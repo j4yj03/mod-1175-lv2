@@ -1,0 +1,20 @@
+/* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls. */
+.gs76{{{cns}}} { width:620px; height:270px; color:#e8f1eb; background:linear-gradient(#282d2a,#141a16); border:2px solid #688573; border-radius:12px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
+.gs76{{{cns}}} header { height:47px; padding:10px 22px; box-sizing:border-box; background:#15834e; border-radius:9px 9px 0 0; cursor:move; }
+.gs76{{{cns}}} header strong { font-size:20px; letter-spacing:2px; }
+.gs76{{{cns}}} header small { float:right; padding-top:6px; font-size:10px; }
+.gs76{{{cns}}} .gs-controls { display:flex; margin:23px 26px 12px; justify-content:space-around; }
+.gs76{{{cns}}} .gs-control { text-align:center; width:84px; }
+.gs76{{{cns}}} label { display:block; margin-bottom:10px; letter-spacing:1px; font-size:11px; }
+.gs76{{{cns}}} .gs-knob { width:54px; height:54px; border-radius:50%; border:2px solid #6d8073; margin:auto; box-shadow:0 3px 7px #000; background:radial-gradient(circle,#464d47 0,#191e1b 72%); position:relative; cursor:ns-resize; }
+.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:25px; width:4px; height:19px; background:#66d494; border-radius:2px; }
+.gs76{{{cns}}} .gs-control span { display:block; margin-top:9px; color:#9ee2b8; font-size:12px; }
+.gs76{{{cns}}} footer { display:flex; gap:10px; margin:19px 27px; align-items:center; }
+.gs76{{{cns}}} select { color:#e0f3e5; background:#1a2b20; border:1px solid #668471; border-radius:4px; height:27px; }
+.gs76{{{cns}}} .gs-bypass { margin-left:auto; padding:6px 11px; background:#263e2f; border:1px solid #658970; border-radius:5px; cursor:pointer; }
+.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#72e098; }
+.gs76{{{cns}}} .gs-light.off { background:#233329; box-shadow:none; }
+.gs76{{{cns}}} .gs-light.on { background:#72e098; box-shadow:0 0 7px #4aa569; }
+.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:78px; display:flex; flex-direction:column; gap:27px; }
+.gs76{{{cns}}} .gs-inputs { left:-11px; } .gs76{{{cns}}} .gs-outputs { right:-11px; }
+.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #8eaaa0; background:#080d09; border-radius:50%; }

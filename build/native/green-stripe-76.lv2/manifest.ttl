@@ -1,0 +1,65 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix mod: <http://moddevices.com/ns/mod#> .
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono> a lv2:Plugin; lv2:binary <green-stripe-76.so>; rdfs:seeAlso <mono.ttl>, <modgui.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-01> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "01 Neutral Start"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-02> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "02 Dr Pepper Inspired"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-03> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "03 Vocal Natural"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-04> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "04 Vocal Peak Catch"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-05> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "05 Vocal Rock Forward"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-06> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "06 Vocal Grit Parallel"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-07> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "07 Bass Finger Level"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-08> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "08 Bass Pick Punch"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-09> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "09 Bass Fast Grit"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-10> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "10 Kick Weight"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-11> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "11 Snare Crack"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-12> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "12 Toms Body"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-13> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "13 Overheads Gentle"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-14> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "14 Room All Buttons"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-15> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "15 Drum Parallel Crush"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-16> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "16 Guitar Clean Sustain"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-17> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "17 Guitar Rhythm Tight"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-18> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "18 Guitar Colour Only"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-19> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "19 Acoustic Strum"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-20> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "20 Acoustic Finger"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "21 Piano Gentle"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "22 Rhodes Body"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-23> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "23 Synth Bass Control"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-24> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "24 Synth Lead Sustain"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-25> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "25 Percussion Snap"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-26> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "26 Stereo Bus Subtle"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo> a lv2:Plugin; lv2:binary <green-stripe-76.so>; rdfs:seeAlso <stereo.ttl>, <modgui.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-01> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "01 Neutral Start"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-02> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "02 Dr Pepper Inspired"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-03> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "03 Vocal Natural"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-04> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "04 Vocal Peak Catch"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-05> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "05 Vocal Rock Forward"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-06> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "06 Vocal Grit Parallel"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-07> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "07 Bass Finger Level"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-08> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "08 Bass Pick Punch"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-09> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "09 Bass Fast Grit"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-10> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "10 Kick Weight"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-11> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "11 Snare Crack"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-12> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "12 Toms Body"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-13> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "13 Overheads Gentle"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-14> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "14 Room All Buttons"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-15> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "15 Drum Parallel Crush"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-16> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "16 Guitar Clean Sustain"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-17> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "17 Guitar Rhythm Tight"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-18> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "18 Guitar Colour Only"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-19> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "19 Acoustic Strum"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-20> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "20 Acoustic Finger"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "21 Piano Gentle"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "22 Rhodes Body"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-23> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "23 Synth Bass Control"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-24> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "24 Synth Lead Sustain"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-25> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "25 Percussion Snap"; rdfs:seeAlso <presets.ttl> .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-26> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "26 Stereo Bus Subtle"; rdfs:seeAlso <presets.ttl> .

@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/parity-cmake/cmake_install.cmake",
+		"/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/parity-cmake/ysfx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

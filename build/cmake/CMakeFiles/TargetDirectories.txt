@@ -1,0 +1,9 @@
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/green-stripe-76.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/dsp_tests.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/test.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/edit_cache.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/list_install_components.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/install.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/install/local.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/install/strip.dir

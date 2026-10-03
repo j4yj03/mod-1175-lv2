@@ -1,0 +1,23 @@
+Start testing: Oct 03 16:16 CEST
+----------------------------------------------------------
+1/1 Testing: signal_tests
+1/1 Test: signal_tests
+Command: "/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/dsp_tests"
+Directory: /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake
+"signal_tests" start time: Oct 03 16:16 CEST
+Output:
+----------------------------------------------------------
+Ratio 4: 3.99946
+Ratio 8: 7.40713
+Ratio 12: 9.95998
+Ratio 20: 14.7262
+DSP acceptance tests: PASS
+<end of output>
+Test time =   0.79 sec
+----------------------------------------------------------
+Test Passed.
+"signal_tests" end time: Oct 03 16:16 CEST
+"signal_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 03 16:16 CEST

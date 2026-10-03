@@ -1,0 +1,43 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/ysfx-private.dir/sources/ysfx.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_eel.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_eel.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_file.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_file.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_gfx.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_gfx.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_reaper.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_api_reaper.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_audio_flac.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_audio_flac.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_audio_wav.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_audio_wav.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_config.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_config.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_eel_utils.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_eel_utils.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_gmem.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_gmem.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_midi.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_midi.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_parse.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_parse.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_parse_menu.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_parse_menu.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_preprocess.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_preprocess.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_preset.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_preset.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_reader.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_reader.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_utils.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_utils.cpp.o.d"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_utils_fts.cpp.o"
+  "CMakeFiles/ysfx-private.dir/sources/ysfx_utils_fts.cpp.o.d"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/ysfx-private.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
