@@ -1,0 +1,260 @@
+# DSP-Architektur — Green Stripe 76, 0.1.0
+
+## 1. Status und normative Dateien
+
+Dies ist ein eigenständiges **reduziertes Gray-Box-Modell**. Die Funktionsstruktur
+ist durch 1176-Unterlagen motiviert, die konkrete parametrische Gain Law und
+Färbung sind eigene Näherungen. Es existiert kein verifizierter transistorweiser
+Original-Netlist-/SPICE-Fit und keine automatisch aus NAM gewonnene Kalibrierung.
+
+- `data/model.json`: gemeinsam generierte Konstanten.
+- `src/dsp/GreenStripe.hpp`: C++11-Implementierung, double-Zustände.
+- `jsfx/GreenStripe76-Core.jsfx-inc`: gleichwertige EEL2-Implementierung.
+- `tools/generate.py`: generierte Model-Includes, Ports, Presets und Oberflächen.
+- `tests/jsfx_parity.cpp`: tatsächliches Rendern beider Kerne, nicht Textvergleich.
+
+## 2. Signalfluss
+
+```text
+Base-rate L/R
+  → 4× interpolation (independent states)
+  → Input gain
+  → input DC/low-frequency colour
+  → nonlinear FET divider ← control charge
+  → preamp colour ─────────────────┐
+  → preamp bandwidth              │ feedback tap BEFORE Output
+  → Output gain                   │
+  → low-frequency output colour   │
+  → asymmetric output amplifier   │
+  → output DC correction          │
+  → high-rate Dry/Wet + Enabled   │
+  → 4× decimation                 │
+  → float output                  │
+                                 └→ magnitude detector / mode law
+                                    → implicit charge update
+                                    → exact discharge + history
+```
+
+Output und der gesamte Ausgangsblock sind **nicht Teil des Detektorabgriffs**.
+Die Audiostufen werden pro Sample nur mit definitiven Zuständen fortgeschrieben;
+die iterativen Detektorberechnungen benutzen zustandslose `tap()`-Auswertungen.
+So wird derselbe Filterzustand nicht mehrfach in einem Solver-Schritt verändert.
+
+## 3. Zeit- und Parametermodell
+
+Abtastrate ist die von Host/REAPER gelieferte Rate, intern `fs_internal=4 fs`.
+Attack und Release werden geometrisch von den Skalen 1–7 abgebildet:
+
+\[
+t_A=0.0008(0.00002/0.0008)^{(A-1)/6},\qquad
+t_R=1.1(0.05/1.1)^{(R-1)/6}.
+\]
+
+Dies sind nominelle Modellzeiten. Die geschlossene Feedback-Antwort, steigende
+Flanken, durch Sinuszyklen wieder aufgeladene Zustände und All Buttons können
+effektive GR-Zeiten verändern. Eine direkte Gleichsetzung mit 63-%-/10–90-%-
+Hardwaremessungen wäre falsch.
+
+Regler-Zielwerte werden mit
+`c=1-exp(-1/(0.002 fs_internal))` geglättet. Erster Parametersatz nach Reset wird
+direkt übernommen, damit Preset-Start/Referenzmessung keine Input-Anfahrrampe
+enthält. Keine pro Block erneut zurückgesetzten Zeitglieder.
+
+## 4. FET-Spannungsteiler
+
+Der physikalische Bezug ist ein Serienwiderstand plus FET als Shunt. Im
+ohmischen Modell erzeugt derselbe Abschwächer Gain und pegelabhängige Verzerrung.
+Green Stripe verwendet eine **regularisierte** dimensionslose Knotenform:
+
+\[
+u=0.08x,\quad C=B-1+q,\quad B=10^{1/20},\quad
+F(v)=v-k\frac{v^2}{1+|v|},
+\]
+
+\[
+v+C F(v)-u=0,\quad k=Colour(0.24+0.08 All).
+\]
+
+Die 0.08-Volt-/Skalierungswahl ist eine eigene Normalisierung, keine ermittelte
+FET-Drainspannung eines Capture-Geräts. Die kleine Ruheabschwächung von nominell
+1 dB ist über `B` kalibriert und am Ausgang wieder normalisiert. Bei Colour=0:
+
+\[
+y=x\,\frac{B}{B+q},\qquad g(q)=\frac{B}{B+q}.
+\]
+
+Nach Multiplikation mit `1+|v|` ist die Knotenform auf jeder Polarität ein
+Quadratpolynom. Mit `U=|u|`, `s=sign(u)` lautet die stabile positive Wurzel:
+
+\[
+a=1+C(1-sk),\quad b=1+C-U,\quad
+v=\frac{2u}{b+\sqrt{b^2+4aU}}.
+\]
+
+Die rationalisierte Lösung vermeidet Wurzelsubtraktions-Auslöschung und ersetzt
+drei frühere per-Tap-Newton-Schritte. Steigung bleibt für die Krümmung positiv;
+beliebig große Extrapolation des reinen JFET-Quadratgesetzes wird vermieden.
+Der Funktionszweig modelliert weder
+Gate-Leckstrom noch ein vollständiges Shichman–Hodges-/Halbleiterkennfeld.
+
+`fetcomp-dsp` zeigt alternativ eine geschlossene quadratische Divider-Lösung
+inklusive LN-Gatefeedback. Das ist eine wertvolle Vergleichsquelle, aber deren
+JUCE-Struktur, Potentiometertabellen, Plugin-Fit und Transformerzustände sind
+hier **nicht übernommen**. Green Stripe ist kein Port dieser Bibliothek.
+
+## 5. Feedback Gain Law
+
+Für das zustandslose FET-/Preamp-Tap-Signal wird
+
+\[
+L=20\log_{10}(\max(|tap(L,q)|,|tap(R,q)|)),\quad d=L-T
+\]
+
+berechnet. Das weiche Knie nutzt die übliche stetige quadratische Überleitung:
+unter `−K/2` null, über `K/2` `d`, dazwischen `(d+K/2)^2/(2K)`.
+
+Die gewünschte Abschwächung gegen den **Feedback-Pegel** ist `(R-1) knee(d)`.
+`R−1` ist wesentlich: der Feed-forward-Koeffizient `1−1/R` würde in derselben
+Feedback-Struktur nicht die gewünschte statische Ratio ergeben. Überleitung in
+den positiv begrenzten Charge-/Conductance-Zustand:
+
+\[
+q_{target}=B\left(10^{\min(60,(R-1)knee(d))/20}-1\right).
+\]
+
+Das ist eine bewusst gewählte **Verhaltenskennlinie**, kein rekonstruierter
+AC-/DC-Widerstands-/Diodenblock. Ratio-abhängige T/K-Werte:
+
+| Modus | nominale Ratio | Threshold dBFS am Tap | Knie dB |
+|---|---:|---:|---:|
+| 4 | 4 | −24 | 6 |
+| 8 | 8 | −21 | 4 |
+| 12 | 12 | −19,5 | 3 |
+| 20 | 20 | −18 | 2 |
+| All | 12…20 | −22 | 1,5 |
+
+Diese Tabellen sind **provisorische Green-Stripe-Abstimmung**, nicht aus der
+Dissertationsgrafik digitalisierte oder vom NAM abgeleitete Messdaten.
+
+## 6. Regelkreis: Aufladung und Entladung
+
+Aufladung benutzt einen impliziten Backward-Euler-Schritt:
+
+\[
+(1+\alpha)q_{n+1}-q_n-\alpha q_{target}(x_{n+1},q_{n+1})=0,\quad
+\alpha=\frac1{fs_{internal}\,t_A\,R\,(1+0.3All)}.
+\]
+
+Die zusätzliche Ratio-Skalierung hält die nominale geschlossene Zeit näher am
+Reglerbereich. Sie ist eine Modellentscheidung, keine RC-Bauteilidentifikation.
+Kein explizites Base-rate-`z^-1` im Detektorpfad.
+
+- Startintervall aus statischer Feed-forward-Näherung.
+- Maximal vier Intervallerweiterungen.
+- Maximal acht safeguarded Newton-Schritte; andernfalls Bisektion des Intervalls.
+- Charge begrenzt auf 0…1000, GR-Computer auf 60 dB.
+- Ableitung des sauberen Divider-Gains dient als monotone Näherung bei Colour.
+
+Bei geschlossenem Gleichrichter entlädt sich der Zustand exakt exponentiell:
+
+\[
+q_{n+1}=q_n e^{-1/(fs_{internal}t_R(1+0.75m+0.2All))}.
+\]
+
+`m∈[0,1]` verfolgt die GR-Historie mit etwa 80 ms Lade-/400 ms Erholungszeit.
+Durch die nichtlineare Zuordnung `q→g` ist die GR-Erholung schon vor dieser
+Historie nicht identisch mit einer einfachen exponentiellen dB-GR-Hüllkurve.
+Die Zusatzhistorie ist eine **programabhängige Näherung**, kein belegter optischer
+oder thermischer Speicher eines 1176. Eichas' Mehrzustands-Fitting motiviert
+den Nutzen längerer Dynamik, nicht diese konkreten Zahlen.
+
+## 7. All Buttons
+
+- Getrennte Threshold-/Knie-/Färbungswerte.
+- Ratio folgt `12+8m`.
+- Unkomprimierter Betragspegel lädt ein etwa 60-µs-Lagglied.
+- Detektor mischt im All-Zustand den normalen Feedback-Tap mit
+  `lagged * g(q)`; das erzeugt eine anfängliche besondere Transientenantwort.
+- Attack-/Release-Skalierungen ändern sich.
+
+AXT zeigt, dass die echte Taste sowohl Bias/Pegel **als auch Thevenin-Impedanzen**
+ändert. Green Stripe bildet diese Gesamtwirkung parametrisch ab, nicht als
+exaktes Schalter-Netzwerk. Im Status als Näherung beibehalten.
+
+## 8. Verstärker- und tieffrequente Färbung
+
+Eingang: 8-Hz-DC-Zustand, 35-Hz-Lowpass-Zustand und konservative niederfrequente
+Amplitudenkrümmung. Vorverstärker: asymmetrische Kennlinie, 45-kHz-Bandbegrenzung.
+Ausgang: Output Gain, eigener 35-Hz-Zustand, asymmetrische Verstärkerkennlinie,
+5-Hz-DC-Korrektur. Input-/Output-States sind kanalgetrennt.
+
+Diese Zustände **sind kein Jiles–Atherton-Hysteresemodell**. Sie stellen eine
+geringe, pegel-/frequenzabhängige Klangfärbung dar. Behauptungen über einen
+bestimmten 5002-/Lundahl-Core, Wicklung oder B-H-Kurve wären nicht gerechtfertigt.
+
+### Gemeinsame `tanh`-Näherung
+
+Audio und Bias-Korrektur benutzen exakt dieselbe [7/6]-Padé-Formel:
+
+\[
+S(x)=\frac{x(135135+x^2(17325+x^2(378+x^2)))}
+ {135135+x^2(62370+x^2(3150+28x^2))}.
+\]
+
+Für `|x|≥5` wird auf ±1 begrenzt. Die kleine Restdiskontinuität am Rand ist
+numerisch gering, aber das Antialiasing bleibt erforderlich. Analytische
+Ableitung derselben Funktion normiert die Kleinsignalverstärkung bei Bias:
+
+\[
+A(x)=H\frac{S(x/H+b)-S(b)}{S'(b)}.
+\]
+
+Keine Vermischung von std::tanh und Approximation; das vermeidet DC-Fehler durch
+unterschiedliche Bias-Referenzen. Keine Float-Bit-Hacks, damit double-EEL2 und
+C++ dieselben Operationen nutzen können. Approximationseffizienz ist nicht
+gleich Hardwaretreue; diese Abgrenzung aus den neuen Quellen bleibt wichtig.
+
+## 9. Oversampling, Dry/Wet und Bypass
+
+Zwei kaskadierte 2×-Halfband-Polyphasen-IIR-Stufen, skalare Allpass-Rekursion:
+
+`y=(x-y_previous)*a+x_previous`.
+
+Koeffizientenprovenienz: HIIR-Designer-Prinzip, Übergangsargumente 0.04 und 0.27,
+acht beziehungsweise vier Koeffizienten (fest in Model-JSON). Interpolation
+erhält DC-Gain ohne zusätzliche ×4-Multiplikation. Decimation tauscht die
+chronologischen Paarhälften gemäß dem Polyphasenschema und mittelt mit 0.5.
+
+Je Kanal eigene Up/Down-States. 4× umfasst **nicht nur** Sättigung, sondern auch
+den Regler. Eine zweite/variabel schaltbare Qualitätsstufe ist in 0.1.0 nicht
+enthalten, damit Kalibrierung, CPU und Parität nachvollziehbar bleiben.
+
+Dry-Abgriff vor Input; Mischung und Enabled erfolgen vor derselben Decimation.
+So entsteht bei internem Bypass keine abrupte Phase-/Latenzumschaltung. Externes
+Host-Bypass kann sich anders verhalten. Vier Frames gemeldete Nominal-PDC,
+nicht frequenzunabhängige Filterverzögerung. External parallel routing prüfen.
+
+## 10. Stereo und RT
+
+Zwei unabhängige Controller plus ein gemeinsamer Link-Controller laufen warm.
+Link-Umschaltung mischt dynamische **Gains**, dann wird in Charge zurückgerechnet.
+Bei Link exakt 0/1 direkte States, um unnötige Rundungsabweichungen zu vermeiden.
+Kein Audiosummen-Sidechain, keine Faltung zwischen Kanälen.
+
+Core-Allokationen nur bei Host-Instanziierung. Speichergröße unabhängig vom
+Block; kein Worker/Thread nötig. Ausnahmebehandlung/RTTI im LV2-Binary aus.
+Inputs NaN/Inf → 0; endliche Inputs auf ±256 begrenzt. Die Begrenzung ist
+Robustheit für fehlerhafte Hosts, kein musikalischer Limiter. Extrem kleine
+rekursive Zustände werden auf null gesetzt; keine künstliche Rauschquelle.
+
+## 11. Grenzen und Ausbau
+
+- Native und JSFX-Parität ist belegt, Hardwaregleichheit nicht.
+- Controller-Attack/Knie/Release abhängig von Betriebszustand; vollständige
+  quantitative Probe-Matrix bleibt zur musikalischen Abstimmung sinnvoll.
+- Hohe nominelle Ratios können auf schnelleren Sinuszyklen schwächer erscheinen.
+- Pro Sample drei Stereo-Controller plus Solver: tatsächliche Dwarf-CPU messen.
+- Modelldaten und mathematische Struktur bei Änderung versionieren; beide
+  Implementierungen und Tests gemeinsam nachziehen.
+- NAM-Färbungsfit erst nach verifizierter Core-Auswertung und Peak/RMS-
+  Kalibrierung; nicht direkt in die Laufzeit kaskadieren.

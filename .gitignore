@@ -1,0 +1,12 @@
+dist/
+.deps/
+__pycache__/
+*.pyc
+*.o
+*.so
+*.dylib
+*.dll
+*.wav
+*.nam
+test-results/
+!tests/fixtures/

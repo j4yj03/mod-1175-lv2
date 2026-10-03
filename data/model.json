@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "calibration_status": "Independent 1176-inspired Green Stripe gray-box; not hardware-calibrated",
+  "oversampling": 4,
+  "nominal_latency_frames": 4,
+  "reference_peak_dbfs": -21.0,
+  "qbias_db": 1.0,
+  "attack_slow_seconds": 0.0008,
+  "attack_fast_seconds": 0.00002,
+  "release_slow_seconds": 1.1,
+  "release_fast_seconds": 0.05,
+  "input_highpass_hz": 8.0,
+  "output_highpass_hz": 5.0,
+  "amplifier_lowpass_hz": 45000.0,
+  "ratios": [4.0, 8.0, 12.0, 20.0, 16.0],
+  "thresholds_dbfs": [-24.0, -21.0, -19.5, -18.0, -22.0],
+  "knees_db": [6.0, 4.0, 3.0, 2.0, 1.5],
+  "halfband_stage1": [0.04063346092419326, 0.1505051290226746, 0.30075705599187408, 0.46077450496145061, 0.6095243148961883, 0.73850384111885725, 0.84922381039206607, 0.9497427837050002],
+  "halfband_stage2": [0.040341222658423818, 0.16379193172022141, 0.38282159255650028, 0.73875012537359719]
+}

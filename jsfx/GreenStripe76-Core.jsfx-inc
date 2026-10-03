@@ -1,0 +1,234 @@
+// SPDX-License-Identifier: MIT
+// Common double-precision core. Keep in step with src/dsp/GreenStripe.hpp.
+// Calibrated constants are imported from generated GreenStripe76-Model.jsfx-inc.
+import GreenStripe76-Model.jsfx-inc
+
+@init
+// EEL2 exact equality treats unordered NaN as equal on x86; ordered >= avoids it.
+function gs_finite(x fallback) ( abs(x)>=0 && 1000000000000000000000000000000>=abs(x) ? x : fallback; );
+function gs_bound(x lo hi) ( max(lo,min(hi,x)); );
+function gs_db_gain(db) ( exp(db*0.1151292546497022842); );
+function gs_gain_db(g) ( 8.68588963806503655*log(max(0.000000000000001,g)); );
+function gs_zap(x) ( abs(x)<0.000000000000000000000000000001 ? 0 : x; );
+function gs_soft(x) local(x2) (
+  x>=5 ? 1 : x<=-5 ? -1 : (x2=x*x;
+    x*(135135+x2*(17325+x2*(378+x2)))/(135135+x2*(62370+x2*(3150+28*x2))));
+);
+function gs_slope(x) local(x2 p d dp dd) (
+  abs(x)>=5 ? 0 : (x2=x*x;
+    p=135135+x2*(17325+x2*(378+x2)); d=135135+x2*(62370+x2*(3150+28*x2));
+    dp=17325+x2*(756+3*x2); dd=62370+x2*(6300+84*x2);
+    ((p+2*x2*dp)*d-2*x2*p*dd)/(d*d));
+);
+function gs_amp(x h bias) (
+  h*(gs_soft(x/h+bias)-gs_soft(bias))/gs_slope(bias);
+);
+function gs_knee(x w) local(v) (
+  x<=-w*0.5 ? 0 : x>=w*0.5 ? x : (v=x+w*0.5; v*v/(2*w));
+);
+function gs_gain(q) ( gs_qbase/(gs_qbase+q); );
+function gs_fet(input q colour all) local(u c k v magnitude polarity a b) (
+  u=input*0.08; c=gs_qbase-1+q; k=colour*(0.24+0.08*all);
+  k===0 ? input*gs_qbase/(1+c) : (
+    magnitude=abs(u); polarity=u>=0 ? 1 : -1;
+    a=1+c*(1-polarity*k); b=1+c-magnitude;
+    v=2*u/(b+sqrt(b*b+4*a*magnitude));
+    v*gs_qbase/0.08;
+  );
+);
+function gs_tap(input q colour all) local(x shaped) (
+  x=gs_fet(input,q,colour,all);
+  shaped=gs_amp(x,2.6,0.025+0.035*all);
+  x+colour*(shaped-x);
+);
+
+function gs_alloc(n) local(base) (
+  base=gs_mem; gs_mem+=n; memset(base,0,n); base;
+);
+function gs_hb_init(n coefs) instance(base count c even odd) (
+  count=n; c=coefs; base=gs_alloc(2*n); even=odd=0;
+);
+function gs_hb_pair(a b) instance(base count c even odd) local(i t0 t1) (
+  i=0;
+  loop(count/2,
+    t0=(a-base[count+i])*c[i]+base[i];
+    t1=(b-base[count+i+1])*c[i+1]+base[i+1];
+    base[i]=a; base[i+1]=b;
+    a=gs_zap(t0); b=gs_zap(t1);
+    base[count+i]=a; base[count+i+1]=b;
+    i+=2;
+  );
+  even=a; odd=b;
+);
+function gs_hb_up(input) ( this.gs_hb_pair(input,input); );
+function gs_hb_down(first second) (
+  this.gs_hb_pair(second,first); (this.even+this.odd)*0.5;
+);
+function gs_rs_init() (
+  this.u1.gs_hb_init(8,gs_coefs1); this.d1.gs_hb_init(8,gs_coefs1);
+  this.u2.gs_hb_init(4,gs_coefs2); this.d2.gs_hb_init(4,gs_coefs2);
+);
+function gs_rs_up(input dest) local(a b) (
+  this.u1.gs_hb_up(input); a=this.u1.even; b=this.u1.odd;
+  this.u2.gs_hb_up(a); dest[0]=this.u2.even; dest[1]=this.u2.odd;
+  this.u2.gs_hb_up(b); dest[2]=this.u2.even; dest[3]=this.u2.odd;
+);
+function gs_rs_down(src) local(a b) (
+  a=this.d2.gs_hb_down(src[0],src[1]); b=this.d2.gs_hb_down(src[2],src[3]);
+  this.d1.gs_hb_down(a,b);
+);
+
+function gs_ch_reset() instance(inDC inFlux preLP outDC outFlux) (
+  inDC=inFlux=preLP=outDC=outFlux=0;
+);
+function gs_ch_input(x colour) instance(inDC inFlux) local(hp iron) (
+  inDC=gs_zap(inDC+gs_input_hp*(x-inDC)); hp=x-inDC;
+  inFlux=gs_zap(inFlux+gs_flux*(hp-inFlux));
+  iron=hp-0.12*(inFlux-0.6*gs_soft(inFlux/0.6)); x+colour*(iron-x);
+);
+function gs_ch_output(x outputGain colour) instance(preLP outDC outFlux) local(iron driven) (
+  preLP=gs_zap(preLP+gs_amp_lp*(x-preLP)); x+=colour*(preLP-x); x*=outputGain;
+  outFlux=gs_zap(outFlux+gs_flux*(x-outFlux));
+  iron=x-0.10*(outFlux-0.8*gs_soft(outFlux/0.8)); driven=gs_amp(iron,1.8,0.04);
+  x+=colour*(driven-x); outDC=gs_zap(outDC+gs_output_hp*(x-outDC)); x-colour*outDC;
+);
+function gs_ctrl_reset() instance(charge memory lagged deriv) (
+  charge=memory=lagged=deriv=0;
+);
+function gs_target(a b q colour all ratio threshold knee) instance(lagged deriv)
+local(measured rectified over desired result left) (
+  left=abs(gs_tap(a,q,colour,all));
+  measured=a===b ? left : max(left,abs(gs_tap(b,q,colour,all)));
+  rectified=(1-all)*measured+all*lagged*gs_gain(q);
+  over=gs_gain_db(rectified)-threshold;
+  desired=min(60,(ratio-1)*gs_knee(over,knee));
+  result=gs_qbase*(gs_db_gain(desired)-1);
+  deriv=desired>=60 ? 0 : -(gs_qbase+result)*(ratio-1)*
+    gs_bound((over+knee*0.5)/knee,0,1)/(gs_qbase+q);
+  result;
+);
+function gs_ctrl(a b colour all ratio threshold knee attackTime releaseTime)
+instance(charge memory lagged deriv)
+local(r demand time alpha level guess low high q wanted f next i stop history) (
+  lagged=gs_zap(lagged+gs_lag*(max(abs(a),abs(b))-lagged));
+  r=ratio+all*((12+8*memory)-ratio);
+  demand=this.gs_target(a,b,charge,colour,all,r,threshold,knee);
+  demand<=charge ? (
+    time=releaseTime*(1+0.75*memory+0.2*all);
+    charge=gs_zap(charge*exp(-1/(time*gs_fs)));
+  ) : (
+    alpha=1/(gs_fs*attackTime*r*(1+0.3*all));
+    level=gs_gain_db(max(abs(a),abs(b)));
+    guess=gs_qbase*(gs_db_gain(min(60,(1-1/r)*gs_knee(level-threshold,knee)))-1);
+    low=charge; high=min(1000,max(charge+1,guess*1.25+0.01));
+    i=0; stop=0;
+    loop(4,
+      !stop ? (
+        f=(1+alpha)*high-charge-alpha*this.gs_target(a,b,high,colour,all,r,threshold,knee);
+        f>=0 ? stop=1 : high=min(1000,high*2+1);
+      );
+    );
+    (1+alpha)*high-charge-alpha*this.gs_target(a,b,high,colour,all,r,threshold,knee)<0 ? high=1000;
+    q=gs_bound(guess,low,high); stop=0;
+    loop(8,
+      !stop ? (
+        wanted=this.gs_target(a,b,q,colour,all,r,threshold,knee);
+        f=(1+alpha)*q-charge-alpha*wanted;
+        abs(f)<0.0000000001*(1+charge) ? stop=1 : (
+          f>0 ? high=q : low=q;
+          next=q-f/(1+alpha-alpha*deriv);
+          q=next>low && next<high ? next : (low+high)*0.5;
+        );
+      );
+    );
+    charge=gs_bound(q,0,1000);
+  );
+  history=gs_bound(-gs_gain_db(gs_gain(charge))/24,0,1);
+  memory=gs_zap(memory+(history>memory ? gs_mem_up : gs_mem_down)*(history-memory));
+  charge;
+);
+
+function gs_reset(twoChannels) instance(stereo initial inL inR wetL wetR outL outR grL grR) (
+  gs_model_init();
+  gs_mem=64; gs_qbase=gs_db_gain(gs_qbias_db); gs_fs=max(8000,srate)*4;
+  gs_smooth=1-exp(-1/(0.002*gs_fs));
+  gs_input_hp=1-exp(-2*$pi*gs_input_highpass_hz/gs_fs);
+  gs_output_hp=1-exp(-2*$pi*gs_output_highpass_hz/gs_fs);
+  gs_flux=1-exp(-2*$pi*35/gs_fs);
+  gs_amp_lp=1-exp(-2*$pi*gs_amplifier_lowpass_hz/gs_fs);
+  gs_mem_up=1-exp(-1/(0.08*gs_fs)); gs_mem_down=1-exp(-1/(0.4*gs_fs));
+  gs_lag=1-exp(-1/(0.00006*gs_fs));
+  this.rsL.gs_rs_init(); this.rsR.gs_rs_init();
+  inL=gs_alloc(4); inR=gs_alloc(4); wetL=gs_alloc(4); wetR=gs_alloc(4);
+  this.chL.gs_ch_reset(); this.chR.gs_ch_reset();
+  this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset();
+  stereo=twoChannels; initial=1; outL=outR=grL=grR=0;
+);
+function gs_set(inputDb outputDb attack release mode mix colour compression enabled link)
+instance(initial ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
+  pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
+local(attackPos releasePos) (
+  mode=gs_bound(floor(gs_finite(mode,0)+0.5),0,4);
+  attackPos=gs_bound(gs_finite(attack,3),1,7); releasePos=gs_bound(gs_finite(release,5),1,7);
+  ti=gs_db_gain(gs_bound(gs_finite(inputDb,0),-36,24)); to=gs_db_gain(gs_bound(gs_finite(outputDb,0),-36,24));
+  ta=gs_attack_slow_seconds*(gs_attack_fast_seconds/gs_attack_slow_seconds)^((attackPos-1)/6);
+  tr=gs_release_slow_seconds*(gs_release_fast_seconds/gs_release_slow_seconds)^((releasePos-1)/6);
+  t_ratio=gs_ratios[mode]; t_threshold=gs_thresholds[mode]; t_knee=gs_knees[mode];
+  t_all=mode==4 ? 1 : 0; tm=gs_bound(gs_finite(mix,100)*0.01,0,1); tc=gs_bound(gs_finite(colour,100)*0.01,0,1);
+  tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=gs_finite(link,1)>0 ? 1 : 0;
+  initial ? (
+    pi=ti; po=to; pa=ta; pr=tr; p_ratio=t_ratio; p_threshold=t_threshold; p_knee=t_knee;
+    p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; initial=0;
+  );
+);
+function gs_process(left right)
+instance(stereo inL inR wetL wetR outL outR grL grR
+  ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
+  pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
+local(i a b independentL independentR linked qL qR gL gR wet blend) (
+  this.rsL.gs_rs_up(gs_bound(left,-256,256),inL);
+  stereo ? this.rsR.gs_rs_up(gs_bound(right,-256,256),inR);
+  i=0;
+  loop(4,
+    pi+=gs_smooth*(ti-pi); po+=gs_smooth*(to-po); pa+=gs_smooth*(ta-pa); pr+=gs_smooth*(tr-pr);
+    p_ratio+=gs_smooth*(t_ratio-p_ratio); p_threshold+=gs_smooth*(t_threshold-p_threshold);
+    p_knee+=gs_smooth*(t_knee-p_knee); p_all+=gs_smooth*(t_all-p_all);
+    pm+=gs_smooth*(tm-pm); pc+=gs_smooth*(tc-pc); pp+=gs_smooth*(tp-pp);
+    pe+=gs_smooth*(te-pe); pl+=gs_smooth*(tl-pl);
+    a=this.chL.gs_ch_input(inL[i]*pi,pc);
+    b=stereo ? this.chR.gs_ch_input(inR[i]*pi,pc) : a;
+    independentL=this.ctrlL.gs_ctrl(a,a,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+    qL=qR=independentL;
+    stereo ? (
+      independentR=this.ctrlR.gs_ctrl(b,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+      linked=this.ctrlS.gs_ctrl(a,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+      gL=(1-pl)*gs_gain(independentL)+pl*gs_gain(linked);
+      gR=(1-pl)*gs_gain(independentR)+pl*gs_gain(linked);
+      qL=pl===0 ? independentL : pl===1 ? linked : gs_qbase*(1/gL-1);
+      qR=pl===0 ? independentR : pl===1 ? linked : gs_qbase*(1/gR-1);
+    );
+    qL*=pp; qR*=pp;
+    wet=this.chL.gs_ch_output(gs_tap(a,qL,pc,p_all),po,pc); blend=pm*pe;
+    wetL[i]=inL[i]+blend*(wet-inL[i]);
+    stereo ? (
+      wet=this.chR.gs_ch_output(gs_tap(b,qR,pc,p_all),po,pc);
+      wetR[i]=inR[i]+blend*(wet-inR[i]);
+    );
+    grL=gs_gain_db(gs_gain(qL))*pe; grR=gs_gain_db(gs_gain(qR))*pe; i+=1;
+  );
+  outL=this.rsL.gs_rs_down(wetL);
+  outR=stereo ? this.rsR.gs_rs_down(wetR) : outL;
+);
+
+// Meter states are independent of the compressor. @gfx only reads snapshots.
+function gs_meter_init() instance(peak rms hold remaining clip) (
+  peak=rms=hold=remaining=clip=0;
+);
+function gs_meter_sample(x) instance(peak rms hold remaining clip) local(a) (
+  a=abs(x); peak=max(a,peak*gs_meter_decay);
+  rms+=gs_meter_rms*(x*x-rms);
+  a>=hold ? (hold=a; remaining=0.8*srate;) : (
+    remaining>0 ? remaining-=1 : hold=max(a,hold*gs_meter_decay);
+  );
+  a>=1 ? clip=srate : clip=max(0,clip-1);
+);

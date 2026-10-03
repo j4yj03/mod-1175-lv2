@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: MIT
+// UI owns no audio/control-loop state; meter snapshots read atomically.
+@init
+function gs_ui_meter(x y w h label peak rms hold gr clip)
+local(t yy value fraction) (
+  gfx_set(0.055,0.09,0.065,1); gfx_rect(x,y,w,h);
+  gfx_set(0.22,0.34,0.26,1); gfx_rect(x,y,w,h,0);
+  gfx_setfont(1,"Arial",13); gfx_set(0.82,0.9,0.84,1);
+  gfx_x=x+7; gfx_y=y+7; gfx_drawstr(label);
+  value=gr ? -peak : peak;
+  fraction=gr ? min(1,max(0,peak/30)) : min(1,max(0,(peak+60)/60));
+  gfx_set(gr ? 0.93 : 0.21,gr ? 0.65 : 0.8,gr ? 0.16 : 0.42,1);
+  gfx_rect(x+8,y+h-40-(h-73)*fraction,w-16,(h-73)*fraction);
+  t=0;
+  loop(6,
+    yy=y+34+t*(h-73)/5;
+    gfx_set(0.3,0.4,0.32,0.7); gfx_line(x+6,yy,x+w-6,yy);
+    t+=1;
+  );
+  !gr ? (
+    yy=y+h-40-(h-73)*min(1,max(0,(rms+60)/60));
+    gfx_set(0.72,0.92,0.78,1); gfx_line(x+8,yy,x+w-8,yy);
+    yy=y+h-40-(h-73)*min(1,max(0,(hold+60)/60));
+    gfx_set(1,0.87,0.45,1); gfx_line(x+8,yy,x+w-8,yy);
+  );
+  gfx_setfont(1,"Arial",12); gfx_set(0.92,0.97,0.93,1);
+  gfx_x=x+7; gfx_y=y+h-31; gfx_printf("%5.1f dB",value);
+  !gr ? (gfx_x=x+7; gfx_y=y+h-16; gfx_printf("R %5.1f",rms););
+  clip>0 ? (gfx_set(0.95,0.16,0.1,1); gfx_rect(x+w-16,y+8,8,8););
+);
+
+function gs_draw_ui(stereo)
+local(w h now idle decay bottom count meterW start y mh inL inR outL outR
+  rmsL rmsR inRmsL inRmsR holdL holdR grL grR clipL clipR i ratioLabel) (
+  w=gfx_w; h=gfx_h; now=time_precise();
+  idle=max(0,now-atomic_get(gs_audio_time)-0.1);
+  decay=exp(-idle/0.35);
+  inL=atomic_get(gs_ui_inL)-idle*24; inR=atomic_get(gs_ui_inR)-idle*24;
+  outL=atomic_get(gs_ui_outL)-idle*24; outR=atomic_get(gs_ui_outR)-idle*24;
+  rmsL=atomic_get(gs_ui_rmsL)-idle*24; rmsR=atomic_get(gs_ui_rmsR)-idle*24;
+  inRmsL=atomic_get(gs_ui_inRmsL)-idle*24; inRmsR=atomic_get(gs_ui_inRmsR)-idle*24;
+  holdL=atomic_get(gs_ui_holdL)-max(0,idle-0.8)*24;
+  holdR=atomic_get(gs_ui_holdR)-max(0,idle-0.8)*24;
+  grL=atomic_get(gs_ui_grL)*decay; grR=atomic_get(gs_ui_grR)*decay;
+  clipL=idle>1 ? 0 : atomic_get(gs_ui_clipL); clipR=idle>1 ? 0 : atomic_get(gs_ui_clipR);
+  gfx_set(0.07,0.095,0.08,1); gfx_rect(0,0,w,h);
+  gfx_set(0.06,0.47,0.26,1); gfx_rect(0,0,w,52);
+  gfx_setfont(1,"Arial",max(14,min(24,w/30)),'b');
+  gfx_set(0.93,0.99,0.94,1); gfx_x=15; gfx_y=10; gfx_drawstr("GREEN STRIPE 76");
+  gfx_setfont(1,"Arial",12); gfx_x=15; gfx_y=36;
+  gfx_drawstr(stereo ? (slider10>0 ? "STEREO LINKED" : "STEREO / DUAL MONO") : "MONO — Input L to both outputs");
+  h<145 || w<310 ? (
+    gfx_x=14; gfx_y=70; gfx_printf("GR L %.1f  R %.1f dB",-grL,-grR);
+    gfx_x=14; gfx_y=92; gfx_printf("OUT L %.1f  R %.1f dBFS",outL,outR);
+  ) : (
+    count=stereo ? 6 : 3; start=14; y=68; mh=max(70,h-143); meterW=(w-28-10*(count-1))/count;
+    gs_ui_meter(start,y,meterW,mh,stereo ? "IN L" : "INPUT",inL,inRmsL,inL,0,0);
+    stereo ? gs_ui_meter(start+(meterW+10),y,meterW,mh,"IN R",inR,inRmsR,inR,0,0);
+    i=stereo ? 2 : 1;
+    gs_ui_meter(start+i*(meterW+10),y,meterW,mh,stereo ? "GR L" : "GR",grL,0,0,1,0);
+    stereo ? gs_ui_meter(start+(i+1)*(meterW+10),y,meterW,mh,"GR R",grR,0,0,1,0);
+    i=stereo ? 4 : 2;
+    gs_ui_meter(start+i*(meterW+10),y,meterW,mh,stereo ? "OUT L" : "OUTPUT",outL,rmsL,holdL,0,clipL);
+    stereo ? gs_ui_meter(start+(i+1)*(meterW+10),y,meterW,mh,"OUT R",outR,rmsR,holdR,0,clipR);
+    gfx_setfont(1,"Arial",12); gfx_set(0.76,0.87,0.79,1); gfx_x=14; gfx_y=h-62;
+    gfx_printf("Input %+.1f dB   Output %+.1f dB   Attack %.2f   Release %.2f",slider1,slider2,slider3,slider4);
+    gfx_x=14; gfx_y=h-43;
+    gfx_printf("Ratio %s   Mix %.0f%%   Colour %.0f%%   %s",slider5==4 ? "ALL" : slider5==3 ? "20:1" : slider5==2 ? "12:1" : slider5==1 ? "8:1" : "4:1",slider6,slider7,slider8>0 ? "COMP ON" : "COLOUR ONLY");
+    gfx_x=14; gfx_y=h-23;
+    gfx_drawstr("Peak dBFS · line = RMS · gold = hold · red = >=0 dBFS · GR before Mix");
+  );
+);
