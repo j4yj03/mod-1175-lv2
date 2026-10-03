@@ -1,20 +1,45 @@
-/* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls. */
-.gs76{{{cns}}} { width:620px; height:270px; color:#e8f1eb; background:linear-gradient(#282d2a,#141a16); border:2px solid #688573; border-radius:12px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
-.gs76{{{cns}}} header { height:47px; padding:10px 22px; box-sizing:border-box; background:#15834e; border-radius:9px 9px 0 0; cursor:move; }
-.gs76{{{cns}}} header strong { font-size:20px; letter-spacing:2px; }
-.gs76{{{cns}}} header small { float:right; padding-top:6px; font-size:10px; }
-.gs76{{{cns}}} .gs-controls { display:flex; margin:23px 26px 12px; justify-content:space-around; }
-.gs76{{{cns}}} .gs-control { text-align:center; width:84px; }
-.gs76{{{cns}}} label { display:block; margin-bottom:10px; letter-spacing:1px; font-size:11px; }
-.gs76{{{cns}}} .gs-knob { width:54px; height:54px; border-radius:50%; border:2px solid #6d8073; margin:auto; box-shadow:0 3px 7px #000; background:radial-gradient(circle,#464d47 0,#191e1b 72%); position:relative; cursor:ns-resize; }
-.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:25px; width:4px; height:19px; background:#66d494; border-radius:2px; }
-.gs76{{{cns}}} .gs-control span { display:block; margin-top:9px; color:#9ee2b8; font-size:12px; }
-.gs76{{{cns}}} footer { display:flex; gap:10px; margin:19px 27px; align-items:center; }
-.gs76{{{cns}}} select { color:#e0f3e5; background:#1a2b20; border:1px solid #668471; border-radius:4px; height:27px; }
-.gs76{{{cns}}} .gs-bypass { margin-left:auto; padding:6px 11px; background:#263e2f; border:1px solid #658970; border-radius:5px; cursor:pointer; }
-.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#72e098; }
-.gs76{{{cns}}} .gs-light.off { background:#233329; box-shadow:none; }
-.gs76{{{cns}}} .gs-light.on { background:#72e098; box-shadow:0 0 7px #4aa569; }
-.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:78px; display:flex; flex-direction:column; gap:27px; }
+/* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls.
+   Pedal-inspired portrait faceplate: silver box, black knobs, green banner,
+   bypass footswitch. Independent 1176-inspired gray-box, no meters. */
+.gs76{{{cns}}} { width:440px; color:#262b26; background:linear-gradient(#dde0db,#a9ada7 55%,#b6bab3); border:2px solid #6b716a; border-radius:22px; font:12px Arial,sans-serif; box-sizing:border-box; position:relative; }
+.gs76{{{cns}}} header { height:30px; padding:6px 16px; box-sizing:border-box; background:transparent; cursor:move; }
+.gs76{{{cns}}} header strong { font-size:13px; letter-spacing:2px; color:#3d443c; }
+.gs76{{{cns}}} header small { float:right; padding-top:2px; font-size:9px; letter-spacing:2px; color:#4d564d; }
+.gs76{{{cns}}} .gs-top { display:flex; justify-content:space-between; align-items:flex-start; padding:2px 34px 0; }
+.gs76{{{cns}}} .gs-led { display:block; width:18px; height:18px; margin-top:14px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#c8f7d6,#37c47f 55%,#0f6e40); box-shadow:0 0 9px #37c47f, inset 0 1px 2px rgba(255,255,255,0.6); border:2px solid #23281f; box-sizing:border-box; }
+.gs76{{{cns}}} .gs-led.off { background:radial-gradient(circle at 35% 30%,#4a544a,#23281f); box-shadow:inset 0 1px 2px rgba(255,255,255,0.15); }
+.gs76{{{cns}}} .gs-led.on { background:radial-gradient(circle at 35% 30%,#c8f7d6,#37c47f 55%,#0f6e40); box-shadow:0 0 9px #37c47f, inset 0 1px 2px rgba(255,255,255,0.6); }
+.gs76{{{cns}}} .gs-mid { display:flex; justify-content:space-between; align-items:flex-start; padding:8px 22px 0; }
+.gs76{{{cns}}} .gs-control { text-align:center; width:88px; }
+.gs76{{{cns}}} label { display:block; margin:4px 0 0; letter-spacing:1px; font-size:10px; color:#2c332b; }
+.gs76{{{cns}}} .gs-knob { width:48px; height:48px; border-radius:50%; border:2px solid #191d18; margin:auto; box-shadow:0 4px 7px rgba(0,0,0,0.45), inset 0 2px 2px rgba(255,255,255,0.14); background:radial-gradient(circle,#2c322b 0,#0c0f0c 78%); position:relative; cursor:ns-resize; }
+.gs76{{{cns}}} .gs-knob-big { width:62px; height:62px; }
+.gs76{{{cns}}} .gs-knob:before { content:""; position:absolute; left:50%; top:50%; width:6px; height:6px; margin:-3px; border-radius:50%; background:#0a0d0a; }
+.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:5px; left:20px; width:5px; height:15px; background:#eef2ec; border-radius:2px; }
+.gs76{{{cns}}} .gs-knob-big:after { left:27px; width:6px; height:19px; }
+.gs76{{{cns}}} .gs-control span { display:block; margin-top:3px; color:#375c45; font-size:11px; }
+.gs76{{{cns}}} .gs-ratio { text-align:center; width:118px; padding-top:2px; }
+.gs76{{{cns}}} .gs-ratio small { display:block; font-size:9px; letter-spacing:2px; color:#4d564d; }
+.gs76{{{cns}}} .gs-ratio select { width:100%; margin:3px 0 0; }
+.gs76{{{cns}}} .gs-ratio label { letter-spacing:2px; }
+.gs76{{{cns}}} select { color:#eef4ee; background:#20261f; border:1px solid #454d44; border-radius:5px; height:26px; }
+.gs76{{{cns}}} .gs-ext { margin:10px 22px 0; background:rgba(30,36,28,0.09); border:1px solid #8a9188; border-radius:9px; padding:6px 10px 8px; }
+.gs76{{{cns}}} .gs-ext > b { display:block; margin-bottom:5px; font-size:8px; letter-spacing:1px; color:#4a544a; text-align:center; }
+.gs76{{{cns}}} .gs-ext-row { display:flex; gap:10px; align-items:flex-start; }
+.gs76{{{cns}}} .gs-ext-row + .gs-ext-row { margin-top:6px; }
+.gs76{{{cns}}} .gs-ext .gs-control { width:64px; }
+.gs76{{{cns}}} .gs-ext .gs-knob { width:38px; height:38px; }
+.gs76{{{cns}}} .gs-ext .gs-knob:after { left:15px; width:4px; height:12px; }
+.gs76{{{cns}}} .gs-ext .gs-control span { font-size:10px; }
+.gs76{{{cns}}} .gs-sel { flex:1; text-align:left; }
+.gs76{{{cns}}} .gs-sel label { margin:0 0 3px; font-size:9px; }
+.gs76{{{cns}}} .gs-sel select { width:100%; height:24px; }
+.gs76{{{cns}}} .gs-banner { margin:12px 34px 0; background:linear-gradient(#1a9a5b,#0f6e40); border-radius:4px; padding:7px 0 8px; text-align:center; box-shadow:inset 0 1px 2px rgba(255,255,255,0.25), 0 1px 3px rgba(0,0,0,0.3); }
+.gs76{{{cns}}} .gs-banner b { display:block; font-size:30px; letter-spacing:8px; color:#eef7ee; text-shadow:0 1px 2px #0a3d21; }
+.gs76{{{cns}}} .gs-banner span { display:block; font-size:9px; letter-spacing:5px; color:#c7e9d2; margin-top:1px; }
+.gs76{{{cns}}} .gs-tagline { margin:8px 0 0; text-align:center; font-size:10px; letter-spacing:2px; color:#4d564d; }
+.gs76{{{cns}}} .gs-foot { width:74px; height:74px; margin:10px auto 16px; border-radius:50%; background:radial-gradient(circle at 50% 34%,#565c54,#252a24 62%,#11150f); border:5px solid #9aa198; box-sizing:border-box; box-shadow:0 5px 9px rgba(0,0,0,0.45), inset 0 2px 3px rgba(255,255,255,0.18); color:#cfd6cd; font-size:9px; letter-spacing:1px; text-align:center; line-height:64px; cursor:pointer; user-select:none; }
+.gs76{{{cns}}} .gs-foot:active { box-shadow:0 2px 4px rgba(0,0,0,0.45), inset 0 2px 5px rgba(0,0,0,0.5); }
+.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:44px; display:flex; flex-direction:column; gap:24px; }
 .gs76{{{cns}}} .gs-inputs { left:-11px; } .gs76{{{cns}}} .gs-outputs { right:-11px; }
-.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #8eaaa0; background:#080d09; border-radius:50%; }
+.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #6d756c; background:#0c110d; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.5); }

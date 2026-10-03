@@ -12,7 +12,15 @@ Hardware-Revision A/D nicht mehr bindend.
   Erholung, All Buttons, asymmetrische Färbung und Output nach Detektor.
 - LV2-Mono-/Stereo-Deskriptoren in einem Bundle, Enabled/Compression/Mix/Colour,
   optionaler Link, separate Kanal-/Controllerzustände, keine Meterports.
-- Original-Green-Stripe-MOD-GUI mit Knobs/Schaltern, Ports und Illustrations-PNGs.
+- MOD-GUI ab 0.2.0 als 1176-inspiriertes Gray-Box-Layout nach Pedalvorlage:
+  Portrait-Faceplate (Silber, schwarze Regler), INPUT/OUTPUT oben mit
+  Bypass-LED zwischen den Reglern, ATTACK/RELEASE/RATIO-Reihe, Gray-Box-
+  Erweiterungsgruppe (Mix/Colour/Compression/Link/Oversampling), grünes
+  GS76-Banner, BYPASS als Footswitch, bewusst ohne GR-/Level-Meter;
+  Illustrations-PNGs im selben Layout.
+- JSFX-Meter 0.2.1-feinheiten: Skala −60 bis 0 dBFS (0 = Clipping),
+  Orange ab −12 dBFS, Rot ab −3 dBFS, breitere Balken, Peak-Hold 2 s,
+  PK-Zahlen zeigen den Hold statt des schnell fallenden Peaks.
 - JSFX Mono/Stereo mit GR/Peak/RMS/Hold/Clip und Host-GR-Meldung für REAPER 7.
 - 26 Instrumentpresets, zwei `.rpl`-Bänke, eingebauter Selector und Custom-Erkennung.
 - Native Make/CMake-Builds, offizielles MPB-Skript/Rezept, zusätzlicher AArch64-
@@ -56,6 +64,7 @@ Hardware-Revision A/D nicht mehr bindend.
 | LV2-OS-Latenz/Umschaltung | PASS: 0/3/4 Frames, blockinvariante Mid-Stream-Wechsel bei 64–512 Frames |
 | Release-Approximation | PASS: analytische exp/log-Fehlergrenzen bei 8/44,1/48/96/384k; Series-Kernel ≤ ~1,2×10⁻¹⁴ relativ zu libm |
 | Native Benchmark 0.2.0 | Mono mode0 0,0146 s/s (+5 % gegen 0.1.1-Stand), Stereo mode0 0,0223 s/s (+10 %); Checksummen stabil; keine Dwarf-Aussage |
+| CPU-Matrix 0.2.0 | Stereo 48k, Bestwert/5: Off+C0 0,0091 s/s; Off+C100 0,0191 (2,1×); 2x+C100 0,0385 (4,2×); 4x+C100 0,0704 (7,7×). Colour verdoppelt wegen nichtlinearem Kern, OS skaliert mit Subframenzahl; keine Dwarf-Aussage |
 | Echte JSFX-CPU-Messung | Uninstrumentiert ysfx: normal Mono ~42 %, Stereo Link ~50 %, clean Stereo ~76 % weniger Zeit |
 | `.rpl`/Selector/Custom | PASS: **52 Presets**, echter ysfx-Banklader/Rendering |
 | GFX-Offscreen | PASS: Mono/Stereo tatsächlich gezeichnet, Controllerzustand unverändert |

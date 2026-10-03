@@ -2,19 +2,19 @@
 // Original paired L/R meters; @gfx reads snapshots and never changes DSP state.
 @init
 function gs_meter_colour(db active) (
-  db>0 ? gfx_set(0.95,0.13,0.10,active ? 1 : 0.16) :
-  db>-6 ? gfx_set(1.0,0.60,0.12,active ? 1 : 0.16) :
+  db>-3 ? gfx_set(0.95,0.13,0.10,active ? 1 : 0.16) :
+  db>-12 ? gfx_set(1.0,0.60,0.12,active ? 1 : 0.16) :
   db>-30 ? gfx_set(0.35,0.95,0.38,active ? 1 : 0.13) :
            gfx_set(0.035,0.38,0.13,active ? 1 : 0.24);
 );
-function gs_meter_y(db top height) ( top+height*(6-gs_bound(db,-60,6))/66; );
+function gs_meter_y(db top height) ( top+height*(0-gs_bound(db,-60,0))/60; );
 
 function gs_level_bar(x top width height peak rms hold clip)
 local(db low high a b yy h marker) (
   gfx_set(0.018,0.029,0.019,1); gfx_rect(x-1,top-1,width+2,height+2);
   // Colour is determined by each scale region, not by recolouring the whole bar.
   db=-60;
-  loop(33,
+  loop(30,
     low=db; high=db+2; a=gs_meter_y(high,top,height); b=gs_meter_y(low,top,height);
     gs_meter_colour((low+high)*0.5,0); gfx_rect(x,a,width,max(1,b-a-1));
     peak>low ? (
@@ -56,7 +56,7 @@ local(top bh bw bx gap tick yy centre) (
   gfx_setfont(1,"Arial",13,'b'); gfx_set(0.85,0.94,0.86,1);
   gfx_x=x+12; gfx_y=y+8; gfx_drawstr(label);
   top=y+48; bh=max(50,height-111); gap=6;
-  bw=min(62,(width-62-gap)/2); bx=x+43+(width-43-(stereo ? 2*bw+gap : bw))/2;
+  bw=min(76,(width-62-gap)/2); bx=x+43+(width-43-(stereo ? 2*bw+gap : bw))/2;
   !gr ? (
     gs_level_bar(bx,top,bw,bh,peakL,rmsL,holdL,clipL);
     stereo ? gs_level_bar(bx+bw+gap,top,bw,bh,peakR,rmsR,holdR,clipR);
@@ -80,7 +80,7 @@ local(top bh bw bx gap tick yy centre) (
   gr ? (
     stereo ? gfx_printf("GR L %5.1f   R %5.1f dB",-peakL,-peakR) : gfx_printf("GR %5.1f dB",-peakL);
   ) : (
-    stereo ? gfx_printf("PK L %5.1f   R %5.1f",peakL,peakR) : gfx_printf("Peak %5.1f dBFS",peakL);
+    stereo ? gfx_printf("PK L %5.1f   R %5.1f",holdL,holdR) : gfx_printf("Peak %5.1f dBFS",holdL);
     gfx_x=x+10; gfx_y=y+height-22;
     stereo ? gfx_printf("RMS  %5.1f     %5.1f",rmsL,rmsR) : gfx_printf("RMS  %5.1f dBFS",rmsL);
   );
@@ -95,10 +95,10 @@ local(w h now idle decay groupW groupH top inL inR outL outR inRmsL inRmsR
   outL=atomic_get(gs_ui_outL)-idle*24; outR=atomic_get(gs_ui_outR)-idle*24;
   rmsL=atomic_get(gs_ui_rmsL)-idle*24; rmsR=atomic_get(gs_ui_rmsR)-idle*24;
   inRmsL=atomic_get(gs_ui_inRmsL)-idle*24; inRmsR=atomic_get(gs_ui_inRmsR)-idle*24;
-  inHoldL=atomic_get(gs_ui_inHoldL)-max(0,idle-0.8)*24;
-  inHoldR=atomic_get(gs_ui_inHoldR)-max(0,idle-0.8)*24;
-  holdL=atomic_get(gs_ui_holdL)-max(0,idle-0.8)*24;
-  holdR=atomic_get(gs_ui_holdR)-max(0,idle-0.8)*24;
+  inHoldL=atomic_get(gs_ui_inHoldL)-max(0,idle-2.0)*24;
+  inHoldR=atomic_get(gs_ui_inHoldR)-max(0,idle-2.0)*24;
+  holdL=atomic_get(gs_ui_holdL)-max(0,idle-2.0)*24;
+  holdR=atomic_get(gs_ui_holdR)-max(0,idle-2.0)*24;
   grL=atomic_get(gs_ui_grL)*decay; grR=atomic_get(gs_ui_grR)*decay;
   inClipL=idle>1 ? 0 : atomic_get(gs_ui_inClipL); inClipR=idle>1 ? 0 : atomic_get(gs_ui_inClipR);
   clipL=idle>1 ? 0 : atomic_get(gs_ui_clipL); clipR=idle>1 ? 0 : atomic_get(gs_ui_clipR);
@@ -125,7 +125,8 @@ local(w h now idle decay groupW groupH top inL inR outL outR inRmsL inRmsR
     gfx_printf("Input %+.1f dB   Output %+.1f dB   Attack %.2f   Release %.2f",slider1,slider2,slider3,slider4);
     gfx_x=14; gfx_y=h-44;
     gfx_printf("Ratio %s   Mix %.0f%%   Colour %.0f%%   %s",slider5==4 ? "ALL" : slider5==3 ? "20:1" : slider5==2 ? "12:1" : slider5==1 ? "8:1" : "4:1",slider6,slider7,slider8>0 ? "COMP ON" : "COLOUR ONLY");
+    gfx_x=560; gfx_drawstr("- line=RMS - GR before Mix");
     gfx_x=14; gfx_y=h-24;
-    gfx_drawstr("dBFS: <-30 dark green / >-30 bright green / >-6 orange / >0 red · line=RMS · GR before Mix");
+    gfx_drawstr("dBFS: <-30 dark green / >-30 bright green / >-12 orange / >-3 red / 0 dBFS clip");
   );
 );

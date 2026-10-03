@@ -140,6 +140,13 @@ Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
   dann die Filterzustände und blendet wieder ein; der Latenzport folgt nach
   Abschluss der Ausblendung. Kurze Pegelschwankungen während des Wechsels sind
   möglich, kein Knacksen.
+- Lokal gemessene relative Last (x86-Referenzbuild, Stereo, 48 kHz, Bestwert
+  über fünf Durchläufe, keine Dwarf-Aussage): Off/Colour 0 = 1,0×;
+  Off/Colour 100 ≈ 2,1×; 2x/Colour 100 ≈ 4,2×; 4x/Colour 100 ≈ 7,7×. Die
+  Färbung enthält den nichtlinearen Kern (FET-Teiler mit Wurzeloperation plus
+  drei Sättigungspolynome) und verdoppelt die Last gegenüber Colour 0; das
+  Oversampling vervielfacht die Subframenzahl entsprechend der Rate. Für
+  sparsamen Betrieb Colour und OS zurücknehmen; auf dem Dwarf vor Ort messen.
 - Eingebaute JSFX-Selektorpresets lassen die Einstellung unverändert;
   importierte Factory-Bänke und die LV2-Factory-Presets setzen Off.
 
@@ -166,8 +173,13 @@ Die LV2-Fassung hat absichtlich keine GR-/Level-Anzeige. JSFX zeigt:
 - **GR:** tatsächlicher dynamischer Regelgain in dB, vor Mix und Output.
   Ein kleiner Mixwert macht die angezeigte Wet-GR nicht kleiner.
 - **OUT:** Peak dBFS, RMS-Linie und goldene Peak-Hold-Linie.
-- **Rot:** Samplewert am Ausgang mindestens 0 dBFS; keine True-Peak-Messung.
-- Peak-Abfall etwa 350 ms, RMS-Zustand etwa 300 ms, Hold etwa 800 ms.
+- **Skala:** −60 bis **0 dBFS**; 0 dBFS ist digitales Clipping, über 0 gibt es
+  nichts. Farbzonen: unter −30 dunkelgrün, ab −30 hellgrün, **ab −12 orange,
+  ab −3 rot**; das Clip-Flag und die rote Leuchtmeldung greifen erst bei
+  Samplewert ≥ 0 dBFS. Keine True-Peak-Messung.
+- **PK-Zahlen zeigen den Peak-Hold**, nicht den schnell fallenden Peak: der
+  Hold bleibt etwa **2 s** stehen und fällt danach weich ab. Der Peak selbst
+  fällt im Balken nach etwa 350 ms, der RMS-Zustand folgt nach etwa 300 ms.
 - Kopfbereich zeigt rechts die aktive OS-Stufe (OS OFF / 2x / 4x).
 
 RMS wird mathematisch als `20 log10(sqrt(mean(x²)))` dargestellt. Ein Sinus mit

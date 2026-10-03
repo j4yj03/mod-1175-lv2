@@ -158,24 +158,29 @@ def metadata(parameters, presets, model):
 
 
 def gui_html(stereo):
-    blocks = []
-    for symbol, label in [('input','INPUT'), ('output','OUTPUT'), ('attack','ATTACK'),
-                          ('release','RELEASE'), ('mix','MIX'), ('colour','COLOUR')]:
-        blocks.append(f'''<div class="gs-control"><label>{label}</label>
-<div class="gs-knob" mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget-rotation="270"></div>
-<span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>''')
-    ratio = '<select mod-role="input-control-port" mod-port-symbol="ratio" mod-widget="select">' + ''.join(
-        f'<option value="{i}">{text}</option>' for i, text in enumerate(['4:1','8:1','12:1','20:1','ALL'])) + '</select>'
-    compression = '<select mod-role="input-control-port" mod-port-symbol="compression" mod-widget="select"><option value="1">COMP ON</option><option value="0">COLOUR ONLY</option></select>'
-    link = '<select mod-role="input-control-port" mod-port-symbol="stereo_link" mod-widget="select"><option value="1">LINK</option><option value="0">DUAL MONO</option></select>' if stereo else ''
-    oversampling = '<select mod-role="input-control-port" mod-port-symbol="oversampling" mod-widget="select"><option value="0">OS OFF</option><option value="1">OS 2x</option><option value="2">OS 4x</option></select>'
+    def knob(symbol, label, size=''):
+        cls = f' gs-knob-{size}' if size else ''
+        return (f'<div class="gs-control"><div class="gs-knob{cls}" mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget-rotation="270"></div>'
+                f'<label>{label}</label><span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
+    def select(symbol, options):
+        return '<select mod-role="input-control-port" mod-port-symbol="%s" mod-widget="select">%s</select>' % (
+            symbol, ''.join(f'<option value="{i}">{text}</option>' for i, text in enumerate(options)))
+    ratio = select('ratio', ['4:1','8:1','12:1','20:1','ALL'])
+    compression = select('compression', ['COMP ON','COLOUR ONLY'])
+    oversampling = select('oversampling', ['OS OFF','OS 2x','OS 4x'])
+    link = select('stereo_link', ['LINK','DUAL MONO']) if stereo else ''
     inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>' for x in (['in_l','in_r'] if stereo else ['in']))
     outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>' for x in (['out_l','out_r'] if stereo else ['out']))
-    return f'''<!-- Generated. No GR/level meters in MOD GUI. -->
+    return f'''<!-- Generated. 1176-pedal-inspired arrangement; no GR/level meters in MOD GUI. -->
 <div class="gs76{{{{{{cns}}}}}}">
-<header mod-role="drag-handle"><strong>GREEN STRIPE 76</strong><small>{'STEREO' if stereo else 'MONO'} · FET FEEDBACK</small></header>
-<div class="gs-inputs">{inputs}</div><div class="gs-controls">{''.join(blocks)}</div><div class="gs-outputs">{outputs}</div>
-<footer>{ratio}{compression}{link}{oversampling}<div class="gs-bypass" mod-role="bypass">BYPASS</div><span class="gs-light" mod-role="bypass-light"></span></footer>
+<header mod-role="drag-handle"><strong>GREEN STRIPE 76</strong><small>{'STEREO' if stereo else 'MONO'}</small></header>
+<div class="gs-top">{knob('input','INPUT','big')}<span class="gs-led" mod-role="bypass-light"></span>{knob('output','OUTPUT','big')}</div>
+<div class="gs-mid">{knob('attack','ATTACK')}{knob('release','RELEASE')}<div class="gs-ratio"><small>4 · 8 · 12 · 20</small>{ratio}<small>OFF · ALL</small><label>RATIO</label></div></div>
+<div class="gs-ext"><b>GRAY-BOX EXTENSIONS · NOT ON ORIGINAL HARDWARE</b><div class="gs-ext-row">{knob('mix','MIX')}{knob('colour','COLOUR')}<div class="gs-sel"><label>COMPRESSION</label>{compression}</div><div class="gs-sel"><label>LINK</label>{link}</div></div><div class="gs-ext-row"><div class="gs-sel gs-sel-wide"><label>OVERSAMPLING</label>{oversampling}</div></div></div>
+<div class="gs-banner"><b>GS76</b><span>GREEN STRIPE 76</span></div>
+<p class="gs-tagline">INDEPENDENT · 1176-INSPIRED GRAY-BOX</p>
+<div class="gs-foot" mod-role="bypass">BYPASS</div>
+<div class="gs-inputs">{inputs}</div><div class="gs-outputs">{outputs}</div>
 </div>
 '''
 

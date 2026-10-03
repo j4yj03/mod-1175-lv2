@@ -415,7 +415,7 @@ function gs_meter_init() instance(peak rms hold remaining clip) (
 function gs_meter_sample(x) instance(peak rms hold remaining clip) local(a) (
   a=abs(x); peak=max(a,peak*gs_meter_decay);
   rms+=gs_meter_rms*(x*x-rms);
-  a>=hold ? (hold=a; remaining=0.8*srate;) : (
+  a>=hold ? (hold=a; remaining=2.0*srate;) : (
     remaining>0 ? remaining-=1 : hold=max(a,hold*gs_meter_decay);
   );
   a>=1 ? clip=srate : clip=max(0,clip-1);
