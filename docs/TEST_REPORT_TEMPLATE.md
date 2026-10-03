@@ -36,6 +36,8 @@ Datum / Agent / Rechner:
 | Regler-/Automationswechsel | | | |
 | 128 Frames / 256 Frames | | | |
 | 5-Minuten-CPU/xruns | | | |
+| 0.1.0/0.1.1 CPUvergleich, identische Rate/Blöcke/Quelle | | | |
+| Parken/Wiedereinschalten und Link-Zustandsübernahme | | | |
 | Mehrere Instanzen | | | |
 | Frequenz-/Kennlinienproben | | | |
 | Kurzer/langer Burst | | | |
@@ -43,6 +45,10 @@ Datum / Agent / Rechner:
 | Musikalischer A/B | | | |
 
 ## CPU
+
+Vergleichsplugins/Versionen/Qualitätseinstellungen benennen. GUI geschlossen/
+geöffnet getrennt messen. Lokale ysfx-Benchmarks sind kein REAPER-/Dwarf-
+CPU-Prozentwert; Vorher und Nachher im gleichen Setup vergleichen.
 
 | Szenario | Rate/Frames | Peak CPU | mittlere CPU | xruns / Dauer |
 |---|---|---|---|---|

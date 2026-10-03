@@ -79,6 +79,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/jsfx_parity.dir/DependInfo.cmake"
+  "CMakeFiles/benchmark_jsfx.dir/DependInfo.cmake"
   "ysfx/CMakeFiles/wdl-base.dir/DependInfo.cmake"
   "ysfx/CMakeFiles/eel2.dir/DependInfo.cmake"
   "ysfx/CMakeFiles/ysfx-private.dir/DependInfo.cmake"

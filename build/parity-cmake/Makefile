@@ -175,6 +175,19 @@ jsfx_parity/fast:
 .PHONY : jsfx_parity/fast
 
 #=============================================================================
+# Target rules for targets named benchmark_jsfx
+
+# Build rule for target.
+benchmark_jsfx: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 benchmark_jsfx
+.PHONY : benchmark_jsfx
+
+# fast build rule for target.
+benchmark_jsfx/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark_jsfx.dir/build.make CMakeFiles/benchmark_jsfx.dir/build
+.PHONY : benchmark_jsfx/fast
+
+#=============================================================================
 # Target rules for targets named wdl-base
 
 # Build rule for target.
@@ -239,6 +252,30 @@ ysfx-api/fast:
 	$(MAKE) $(MAKESILENT) -f ysfx/CMakeFiles/ysfx-api.dir/build.make ysfx/CMakeFiles/ysfx-api.dir/build
 .PHONY : ysfx-api/fast
 
+benchmark_jsfx.o: benchmark_jsfx.cpp.o
+.PHONY : benchmark_jsfx.o
+
+# target to build an object file
+benchmark_jsfx.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark_jsfx.dir/build.make CMakeFiles/benchmark_jsfx.dir/benchmark_jsfx.cpp.o
+.PHONY : benchmark_jsfx.cpp.o
+
+benchmark_jsfx.i: benchmark_jsfx.cpp.i
+.PHONY : benchmark_jsfx.i
+
+# target to preprocess a source file
+benchmark_jsfx.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark_jsfx.dir/build.make CMakeFiles/benchmark_jsfx.dir/benchmark_jsfx.cpp.i
+.PHONY : benchmark_jsfx.cpp.i
+
+benchmark_jsfx.s: benchmark_jsfx.cpp.s
+.PHONY : benchmark_jsfx.s
+
+# target to generate assembly for a file
+benchmark_jsfx.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark_jsfx.dir/build.make CMakeFiles/benchmark_jsfx.dir/benchmark_jsfx.cpp.s
+.PHONY : benchmark_jsfx.cpp.s
+
 jsfx_parity.o: jsfx_parity.cpp.o
 .PHONY : jsfx_parity.o
 
@@ -276,11 +313,15 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... ysfx-api"
+	@echo "... benchmark_jsfx"
 	@echo "... eel2"
 	@echo "... jsfx_parity"
 	@echo "... wdl-base"
 	@echo "... ysfx"
 	@echo "... ysfx-private"
+	@echo "... benchmark_jsfx.o"
+	@echo "... benchmark_jsfx.i"
+	@echo "... benchmark_jsfx.s"
 	@echo "... jsfx_parity.o"
 	@echo "... jsfx_parity.i"
 	@echo "... jsfx_parity.s"

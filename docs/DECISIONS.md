@@ -11,7 +11,8 @@ Quellen behalten ihre tatsächliche Revision, Pluginname verspricht keine.
 
 C++11 und EEL2 mit identischen mathematischen Operationen. Kein JUCE/WebView-
 Runtime für Dwarf; nur C-ABI-Deskriptoren/float Ports. ysfx als unabhängiger
-Testhost, nicht als Runtime-Abhängigkeit. 134 Audiofälle tatsächlich verglichen.
+Testhost, nicht als Runtime-Abhängigkeit. 0.1.0: 134 Audiofälle; 0.1.1: 152
+mit zusätzlichen langen Übergängen tatsächlich verglichen.
 
 ## D03 — Implizite Feedback-Regelung
 
@@ -35,9 +36,10 @@ Teil des Wetcharakters. Externer Dwarf-Parallelzweig erfordert eigenen Test.
 
 ## D06 — Link ein/aus
 
-Unabhängige L/R-Controller plus gemeinsamer Betrags-Max-Controller warmhalten.
-Link-Crossfade in Gain-Domäne; kein L+R-Detektor. Mehr CPU als ein einzelner
-Controller, dafür gleichmäßige Umschaltung. Keine elektrische 1176-SA-Identität.
+Ursprünglich L/R und gemeinsamer Betrags-Max-Controller warmgehalten.
+Ab 0.1.1 nur aktive Controller, beim Umschalten Zustandsübernahme und temporäre
+Gain-Crossfadeberechnung aller drei. Kein L+R-Detektor und keine elektrische
+1176-SA-Identität. So entfällt unnötige dreifache Regelarbeit im stabilen Link.
 
 ## D07 — Meter nur JSFX
 
@@ -78,7 +80,22 @@ Dwarf-Ausführung. MPB-Zweitbuild und Echtzeitlast im Übergabeauftrag.
 
 - Feinabstimmung hoher Ratio/Attack-/Releasebereiche anhand klarer Proben.
 - Echte Farbkalibrierung gegen verifizierte NAM-Core-/Hardwaredaten.
-- Mögliche niedrigere CPU bei warmen Stereo-Reglern.
+- Weiter reduzierte Control-/LUT-Struktur nach Eichas, falls CPU nach den
+  belegten 0.1.1-Optimierungen noch zu hoch ist; zuerst Zeitdaten/Fitting.
 - Samplegenaue REAPER-Automation versus jetzige geglättete Blocksteuerung.
 - Falls externe Parallelphasigkeit nötig: linearphasige oder zusätzliche
   Kompensationsvariante statt unerklärter Änderungen am jetzigen Bundle.
+
+## D12 — CPU-Optimierung mit Dissertation-Abgleich, 0.1.1
+
+Operationcounts zeigen 97 % Entladefälle, aber vorher exp/log-Zielauswertung
+und dreifachen Stereo-Regler. Optimiert: gecachte Bias/Kniekonstanten, begrenzte
+kubische Release-exp/log-Inkremente, Endpunktfastpaths, ausgerollte EEL2-
+Resampler, letzte Subphase-Meter, Regler-Einrasten, aktive Controller und Parken.
+Keine Oversamplingreduktion wegen bereits sichtbarer Alias-Kandidaten.
+
+80 stationäre Burstfälle sind praktisch numerisch gleich; bewusste Änderungen
+nur im Off-/Link-Startzustand, zusätzliche Übergangstests. Ein Feed-forward-
+LUT-/Dreifiltermodell aus der Dissertation wäre eine weitere Kalibrierstufe,
+nicht ungeprüft dieselbe Klangimplementierung. `CPU_ANALYSIS.md` erläutert
+Messzahlen, Seitenbelege und Grenzen.

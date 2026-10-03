@@ -1,0 +1,117 @@
+{
+  "test_host": "JoepVanlier/ysfx 5c3452fee62583aa3d1b7e877d0c758c4024af89, x86_64 WSL, GCC15.2",
+  "protocol": {
+    "rate": 48000,
+    "block": 128,
+    "frames": 96000,
+    "repeats": 7,
+    "gui": "not executed"
+  },
+  "limitations": "Same local host and vectors, compilation/GUI excluded; sequential median runs are hardware/load dependent. Not REAPER CPU%, Dwarf CPU%, or a comparison with unidentified other JSFX.",
+  "before_source_hashes": {
+    "GreenStripe76-Core.jsfx-inc": "16050af1e0f6c5012339bfab45183a3053feafac40bc3f729875a8e5c2209b9e",
+    "GreenStripe76-Model.jsfx-inc": "acc69b784724534c585a49e2d68c6a701f0f150ace0c16ce64b74bd7a9910a99",
+    "GreenStripe76-Mono.jsfx": "6c73de146b82082c302a086d23b9ca8504aa927ed9b6030fbe15d1df5d77904e",
+    "GreenStripe76-Presets.jsfx-inc": "95200537427abd46848acacdbb5d6c31fa44c7e8232736108155520539c2a6f4",
+    "GreenStripe76-Stereo.jsfx": "1994b31d5417ff160b3f8a5a53f9163b3ee4a119e341fec7164de63fe8ffb32b",
+    "GreenStripe76-UI.jsfx-inc": "1bdbfef64daf3e559aea21e683c098a5f8625591ed3d06a8ad50aa6260bfa150"
+  },
+  "after_source_hashes": {
+    "GreenStripe76-Core.jsfx-inc": "d1e580e3701f42e8c6ed74302667d1c832ad4fd1e8c1a930e674b84a6387eb41",
+    "GreenStripe76-Model.jsfx-inc": "acc69b784724534c585a49e2d68c6a701f0f150ace0c16ce64b74bd7a9910a99",
+    "GreenStripe76-Mono.jsfx": "d46cb77533d07347c65ad96820f88297e22689bc6af8855a6e8e5caad12d0d64",
+    "GreenStripe76-Presets.jsfx-inc": "95200537427abd46848acacdbb5d6c31fa44c7e8232736108155520539c2a6f4",
+    "GreenStripe76-Stereo.jsfx": "3f9b39523c28825c958767f1082baf01d419b51f86c1ff8f52e448092d6eaced",
+    "GreenStripe76-UI.jsfx-inc": "1bdbfef64daf3e559aea21e683c098a5f8625591ed3d06a8ad50aa6260bfa150"
+  },
+  "cases": [
+    {
+      "variant": "mono",
+      "scenario": "normal",
+      "before_seconds_per_audio_second": 0.1363148285,
+      "after_seconds_per_audio_second": 0.0786662935,
+      "reduction_percent": 42.290729214393586,
+      "speedup": 1.7328238364249362
+    },
+    {
+      "variant": "mono",
+      "scenario": "all",
+      "before_seconds_per_audio_second": 0.123184506,
+      "after_seconds_per_audio_second": 0.063510533,
+      "reduction_percent": 48.44275870213743,
+      "speedup": 1.9395917524420714
+    },
+    {
+      "variant": "mono",
+      "scenario": "clean",
+      "before_seconds_per_audio_second": 0.111908789,
+      "after_seconds_per_audio_second": 0.0397106005,
+      "reduction_percent": 64.51520845248358,
+      "speedup": 2.818108706263457
+    },
+    {
+      "variant": "mono",
+      "scenario": "colour_only",
+      "before_seconds_per_audio_second": 0.1302108315,
+      "after_seconds_per_audio_second": 0.054847187,
+      "reduction_percent": 57.87816853008885,
+      "speedup": 2.374065811251177
+    },
+    {
+      "variant": "mono",
+      "scenario": "bypass",
+      "before_seconds_per_audio_second": 0.1275177,
+      "after_seconds_per_audio_second": 0.0123759315,
+      "reduction_percent": 90.29473437805105,
+      "speedup": 10.303685019588224
+    },
+    {
+      "variant": "stereo",
+      "scenario": "normal",
+      "before_seconds_per_audio_second": 0.285347575,
+      "after_seconds_per_audio_second": 0.143222584,
+      "reduction_percent": 49.807674377467556,
+      "speedup": 1.992336453027548
+    },
+    {
+      "variant": "stereo",
+      "scenario": "all",
+      "before_seconds_per_audio_second": 0.28362103,
+      "after_seconds_per_audio_second": 0.1202145705,
+      "reduction_percent": 57.61436643114934,
+      "speedup": 2.3592899664354743
+    },
+    {
+      "variant": "stereo",
+      "scenario": "clean",
+      "before_seconds_per_audio_second": 0.2645146565,
+      "after_seconds_per_audio_second": 0.0646185865,
+      "reduction_percent": 75.57088618263388,
+      "speedup": 4.093476363801303
+    },
+    {
+      "variant": "stereo",
+      "scenario": "colour_only",
+      "before_seconds_per_audio_second": 0.321971832,
+      "after_seconds_per_audio_second": 0.0983390405,
+      "reduction_percent": 69.45725348421162,
+      "speedup": 3.2740997915268455
+    },
+    {
+      "variant": "stereo",
+      "scenario": "bypass",
+      "before_seconds_per_audio_second": 0.2869738655,
+      "after_seconds_per_audio_second": 0.024520958,
+      "reduction_percent": 91.4553341095097,
+      "speedup": 11.703207741720368
+    },
+    {
+      "variant": "stereo",
+      "scenario": "dual_mono",
+      "before_seconds_per_audio_second": 0.2955082905,
+      "after_seconds_per_audio_second": 0.157999136,
+      "reduction_percent": 46.53309532106004,
+      "speedup": 1.8703158636259882
+    }
+  ]
+}

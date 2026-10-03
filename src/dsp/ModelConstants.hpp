@@ -3,6 +3,8 @@
 #define GREEN_STRIPE_MODEL_CONSTANTS_HPP
 namespace greenstripe { namespace model {
 static const unsigned oversampling = 4;
+static const unsigned default_oversampling = 0;
+static const unsigned latency_2x_frames = 3;
 static const unsigned nominal_latency_frames = 4;
 static const double reference_peak_dbfs = -21;
 static const double qbias_db = 1;

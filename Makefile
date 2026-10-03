@@ -12,7 +12,7 @@ LDFLAGS += -Wl,--no-undefined
 LIBRARY = $(BUILD_DIR)/green-stripe-76.lv2/green-stripe-76.so
 HEADERS = src/dsp/GreenStripe.hpp src/dsp/ModelConstants.hpp src/lv2_abi.h
 
-.PHONY: all generate check-generated test benchmark install clean package
+.PHONY: all generate check-generated test benchmark measurement-probe install clean package
 all: $(LIBRARY)
 
 generate:
@@ -30,8 +30,13 @@ $(BUILD_DIR)/dsp_tests: tests/dsp_tests.cpp $(HEADERS)
 	mkdir -p "$(BUILD_DIR)"
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tests/dsp_tests.cpp $(LDFLAGS) -o "$@"
 
-test: all check-generated $(BUILD_DIR)/dsp_tests
+$(BUILD_DIR)/transitions: tests/transitions.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tests/transitions.cpp $(LDFLAGS) -o "$@"
+
+test: all check-generated $(BUILD_DIR)/dsp_tests $(BUILD_DIR)/transitions
 	"$(BUILD_DIR)/dsp_tests"
+	"$(BUILD_DIR)/transitions"
 	$(PYTHON) tests/test_lv2.py "$(LIBRARY)"
 	$(PYTHON) tools/validate.py
 
@@ -41,6 +46,12 @@ $(BUILD_DIR)/benchmark: tests/benchmark.cpp $(HEADERS)
 
 benchmark: $(BUILD_DIR)/benchmark
 	"$(BUILD_DIR)/benchmark"
+
+$(BUILD_DIR)/measurement_probe: tools/measurement_probe.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tools/measurement_probe.cpp $(LDFLAGS) -o "$@"
+
+measurement-probe: $(BUILD_DIR)/measurement_probe
 
 install: all
 	mkdir -p "$(DESTDIR)$(LV2DIR)/green-stripe-76.lv2"

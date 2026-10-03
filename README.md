@@ -4,13 +4,19 @@
 Die Gestaltung ist bewusst **Green Stripe**. Das Projekt greift Funktionsprinzipien
 der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 
+Aktuell **0.2.0**: auswählbares Oversampling (Off/2x/4x, Default Off) als
+separate Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad.
+Im lokalen ysfx-Vergleich etwa 42 % weniger Mono- und 50 % weniger
+Stereo-Link-Rechenzeit gegenüber 0.1.0; Geräte-/REAPER-CPU vor Ort messen.
+
 ## Lieferumfang
 
 - LV2 **Mono** und **Stereo** in einem Bundle; Stereo Link ein/aus.
 - JSFX **Mono** und **Stereo** mit GR-, Peak-/RMS- und Hold-Anzeigen.
 - 26 Instrument-Presets: eingebauter JSFX-Selektor, importierbare `.rpl`-Bänke
   und zusätzliche LV2-Factory-Presets.
-- Frameworkfreier C++11-DSP und gleichwertiger EEL2-Kern, feste 4×-Verarbeitung.
+- Frameworkfreier C++11-DSP und gleichwertiger EEL2-Kern, Off/2x/4x-Oversampling
+  mit einblendungsgepufferter Umschaltung und Latenzmeldung (0/3/4 Frames).
 - Build-, Paketierungs-, Test- und NAM-Inventarwerkzeuge.
 - Deutsche Bedienungsanleitung und Übergabedokumentation für eine weitere Session.
 
@@ -50,9 +56,11 @@ Für Dwarf-Build und Installation: [BUILD](docs/BUILD.md),
 | [REQUIREMENTS](docs/REQUIREMENTS.md) | Verbindlicher Umfang und Zielumgebung |
 | [PARAMETERS](docs/PARAMETERS.md) | Parameter, Portindizes, Einheiten und Hostverhalten |
 | [DSP_ARCHITECTURE](docs/DSP_ARCHITECTURE.md) | Signalfluss, Numerik, Färbung, Grenzen |
+| [CPU_ANALYSIS](docs/CPU_ANALYSIS.md) | Gemessene CPU-Hotspots, Optimierungen und Dissertation-Bezug |
 | [BUILD](docs/BUILD.md) | Native/MPB-Builds, Cross-ABI, Paketierung |
 | [INSTALLATION](docs/INSTALLATION.md) | Übergabe auf anderen Rechner, Dwarf und REAPER |
 | [TESTING](docs/TESTING.md) | Offline-, Paritäts- und Praxistests |
+| [PLUGIN_DOCTOR_EVALUATION](docs/PLUGIN_DOCTOR_EVALUATION.md) | Auswertung der sieben externen JSFX-/ReaJS-Versuche, Färbung und Alias-Prüfpunkte |
 | [TEST_REPORT_TEMPLATE](docs/TEST_REPORT_TEMPLATE.md) | Ausfüllbares Protokoll für den anderen Agenten |
 | [RESEARCH](docs/RESEARCH.md) | Auswertung der wissenschaftlichen und technischen Quellen |
 | [NAM_PROFILES](docs/NAM_PROFILES.md) | Identität, Metadaten und Grenzen der lokalen Capture-Modelle |

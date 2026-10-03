@@ -304,3 +304,26 @@ geschützter Artikelvolltext oder fremde Presetbank im Paket nachgebildet.
 MD5-Transportheader und SHA256 überprüft. Exakte Herkunft/ABI in `BUILD.md`.
 Native Toolchain aus Ubuntu-26.04-Paketen unprivilegiert unter `/tmp/opencode`
 extrahiert; Paket-SHA512 beim Bootstrap geprüft.
+
+## 9. Externe JSFX-Messungen / PluginDoctor-Methodik
+
+- Benutzerdateien in `evaluation_plugindoc/Versuch 1..7/`: insgesamt
+  **29 Textdateien und 26 JPEGs**, vollständig ausgewertet.
+  Erste 27 Dateien aus Messdaten-Commit `424501a`; später vier Versuche
+  hinzugefügt. Originalnamen `hamonics1.txt`/`hamonics2.txt` und
+  `hamemrstein5.txt` bleiben erhalten.
+- [DDMF PluginDoctor](https://ddmf.eu/plugindoctor/) — Produkt-/Methodenbeschreibung
+  gelesen: Delta-/Random-, Harmonic-, Dynamics-/Performance-Modi.
+- [PluginDoctor PDF-Handbuch](https://ddmf.eu/pdfmanuals/PlugindoctorManual.pdf)
+  — neun Seiten Text im Speicher gelesen; S. 3–5 Delta/Fundamental-Analyse,
+  S. 7 Ramp/Attack-Release/Hammerstein, S. 8 Settings/Offline-Speed.
+- [Cockos ReaPlugs/ReaJS](https://www.reaper.fm/reaplugs/) — Hostkontext und
+  Veröffentlichungsstand gelesen. Sichtbares ReaJS ≠ automatisch REAPER 7.
+
+Bericht/Dateihashes in `PLUGIN_DOCTOR_EVALUATION.md` und `.json`. Diese Daten
+sind reale Messungen unserer Mono-JSFX, kein Referenzhardwaredatensatz und kein
+Beleg einer bestimmten Revision. Versuch 4/5 sind Colour-only, Versuch 6
+20:1/Clean und Versuch 7 zwei Delta-Frequenzspektren, keine Zeitkurven.
+Native periodische Impuls- und kohärente Sinusproben reproduzieren die Daten;
+gefaltete-Harmonischenkandidaten sind als Qualitätsprüfpunkte dokumentiert.
+Keine Zeit-/Stereo-/Geräte-Abnahme ergänzen, die in den Dateien nicht vorhanden ist.

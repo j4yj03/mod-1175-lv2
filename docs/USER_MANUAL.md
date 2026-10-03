@@ -33,7 +33,9 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
   Bedienparameter. Geeignet für zwei unabhängige Monoquellen; bei einem
   Stereo-Raumsignal kann die Balance hörbar wandern.
 - Umschaltung und Regleränderungen werden intern über etwa 2 ms geglättet.
-  Alle drei Reglerzustände bleiben während des Betriebs warm.
+  Ab Version 0.1.1 laufen nur die aktiven Regler: Link On einer, Link Off zwei.
+  Beim Umschalten wird der bisherige Zustand übernommen und kurz überblendet;
+  dadurch muss kein dritter Regler dauerhaft unsichtbar mitlaufen.
 
 ## 3. Regler
 
@@ -118,14 +120,38 @@ aktiv. Der Regler ist eine eigene Erweiterung und kein originaler Hardwareknopf.
 - **Off:** Audioverstärker-/Färbungspfad bleibt aktiv, dynamische Abschwächung
   ist aus. Input und Output können weiter Färbung erzeugen.
 
-Der Controller läuft warm im Hintergrund, sodass Wiedereinschalten nicht wie ein
-hart zurückgesetzter Kompressor startet. Das ist eine digitale Betriebsentscheidung.
+Ab Version 0.1.1 wird der vollständig ausgeschaltete Controller geparkt und
+zurückgesetzt, um CPU zu sparen. Beim Einschalten baut er die GR mit seiner
+Attack wieder auf; die Steuerung wird geglättet. Färbungszustände laufen bei
+Compression Off weiterhin normal. Das ist eine digitale Betriebsentscheidung.
+
+### Oversampling — Off / 2x / 4x
+
+Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
+
+- **Off:** interne Verarbeitung mit der Hostrate; der CPU-günstigste Referenzpfad.
+- **2x/4x:** Audiopfad **und** Regelkreis laufen mit der zwei- bzw. vierfachen
+  Rate; das reduziert Aliasing der Färbung und des FET-Teilers, kostet aber
+  entsprechend Rechenzeit.
+- Die nominal gemeldete Latenz beträgt **0 Frames (Off), 3 Frames (2x),
+  4 Frames (4x)**; die IIR-Phase ist frequenzabhängig und bleibt auch im
+  internen Bypass erhalten.
+- Eine Umschaltung im laufenden Signal blendet über etwa 2 ms aus, wechselt
+  dann die Filterzustände und blendet wieder ein; der Latenzport folgt nach
+  Abschluss der Ausblendung. Kurze Pegelschwankungen während des Wechsels sind
+  möglich, kein Knacksen.
+- Eingebaute JSFX-Selektorpresets lassen die Einstellung unverändert;
+  importierte Factory-Bänke und die LV2-Factory-Presets setzen Off.
 
 ### Enabled / Bypass
 
 - `Enabled=On`: normaler Betrieb.
 - `Enabled=Off`: interner, geglätteter Bypass auf den resamplingangepassten
   trockenen Pfad. Input und Output werden dabei umgangen.
+
+Im vollständigen internen Bypass rechnet ab 0.1.1 nur noch die identische
+Resamplingkette; Audiopfad-/Controllerzustände werden einmal zurückgesetzt.
+Die IIR-Phase und nominelle Latenz bleiben dadurch auch im Bypass erhalten.
 
 Beim Dwarf bedient der normale Bypass-Schalter diesen `lv2:enabled`-Port.
 REAPERs äußerer Host-Bypass ist eine andere Funktion: dessen Phase, Zustände und
@@ -136,12 +162,13 @@ Enabled-Regler verwenden.
 
 Die LV2-Fassung hat absichtlich keine GR-/Level-Anzeige. JSFX zeigt:
 
-- **IN:** Peak dBFS vor Input, RMS-Linie des Eingangs.
+- **IN:** Peak dBFS vor Input, RMS-Linie, Hold-Marker und Clip-Flag des Eingangs.
 - **GR:** tatsächlicher dynamischer Regelgain in dB, vor Mix und Output.
   Ein kleiner Mixwert macht die angezeigte Wet-GR nicht kleiner.
 - **OUT:** Peak dBFS, RMS-Linie und goldene Peak-Hold-Linie.
 - **Rot:** Samplewert am Ausgang mindestens 0 dBFS; keine True-Peak-Messung.
 - Peak-Abfall etwa 350 ms, RMS-Zustand etwa 300 ms, Hold etwa 800 ms.
+- Kopfbereich zeigt rechts die aktive OS-Stufe (OS OFF / 2x / 4x).
 
 RMS wird mathematisch als `20 log10(sqrt(mean(x²)))` dargestellt. Ein Sinus mit
 0 dBFS **Peak** hat daher ungefähr **−3,01 dBFS RMS**. Es gibt keinen versteckten

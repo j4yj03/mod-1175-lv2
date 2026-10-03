@@ -16,16 +16,18 @@ def main():
     for p in presets:
         for spec in parameters:
             key='link' if spec['symbol']=='stereo_link' else spec['symbol']
-            value=1 if key=='enabled' else p[key]
+            value=1 if key=='enabled' else 0 if key=='oversampling' else p[key]
             assert spec['min']<=value<=spec['max'],(p['name'],key)
     bundle=ROOT/'lv2/green-stripe-76.lv2'
-    for variant, expected in [('mono',12),('stereo',15)]:
+    for variant, expected in [('mono',13),('stereo',16)]:
         ttl=(bundle/(variant+'.ttl')).read_text()
         indices=list(map(int,re.findall(r'lv2:index (\d+)',ttl)))
         assert indices==list(range(expected)), (variant,indices)
         assert len(re.findall('lv2:OutputPort, lv2:ControlPort',ttl))==1
         assert 'lv2:designation lv2:enabled' in ttl
         assert 'gain_reduction' not in ttl
+        assert 'lv2:symbol "oversampling"' in ttl
+        assert 'lv2:connectionOptional' in ttl
     for path in (ROOT/'jsfx').glob('*.jsfx*'):
         content=path.read_text()
         for include in re.findall(r'^import (.+)$',content,re.M):

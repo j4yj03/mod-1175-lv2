@@ -1,0 +1,1 @@
+/tmp/opencode/toolchain/usr/bin/g++-15 --sysroot=/tmp/opencode/toolchain -B/tmp/opencode/toolchain/usr/lib/gcc/x86_64-linux-gnu/15/ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/benchmark_jsfx.dir/link.d CMakeFiles/benchmark_jsfx.dir/benchmark_jsfx.cpp.o -o benchmark_jsfx  ysfx/libysfx.a

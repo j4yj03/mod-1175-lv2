@@ -1,5 +1,5 @@
 # Local development recipe. Source path inside MPB container is /root/source.
-GREEN_STRIPE_76_VERSION = 0.1.0
+GREEN_STRIPE_76_VERSION = 0.2.0
 GREEN_STRIPE_76_SITE_METHOD = local
 GREEN_STRIPE_76_SITE = /root/source
 GREEN_STRIPE_76_LICENSE = MIT, ISC (LV2 ABI header)

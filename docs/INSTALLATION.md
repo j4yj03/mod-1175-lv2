@@ -51,7 +51,7 @@ USB-/Netzverbindung zur Web-GUI herstellen. Standardadresse
 der MOD-SDK-Schnittstelle: **Base64 des gzip-Tarballs als Multipart package**.
 
 ```bash
-base64 < "green-stripe-76-0.1.0-moddwarf.tar.gz" | \
+base64 < "green-stripe-76-0.1.1-moddwarf.tar.gz" | \
   curl --fail --show-error -F 'package=@-' http://192.168.51.1/sdk/install
 ```
 

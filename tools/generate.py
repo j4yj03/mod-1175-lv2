@@ -71,6 +71,8 @@ def port(index, p):
         properties += ['lv2:integer', 'lv2:enumeration']
     if p.get('toggle'):
         properties += ['lv2:integer', 'lv2:toggled']
+    if p.get('connection_optional'):
+        properties += ['lv2:connectionOptional']
     lines = [f'    [ a lv2:InputPort, lv2:ControlPort; lv2:index {index};',
              f'      lv2:symbol "{p["symbol"]}"; lv2:name "{p["name"]}";',
              f'      lv2:shortName "{p["short"]}"; lv2:default {number(p["default"])};',
@@ -88,8 +90,9 @@ def port(index, p):
     return '\n'.join(lines)
 
 
-def metadata(parameters, presets):
+def metadata(parameters, presets, model):
     files = {}
+    _, minor, micro = map(int, model['version'].split('.'))
     bundle = 'lv2/green-stripe-76.lv2/'
     manifest = [TTL_PREFIXES]
     gui = [TTL_PREFIXES]
@@ -107,11 +110,15 @@ def metadata(parameters, presets):
             ports.append(f'    [ a lv2:{"Input" if is_input else "Output"}Port, lv2:AudioPort; '
                          f'lv2:index {i}; lv2:symbol "{symbol}"; lv2:name "{label}" ]')
         controls = [p for p in parameters if stereo or not p.get('stereo_only')]
-        ports += [port(len(audio) + i, p) for i, p in enumerate(controls)]
-        ports.append(f'    [ a lv2:OutputPort, lv2:ControlPort; lv2:index {len(audio)+len(controls)}; '
+        existing_controls = [p for p in controls if not p.get('lv2_append')]
+        appended_controls = [p for p in controls if p.get('lv2_append')]
+        ports += [port(len(audio) + i, p) for i, p in enumerate(existing_controls)]
+        latency_index = len(audio) + len(existing_controls)
+        ports.append(f'    [ a lv2:OutputPort, lv2:ControlPort; lv2:index {latency_index}; '
                      'lv2:symbol "latency"; lv2:name "Nominal latency"; '
                      'lv2:designation lv2:latency; lv2:portProperty lv2:integer, pprops:notOnGUI; '
-                     'units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 4 ]')
+                      'units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 0 ]')
+        ports += [port(latency_index + 1 + i, p) for i, p in enumerate(appended_controls)]
         files[bundle + variant + '.ttl'] = TTL_PREFIXES + f'''
 <{uri}> a lv2:Plugin, lv2:CompressorPlugin;
     doap:name "Green Stripe 76 {variant.title()}";
@@ -119,9 +126,9 @@ def metadata(parameters, presets):
     doap:maintainer [ foaf:name "Green Stripe 76 contributors";
         foaf:homepage <https://github.com/j4yj03/mod-1175-lv2> ];
     mod:brand "GreenStripe"; mod:label "GS76 {variant.title()}";
-    lv2:minorVersion 0; lv2:microVersion 1;
+    lv2:minorVersion {minor}; lv2:microVersion {micro};
     lv2:optionalFeature lv2:hardRTCapable;
-    rdfs:comment "Independent FET feedback adaptation. 4x oversampling, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
+    rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port
 ''' + ',\n'.join(ports) + ' .\n'
         gui_ports = [p for p in controls if p['symbol'] != 'enabled']
@@ -138,7 +145,7 @@ def metadata(parameters, presets):
             preset_uri = PREFIX + f'preset-{variant}-{i+1:02d}'
             manifest.append(f'<{preset_uri}> a pset:Preset; lv2:appliesTo <{uri}>; '
                             f'rdfs:label "{preset["name"]}"; rdfs:seeAlso <presets.ttl> .')
-            values = dict(preset, enabled=1, stereo_link=preset['link'])
+            values = dict(preset, enabled=1, stereo_link=preset['link'], oversampling=0)
             preset_text.append(f'<{preset_uri}> a pset:Preset; lv2:appliesTo <{uri}>; '
                               f'rdfs:label "{preset["name"]}"; lv2:port\n' + ',\n'.join(
                                   f'    [ lv2:symbol "{p["symbol"]}"; pset:value {number(values[p["symbol"]])} ]'
@@ -161,18 +168,19 @@ def gui_html(stereo):
         f'<option value="{i}">{text}</option>' for i, text in enumerate(['4:1','8:1','12:1','20:1','ALL'])) + '</select>'
     compression = '<select mod-role="input-control-port" mod-port-symbol="compression" mod-widget="select"><option value="1">COMP ON</option><option value="0">COLOUR ONLY</option></select>'
     link = '<select mod-role="input-control-port" mod-port-symbol="stereo_link" mod-widget="select"><option value="1">LINK</option><option value="0">DUAL MONO</option></select>' if stereo else ''
+    oversampling = '<select mod-role="input-control-port" mod-port-symbol="oversampling" mod-widget="select"><option value="0">OS OFF</option><option value="1">OS 2x</option><option value="2">OS 4x</option></select>'
     inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>' for x in (['in_l','in_r'] if stereo else ['in']))
     outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>' for x in (['out_l','out_r'] if stereo else ['out']))
     return f'''<!-- Generated. No GR/level meters in MOD GUI. -->
 <div class="gs76{{{{{{cns}}}}}}">
 <header mod-role="drag-handle"><strong>GREEN STRIPE 76</strong><small>{'STEREO' if stereo else 'MONO'} · FET FEEDBACK</small></header>
 <div class="gs-inputs">{inputs}</div><div class="gs-controls">{''.join(blocks)}</div><div class="gs-outputs">{outputs}</div>
-<footer>{ratio}{compression}{link}<div class="gs-bypass" mod-role="bypass">BYPASS</div><span class="gs-light" mod-role="bypass-light"></span></footer>
+<footer>{ratio}{compression}{link}{oversampling}<div class="gs-bypass" mod-role="bypass">BYPASS</div><span class="gs-light" mod-role="bypass-light"></span></footer>
 </div>
 '''
 
 
-def jsfx_files(parameters, presets):
+def jsfx_files(parameters, presets, model):
     files = {}
     preset_eel = ['// Generated instrument starting points; not hardware measurements.', '@init',
                   'function gs_apply_preset(which) (']
@@ -189,14 +197,14 @@ def jsfx_files(parameters, presets):
         rpl = [f'<REAPER_PRESET_LIBRARY "Green Stripe 76 {variant}"']
         for preset in presets:
             values = [preset[x] for x in ('input','output','attack','release','ratio','mix','colour','compression')]
-            values += [1,preset['link'],0]
+            values += [1,preset['link'],0,0]
             state = ' '.join([number(x) for x in values] + ['-']*(64-len(values)))
             payload = base64.b64encode((state + ' "' + preset['name'] + '"\x00').encode('utf-8')).decode('ascii')
             rpl += [f'  <PRESET "{preset["name"]}"', '    '+payload, '  >']
         rpl += ['>', '']
         files[f'jsfx/GreenStripe76-{variant}.rpl'] = '\n'.join(rpl)
         lines = [f'desc:Green Stripe 76 {variant}', 'author:Green Stripe 76 contributors',
-                 'version:0.1.0', 'tags:dynamics compressor limiter fet',
+                 f'version:{model["version"]}', 'tags:dynamics compressor limiter fet',
                  '// SPDX-License-Identifier: MIT',
                  'options:maxmem=8192 prealloc=8192 gfx_hz=30',
                  'import GreenStripe76-Core.jsfx-inc',
@@ -208,7 +216,8 @@ def jsfx_files(parameters, presets):
             if p.get('unit') == 'pc': label += ' (%)'
             if not stereo and p.get('stereo_only'): label = '-' + label
             labels = '{' + ','.join(p['labels']) + '}' if p.get('labels') else '{Off,On}' if p.get('toggle') else ''
-            lines.append(f'slider{i+1}:{p["default"]}<{p["min"]},{p["max"]},{p["step"]}{labels}>{label}')
+            slider_index = p.get('jsfx_slider', i + 1)
+            lines.append(f'slider{slider_index}:{p["default"]}<{p["min"]},{p["max"]},{p["step"]}{labels}>{label}')
         names = 'Custom,' + ','.join(p['name'] for p in presets)
         lines.append(f'slider11:0<0,{len(presets)},1{{{names}}}>Instrument preset')
         lines += ['in_pin:Input L', 'in_pin:Input R', 'out_pin:Output L', 'out_pin:Output R',
@@ -227,38 +236,42 @@ def jsfx_files(parameters, presets):
                   '  );', ');',
                   'gs_prev1=slider1; gs_prev2=slider2; gs_prev3=slider3; gs_prev4=slider4; gs_prev5=slider5;',
                   'gs_prev6=slider6; gs_prev7=slider7; gs_prev8=slider8; gs_prev9=slider9; gs_prev10=slider10; gs_have_controls=1;',
-                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10);',
+                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);',
                   '', '@block', 'srate!=gs_rate ? (',
                   '  gs_engine.gs_reset(gs_stereo); gs_rate=srate;',
                   '  gs_meter_decay=exp(-1/(0.35*max(8000,srate)));',
                   '  gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));', ');',
-                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10);',
-                  'pdc_delay=gs_nominal_latency_frames; pdc_bot_ch=0; pdc_top_ch=2;',
+                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);',
+                  'pdc_delay=gs_engine.gs_latency(); pdc_bot_ch=0; pdc_top_ch=2;',
+                  'atomic_set(gs_ui_os_active,gs_engine.os_active);',
                   'ext_gr_meter=gs_peakGR; gs_peakGR=0;',
                   'atomic_set(gs_audio_time,time_precise());',
-                  'atomic_set(gs_ui_inL,gs_gain_db(gs_inL.peak)); atomic_set(gs_ui_inR,gs_gain_db(gs_inR.peak));',
-                  'atomic_set(gs_ui_outL,gs_gain_db(gs_outL.peak)); atomic_set(gs_ui_outR,gs_gain_db(gs_outR.peak));',
+                  'atomic_set(gs_ui_inL,gs_gain_db(gs_inL.peak)); atomic_set(gs_ui_inR,gs_gain_db(gs_stereo ? gs_inR.peak : gs_inL.peak));',
+                  'atomic_set(gs_ui_outL,gs_gain_db(gs_outL.peak)); atomic_set(gs_ui_outR,gs_gain_db(gs_stereo ? gs_outR.peak : gs_outL.peak));',
                   'atomic_set(gs_ui_inRmsL,gs_gain_db(sqrt(max(0,gs_inL.rms))));',
-                  'atomic_set(gs_ui_inRmsR,gs_gain_db(sqrt(max(0,gs_inR.rms))));',
+                  'atomic_set(gs_ui_inRmsR,gs_gain_db(sqrt(max(0,gs_stereo ? gs_inR.rms : gs_inL.rms))));',
                   'atomic_set(gs_ui_rmsL,gs_gain_db(sqrt(max(0,gs_outL.rms))));',
-                  'atomic_set(gs_ui_rmsR,gs_gain_db(sqrt(max(0,gs_outR.rms))));',
-                  'atomic_set(gs_ui_holdL,gs_gain_db(gs_outL.hold)); atomic_set(gs_ui_holdR,gs_gain_db(gs_outR.hold));',
+                  'atomic_set(gs_ui_rmsR,gs_gain_db(sqrt(max(0,gs_stereo ? gs_outR.rms : gs_outL.rms))));',
+                  'atomic_set(gs_ui_holdL,gs_gain_db(gs_outL.hold)); atomic_set(gs_ui_holdR,gs_gain_db(gs_stereo ? gs_outR.hold : gs_outL.hold));',
+                  'atomic_set(gs_ui_inHoldL,gs_gain_db(gs_inL.hold)); atomic_set(gs_ui_inHoldR,gs_gain_db(gs_stereo ? gs_inR.hold : gs_inL.hold));',
+                  'atomic_set(gs_ui_inClipL,gs_inL.clip); atomic_set(gs_ui_inClipR,gs_stereo ? gs_inR.clip : gs_inL.clip);',
                   'atomic_set(gs_ui_grL,gs_grL); atomic_set(gs_ui_grR,gs_grR);',
-                  'atomic_set(gs_ui_clipL,gs_outL.clip); atomic_set(gs_ui_clipR,gs_outR.clip);',
+                  'atomic_set(gs_ui_clipL,gs_outL.clip); atomic_set(gs_ui_clipR,gs_stereo ? gs_outR.clip : gs_outL.clip);',
                   '', '@sample',
                   'gs_rawL=gs_bound(gs_finite(spl0,0),-256,256);',
                   'gs_rawR=gs_bound(gs_finite(spl1,0),-256,256);',
                   'gs_stereo ? gs_engine.gs_process(gs_rawL,gs_rawR) : gs_engine.gs_process(gs_rawL,gs_rawL);',
                   'spl0=gs_engine.outL; spl1=gs_engine.outR;',
                   'gs_inL.gs_meter_sample(gs_rawL); gs_outL.gs_meter_sample(spl0);',
-                  'gs_inR.gs_meter_sample(gs_stereo ? gs_rawR : gs_rawL); gs_outR.gs_meter_sample(spl1);',
+                  'gs_stereo ? (gs_inR.gs_meter_sample(gs_rawR); gs_outR.gs_meter_sample(spl1););',
                   'gs_peakGR=min(gs_peakGR,min(gs_engine.grL,gs_engine.grR));',
                   'gs_grL=max(-gs_engine.grL,gs_grL*gs_meter_decay);',
                   'gs_grR=max(-gs_engine.grR,gs_grR*gs_meter_decay);',
-                  '', '@gfx 820 340', 'gs_draw_ui(gs_stereo);', '']
+                  '', '@gfx 820 380', 'gs_draw_ui(gs_stereo);', '']
         files[f'jsfx/GreenStripe76-{variant}.jsfx'] = '\n'.join(lines)
     docs = ['# Instrument-Presets', '', '> Alle Werte sind eigene Ausgangspunkte, keine Hardwaremessungen.',
-            '> Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.', '',
+            '> Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.',
+            '> Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). Der eingebaute JSFX-Selektor lässt sie unverändert; importierte Factory-Bänke und LV2-Presets setzen Off.', '',
             '| Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Ziel-GR |',
             '|---|---|---|---|---|---|---|---|']
     ratio_names = ['4:1','8:1','12:1','20:1','All']
@@ -281,7 +294,7 @@ def main():
     model = json.loads((ROOT/'data/model.json').read_text())
     parameters = json.loads((ROOT/'data/parameters.json').read_text())
     presets = json.loads((ROOT/'data/presets.json').read_text())
-    files = dict(model_files(model), **metadata(parameters, presets), **jsfx_files(parameters, presets))
+    files = dict(model_files(model), **metadata(parameters, presets, model), **jsfx_files(parameters, presets, model))
     mismatch = []
     for path, text in files.items():
         destination = ROOT/path

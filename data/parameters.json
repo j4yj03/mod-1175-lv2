@@ -8,5 +8,6 @@
   {"symbol":"colour","name":"Colour","short":"Colour","default":100,"min":0,"max":100,"step":0.1,"unit":"pc"},
   {"symbol":"compression","name":"Compression","short":"Compress","default":1,"min":0,"max":1,"step":1,"toggle":true},
   {"symbol":"enabled","name":"Enabled","short":"Enabled","default":1,"min":0,"max":1,"step":1,"toggle":true,"designation":"enabled"},
-  {"symbol":"stereo_link","name":"Stereo Link","short":"Link","default":1,"min":0,"max":1,"step":1,"toggle":true,"stereo_only":true}
+  {"symbol":"stereo_link","name":"Stereo Link","short":"Link","default":1,"min":0,"max":1,"step":1,"toggle":true,"stereo_only":true},
+  {"symbol":"oversampling","name":"Oversampling","short":"OS","default":0,"min":0,"max":2,"step":1,"labels":["Off","2x","4x"],"jsfx_slider":12,"lv2_append":true,"connection_optional":true}
 ]

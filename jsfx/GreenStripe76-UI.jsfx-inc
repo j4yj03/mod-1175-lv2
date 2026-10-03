@@ -1,72 +1,131 @@
 // SPDX-License-Identifier: MIT
-// UI owns no audio/control-loop state; meter snapshots read atomically.
+// Original paired L/R meters; @gfx reads snapshots and never changes DSP state.
 @init
-function gs_ui_meter(x y w h label peak rms hold gr clip)
-local(t yy value fraction) (
-  gfx_set(0.055,0.09,0.065,1); gfx_rect(x,y,w,h);
-  gfx_set(0.22,0.34,0.26,1); gfx_rect(x,y,w,h,0);
-  gfx_setfont(1,"Arial",13); gfx_set(0.82,0.9,0.84,1);
-  gfx_x=x+7; gfx_y=y+7; gfx_drawstr(label);
-  value=gr ? -peak : peak;
-  fraction=gr ? min(1,max(0,peak/30)) : min(1,max(0,(peak+60)/60));
-  gfx_set(gr ? 0.93 : 0.21,gr ? 0.65 : 0.8,gr ? 0.16 : 0.42,1);
-  gfx_rect(x+8,y+h-40-(h-73)*fraction,w-16,(h-73)*fraction);
-  t=0;
-  loop(6,
-    yy=y+34+t*(h-73)/5;
-    gfx_set(0.3,0.4,0.32,0.7); gfx_line(x+6,yy,x+w-6,yy);
-    t+=1;
+function gs_meter_colour(db active) (
+  db>0 ? gfx_set(0.95,0.13,0.10,active ? 1 : 0.16) :
+  db>-6 ? gfx_set(1.0,0.60,0.12,active ? 1 : 0.16) :
+  db>-30 ? gfx_set(0.35,0.95,0.38,active ? 1 : 0.13) :
+           gfx_set(0.035,0.38,0.13,active ? 1 : 0.24);
+);
+function gs_meter_y(db top height) ( top+height*(6-gs_bound(db,-60,6))/66; );
+
+function gs_level_bar(x top width height peak rms hold clip)
+local(db low high a b yy h marker) (
+  gfx_set(0.018,0.029,0.019,1); gfx_rect(x-1,top-1,width+2,height+2);
+  // Colour is determined by each scale region, not by recolouring the whole bar.
+  db=-60;
+  loop(33,
+    low=db; high=db+2; a=gs_meter_y(high,top,height); b=gs_meter_y(low,top,height);
+    gs_meter_colour((low+high)*0.5,0); gfx_rect(x,a,width,max(1,b-a-1));
+    peak>low ? (
+      a=gs_meter_y(min(high,peak),top,height);
+      gs_meter_colour((low+high)*0.5,1); gfx_rect(x,a,width,max(0,b-a-1));
+    );
+    db+=2;
   );
+  // RMS is a narrow pale line; hold takes the colour at the actual held level.
+  rms>-60 ? (
+    yy=gs_meter_y(rms,top,height); gfx_set(0.84,0.93,0.86,1); gfx_rect(x,yy,width,1);
+  );
+  hold>-60 ? (
+    yy=gs_meter_y(hold,top,height); gs_meter_colour(hold,1); gfx_rect(x,yy,width,3);
+  );
+  gfx_set(clip>0 ? 1 : 0.22,clip>0 ? 0.10 : 0.035,clip>0 ? 0.06 : 0.026,1);
+  gfx_rect(x,top-21,width,10);
+  gfx_set(0.4,0.4,0.36,1); gfx_rect(x,top-21,width,10,0);
+);
+
+function gs_gr_bar(x top width height reduction) local(db a b) (
+  gfx_set(0.035,0.055,0.040,1); gfx_rect(x-1,top-1,width+2,height+2);
+  db=0;
+  loop(15,
+    a=top+height*db/30; b=top+height*(db+2)/30;
+    gfx_set(0.22,0.15,0.035,1); gfx_rect(x,a,width,max(1,b-a-1));
+    reduction>db ? (
+      gfx_set(0.98,0.65,0.14,1);
+      gfx_rect(x,a,width,max(0,height*(min(db+2,reduction)-db)/30-1));
+    );
+    db+=2;
+  );
+);
+
+function gs_meter_group(x y width height label stereo gr peakL peakR rmsL rmsR holdL holdR clipL clipR)
+local(top bh bw bx gap tick yy centre) (
+  gfx_set(0.035,0.061,0.045,1); gfx_rect(x,y,width,height);
+  gfx_set(0.24,0.36,0.28,1); gfx_rect(x,y,width,height,0);
+  gfx_setfont(1,"Arial",13,'b'); gfx_set(0.85,0.94,0.86,1);
+  gfx_x=x+12; gfx_y=y+8; gfx_drawstr(label);
+  top=y+48; bh=max(50,height-111); gap=6;
+  bw=min(62,(width-62-gap)/2); bx=x+43+(width-43-(stereo ? 2*bw+gap : bw))/2;
   !gr ? (
-    yy=y+h-40-(h-73)*min(1,max(0,(rms+60)/60));
-    gfx_set(0.72,0.92,0.78,1); gfx_line(x+8,yy,x+w-8,yy);
-    yy=y+h-40-(h-73)*min(1,max(0,(hold+60)/60));
-    gfx_set(1,0.87,0.45,1); gfx_line(x+8,yy,x+w-8,yy);
+    gs_level_bar(bx,top,bw,bh,peakL,rmsL,holdL,clipL);
+    stereo ? gs_level_bar(bx+bw+gap,top,bw,bh,peakR,rmsR,holdR,clipR);
+  ) : (
+    gs_gr_bar(bx,top,bw,bh,peakL);
+    stereo ? gs_gr_bar(bx+bw+gap,top,bw,bh,peakR);
   );
-  gfx_setfont(1,"Arial",12); gfx_set(0.92,0.97,0.93,1);
-  gfx_x=x+7; gfx_y=y+h-31; gfx_printf("%5.1f dB",value);
-  !gr ? (gfx_x=x+7; gfx_y=y+h-16; gfx_printf("R %5.1f",rms););
-  clip>0 ? (gfx_set(0.95,0.16,0.1,1); gfx_rect(x+w-16,y+8,8,8););
+  gfx_setfont(1,"Arial",11);
+  tick=gr ? 0 : 0;
+  loop(gr ? 7 : 16,
+    yy=gr ? top+bh*tick/30 : gs_meter_y(-tick,top,bh);
+    gfx_set(0.68,0.78,0.70,1); gfx_x=x+7; gfx_y=yy-5;
+    gfx_printf("%d",tick);
+    gfx_set(0.26,0.32,0.28,0.7); gfx_line(x+27,yy,bx-4,yy);
+    tick+=gr ? 5 : 4;
+  );
+  gfx_setfont(1,"Arial",11); gfx_set(0.78,0.88,0.79,1);
+  gfx_x=bx+bw/2-4; gfx_y=top+bh+6; gfx_drawstr(stereo ? "L" : "M");
+  stereo ? (gfx_x=bx+bw+gap+bw/2-4; gfx_y=top+bh+6; gfx_drawstr("R"););
+  gfx_x=x+10; gfx_y=y+height-39;
+  gr ? (
+    stereo ? gfx_printf("GR L %5.1f   R %5.1f dB",-peakL,-peakR) : gfx_printf("GR %5.1f dB",-peakL);
+  ) : (
+    stereo ? gfx_printf("PK L %5.1f   R %5.1f",peakL,peakR) : gfx_printf("Peak %5.1f dBFS",peakL);
+    gfx_x=x+10; gfx_y=y+height-22;
+    stereo ? gfx_printf("RMS  %5.1f     %5.1f",rmsL,rmsR) : gfx_printf("RMS  %5.1f dBFS",rmsL);
+  );
 );
 
 function gs_draw_ui(stereo)
-local(w h now idle decay bottom count meterW start y mh inL inR outL outR
-  rmsL rmsR inRmsL inRmsR holdL holdR grL grR clipL clipR i ratioLabel) (
+local(w h now idle decay groupW groupH top inL inR outL outR inRmsL inRmsR
+  rmsL rmsR inHoldL inHoldR holdL holdR inClipL inClipR clipL clipR grL grR activeOS) (
   w=gfx_w; h=gfx_h; now=time_precise();
-  idle=max(0,now-atomic_get(gs_audio_time)-0.1);
-  decay=exp(-idle/0.35);
+  idle=max(0,now-atomic_get(gs_audio_time)-0.1); decay=exp(-idle/0.35);
   inL=atomic_get(gs_ui_inL)-idle*24; inR=atomic_get(gs_ui_inR)-idle*24;
   outL=atomic_get(gs_ui_outL)-idle*24; outR=atomic_get(gs_ui_outR)-idle*24;
   rmsL=atomic_get(gs_ui_rmsL)-idle*24; rmsR=atomic_get(gs_ui_rmsR)-idle*24;
   inRmsL=atomic_get(gs_ui_inRmsL)-idle*24; inRmsR=atomic_get(gs_ui_inRmsR)-idle*24;
+  inHoldL=atomic_get(gs_ui_inHoldL)-max(0,idle-0.8)*24;
+  inHoldR=atomic_get(gs_ui_inHoldR)-max(0,idle-0.8)*24;
   holdL=atomic_get(gs_ui_holdL)-max(0,idle-0.8)*24;
   holdR=atomic_get(gs_ui_holdR)-max(0,idle-0.8)*24;
   grL=atomic_get(gs_ui_grL)*decay; grR=atomic_get(gs_ui_grR)*decay;
+  inClipL=idle>1 ? 0 : atomic_get(gs_ui_inClipL); inClipR=idle>1 ? 0 : atomic_get(gs_ui_inClipR);
   clipL=idle>1 ? 0 : atomic_get(gs_ui_clipL); clipR=idle>1 ? 0 : atomic_get(gs_ui_clipR);
-  gfx_set(0.07,0.095,0.08,1); gfx_rect(0,0,w,h);
+  activeOS=atomic_get(gs_ui_os_active);
+  gfx_set(0.045,0.073,0.052,1); gfx_rect(0,0,w,h);
   gfx_set(0.06,0.47,0.26,1); gfx_rect(0,0,w,52);
-  gfx_setfont(1,"Arial",max(14,min(24,w/30)),'b');
-  gfx_set(0.93,0.99,0.94,1); gfx_x=15; gfx_y=10; gfx_drawstr("GREEN STRIPE 76");
-  gfx_setfont(1,"Arial",12); gfx_x=15; gfx_y=36;
+  gfx_setfont(1,"Arial",max(14,min(24,w/30)),'b'); gfx_set(0.93,0.99,0.94,1);
+  gfx_x=15; gfx_y=9; gfx_drawstr("GREEN STRIPE 76");
+  gfx_setfont(1,"Arial",12); gfx_x=15; gfx_y=35;
   gfx_drawstr(stereo ? (slider10>0 ? "STEREO LINKED" : "STEREO / DUAL MONO") : "MONO — Input L to both outputs");
-  h<145 || w<310 ? (
-    gfx_x=14; gfx_y=70; gfx_printf("GR L %.1f  R %.1f dB",-grL,-grR);
-    gfx_x=14; gfx_y=92; gfx_printf("OUT L %.1f  R %.1f dBFS",outL,outR);
+  gfx_x=max(240,w-140); gfx_y=35;
+  gfx_printf("OS %s",activeOS===0 ? "OFF" : activeOS===1 ? "2x" : "4x");
+  h<235 || w<590 ? (
+    gfx_setfont(1,"Arial",12); gfx_x=14; gfx_y=72;
+    gfx_printf("IN  L %.1f  R %.1f dBFS",inL,inR);
+    gfx_x=14; gfx_y=94; gfx_printf("GR  L %.1f  R %.1f dB",-grL,-grR);
+    gfx_x=14; gfx_y=116; gfx_printf("OUT L %.1f  R %.1f dBFS",outL,outR);
   ) : (
-    count=stereo ? 6 : 3; start=14; y=68; mh=max(70,h-143); meterW=(w-28-10*(count-1))/count;
-    gs_ui_meter(start,y,meterW,mh,stereo ? "IN L" : "INPUT",inL,inRmsL,inL,0,0);
-    stereo ? gs_ui_meter(start+(meterW+10),y,meterW,mh,"IN R",inR,inRmsR,inR,0,0);
-    i=stereo ? 2 : 1;
-    gs_ui_meter(start+i*(meterW+10),y,meterW,mh,stereo ? "GR L" : "GR",grL,0,0,1,0);
-    stereo ? gs_ui_meter(start+(i+1)*(meterW+10),y,meterW,mh,"GR R",grR,0,0,1,0);
-    i=stereo ? 4 : 2;
-    gs_ui_meter(start+i*(meterW+10),y,meterW,mh,stereo ? "OUT L" : "OUTPUT",outL,rmsL,holdL,0,clipL);
-    stereo ? gs_ui_meter(start+(i+1)*(meterW+10),y,meterW,mh,"OUT R",outR,rmsR,holdR,0,clipR);
-    gfx_setfont(1,"Arial",12); gfx_set(0.76,0.87,0.79,1); gfx_x=14; gfx_y=h-62;
+    groupW=(w-48)/3; groupH=h-143; top=65;
+    gs_meter_group(12,top,groupW,groupH,"INPUT",stereo,0,inL,inR,inRmsL,inRmsR,inHoldL,inHoldR,inClipL,inClipR);
+    gs_meter_group(24+groupW,top,groupW,groupH,"GAIN REDUCTION",stereo,1,grL,grR,0,0,0,0,0,0);
+    gs_meter_group(36+2*groupW,top,groupW,groupH,"OUTPUT",stereo,0,outL,outR,rmsL,rmsR,holdL,holdR,clipL,clipR);
+    gfx_setfont(1,"Arial",12); gfx_set(0.76,0.87,0.79,1); gfx_x=14; gfx_y=h-64;
     gfx_printf("Input %+.1f dB   Output %+.1f dB   Attack %.2f   Release %.2f",slider1,slider2,slider3,slider4);
-    gfx_x=14; gfx_y=h-43;
+    gfx_x=14; gfx_y=h-44;
     gfx_printf("Ratio %s   Mix %.0f%%   Colour %.0f%%   %s",slider5==4 ? "ALL" : slider5==3 ? "20:1" : slider5==2 ? "12:1" : slider5==1 ? "8:1" : "4:1",slider6,slider7,slider8>0 ? "COMP ON" : "COLOUR ONLY");
-    gfx_x=14; gfx_y=h-23;
-    gfx_drawstr("Peak dBFS · line = RMS · gold = hold · red = >=0 dBFS · GR before Mix");
+    gfx_x=14; gfx_y=h-24;
+    gfx_drawstr("dBFS: <-30 dark green / >-30 bright green / >-6 orange / >0 red · line=RMS · GR before Mix");
   );
 );

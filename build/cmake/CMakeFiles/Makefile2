@@ -65,11 +65,13 @@ CMAKE_BINARY_DIR = "/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/b
 # The main recursive "all" target.
 all: CMakeFiles/green-stripe-76.dir/all
 all: CMakeFiles/dsp_tests.dir/all
+all: CMakeFiles/transitions.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/green-stripe-76.dir/codegen
 codegen: CMakeFiles/dsp_tests.dir/codegen
+codegen: CMakeFiles/transitions.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -79,6 +81,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/green-stripe-76.dir/clean
 clean: CMakeFiles/dsp_tests.dir/clean
+clean: CMakeFiles/transitions.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -144,6 +147,38 @@ CMakeFiles/dsp_tests.dir/codegen:
 CMakeFiles/dsp_tests.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dsp_tests.dir/build.make CMakeFiles/dsp_tests.dir/clean
 .PHONY : CMakeFiles/dsp_tests.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/transitions.dir
+
+# All Build rule for target.
+CMakeFiles/transitions.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles" --progress-num=5,6 "Built target transitions"
+.PHONY : CMakeFiles/transitions.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/transitions.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles" 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/transitions.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles" 0
+.PHONY : CMakeFiles/transitions.dir/rule
+
+# Convenience name for target.
+transitions: CMakeFiles/transitions.dir/rule
+.PHONY : transitions
+
+# codegen rule for target.
+CMakeFiles/transitions.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles" --progress-num=5,6 "Finished codegen for target transitions"
+.PHONY : CMakeFiles/transitions.dir/codegen
+
+# clean rule for target.
+CMakeFiles/transitions.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/clean
+.PHONY : CMakeFiles/transitions.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

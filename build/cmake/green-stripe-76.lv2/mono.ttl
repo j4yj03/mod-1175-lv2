@@ -15,7 +15,7 @@
     doap:maintainer [ foaf:name "Green Stripe 76 contributors";
         foaf:homepage <https://github.com/j4yj03/mod-1175-lv2> ];
     mod:brand "GreenStripe"; mod:label "GS76 Mono";
-    lv2:minorVersion 0; lv2:microVersion 1;
+    lv2:minorVersion 1; lv2:microVersion 1;
     lv2:optionalFeature lv2:hardRTCapable;
     rdfs:comment "Independent FET feedback adaptation. 4x oversampling, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port

@@ -1,0 +1,1 @@
+/tmp/opencode/toolchain/usr/bin/g++-15 --sysroot=/tmp/opencode/toolchain -B/tmp/opencode/toolchain/usr/lib/gcc/x86_64-linux-gnu/15/ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/transitions.dir/link.d CMakeFiles/transitions.dir/tests/transitions.cpp.o -o transitions

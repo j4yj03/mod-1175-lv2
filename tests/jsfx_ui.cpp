@@ -29,15 +29,15 @@ int main(int argc,char** argv) {
         }
     }); audio.join();
     const double charge=ysfx_read_var(fx.get(),"gs_engine.ctrlL.charge");
-    std::vector<uint8_t> pixels(820*340*4);
-    ysfx_gfx_config_t ui{}; ui.pixel_width=820; ui.pixel_height=340;
+    std::vector<uint8_t> pixels(820*380*4);
+    ysfx_gfx_config_t ui{}; ui.pixel_width=820; ui.pixel_height=380;
     ui.pixel_stride=820*4; ui.pixels=pixels.data(); ui.scale_factor=1;
     ysfx_gfx_setup(fx.get(),&ui); ysfx_gfx_set_window_state(fx.get(),true,true,true);
     for (unsigned i=0;i<10;++i) ysfx_gfx_run(fx.get());
     if (charge!=ysfx_read_var(fx.get(),"gs_engine.ctrlL.charge")) return 1;
     if (!std::any_of(pixels.begin(),pixels.end(),[](uint8_t p){return p!=0;})) return 1;
-    std::ofstream ppm(argv[2],std::ios::binary); ppm << "P6\n820 340\n255\n";
-    for (unsigned i=0;i<820*340;++i) {
+    std::ofstream ppm(argv[2],std::ios::binary); ppm << "P6\n820 380\n255\n";
+    for (unsigned i=0;i<820*380;++i) {
         ppm.put(char(pixels[i*4+2])); ppm.put(char(pixels[i*4+1])); ppm.put(char(pixels[i*4]));
     }
     std::cout << "JSFX GFX render / unchanged controller state: PASS\n";

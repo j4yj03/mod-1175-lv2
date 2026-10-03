@@ -2,6 +2,7 @@
 
 > Alle Werte sind eigene Ausgangspunkte, keine Hardwaremessungen.
 > Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.
+> Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). Der eingebaute JSFX-Selektor lässt sie unverändert; importierte Factory-Bänke und LV2-Presets setzen Off.
 
 | Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Ziel-GR |
 |---|---|---|---|---|---|---|---|

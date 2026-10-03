@@ -63,11 +63,18 @@ def main():
     handle=d.instantiate(pointer,rate,b'./',C.pointer(C.c_void_p()))
     if not handle: raise SystemExit('Cannot instantiate native plugin')
     audio=[(C.c_float*args.block)() for _ in range(4 if stereo else 2)]
-    controls=[C.c_float(values[p['symbol']]) for p in parameters if stereo or not p.get('stereo_only')]
+    relevant=[p for p in parameters if stereo or not p.get('stereo_only')]
+    existing=[p for p in relevant if not p.get('lv2_append')]
+    appended=[p for p in relevant if p.get('lv2_append')]
+    controls=[C.c_float(values[p['symbol']]) for p in existing]
+    extra=[C.c_float(values[p['symbol']]) for p in appended]
     latency=C.c_float()
     for i,buffer in enumerate(audio): d.connect(handle,i,C.cast(buffer,C.c_void_p))
     for i,value in enumerate(controls): d.connect(handle,len(audio)+i,C.byref(value))
-    d.connect(handle,len(audio)+len(controls),C.byref(latency)); d.activate(handle)
+    latency_index=len(audio)+len(controls)
+    d.connect(handle,latency_index,C.byref(latency))
+    for i,value in enumerate(extra): d.connect(handle,latency_index+1+i,C.byref(value))
+    d.activate(handle)
     output=[]; total=len(signal)//ch
     for offset in range(0,total,args.block):
         frames=min(args.block,total-offset)

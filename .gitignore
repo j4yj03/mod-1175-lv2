@@ -1,4 +1,3 @@
-dist/
 .deps/
 __pycache__/
 *.pyc

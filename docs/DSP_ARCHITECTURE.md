@@ -1,4 +1,4 @@
-# DSP-Architektur — Green Stripe 76, 0.1.0
+# DSP-Architektur — Green Stripe 76, 0.1.1
 
 ## 1. Status und normative Dateien
 
@@ -32,7 +32,7 @@ Base-rate L/R
   → float output                  │
                                  └→ magnitude detector / mode law
                                     → implicit charge update
-                                    → exact discharge + history
+                                    → discharge + history
 ```
 
 Output und der gesamte Ausgangsblock sind **nicht Teil des Detektorabgriffs**.
@@ -59,6 +59,8 @@ Regler-Zielwerte werden mit
 `c=1-exp(-1/(0.002 fs_internal))` geglättet. Erster Parametersatz nach Reset wird
 direkt übernommen, damit Preset-Start/Referenzmessung keine Input-Anfahrrampe
 enthält. Keine pro Block erneut zurückgesetzten Zeitglieder.
+Ab 0.1.1 rasten die Zielwerte bei 10⁻¹² absolut/relativ ein; dann wird die
+Sample-Glättung übersprungen. Das ermöglicht exakte 0/1-Fastpaths.
 
 ## 4. FET-Spannungsteiler
 
@@ -155,11 +157,18 @@ Kein explizites Base-rate-`z^-1` im Detektorpfad.
 - Charge begrenzt auf 0…1000, GR-Computer auf 60 dB.
 - Ableitung des sauberen Divider-Gains dient als monotone Näherung bei Colour.
 
-Bei geschlossenem Gleichrichter entlädt sich der Zustand exakt exponentiell:
+Bei geschlossenem Gleichrichter entlädt sich der Zustand exponentiell:
 
 \[
 q_{n+1}=q_n e^{-1/(fs_{internal}t_R(1+0.75m+0.2All))}.
 \]
+
+Ab 0.1.1 wird exp(−s) im kleinen zulässigen Schrittbereich kubisch ausgewertet:
+`1−s+s²/2−s³/6`, Koeffizientenfehler <7×10⁻¹⁵ im schlechtesten unterstützten
+Fall (8k/4×/50 ms). Der GR-Logarithmus wird beim Entladen über ein kubisches
+`log(1−z)`-Inkrement fortgeführt und beim Aufladen exakt neu verankert.
+Damit entfallen zwei häufige Transzendentalaufrufe; Fehlergrenzen und 80
+Vorher/Nachher-Fälle sind in `CPU_ANALYSIS.md` dokumentiert.
 
 `m∈[0,1]` verfolgt die GR-Historie mit etwa 80 ms Lade-/400 ms Erholungszeit.
 Durch die nichtlineare Zuordnung `q→g` ist die GR-Erholung schon vor dieser
@@ -226,7 +235,7 @@ erhält DC-Gain ohne zusätzliche ×4-Multiplikation. Decimation tauscht die
 chronologischen Paarhälften gemäß dem Polyphasenschema und mittelt mit 0.5.
 
 Je Kanal eigene Up/Down-States. 4× umfasst **nicht nur** Sättigung, sondern auch
-den Regler. Eine zweite/variabel schaltbare Qualitätsstufe ist in 0.1.0 nicht
+den Regler. Eine zweite/variabel schaltbare Qualitätsstufe ist in 0.1.1 nicht
 enthalten, damit Kalibrierung, CPU und Parität nachvollziehbar bleiben.
 
 Dry-Abgriff vor Input; Mischung und Enabled erfolgen vor derselben Decimation.
@@ -236,10 +245,13 @@ nicht frequenzunabhängige Filterverzögerung. External parallel routing prüfen
 
 ## 10. Stereo und RT
 
-Zwei unabhängige Controller plus ein gemeinsamer Link-Controller laufen warm.
-Link-Umschaltung mischt dynamische **Gains**, dann wird in Charge zurückgerechnet.
-Bei Link exakt 0/1 direkte States, um unnötige Rundungsabweichungen zu vermeiden.
-Kein Audiosummen-Sidechain, keine Faltung zwischen Kanälen.
+Zwei unabhängige Controller plus ein gemeinsamer Link-Controller sind vorhanden.
+Ab 0.1.1 rechnen bei stabilem Link nur die benötigten Zustände: Link On einer,
+Off zwei. Bei Umschaltung werden Zustände übernommen; während der kurzen
+Glättung laufen alle drei. Link-Umschaltung mischt dynamische **Gains**, dann
+wird in Charge zurückgerechnet. Vollständig abgeschaltete Compression/Enabled
+parkt Controller; Bypass überspringt auch den Audiopfad. Die Resamplinghistorie
+läuft für identische Phase weiter. Kein Audiosummen-Sidechain/Kanalfaltung.
 
 Core-Allokationen nur bei Host-Instanziierung. Speichergröße unabhängig vom
 Block; kein Worker/Thread nötig. Ausnahmebehandlung/RTTI im LV2-Binary aus.
@@ -253,7 +265,8 @@ rekursive Zustände werden auf null gesetzt; keine künstliche Rauschquelle.
 - Controller-Attack/Knie/Release abhängig von Betriebszustand; vollständige
   quantitative Probe-Matrix bleibt zur musikalischen Abstimmung sinnvoll.
 - Hohe nominelle Ratios können auf schnelleren Sinuszyklen schwächer erscheinen.
-- Pro Sample drei Stereo-Controller plus Solver: tatsächliche Dwarf-CPU messen.
+- Aktive Controller plus Solver: tatsächliche Dwarf-CPU messen; der lokale
+  JSFX-Vergleich ist kein Gerätelastnachweis.
 - Modelldaten und mathematische Struktur bei Änderung versionieren; beide
   Implementierungen und Tests gemeinsam nachziehen.
 - NAM-Färbungsfit erst nach verifizierter Core-Auswertung und Peak/RMS-

@@ -198,6 +198,19 @@ dsp_tests/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dsp_tests.dir/build.make CMakeFiles/dsp_tests.dir/build
 .PHONY : dsp_tests/fast
 
+#=============================================================================
+# Target rules for targets named transitions
+
+# Build rule for target.
+transitions: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 transitions
+.PHONY : transitions
+
+# fast build rule for target.
+transitions/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/build
+.PHONY : transitions/fast
+
 src/lv2_plugin.o: src/lv2_plugin.cpp.o
 .PHONY : src/lv2_plugin.o
 
@@ -246,6 +259,30 @@ tests/dsp_tests.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dsp_tests.dir/build.make CMakeFiles/dsp_tests.dir/tests/dsp_tests.cpp.s
 .PHONY : tests/dsp_tests.cpp.s
 
+tests/transitions.o: tests/transitions.cpp.o
+.PHONY : tests/transitions.o
+
+# target to build an object file
+tests/transitions.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/tests/transitions.cpp.o
+.PHONY : tests/transitions.cpp.o
+
+tests/transitions.i: tests/transitions.cpp.i
+.PHONY : tests/transitions.i
+
+# target to preprocess a source file
+tests/transitions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/tests/transitions.cpp.i
+.PHONY : tests/transitions.cpp.i
+
+tests/transitions.s: tests/transitions.cpp.s
+.PHONY : tests/transitions.s
+
+# target to generate assembly for a file
+tests/transitions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/transitions.dir/build.make CMakeFiles/transitions.dir/tests/transitions.cpp.s
+.PHONY : tests/transitions.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -261,12 +298,16 @@ help:
 	@echo "... test"
 	@echo "... dsp_tests"
 	@echo "... green-stripe-76"
+	@echo "... transitions"
 	@echo "... src/lv2_plugin.o"
 	@echo "... src/lv2_plugin.i"
 	@echo "... src/lv2_plugin.s"
 	@echo "... tests/dsp_tests.o"
 	@echo "... tests/dsp_tests.i"
 	@echo "... tests/dsp_tests.s"
+	@echo "... tests/transitions.o"
+	@echo "... tests/transitions.i"
+	@echo "... tests/transitions.s"
 .PHONY : help
 
 

@@ -197,3 +197,17 @@ Quellenwissen bestimmt Struktur, Vergleichsverfahren und dokumentierte Grenzen.
 Der funktionsfähige Green Stripe ist eine prüfbare erste Abstimmung.
 Weitere Färbungs-/Zeitkalibrierung wird anhand dokumentierter Messungen und
 pegelgleicher Musiktests entschieden, nicht durch alleinigen Revisionstitel.
+
+## 9. Erneuter Dissertation-Abgleich für CPU, 0.1.1
+
+Gedruckte S.63–75 erneut geprüft: die Arbeit setzt bewusst einen reduzierten
+Feed-forward-Pegel-/LUT-/Dreieinpolkern statt transistor-/solverintensiver
+Onlineauswertung ein. Diese Richtung ist für ein weiteres CPU-Ziel plausibel,
+aber kein direktes Drop-in für denselben Feedback-/Slam-Klang. Die Arbeit
+veröffentlicht weder fertige Tabellen noch Echtzeitkosten für Dwarf.
+
+0.1.1 entfernt zunächst belegte Verschwendung im bestehenden Kern: drei immer
+aktive Stereoregler, Off-/Bypass-Reglerarbeit, Sample-exp/log bei Entladung,
+mehrfacher Bias und EEL2-RAM-Schleifen. Stationäres Verhalten gegen gesicherte
+0.1.0 geprüft. Details, Messzahlen und weitere LUT-/Mehrzeitkonstanten-
+Kalibrierempfehlung in `CPU_ANALYSIS.md`.

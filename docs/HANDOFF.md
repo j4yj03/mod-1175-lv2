@@ -4,10 +4,19 @@
 
 **Es liegt implementierter Code vor, kein bloßer Plan.**
 
+Aktuell **0.2.0** mit auswählbarem Oversampling (Off/2x/4x, Default Off) und
+bitgleicher C++/EEL2-Parität über die gesamte Rate-/OS-Matrix; die Vorher/
+Nachher-Werte der 0.1.1-CPU-Optimierung stehen in `CPU_ANALYSIS.md`. Bitte
+REAPER-/Dwarf-CPUvergleich mit dieser Fassung, insbesondere OS 2x/4x gegen Off.
+
 1. `AGENTS.md` und `docs/STATUS.md` lesen.
 2. SHA256 der übergebenen Archive/Binaries prüfen.
 3. `README.md`, `USER_MANUAL.md`, `TESTING.md` lesen.
 4. Reales Dwarf-/REAPER-Protokoll mit `TEST_REPORT_TEMPLATE.md` führen.
+5. Neue externe Messdaten: `PLUGIN_DOCTOR_EVALUATION.md` lesen. Alle sieben
+   ReaJS-/PluginDoctor-Mono-Versuche sind ausgewertet; hohe Delta-Anregung bei
+   aktiver GR oder Sättigung nicht als isolierten linearen Filterfrequenzgang
+   beurteilen. Besonders Colour-only-Drive und Alias-/Zeitprüfpunkte beachten.
 
 ## Vorhandene Artefakte
 
@@ -49,6 +58,12 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 - Nicht offizielles Arm-GCC9-Binary ist hier ABI-geprüft, nicht device-geprüft.
 - Höhere Ratios messen: im sauberen 1-kHz-Test wurden etwa 4,00 / 7,41 / 9,96 /
   14,73 gemessen, nominale Labels sind keine harte Brickwall-Garantie.
+- Neuer Versuch 6 fährt 20:1 überwiegend unterhalb des Knies; für Ratio-Abnahme
+  geeigneten höheren Input wählen. Versuch 7 ist ein Frequenzvergleich, keine
+  Attack-/Release-Zeitkurve.
+- Starke Colour-only-Sättigung ist gemessen (etwa 3,5–20 % THD nahe 0 dBFS).
+  Gefaltete H9-Kandidatenlinie ~21,45 kHz/−72 dBc bei hohem Drive: Alias-
+  Konvergenz und Hören prüfen, nicht nur nominalen THD-Wert vergleichen.
 - Klang-/Zeitkalibrierung bei Bedarf zuerst anhand dokumentierter Signale,
   dann C++ **und** EEL2 zusammen ändern, Parität neu ausführen.
 
@@ -63,8 +78,9 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 ## Bereits lokal belegt
 
 Details/Versionen in `STATUS.md`: Native Build, CMake/CTest, Signal-/LV2-ABI,
-Blockgrößen/In-place, 134 JSFX-Paritätsfälle, 52 Presets, echte GFX-Kompilation/
+Blockgrößen/In-place, 152 JSFX-Paritätsfälle, 52 Presets, echte GFX-Kompilation/
 Render, Turtle-Parsing, AArch64-Symbolfloor, NAM-Dateiinventar.
+Zusätzlich CPU-Benchmark und 80 Vorher/Nachher-Burstregressionen.
 
 ## Noch nicht belegt
 
@@ -81,4 +97,5 @@ NAM-Core-Färbungsfit. Diese Punkte nach tatsächlicher Ausführung aktualisiere
 - Source-/Runtime-APIs in `PARAMETERS.md`, physikalische versus provisorische
   Annahmen in `DSP_ARCHITECTURE.md`.
 - Ohne Commitauftrag nichts committen/pushen. Der initiale Repozustand hat noch
-  keine Commits; die Umsetzung liegt als neue Dateien vor.
+  keine Commits gehabt; inzwischen liegen Implementierungs- und Messdaten-
+  Commits vor. Aktuellen Gitstatus vor Weiterarbeit prüfen.

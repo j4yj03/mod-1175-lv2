@@ -1,0 +1,2869 @@
+{
+  "host": "PluginDoctor 2.3.2 (64-bit), Cockos ReaJS, GreenStripe76-Mono.jsfx (screenshots)",
+  "samplerate_inferred_hz": 44100,
+  "samplerate_evidence": "2.69198 Hz FFT bin spacing with FFT size 16384; 0.02268 ms IR spacing",
+  "test_frequency_from_screenshot_hz": 2516.7,
+  "ramp_step_seconds_from_screenshot": 1.5,
+  "harmonic_input_dbfs_from_screenshot": -0.32,
+  "linear_delta_db_from_screenshot_by_experiment": {
+    "1": 6.45,
+    "2": 6.45,
+    "3": 6.45,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0
+  },
+  "raw_capture_files": [
+    {
+      "path": "Versuch 1/Clipboard01.jpg",
+      "bytes": 154040,
+      "sha256": "75e5e733d95f206b425f50351ee0b4070801a6208feb372eb11ab601295df1d1"
+    },
+    {
+      "path": "Versuch 1/Clipboard02.jpg",
+      "bytes": 154040,
+      "sha256": "75e5e733d95f206b425f50351ee0b4070801a6208feb372eb11ab601295df1d1"
+    },
+    {
+      "path": "Versuch 1/Clipboard03.jpg",
+      "bytes": 143382,
+      "sha256": "58230625b9830f2dd2b5ce36094567aaa56b1813a8c7070445e5c34de7ee3fe9"
+    },
+    {
+      "path": "Versuch 1/Clipboard04.jpg",
+      "bytes": 142911,
+      "sha256": "48cdbbe1495728d5128cfa6e07c13e38302c39d252328181c7205939c742dc2a"
+    },
+    {
+      "path": "Versuch 1/IR1.txt",
+      "bytes": 586022,
+      "sha256": "b568457053ef21c5f520b948c75df489e85b8738bd05c9e45971dbe698a1be0d"
+    },
+    {
+      "path": "Versuch 1/dynamics1.txt",
+      "bytes": 4076,
+      "sha256": "605073fdc7ff429bbe7c66ed0b90f10dda29b4ef0483a6dafc7de48222152f5f"
+    },
+    {
+      "path": "Versuch 1/hammerstein1.txt",
+      "bytes": 528808,
+      "sha256": "ef2cfd75b855efcee2c3637a90ef9b8a45464600599b9558043a36aa1a906221"
+    },
+    {
+      "path": "Versuch 1/hamonics1.txt",
+      "bytes": 368582,
+      "sha256": "25e3d337b3e45edbbe349aa02023c0f290f48ab11c710c4b7a6df8df35af8dbe"
+    },
+    {
+      "path": "Versuch 1/linear1.txt",
+      "bytes": 339386,
+      "sha256": "10d3c89795603e42f963967856e7784b49245e7f4f2645f506863ad3da998860"
+    },
+    {
+      "path": "Versuch 2/Clipboard01.jpg",
+      "bytes": 157751,
+      "sha256": "db5f716048cbf90fa436c26cd2be54064a5ec20e3700ff7a3693d540aaf768a9"
+    },
+    {
+      "path": "Versuch 2/Clipboard02.jpg",
+      "bytes": 157751,
+      "sha256": "db5f716048cbf90fa436c26cd2be54064a5ec20e3700ff7a3693d540aaf768a9"
+    },
+    {
+      "path": "Versuch 2/Clipboard03.jpg",
+      "bytes": 175590,
+      "sha256": "582321823fd4cde5b38027b0a5e01cf24e82d29bfd3807322448d4a5c1d3b597"
+    },
+    {
+      "path": "Versuch 2/Clipboard04.jpg",
+      "bytes": 176134,
+      "sha256": "ea85ebbdc2ed372afa7b252e2e0683f3a2680467f6576ee589e7617bbac641e1"
+    },
+    {
+      "path": "Versuch 2/IR2.txt",
+      "bytes": 590142,
+      "sha256": "e9e12321eb76799d5895ab8168e7592728f2e96c4b1798f00c1744a4d2ff79e6"
+    },
+    {
+      "path": "Versuch 2/dynamics2.txt",
+      "bytes": 4074,
+      "sha256": "a4ac788b07fe699d6566118301e08fc827ca70cc56a796801e6c84a453b99a06"
+    },
+    {
+      "path": "Versuch 2/hammerstein2.txt",
+      "bytes": 536301,
+      "sha256": "1aecc959e78f6b14857fda85956f7afdc73263ec46930dfa4be933fc2ed2020d"
+    },
+    {
+      "path": "Versuch 2/hamonics2.txt",
+      "bytes": 368586,
+      "sha256": "d94fca4bc49ca6b7ce103ffad2304bf36917a4112b972ba05ffadddb8754d946"
+    },
+    {
+      "path": "Versuch 2/linear2.txt",
+      "bytes": 327012,
+      "sha256": "bef34fcf6cdfa2d32bb9ea6f19aa2f6ffb555f45b5a7d0b1e4063425d5fe71b0"
+    },
+    {
+      "path": "Versuch 3/Clipboard01.jpg",
+      "bytes": 158979,
+      "sha256": "be6794f341d8a930bc7dd34a5b4f43e74b3445e8d09b1d8178ffc1490b8ff05c"
+    },
+    {
+      "path": "Versuch 3/Clipboard02.jpg",
+      "bytes": 291304,
+      "sha256": "7b1aea193eb8178d35e6940c7c66ad872e91e2093f6fa893bf46c7db408f2d35"
+    },
+    {
+      "path": "Versuch 3/Clipboard03.jpg",
+      "bytes": 152873,
+      "sha256": "015eeead297cf123b0eff30d1ad2260ec0afbf59b122d584c6fc5d3ded5dc64a"
+    },
+    {
+      "path": "Versuch 3/Clipboard04.jpg",
+      "bytes": 175865,
+      "sha256": "d94b2ec9ecde8a89397f9f763b5072615acafa5796287feef2a6da56efb907fb"
+    },
+    {
+      "path": "Versuch 3/IR3.txt",
+      "bytes": 580920,
+      "sha256": "f1d40a45e033ba03e161b6d131759cffefeaf341d74ba05666a0fe15f4c3154d"
+    },
+    {
+      "path": "Versuch 3/dynamics3.txt",
+      "bytes": 4074,
+      "sha256": "c625cdce1d0551b99ed89fec638e7775083f99f39d3a94552ee8851b7d95c27c"
+    },
+    {
+      "path": "Versuch 3/hammerstein3.txt",
+      "bytes": 540487,
+      "sha256": "4010cb1c8d8aad6ad1d7059a004cf2d3e9f868d8db5328ac0c16fd6c1f879899"
+    },
+    {
+      "path": "Versuch 3/harmonics3.txt",
+      "bytes": 368586,
+      "sha256": "ab2c1cc148c325a2412b04558955e85a66c6545d4f41331bdf1f3bc4390e015d"
+    },
+    {
+      "path": "Versuch 3/linear3.txt",
+      "bytes": 322190,
+      "sha256": "55fb40de58bbc8d8182bcce88d73d032c6568c9ce3aa340250277b78a6a1d105"
+    },
+    {
+      "path": "Versuch 4/Clipboard01.jpg",
+      "bytes": 152720,
+      "sha256": "b23f742f4117568423f580f47242c8730502c92fbb8ff331caed45a5bcc6fc44"
+    },
+    {
+      "path": "Versuch 4/Clipboard02.jpg",
+      "bytes": 178336,
+      "sha256": "bd8f336ea0c4f6cd30a8e6aeb81b5933dfb11c9bf57219a30d64660e93859928"
+    },
+    {
+      "path": "Versuch 4/Clipboard03.jpg",
+      "bytes": 147914,
+      "sha256": "b6212101974ddc9e048d6370f2062ae0b7b9307b66e4007186611ed05db76317"
+    },
+    {
+      "path": "Versuch 4/Clipboard04.jpg",
+      "bytes": 287998,
+      "sha256": "1be92f5b2b701e85c2bcb00e527e33380fb01cfbfbedde08b82ef2aa42c9c4f3"
+    },
+    {
+      "path": "Versuch 4/dynamics4.txt",
+      "bytes": 4056,
+      "sha256": "e2aef0907af382ccb143e54c5bbf8c0f599766408348f0f9466c0134c54f9b66"
+    },
+    {
+      "path": "Versuch 4/hammerstein4.txt",
+      "bytes": 524152,
+      "sha256": "2edbd05e1e3ed8610c1ad2b00cdcf82f6640d78a5837308bcb6a6f4a9e887615"
+    },
+    {
+      "path": "Versuch 4/harmonics4.txt",
+      "bytes": 368574,
+      "sha256": "f679fc66cbdb24a37725264dc5dc82ca3fd464f8c2724105d340e3fd100e5961"
+    },
+    {
+      "path": "Versuch 4/linear4.txt",
+      "bytes": 335828,
+      "sha256": "c7bbf09837a913ce6781eb7849dead7eda35ad7659466bb39e3e4fa13dad046a"
+    },
+    {
+      "path": "Versuch 5/Clipboard01.jpg",
+      "bytes": 150036,
+      "sha256": "4fd9213aec684e01be2700917a495c54dda47be751a2d96cc2d39c80ec719b2a"
+    },
+    {
+      "path": "Versuch 5/Clipboard02.jpg",
+      "bytes": 178053,
+      "sha256": "1c79c2acfa8ac9927ef1c0feb90412d92ff5620948df9c2a6a03018cacdbdf2f"
+    },
+    {
+      "path": "Versuch 5/Clipboard03.jpg",
+      "bytes": 151373,
+      "sha256": "8cbb0fe2d21c087425c03b696fcd447a662ea77d043c7e4db31fe4519bf52eea"
+    },
+    {
+      "path": "Versuch 5/Clipboard04.jpg",
+      "bytes": 176804,
+      "sha256": "985347c56a3264a5389de7db08ec9c164d59ad1f8915054c112d79c65f771683"
+    },
+    {
+      "path": "Versuch 5/dynamics5.txt",
+      "bytes": 4060,
+      "sha256": "56473f871ed3cda4b7b4348bfd2258a7da094cfcb5986ff5bd12f40b4c363311"
+    },
+    {
+      "path": "Versuch 5/hamemrstein5.txt",
+      "bytes": 523657,
+      "sha256": "62852b1cdf3f030cba792219332cf51e13830251594982f5f5b783d9ce7964d2"
+    },
+    {
+      "path": "Versuch 5/harmonics5.txt",
+      "bytes": 368570,
+      "sha256": "fbf2fbcc64ba2763424343be8fb4104b5a80fe31382979bbb85f90844db6a1fb"
+    },
+    {
+      "path": "Versuch 5/linear5.txt",
+      "bytes": 335160,
+      "sha256": "a02a1b5c6c7762ec974817a1eebf8f15f58d650c5e5e1bd540f62b5e2104447a"
+    },
+    {
+      "path": "Versuch 6/Clipboard01.jpg",
+      "bytes": 151573,
+      "sha256": "4079351098590e2b686f197de5dc56e1fee1f88fe8ec41282d0eb5ca86637662"
+    },
+    {
+      "path": "Versuch 6/Clipboard02.jpg",
+      "bytes": 179064,
+      "sha256": "4cdbed666497a9fe1bd61043477d7f8c336abbe4e80e7315a7a9f9458456b0c2"
+    },
+    {
+      "path": "Versuch 6/Clipboard03.jpg",
+      "bytes": 145593,
+      "sha256": "a55ffc48f3a324414287076306438ff8d5779b75c4069ffb60a4c671d4a4fa84"
+    },
+    {
+      "path": "Versuch 6/Clipboard04.jpg",
+      "bytes": 200384,
+      "sha256": "2ba05f3f35972b634a44f7646dbeb40706169731c828755f2cf609adb0d71602"
+    },
+    {
+      "path": "Versuch 6/dynamics6.txt",
+      "bytes": 4056,
+      "sha256": "79701a1edc5145afbdc18f32281960fefc817cc11026734459f96315505a3a6e"
+    },
+    {
+      "path": "Versuch 6/hammerstein6.txt",
+      "bytes": 525842,
+      "sha256": "1dec32ce0f696cbf2f4abe5d17cb8f0c67700786e0433c7e187595dfd50e8799"
+    },
+    {
+      "path": "Versuch 6/harmonics6.txt",
+      "bytes": 368572,
+      "sha256": "ef9548fe66485fe85d76682794686a086768be1052f27cb974807a1c0a5d8e38"
+    },
+    {
+      "path": "Versuch 6/linear6.txt",
+      "bytes": 335826,
+      "sha256": "3d882e7bc9eaa1967d939165cf975330fd5d8307b2c8f12daa2bd43d6c8172a7"
+    },
+    {
+      "path": "Versuch 7/Clipboard01_4_to1_ratio.jpg",
+      "bytes": 154381,
+      "sha256": "848b5280b3c131a30f783f9b3c00dc7ecf9cdfc084b22d5888b4082ce8c61952"
+    },
+    {
+      "path": "Versuch 7/Clipboard01_4_to1_ratio.txt",
+      "bytes": 344224,
+      "sha256": "f6b6467db1bb7a9d8156a57c872f0c46cbbdbdee6ca11ea228bc20f58028ec08"
+    },
+    {
+      "path": "Versuch 7/Clipboard01_all_Buttons.jpg",
+      "bytes": 157520,
+      "sha256": "b4519085533e0ff664892fc91afd28b012e351f036fbf4c9e731b8c711e53dfa"
+    },
+    {
+      "path": "Versuch 7/Clipboard01_all_Buttons.txt",
+      "bytes": 335826,
+      "sha256": "2045beb9dc01a858f86a2f69037280945cbe4d5eabcaee8cee830aeb46df66f8"
+    }
+  ],
+  "experiments": [
+    {
+      "number": 1,
+      "screenshot_settings": {
+        "input": 0.0,
+        "output": 0.0,
+        "attack": 3.0,
+        "release": 5.0,
+        "ratio": "4:1",
+        "colour": 100.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 2,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true,
+        "impulse": true
+      },
+      "linear_delta_db_from_screenshot": 6.45,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": -0.013080000000002201,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -26.0,
+        "1.0": -23.0,
+        "3.0": -20.0
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.24971796703296703,
+          "effective_ratio": 4.004517623948072,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.24914678571428603,
+          "effective_ratio": 4.013698178497754,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.24885500000000071,
+          "effective_ratio": 4.018404291655772,
+          "interpretation": "working compressor: may include the knee"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -36.01545,
+          "reduction_vs_low_level_gain_db": 0.002369999999999095
+        },
+        {
+          "input_db": -24,
+          "output_db": -24.97859,
+          "reduction_vs_low_level_gain_db": 0.9655099999999983
+        },
+        {
+          "input_db": -18,
+          "output_db": -22.61806,
+          "reduction_vs_low_level_gain_db": 4.604979999999998
+        },
+        {
+          "input_db": -12,
+          "output_db": -20.93651,
+          "reduction_vs_low_level_gain_db": 8.923429999999996
+        },
+        {
+          "input_db": -6,
+          "output_db": -19.4344,
+          "reduction_vs_low_level_gain_db": 13.421319999999998
+        },
+        {
+          "input_db": 0,
+          "output_db": -17.93949,
+          "reduction_vs_low_level_gain_db": 17.926409999999997
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -5.755164159020498,
+          "relative_to_1khz_db": -0.7519209997710607
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -5.02398534985661,
+          "relative_to_1khz_db": -0.020742190607172972
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -5.003243159249437,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -5.362784672895462,
+          "relative_to_1khz_db": -0.3595415136460245
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -6.714097089350029,
+          "relative_to_1khz_db": -1.7108539301005923
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -9.98276419873318,
+          "relative_to_1khz_db": -4.9795210394837435
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -11.649079772576744,
+          "relative_to_1khz_db": -6.645836613327307
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -9.096943707182547,
+          "relative_to_1khz_db": -4.09370054793311
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 428.02493,
+        "db": -4.99526,
+        "relative_to_1khz_db": 0.007983159249437044
+      },
+      "delta_minimum_20_20000": {
+        "hz": 17546.32812,
+        "db": -11.75716,
+        "relative_to_1khz_db": -6.753916840750564
+      },
+      "delta_range_20_20000_db": 6.761900000000001,
+      "delta_peak_20000_22050": {
+        "hz": 20943.61523,
+        "db": -8.21192
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -20.00077997102639
+        },
+        {
+          "order": 2,
+          "db": -69.44413621725379
+        },
+        {
+          "order": 3,
+          "db": -50.55462916628438
+        },
+        {
+          "order": 4,
+          "db": -70.9945190337301
+        },
+        {
+          "order": 5,
+          "db": -54.138620916048964
+        },
+        {
+          "order": 6,
+          "db": -75.34305936378782
+        }
+      ],
+      "duplicate_first_two_screenshots": true,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -18.00568
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5034.00293,
+          "peak_dbfs": -77.47997,
+          "dbc": -59.474289999999996
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -81.76576,
+          "dbc": -63.76008
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10067.99805,
+          "peak_dbfs": -121.01448,
+          "dbc": -103.00880000000001
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -98.48798,
+          "dbc": -80.4823
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15101.99414,
+          "peak_dbfs": -126.07875,
+          "dbc": -108.07307
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -102.42108,
+          "dbc": -84.4154
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20136.00391,
+          "peak_dbfs": -130.21469,
+          "dbc": -112.20900999999999
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -58.063084685090296,
+        "percent": 0.1249815095190937,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -129.03703,
+            "dbc": -111.03134999999999
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -172.10718,
+            "dbc": -154.1015
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -171.54024,
+            "dbc": -153.53456
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -170.40306,
+            "dbc": -152.39738
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -103.2863,
+            "dbc": -85.28062
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -104.03204,
+            "dbc": -86.02636
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [
+          {
+            "fft_bin": 1021,
+            "hz": 2748.50952,
+            "peak_dbfs": -103.2863,
+            "dbc": -85.28062
+          },
+          {
+            "fft_bin": 849,
+            "hz": 2285.48975,
+            "peak_dbfs": -104.03204,
+            "dbc": -86.02636
+          },
+          {
+            "fft_bin": 1107,
+            "hz": 2980.02148,
+            "peak_dbfs": -119.7137,
+            "dbc": -101.70802
+          }
+        ],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "impulse_peak": {
+        "index": 1025,
+        "exported_time_ms": 23.24263,
+        "amplitude": 0.28096,
+        "limitation": "Export includes unknown host/plot offset; this is not plugin latency"
+      },
+      "quantised_ir_fft_max_difference_20_20000_db": 0.05293172730498252,
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 2.1013577690467478,
+        "max_fft_error_20_20000_db": 0.003403221540121848,
+        "rms_fft_error_20_20000_db": 0.0013569299006307646,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency",
+        "assumed_impulse_offset_samples": 1020,
+        "raw_peak_sample_error": 1.5813423111382674e-05,
+        "raw_rms_sample_error": 2.1442843539354723e-06,
+        "fitted_constant_scale": 1.0000542913226875,
+        "scaled_peak_sample_error": 4.999805180680875e-06,
+        "impulse_alignment_limitation": "Chosen placement and fitted scale validate shape, not independently measured latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -18.00503004640032,
+        "exported_fundamental_dbfs": -18.00568,
+        "fundamental_error_db": 0.0006499535996802308,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -59.47387934170945,
+            "exported_dbc": -59.474289999999996,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 3,
+            "native_dbc": -63.7589498849803,
+            "exported_dbc": -63.76008,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -103.00735701974475,
+            "exported_dbc": -103.00880000000001,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 5,
+            "native_dbc": -80.48238271452493,
+            "exported_dbc": -80.4823,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -108.07209558548536,
+            "exported_dbc": -108.07307,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 7,
+            "native_dbc": -84.4155151002292,
+            "exported_dbc": -84.4154,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -112.20682462332235,
+            "exported_dbc": -112.20900999999999,
+            "above_comparison_floor": false
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 0.0011301150197056131,
+        "native_h2_h8_thd_percent": 0.12499014970930929,
+        "native_h2_h8_thd_db": -58.06248423511187,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -129.03550139264235,
+          "native_dbc": -111.03047134624202
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    },
+    {
+      "number": 2,
+      "screenshot_settings": {
+        "input": 24.0,
+        "output": -11.2,
+        "attack": 1.0,
+        "release": 7.0,
+        "ratio": "All Buttons",
+        "colour": 100.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 2,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true,
+        "impulse": true
+      },
+      "linear_delta_db_from_screenshot": 6.45,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": 12.786610000000003,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -44.0,
+        "1.0": -43.0,
+        "3.0": -40.0
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.05024395604395611,
+          "effective_ratio": 19.902891387078405,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.050114999999999785,
+          "effective_ratio": 19.954105557218483,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.05007999999999946,
+          "effective_ratio": 19.96805111821108,
+          "interpretation": "working compressor: may include the knee"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -30.61707,
+          "reduction_vs_low_level_gain_db": 7.403680000000001
+        },
+        {
+          "input_db": -24,
+          "output_db": -30.04726,
+          "reduction_vs_low_level_gain_db": 18.833870000000005
+        },
+        {
+          "input_db": -18,
+          "output_db": -29.85227,
+          "reduction_vs_low_level_gain_db": 24.638880000000004
+        },
+        {
+          "input_db": -12,
+          "output_db": -29.54738,
+          "reduction_vs_low_level_gain_db": 30.333990000000004
+        },
+        {
+          "input_db": -6,
+          "output_db": -29.24507,
+          "reduction_vs_low_level_gain_db": 36.03168
+        },
+        {
+          "input_db": 0,
+          "output_db": -28.94434,
+          "reduction_vs_low_level_gain_db": 41.73095000000001
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": 1.8486417400203567,
+          "relative_to_1khz_db": -0.5410214192290805
+        },
+        {
+          "hz": 100,
+          "output_fft_db": 2.351080960341164,
+          "relative_to_1khz_db": -0.0385821989082733
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": 2.3896631592494373,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": 2.2821132020483725,
+          "relative_to_1khz_db": -0.10754995720106475
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": 0.8579867980211342,
+          "relative_to_1khz_db": -1.531676361228303
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -2.3974955704398964,
+          "relative_to_1khz_db": -4.787158729689334
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -0.7767175031813949,
+          "relative_to_1khz_db": -3.166380662430832
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -0.044989801394937405,
+          "relative_to_1khz_db": -2.4346529606443745
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 2390.47827,
+        "db": 2.41383,
+        "relative_to_1khz_db": 0.024166840750562635
+      },
+      "delta_minimum_20_20000": {
+        "hz": 15484.27734,
+        "db": -2.47212,
+        "relative_to_1khz_db": -4.861783159249438
+      },
+      "delta_range_20_20000_db": 4.885949999999999,
+      "delta_peak_20000_22050": {
+        "hz": 20001.41602,
+        "db": -0.04583
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -32.05359524905232
+        },
+        {
+          "order": 2,
+          "db": -95.92338648670835
+        },
+        {
+          "order": 3,
+          "db": -58.122187347224575
+        },
+        {
+          "order": 4,
+          "db": -106.2828678467779
+        },
+        {
+          "order": 5,
+          "db": -61.036044711108964
+        },
+        {
+          "order": 6,
+          "db": -110.4708597882512
+        }
+      ],
+      "duplicate_first_two_screenshots": true,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -28.95867
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5034.00293,
+          "peak_dbfs": -96.14688,
+          "dbc": -67.18821
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -104.63227,
+          "dbc": -75.67360000000001
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10067.99805,
+          "peak_dbfs": -141.22871,
+          "dbc": -112.27004000000001
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -104.29361,
+          "dbc": -75.33494
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15101.99414,
+          "peak_dbfs": -162.16203,
+          "dbc": -133.20335999999998
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -110.4802,
+          "dbc": -81.52153
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20136.00391,
+          "peak_dbfs": -170.30908,
+          "dbc": -141.35040999999998
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -65.94364152286946,
+        "percent": 0.05044497647723799,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -140.28674,
+            "dbc": -111.32807000000001
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -166.38394,
+            "dbc": -137.42526999999998
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -163.09366,
+            "dbc": -134.13499
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -157.23421,
+            "dbc": -128.27553999999998
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -113.56223,
+            "dbc": -84.60356
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -113.84906,
+            "dbc": -84.89039
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [
+          {
+            "fft_bin": 1021,
+            "hz": 2748.50952,
+            "peak_dbfs": -113.56223,
+            "dbc": -84.60356
+          },
+          {
+            "fft_bin": 849,
+            "hz": 2285.48975,
+            "peak_dbfs": -113.84906,
+            "dbc": -84.89039
+          }
+        ],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "impulse_peak": {
+        "index": 1024,
+        "exported_time_ms": 23.21995,
+        "amplitude": 0.60299,
+        "limitation": "Export includes unknown host/plot offset; this is not plugin latency"
+      },
+      "quantised_ir_fft_max_difference_20_20000_db": 0.00922308034149033,
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 2.1013577690467478,
+        "max_fft_error_20_20000_db": 0.0030307089374345952,
+        "rms_fft_error_20_20000_db": 0.0009656819018536318,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency",
+        "assumed_impulse_offset_samples": 1020,
+        "raw_peak_sample_error": 3.61506544636625e-05,
+        "raw_rms_sample_error": 1.9057391683454976e-06,
+        "fitted_constant_scale": 1.0000650032814946,
+        "scaled_peak_sample_error": 3.314092101802668e-05,
+        "impulse_alignment_limitation": "Chosen placement and fitted scale validate shape, not independently measured latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -28.958530625377385,
+        "exported_fundamental_dbfs": -28.95867,
+        "fundamental_error_db": 0.0001393746226163728,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -67.18815320259247,
+            "exported_dbc": -67.18821,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 3,
+            "native_dbc": -75.67406522210229,
+            "exported_dbc": -75.67360000000001,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -112.26960506641728,
+            "exported_dbc": -112.27004000000001,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 5,
+            "native_dbc": -75.33490858302886,
+            "exported_dbc": -75.33494,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -133.20332265846164,
+            "exported_dbc": -133.20335999999998,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 7,
+            "native_dbc": -81.5215422134336,
+            "exported_dbc": -81.52153,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -141.35429632556963,
+            "exported_dbc": -141.35040999999998,
+            "above_comparison_floor": false
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 0.00046522210227806227,
+        "native_h2_h8_thd_percent": 0.050444955731260996,
+        "native_h2_h8_thd_db": -65.94364509502503,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -140.28599623047046,
+          "native_dbc": -111.32746560509307
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    },
+    {
+      "number": 3,
+      "screenshot_settings": {
+        "input": 24.0,
+        "output": -11.2,
+        "attack": 1.0,
+        "release": 7.0,
+        "ratio": "All Buttons",
+        "colour": 0.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 2,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true,
+        "impulse": true
+      },
+      "linear_delta_db_from_screenshot": 6.45,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": 12.799999999999997,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -44.0,
+        "1.0": -43.0,
+        "3.0": -40.0
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.050334285714285894,
+          "effective_ratio": 19.867173752625234,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.050250357142857256,
+          "effective_ratio": 19.900356074228284,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.050200000000000244,
+          "effective_ratio": 19.920318725099506,
+          "interpretation": "working compressor: may include the knee"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -30.59189,
+          "reduction_vs_low_level_gain_db": 7.3918899999999965
+        },
+        {
+          "input_db": -24,
+          "output_db": -30.02382,
+          "reduction_vs_low_level_gain_db": 18.823819999999998
+        },
+        {
+          "input_db": -18,
+          "output_db": -29.82919,
+          "reduction_vs_low_level_gain_db": 24.629189999999998
+        },
+        {
+          "input_db": -12,
+          "output_db": -29.52379,
+          "reduction_vs_low_level_gain_db": 30.32379
+        },
+        {
+          "input_db": -6,
+          "output_db": -29.22113,
+          "reduction_vs_low_level_gain_db": 36.02113
+        },
+        {
+          "input_db": 0,
+          "output_db": -28.91962,
+          "reduction_vs_low_level_gain_db": 41.71961999999999
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": 9.31447,
+          "relative_to_1khz_db": 0.015822633320704327
+        },
+        {
+          "hz": 100,
+          "output_fft_db": 9.314318526203955,
+          "relative_to_1khz_db": 0.015671159524659473
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": 9.298647366679296,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": 8.908024279040577,
+          "relative_to_1khz_db": -0.3906230876387191
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": 7.512380271815286,
+          "relative_to_1khz_db": -1.7862670948640096
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": 4.393920079788814,
+          "relative_to_1khz_db": -4.904727286890481
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": 0.9593902840558131,
+          "relative_to_1khz_db": -8.339257082623483
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -2.8642739213117934,
+          "relative_to_1khz_db": -12.16292128799109
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 21.53583,
+        "db": 9.31447,
+        "relative_to_1khz_db": 0.015822633320704327
+      },
+      "delta_minimum_20_20000": {
+        "hz": 19998.73633,
+        "db": -2.86127,
+        "relative_to_1khz_db": -12.159917366679295
+      },
+      "delta_range_20_20000_db": 12.175740000000001,
+      "delta_peak_20000_22050": {
+        "hz": 20001.41602,
+        "db": -2.86764
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -32.07815526643649
+        },
+        {
+          "order": 2,
+          "db": -137.82225012434503
+        },
+        {
+          "order": 3,
+          "db": -56.539420794359806
+        },
+        {
+          "order": 4,
+          "db": -127.50380716976122
+        },
+        {
+          "order": 5,
+          "db": -59.85872794963421
+        },
+        {
+          "order": 6,
+          "db": -128.15117161672745
+        }
+      ],
+      "duplicate_first_two_screenshots": false,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -28.94048
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5036.69238,
+          "peak_dbfs": -156.39024,
+          "dbc": -127.44976
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -97.08487,
+          "dbc": -68.14438999999999
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10070.68945,
+          "peak_dbfs": -164.75938,
+          "dbc": -135.81889999999999
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -104.01614,
+          "dbc": -75.07566
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15099.30859,
+          "peak_dbfs": -168.39011,
+          "dbc": -139.44962999999998
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -109.95717,
+          "dbc": -81.01669000000001
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20133.30469,
+          "peak_dbfs": -170.395,
+          "dbc": -141.45452
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -67.1602900983771,
+        "percent": 0.043851605161614564,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -140.01553,
+            "dbc": -111.07505
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -168.89328,
+            "dbc": -139.9528
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -166.11774,
+            "dbc": -137.17726
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -160.35191,
+            "dbc": -131.41143
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -113.32968,
+            "dbc": -84.38919999999999
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -113.63551,
+            "dbc": -84.69503
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [
+          {
+            "fft_bin": 1021,
+            "hz": 2748.50952,
+            "peak_dbfs": -113.32968,
+            "dbc": -84.38919999999999
+          },
+          {
+            "fft_bin": 849,
+            "hz": 2285.48975,
+            "peak_dbfs": -113.63551,
+            "dbc": -84.69503
+          }
+        ],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "impulse_peak": {
+        "index": 1025,
+        "exported_time_ms": 23.24263,
+        "amplitude": 1.51444,
+        "limitation": "Export includes unknown host/plot offset; this is not plugin latency"
+      },
+      "quantised_ir_fft_max_difference_20_20000_db": 0.0010336973314148956,
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 2.1013577690467478,
+        "max_fft_error_20_20000_db": 0.007432921238462953,
+        "rms_fft_error_20_20000_db": 0.00304977926406392,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency",
+        "assumed_impulse_offset_samples": 1020,
+        "raw_peak_sample_error": 0.0002706127279286097,
+        "raw_rms_sample_error": 3.0334949061405056e-06,
+        "fitted_constant_scale": 1.0001768351620695,
+        "scaled_peak_sample_error": 9.768161841283707e-06,
+        "impulse_alignment_limitation": "Chosen placement and fitted scale validate shape, not independently measured latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -28.940344381778544,
+        "exported_fundamental_dbfs": -28.94048,
+        "fundamental_error_db": 0.0001356182214564683,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -271.0596556182214,
+            "exported_dbc": -127.44976,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 3,
+            "native_dbc": -68.14439130699247,
+            "exported_dbc": -68.14438999999999,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -271.0596556182214,
+            "exported_dbc": -135.81889999999999,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 5,
+            "native_dbc": -75.07563299748412,
+            "exported_dbc": -75.07566,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -271.0596556182214,
+            "exported_dbc": -139.44962999999998,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 7,
+            "native_dbc": -81.01664212318902,
+            "exported_dbc": -81.01669000000001,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -271.0596556182214,
+            "exported_dbc": -141.45452,
+            "above_comparison_floor": false
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 4.787681099571728e-05,
+        "native_h2_h8_thd_percent": 0.04385160627052706,
+        "native_h2_h8_thd_db": -67.16028987872969,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -140.01361348538776,
+          "native_dbc": -111.07326910360922
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    },
+    {
+      "number": 4,
+      "screenshot_settings": {
+        "input": 0.0,
+        "output": 0.0,
+        "attack": 1.0,
+        "release": 1.0,
+        "ratio": "All Buttons",
+        "colour": 100.0,
+        "compression": false,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 0,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true
+      },
+      "linear_delta_db_from_screenshot": 0.0,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": -0.013099999999994338,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -13.0,
+        "1.0": -1.0,
+        "3.0": null
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.9074097252747252,
+          "effective_ratio": 1.102038001297862,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.8510114285714286,
+          "effective_ratio": 1.1750723508833185,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.7906399999999999,
+          "effective_ratio": 1.2647981382171407,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -36.01633,
+          "reduction_vs_low_level_gain_db": 0.00323000000000917
+        },
+        {
+          "input_db": -24,
+          "output_db": -24.02993,
+          "reduction_vs_low_level_gain_db": 0.016830000000005896
+        },
+        {
+          "input_db": -18,
+          "output_db": -18.0569,
+          "reduction_vs_low_level_gain_db": 0.0438000000000045
+        },
+        {
+          "input_db": -12,
+          "output_db": -12.14041,
+          "reduction_vs_low_level_gain_db": 0.12731000000000492
+        },
+        {
+          "input_db": -6,
+          "output_db": -6.41744,
+          "reduction_vs_low_level_gain_db": 0.4043400000000057
+        },
+        {
+          "input_db": 0,
+          "output_db": -1.32054,
+          "reduction_vs_low_level_gain_db": 1.3074400000000057
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -1.722852252319854,
+          "relative_to_1khz_db": -0.9626833078543624
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -0.8482963980148294,
+          "relative_to_1khz_db": -0.08812745354933782
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -0.7601689444654915,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -0.6733863173120128,
+          "relative_to_1khz_db": 0.08678262715347873
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -0.735791528157209,
+          "relative_to_1khz_db": 0.024377416308282496
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -0.8892964177829923,
+          "relative_to_1khz_db": -0.12912747331750074
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -0.8096024704744186,
+          "relative_to_1khz_db": -0.04943352600892703
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -0.4724842133978184,
+          "relative_to_1khz_db": 0.28768473106767317
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 19998.73633,
+        "db": -0.47272,
+        "relative_to_1khz_db": 0.2874489444654916
+      },
+      "delta_minimum_20_20000": {
+        "hz": 21.53583,
+        "db": -1.59501,
+        "relative_to_1khz_db": -0.8348410555345085
+      },
+      "delta_range_20_20000_db": 1.12229,
+      "delta_peak_20000_22050": {
+        "hz": 20704.0293,
+        "db": -0.39028
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -3.661305747398411
+        },
+        {
+          "order": 2,
+          "db": -34.1621286442765
+        },
+        {
+          "order": 3,
+          "db": -22.178714380085474
+        },
+        {
+          "order": 4,
+          "db": -44.890679003549266
+        },
+        {
+          "order": 5,
+          "db": -36.832694177270206
+        },
+        {
+          "order": 6,
+          "db": -55.24789555617259
+        }
+      ],
+      "duplicate_first_two_screenshots": false,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -1.16218
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5034.00293,
+          "peak_dbfs": -36.60899,
+          "dbc": -35.44681
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -31.36728,
+          "dbc": -30.2051
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10067.99805,
+          "peak_dbfs": -59.323,
+          "dbc": -58.16082
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -59.01701,
+          "dbc": -57.85483
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15101.99414,
+          "peak_dbfs": -83.42364,
+          "dbc": -82.26146
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -86.29332,
+          "dbc": -85.13113999999999
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20136.00391,
+          "peak_dbfs": -108.84235,
+          "dbc": -107.68016999999999
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -29.057531807257746,
+        "percent": 3.5247101539668297,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -136.78464,
+            "dbc": -135.62246
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -199.24187,
+            "dbc": -198.07969
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -206.7677,
+            "dbc": -205.60551999999998
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -192.96382,
+            "dbc": -191.80164
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -190.94339,
+            "dbc": -189.78121
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -190.67461,
+            "dbc": -189.51243
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 1.0,
+        "max_fft_error_20_20000_db": 0.0004947322717767655,
+        "rms_fft_error_20_20000_db": 0.0001355703580542353,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -1.1600498191411552,
+        "exported_fundamental_dbfs": -1.16218,
+        "fundamental_error_db": 0.0021301808588447546,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -35.4451678968433,
+            "exported_dbc": -35.44681,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 3,
+            "native_dbc": -30.200502710039654,
+            "exported_dbc": -30.2051,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -58.15444036683913,
+            "exported_dbc": -58.16082,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 5,
+            "native_dbc": -57.84555449634486,
+            "exported_dbc": -57.85483,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -82.25023373195371,
+            "exported_dbc": -82.26146,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 7,
+            "native_dbc": -85.11711202701215,
+            "exported_dbc": -85.13113999999999,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -107.66317110637416,
+            "exported_dbc": -107.68016999999999,
+            "above_comparison_floor": true
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 0.016998893625824962,
+        "native_h2_h8_thd_percent": 3.526304170410302,
+        "native_h2_h8_thd_db": -29.05360458473112,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -136.7543955835504,
+          "native_dbc": -135.59434576440924
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    },
+    {
+      "number": 5,
+      "screenshot_settings": {
+        "input": 15.6,
+        "output": -15.6,
+        "attack": 1.0,
+        "release": 1.0,
+        "ratio": "All Buttons",
+        "colour": 100.0,
+        "compression": false,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 0,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true
+      },
+      "linear_delta_db_from_screenshot": 0.0,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": -0.01318000000000552,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -24.0,
+        "1.0": -12.0,
+        "3.0": -6.0
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.4527641208791209,
+          "effective_ratio": 2.2086555755750363,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.27099535714285716,
+          "effective_ratio": 3.6901001203236214,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.1734,
+          "effective_ratio": 5.767012687427912,
+          "interpretation": "saturation slope; NOT dynamic compressor ratio"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -36.02716,
+          "reduction_vs_low_level_gain_db": 0.01397999999999655
+        },
+        {
+          "input_db": -24,
+          "output_db": -24.11687,
+          "reduction_vs_low_level_gain_db": 0.10368999999999318
+        },
+        {
+          "input_db": -18,
+          "output_db": -18.34152,
+          "reduction_vs_low_level_gain_db": 0.32833999999999364
+        },
+        {
+          "input_db": -12,
+          "output_db": -13.09428,
+          "reduction_vs_low_level_gain_db": 1.081099999999994
+        },
+        {
+          "input_db": -6,
+          "output_db": -9.28749,
+          "reduction_vs_low_level_gain_db": 3.2743099999999945
+        },
+        {
+          "input_db": 0,
+          "output_db": -7.64558,
+          "reduction_vs_low_level_gain_db": 7.632399999999994
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -5.478868287208671,
+          "relative_to_1khz_db": -0.8062135648812143
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -4.975305983001233,
+          "relative_to_1khz_db": -0.3026512606737759
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -4.672654722327457,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -4.159854759680193,
+          "relative_to_1khz_db": 0.5127999626472644
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -4.050024722330631,
+          "relative_to_1khz_db": 0.6226299999968257
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -3.9592840058885557,
+          "relative_to_1khz_db": 0.7133707164389014
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -2.4810385788279063,
+          "relative_to_1khz_db": 2.1916161434995507
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -0.32149618381230677,
+          "relative_to_1khz_db": 4.3511585385151506
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 19998.73633,
+        "db": -0.32276,
+        "relative_to_1khz_db": 4.349894722327457
+      },
+      "delta_minimum_20_20000": {
+        "hz": 21.53583,
+        "db": -5.40688,
+        "relative_to_1khz_db": -0.7342252776725431
+      },
+      "delta_range_20_20000_db": 5.08412,
+      "delta_peak_20000_22050": {
+        "hz": 20873.62109,
+        "db": 0.2145
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -12.95684005794722
+        },
+        {
+          "order": 2,
+          "db": -41.854250272834825
+        },
+        {
+          "order": 3,
+          "db": -9.634499049907044
+        },
+        {
+          "order": 4,
+          "db": -24.824333377840016
+        },
+        {
+          "order": 5,
+          "db": -10.143878493613734
+        },
+        {
+          "order": 6,
+          "db": -26.53559847043485
+        }
+      ],
+      "duplicate_first_two_screenshots": false,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -6.21536
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5034.00293,
+          "peak_dbfs": -38.94329,
+          "dbc": -32.72793
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -20.7326,
+          "dbc": -14.517240000000001
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10067.99805,
+          "peak_dbfs": -46.29756,
+          "dbc": -40.0822
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -32.47921,
+          "dbc": -26.26385
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15101.99414,
+          "peak_dbfs": -54.9426,
+          "dbc": -48.727239999999995
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -43.90795,
+          "dbc": -37.692589999999996
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20136.00391,
+          "peak_dbfs": -64.25979,
+          "dbc": -58.04442999999999
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -14.142979907052,
+        "percent": 19.626868135649296,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -78.5411,
+            "dbc": -72.32574
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -147.68539,
+            "dbc": -141.47003
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -157.57076,
+            "dbc": -151.3554
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -166.56526,
+            "dbc": -160.3499
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -199.28036,
+            "dbc": -193.065
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -198.08391,
+            "dbc": -191.86855
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 1.0,
+        "max_fft_error_20_20000_db": 0.00274733779923797,
+        "rms_fft_error_20_20000_db": 0.0009164761097780275,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -6.2147996762223805,
+        "exported_fundamental_dbfs": -6.21536,
+        "fundamental_error_db": 0.0005603237776199421,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -32.728898465462876,
+            "exported_dbc": -32.72793,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 3,
+            "native_dbc": -14.514935687650926,
+            "exported_dbc": -14.517240000000001,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -40.08029423382463,
+            "exported_dbc": -40.0822,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 5,
+            "native_dbc": -26.258805581726012,
+            "exported_dbc": -26.26385,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -48.72245426887865,
+            "exported_dbc": -48.727239999999995,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 7,
+            "native_dbc": -37.684697865737036,
+            "exported_dbc": -37.692589999999996,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -58.036791391492045,
+            "exported_dbc": -58.04442999999999,
+            "above_comparison_floor": true
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 0.007892134262959871,
+        "native_h2_h8_thd_percent": 19.63240940507942,
+        "native_h2_h8_thd_db": -14.140527958974529,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -78.5298279630283,
+          "native_dbc": -72.31502828680591
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    },
+    {
+      "number": 6,
+      "screenshot_settings": {
+        "input": -15.6,
+        "output": 15.6,
+        "attack": 7.0,
+        "release": 7.0,
+        "ratio": "20:1",
+        "colour": 0.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "graph_counts": {
+        "linear": 2,
+        "harmonics": 2,
+        "dynamics": 2,
+        "impulse": 0,
+        "hammerstein": 6
+      },
+      "mono_output_copies_identical": {
+        "linear": true,
+        "dynamics": true
+      },
+      "linear_delta_db_from_screenshot": 0.0,
+      "dynamics_kind": "stationary input/output ramp; not an attack/release time trace",
+      "small_signal_gain_db": 0.0,
+      "first_input_db_for_relative_reduction": {
+        "0.1": -3.0,
+        "1.0": -1.0,
+        "3.0": null
+      },
+      "reduction_interpretation": "relative output reduction, NOT explicit controller GR when compression is disabled",
+      "ratios": [
+        {
+          "input_range_db": [
+            -12,
+            0
+          ],
+          "output_slope": 0.8428142307692308,
+          "effective_ratio": 1.186501085876667,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -6,
+            0
+          ],
+          "output_slope": 0.5628992857142857,
+          "effective_ratio": 1.776516732884213,
+          "interpretation": "working compressor: may include the knee"
+        },
+        {
+          "input_range_db": [
+            -2,
+            0
+          ],
+          "output_slope": 0.15571000000000002,
+          "effective_ratio": 6.422195106287329,
+          "interpretation": "working compressor: may include the knee"
+        }
+      ],
+      "transfer_points": [
+        {
+          "input_db": -36,
+          "output_db": -36.0,
+          "reduction_vs_low_level_gain_db": 0.0
+        },
+        {
+          "input_db": -24,
+          "output_db": -24.0,
+          "reduction_vs_low_level_gain_db": 0.0
+        },
+        {
+          "input_db": -18,
+          "output_db": -18.0,
+          "reduction_vs_low_level_gain_db": 0.0
+        },
+        {
+          "input_db": -12,
+          "output_db": -12.0,
+          "reduction_vs_low_level_gain_db": 0.0
+        },
+        {
+          "input_db": -6,
+          "output_db": -6.0,
+          "reduction_vs_low_level_gain_db": 0.0
+        },
+        {
+          "input_db": 0,
+          "output_db": -2.6084,
+          "reduction_vs_low_level_gain_db": 2.6084
+        }
+      ],
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -0.0208,
+          "relative_to_1khz_db": 7.473703563390041e-05
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -0.0208,
+          "relative_to_1khz_db": 7.473703563390041e-05
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -0.0208747370356339,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -0.02277,
+          "relative_to_1khz_db": -0.0018952629643660991
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -0.02951,
+          "relative_to_1khz_db": -0.008635262964366102
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -0.046682139260997416,
+          "relative_to_1khz_db": -0.025807402225363516
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -0.0659852689116279,
+          "relative_to_1khz_db": -0.045110531875993995
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -0.06687585280386911,
+          "relative_to_1khz_db": -0.04600111576823521
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 21.53583,
+        "db": -0.0208,
+        "relative_to_1khz_db": 7.473703563390041e-05
+      },
+      "delta_minimum_20_20000": {
+        "hz": 19183.06641,
+        "db": -0.07058,
+        "relative_to_1khz_db": -0.0497052629643661
+      },
+      "delta_range_20_20000_db": 0.049780000000000005,
+      "delta_peak_20000_22050": {
+        "hz": 21158.96289,
+        "db": -0.04675
+      },
+      "hammerstein_at_1khz": [
+        {
+          "order": 1,
+          "db": -4.655608528382065
+        },
+        {
+          "order": 2,
+          "db": -102.37426494386362
+        },
+        {
+          "order": 3,
+          "db": -34.52030946760992
+        },
+        {
+          "order": 4,
+          "db": -96.63296768331841
+        },
+        {
+          "order": 5,
+          "db": -37.55536380713234
+        },
+        {
+          "order": 6,
+          "db": -101.6694978914455
+        }
+      ],
+      "duplicate_first_two_screenshots": false,
+      "harmonic_fundamental": {
+        "peak_bin_hz": 2517.00024,
+        "peak_dbfs": -2.65149
+      },
+      "harmonic_partials": [
+        {
+          "order": 2,
+          "peak_bin_hz": 5036.69238,
+          "peak_dbfs": -161.60973,
+          "dbc": -158.95824000000002
+        },
+        {
+          "order": 3,
+          "peak_bin_hz": 7550.99854,
+          "peak_dbfs": -76.35882,
+          "dbc": -73.70733
+        },
+        {
+          "order": 4,
+          "peak_bin_hz": 10070.68945,
+          "peak_dbfs": -168.90022,
+          "dbc": -166.24873
+        },
+        {
+          "order": 5,
+          "peak_bin_hz": 12584.99609,
+          "peak_dbfs": -81.57989,
+          "dbc": -78.92840000000001
+        },
+        {
+          "order": 6,
+          "peak_bin_hz": 15104.68848,
+          "peak_dbfs": -174.05704,
+          "dbc": -171.40555
+        },
+        {
+          "order": 7,
+          "peak_bin_hz": 17619.00195,
+          "peak_dbfs": -84.85182,
+          "dbc": -82.20033000000001
+        },
+        {
+          "order": 8,
+          "peak_bin_hz": 20138.68945,
+          "peak_dbfs": -175.72481,
+          "dbc": -173.07332
+        }
+      ],
+      "approximate_peak_bin_thd": {
+        "db": -72.11763163970994,
+        "percent": 0.024780976623518455,
+        "limitation": "Peak-bin H2-H8 estimate, not a reimplementation of PluginDoctor THD/THD+N or a noise-floor measurement"
+      },
+      "extra_spectral_lines": {
+        "folded_harmonic_candidates": [
+          {
+            "candidate_order": 9,
+            "fft_bin": 7969,
+            "exact_bin_frequency_hz": 21449.761962890625,
+            "exported_bin_frequency_hz": 21452.37305,
+            "peak_dbfs": -110.54008,
+            "dbc": -107.88859000000001
+          },
+          {
+            "candidate_order": 11,
+            "fft_bin": 6099,
+            "exact_bin_frequency_hz": 16416.375732421875,
+            "exported_bin_frequency_hz": 16418.37695,
+            "peak_dbfs": -142.90508,
+            "dbc": -140.25359
+          },
+          {
+            "candidate_order": 13,
+            "fft_bin": 4229,
+            "exact_bin_frequency_hz": 11382.989501953125,
+            "exported_bin_frequency_hz": 11384.37109,
+            "peak_dbfs": -140.39885,
+            "dbc": -137.74736000000001
+          },
+          {
+            "candidate_order": 15,
+            "fft_bin": 2359,
+            "exact_bin_frequency_hz": 6349.603271484375,
+            "exported_bin_frequency_hz": 6350.37695,
+            "peak_dbfs": -135.43225,
+            "dbc": -132.78076000000001
+          },
+          {
+            "candidate_order": 69,
+            "fft_bin": 1021,
+            "exact_bin_frequency_hz": 2748.175048828125,
+            "exported_bin_frequency_hz": 2748.50952,
+            "peak_dbfs": -94.81865,
+            "dbc": -92.16716000000001
+          },
+          {
+            "candidate_order": 71,
+            "fft_bin": 849,
+            "exact_bin_frequency_hz": 2285.211181640625,
+            "exported_bin_frequency_hz": 2285.48975,
+            "peak_dbfs": -95.68285,
+            "dbc": -93.03136
+          }
+        ],
+        "largest_other_local_peaks_20_20000": [
+          {
+            "fft_bin": 1021,
+            "hz": 2748.50952,
+            "peak_dbfs": -94.81865,
+            "dbc": -92.16716000000001
+          },
+          {
+            "fft_bin": 849,
+            "hz": 2285.48975,
+            "peak_dbfs": -95.68285,
+            "dbc": -93.03136
+          },
+          {
+            "fft_bin": 1107,
+            "hz": 2980.02148,
+            "peak_dbfs": -97.65534,
+            "dbc": -95.00385
+          },
+          {
+            "fft_bin": 763,
+            "hz": 2053.97974,
+            "peak_dbfs": -99.25586,
+            "dbc": -96.60437
+          },
+          {
+            "fft_bin": 1193,
+            "hz": 3211.53052,
+            "peak_dbfs": -108.26217,
+            "dbc": -105.61068
+          },
+          {
+            "fft_bin": 2891,
+            "hz": 7782.50781,
+            "peak_dbfs": -110.25861,
+            "dbc": -107.60712000000001
+          },
+          {
+            "fft_bin": 677,
+            "hz": 1822.46948,
+            "peak_dbfs": -110.59599,
+            "dbc": -107.9445
+          },
+          {
+            "fft_bin": 4761,
+            "hz": 12816.50391,
+            "peak_dbfs": -111.05512,
+            "dbc": -108.40363
+          }
+        ],
+        "limitation": "Candidate folded harmonic mapping, not proof of the source order of every bin. Extra lines include gain modulation; high-rate reference needed for alias assessment."
+      },
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 1.0,
+        "max_fft_error_20_20000_db": 2.9265605277023488e-05,
+        "rms_fft_error_20_20000_db": 7.515024250206603e-06,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency"
+      },
+      "native_sine_crosscheck": {
+        "coherent_frequency_hz": 2516.693115234375,
+        "input_peak_dbfs": -0.32,
+        "settling_samples": 147456,
+        "native_fundamental_dbfs": -2.651145653562529,
+        "exported_fundamental_dbfs": -2.65149,
+        "fundamental_error_db": 0.0003443464374708327,
+        "partials": [
+          {
+            "order": 2,
+            "native_dbc": -296.2201884050882,
+            "exported_dbc": -158.95824000000002,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 3,
+            "native_dbc": -73.70061222294586,
+            "exported_dbc": -73.70733,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 4,
+            "native_dbc": -295.1980472492383,
+            "exported_dbc": -166.24873,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 5,
+            "native_dbc": -78.92174371007697,
+            "exported_dbc": -78.92840000000001,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 6,
+            "native_dbc": -285.08625394337963,
+            "exported_dbc": -171.40555,
+            "above_comparison_floor": false
+          },
+          {
+            "order": 7,
+            "native_dbc": -82.19379023886239,
+            "exported_dbc": -82.20033000000001,
+            "above_comparison_floor": true
+          },
+          {
+            "order": 8,
+            "native_dbc": -276.7471682541199,
+            "exported_dbc": -173.07332,
+            "above_comparison_floor": false
+          }
+        ],
+        "maximum_harmonic_error_above_minus120_dbfs_dbc": 0.006717777054134899,
+        "native_h2_h8_thd_percent": 0.024800063468861912,
+        "native_h2_h8_thd_db": -72.11094415432952,
+        "ninth_folded_bin": {
+          "fft_bin": 7969,
+          "hz": 21449.761962890625,
+          "native_dbfs": -110.53389594615496,
+          "native_dbc": -107.88275029259243
+        },
+        "limitation": "Coherent steady sine, unwindowed native FFT; no alias/THD+N certification and no comparison of numerically absent partials below -120 dBFS"
+      }
+    }
+  ],
+  "additional_linear_curves": [
+    {
+      "experiment": 7,
+      "file": "Clipboard01_4_to1_ratio.txt",
+      "native_scenario": 7,
+      "screenshot_settings": {
+        "input": -6.0,
+        "output": 6.0,
+        "attack": 7.0,
+        "release": 1.0,
+        "ratio": "4:1",
+        "colour": 0.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "kind": "Delta magnitude spectrum, NOT attack/release time curve",
+      "linear_delta_db_from_screenshot": 0.0,
+      "graph_count": 2,
+      "mono_output_copies_identical": true,
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -9.71241,
+          "relative_to_1khz_db": 0.00210947407126838
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -9.71243,
+          "relative_to_1khz_db": 0.0020894740712691373
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -9.714519474071269,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -9.766482096127923,
+          "relative_to_1khz_db": -0.051962622056654695
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -9.954290417479735,
+          "relative_to_1khz_db": -0.23977094340846605
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -10.42463064595895,
+          "relative_to_1khz_db": -0.7101111718876822
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -10.899339142995348,
+          "relative_to_1khz_db": -1.1848196689240797
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -10.786776152651985,
+          "relative_to_1khz_db": -1.0722566785807164
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 21.53583,
+        "db": -9.71241,
+        "relative_to_1khz_db": 0.00210947407126838
+      },
+      "delta_minimum_20_20000": {
+        "hz": 18862.70898,
+        "db": -10.96191,
+        "relative_to_1khz_db": -1.247390525928731
+      },
+      "delta_range_20_20000_db": 1.2494999999999994,
+      "delta_peak_20000_22050": {
+        "hz": 21350.09961,
+        "db": -10.21959
+      },
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 1.0,
+        "max_fft_error_20_20000_db": 0.0008411326047657042,
+        "rms_fft_error_20_20000_db": 0.0001867634696060701,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency"
+      }
+    },
+    {
+      "experiment": 7,
+      "file": "Clipboard01_all_Buttons.txt",
+      "native_scenario": 8,
+      "screenshot_settings": {
+        "input": -6.0,
+        "output": 6.0,
+        "attack": 7.0,
+        "release": 1.0,
+        "ratio": "All Buttons",
+        "colour": 0.0,
+        "compression": true,
+        "mix": 100.0,
+        "enabled": true,
+        "variant": "Mono"
+      },
+      "kind": "Delta magnitude spectrum, NOT attack/release time curve",
+      "linear_delta_db_from_screenshot": 0.0,
+      "graph_count": 2,
+      "mono_output_copies_identical": true,
+      "delta_spectrum": [
+        {
+          "hz": 20,
+          "output_fft_db": -3.99877,
+          "relative_to_1khz_db": 0.0021594740712678195
+        },
+        {
+          "hz": 100,
+          "output_fft_db": -3.99879,
+          "relative_to_1khz_db": 0.0021394740712676885
+        },
+        {
+          "hz": 1000,
+          "output_fft_db": -4.000929474071268,
+          "relative_to_1khz_db": 0.0
+        },
+        {
+          "hz": 5000,
+          "output_fft_db": -4.052032096127923,
+          "relative_to_1khz_db": -0.05110262205665528
+        },
+        {
+          "hz": 10000,
+          "output_fft_db": -4.199583611653155,
+          "relative_to_1khz_db": -0.19865413758188755
+        },
+        {
+          "hz": 15000,
+          "output_fft_db": -4.441619253348977,
+          "relative_to_1khz_db": -0.4406897792777089
+        },
+        {
+          "hz": 18000,
+          "output_fft_db": -4.753736025376744,
+          "relative_to_1khz_db": -0.7528065513054765
+        },
+        {
+          "hz": 20000,
+          "output_fft_db": -5.095165050621527,
+          "relative_to_1khz_db": -1.0942355765502594
+        }
+      ],
+      "delta_peak_20_20000": {
+        "hz": 21.53583,
+        "db": -3.99877,
+        "relative_to_1khz_db": 0.0021594740712678195
+      },
+      "delta_minimum_20_20000": {
+        "hz": 19998.73633,
+        "db": -5.095,
+        "relative_to_1khz_db": -1.094070525928732
+      },
+      "delta_range_20_20000_db": 1.0962299999999998,
+      "delta_peak_20000_22050": {
+        "hz": 21530.4668,
+        "db": -4.89834
+      },
+      "native_periodic_impulse_crosscheck": {
+        "scenario": "44100 Hz; periodic delta every 16384 samples; 10 periods; screenshot settings",
+        "delta_amplitude": 1.0,
+        "max_fft_error_20_20000_db": 0.0004417687003925863,
+        "rms_fft_error_20_20000_db": 0.00015849896463107483,
+        "limitation": "Steady periodic excitation with screenshot parameters; spectrum agreement does not independently establish capture identity, hardware fidelity or latency"
+      }
+    }
+  ],
+  "analysed_graph_files": [
+    "Versuch 1/dynamics1.txt",
+    "Versuch 1/linear1.txt",
+    "Versuch 1/hammerstein1.txt",
+    "Versuch 1/hamonics1.txt",
+    "Versuch 1/IR1.txt",
+    "Versuch 2/dynamics2.txt",
+    "Versuch 2/linear2.txt",
+    "Versuch 2/hammerstein2.txt",
+    "Versuch 2/hamonics2.txt",
+    "Versuch 2/IR2.txt",
+    "Versuch 3/dynamics3.txt",
+    "Versuch 3/linear3.txt",
+    "Versuch 3/hammerstein3.txt",
+    "Versuch 3/harmonics3.txt",
+    "Versuch 3/IR3.txt",
+    "Versuch 4/dynamics4.txt",
+    "Versuch 4/linear4.txt",
+    "Versuch 4/hammerstein4.txt",
+    "Versuch 4/harmonics4.txt",
+    "Versuch 5/dynamics5.txt",
+    "Versuch 5/linear5.txt",
+    "Versuch 5/hamemrstein5.txt",
+    "Versuch 5/harmonics5.txt",
+    "Versuch 6/dynamics6.txt",
+    "Versuch 6/linear6.txt",
+    "Versuch 6/hammerstein6.txt",
+    "Versuch 6/harmonics6.txt",
+    "Versuch 7/Clipboard01_4_to1_ratio.txt",
+    "Versuch 7/Clipboard01_all_Buttons.txt"
+  ],
+  "native_probe_provenance": {
+    "executable_sha256": "c248e3763f31aa9f1061a2953b4d9e61a4cebfef81d7e41dc8f2b0ef7f0ecfcc",
+    "source_sha256": "c3ed9bac8fbd6fcc7a17b0afd83adbb52826f9576ff4da54fd7823d2e2dd3e9a",
+    "dsp_header_sha256": "afc5014c394674b3705ab2480eece96a94f13fef45a05356cf4c7b1a8a25960f",
+    "model_sha256": "c6a0ec66a9ec13d8037f3b9be7e2854817c1692c9a95192a75fda0da3c88990c",
+    "numeric_domain": "Current C++11 native core with double samples/states; no float port quantisation in this diagnostic"
+  },
+  "native_identity_chain": {
+    "colour": 0,
+    "compression": false,
+    "frequency_range_hz": [
+      20,
+      20000
+    ],
+    "maximum_gain_deviation_db": 1.9872397555819494e-09,
+    "limitation": "Current native implementation; does not prove the unidentified external capture binary or ReaJS version"
+  },
+  "native_colour_only_small_signal": [
+    {
+      "scenario": 4,
+      "peak_amplitude": 1e-06,
+      "normalised_magnitude_points": [
+        {
+          "hz": 20,
+          "db": -0.9202242595657968
+        },
+        {
+          "hz": 100,
+          "db": -0.0405892943070419
+        },
+        {
+          "hz": 1000,
+          "db": -0.004136279700004569
+        },
+        {
+          "hz": 5000,
+          "db": -0.04517114204893199
+        },
+        {
+          "hz": 10000,
+          "db": -0.17076014991707283
+        },
+        {
+          "hz": 15000,
+          "db": -0.36818211076063573
+        },
+        {
+          "hz": 18000,
+          "db": -0.5148889525055815
+        },
+        {
+          "hz": 20000,
+          "db": -0.622207556314409
+        }
+      ],
+      "limitation": "Current native infinitesimal/low-level response, not an external measurement; do not confuse with the 0 dB nonlinear delta in captures"
+    },
+    {
+      "scenario": 5,
+      "peak_amplitude": 1e-06,
+      "normalised_magnitude_points": [
+        {
+          "hz": 20,
+          "db": -0.9202251825566061
+        },
+        {
+          "hz": 100,
+          "db": -0.040590229143419934
+        },
+        {
+          "hz": 1000,
+          "db": -0.004137054425807607
+        },
+        {
+          "hz": 5000,
+          "db": -0.045171632867696196
+        },
+        {
+          "hz": 10000,
+          "db": -0.17076052397771585
+        },
+        {
+          "hz": 15000,
+          "db": -0.36818241920395395
+        },
+        {
+          "hz": 18000,
+          "db": -0.5148890790090244
+        },
+        {
+          "hz": 20000,
+          "db": -0.6222073675307049
+        }
+      ],
+      "limitation": "Current native infinitesimal/low-level response, not an external measurement; do not confuse with the 0 dB nonlinear delta in captures"
+    }
+  ],
+  "unanalysed_graph_files": []
+}

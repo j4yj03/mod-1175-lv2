@@ -2,8 +2,8 @@
 
 ## Einstieg in eine neue Session
 
-1. `README.md`, `docs/STATUS.md`, `docs/HANDOFF.md`, `docs/REQUIREMENTS.md` und
-   `docs/DSP_ARCHITECTURE.md` lesen.
+1. `README.md`, `docs/STATUS.md`, `docs/HANDOFF.md`, `docs/REQUIREMENTS.md`,
+   `docs/DSP_ARCHITECTURE.md` und bei Performancearbeit `docs/CPU_ANALYSIS.md` lesen.
 2. `git status --short` prüfen; vorhandene Benutzeränderungen erhalten.
 3. `docs/TESTING.md` für die passenden Prüfungen verwenden.
 4. Ergebnisse, offene Fragen und nächste Schritte in `docs/STATUS.md`
@@ -36,6 +36,9 @@
   Signale nicht aus der Detektion entfernen.
 - JSFX-Grafik verändert keine Audiozustände. Meter sind getrennte Zustände.
 - C++ und EEL2 bei DSP-Änderungen **zusammen** aktualisieren und Parität testen.
+- Ab 0.1.1: nur aktive Controller rechnen; Link-Crossfade mit Zustandsübernahme.
+  Compression/Enabled Off parkt Controller. Numerische Release-Approximation
+  und Regler-Einrastschwellen nur mit Vorher-/Nachher- und Übergangstests ändern.
 - Generierte TTL/JSFX-Presetdaten über `tools/generate.py` erneuern.
 - Portindizes/-symbole/URIs nicht ohne begründete Versionierung ändern.
 - Kein `-ffast-math`; anfänglich `-ffp-contract=off` für Parität.

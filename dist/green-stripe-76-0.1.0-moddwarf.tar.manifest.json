@@ -1,0 +1,19 @@
+{
+  "binary_sha256": "5417191ada1c2c59bdeb448b62f44077bd52e53d021cf2d8addd72f21dc40e81",
+  "abi": {
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libc.so.6"
+    ],
+    "versions": {
+      "GLIBC": [
+        "2.17"
+      ],
+      "GLIBCXX": [],
+      "CXXABI": []
+    }
+  },
+  "toolchain": "Arm GNU-A GCC9.2.1 20191025; Cortex-A35; -DGS_GLIBC_217; not official MPB; device untested",
+  "device_tested": false
+}

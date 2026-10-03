@@ -51,4 +51,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/green-stripe-76.dir/DependInfo.cmake"
   "CMakeFiles/dsp_tests.dir/DependInfo.cmake"
+  "CMakeFiles/transitions.dir/DependInfo.cmake"
   )

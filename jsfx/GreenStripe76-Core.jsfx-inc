@@ -7,9 +7,56 @@ import GreenStripe76-Model.jsfx-inc
 // EEL2 exact equality treats unordered NaN as equal on x86; ordered >= avoids it.
 function gs_finite(x fallback) ( abs(x)>=0 && 1000000000000000000000000000000>=abs(x) ? x : fallback; );
 function gs_bound(x lo hi) ( max(lo,min(hi,x)); );
-function gs_db_gain(db) ( exp(db*0.1151292546497022842); );
-function gs_gain_db(g) ( 8.68588963806503655*log(max(0.000000000000001,g)); );
+// Shared transcendental kernels; operation order mirrors src/dsp/GreenStripe.hpp
+// so both engines stay bit-equal through parameter-time attack/release mapping.
+function gs_series_log(g) local(x k y y2 acc) (
+  x=g<0.000000000000001 ? 0.000000000000001 : g;
+  k=0;
+  while(x>=2)( x*=0.5; k+=1; );
+  while(x<1)( x+=x; k-=1; );
+  y=(x-1)/(x+1); y2=y*y;
+  acc=0.034482758620689655;
+  acc=y2*acc+0.037037037037037035;
+  acc=y2*acc+0.040000000000000001;
+  acc=y2*acc+0.043478260869565216;
+  acc=y2*acc+0.047619047619047616;
+  acc=y2*acc+0.052631578947368418;
+  acc=y2*acc+0.058823529411764705;
+  acc=y2*acc+0.066666666666666666;
+  acc=y2*acc+0.076923076923076927;
+  acc=y2*acc+0.090909090909090912;
+  acc=y2*acc+0.1111111111111111;
+  acc=y2*acc+0.14285714285714285;
+  acc=y2*acc+0.20000000000000001;
+  acc=y2*acc+0.33333333333333331;
+  k*0.6931471805599453+2*y*(1+y2*acc);
+);
+function gs_series_exp(x) local(k r acc e) (
+  k=floor(x/0.6931471805599453+0.5);
+  r=x-k*0.6931471805599453;
+  acc=0.000000000011470745597729725;
+  acc=r*acc+0.00000000016059043836821613;
+  acc=r*acc+0.00000000208767569878681;
+  acc=r*acc+0.00000002505210838544172;
+  acc=r*acc+0.00000027557319223985888;
+  acc=r*acc+0.0000027557319223985893;
+  acc=r*acc+0.000024801587301587302;
+  acc=r*acc+0.00019841269841269841;
+  acc=r*acc+0.0013888888888888889;
+  acc=r*acc+0.0083333333333333332;
+  acc=r*acc+0.041666666666666664;
+  acc=r*acc+0.16666666666666666;
+  acc=r*acc+0.5;
+  acc=r*acc+1;
+  acc=r*acc+1;
+  e=k;
+  while(e>0)( acc+=acc; e-=1; );
+  while(e<0)( acc*=0.5; e+=1; );
+  acc;
+);
 function gs_zap(x) ( abs(x)<0.000000000000000000000000000001 ? 0 : x; );
+function gs_db_gain(db) ( gs_series_exp(db*0.1151292546497022842); );
+function gs_gain_db(g) ( 8.68588963806503655*gs_series_log(g); );
 function gs_soft(x) local(x2) (
   x>=5 ? 1 : x<=-5 ? -1 : (x2=x*x;
     x*(135135+x2*(17325+x2*(378+x2)))/(135135+x2*(62370+x2*(3150+28*x2))));
@@ -38,25 +85,48 @@ function gs_fet(input q colour all) local(u c k v magnitude polarity a b) (
 );
 function gs_tap(input q colour all) local(x shaped) (
   x=gs_fet(input,q,colour,all);
-  shaped=gs_amp(x,2.6,0.025+0.035*all);
-  x+colour*(shaped-x);
+  colour===0 ? x : (
+    shaped=2.6*(gs_soft(x/2.6+gs_tap_bias)-gs_tap_bias_value)/gs_tap_bias_slope;
+    x+colour*(shaped-x);
+  );
+);
+function gs_tap_calibration(all threshold knee) (
+  gs_calibrated_all!==all ? (
+    gs_calibrated_all=all; gs_tap_bias=0.025+0.035*all;
+    gs_tap_bias_value=gs_soft(gs_tap_bias); gs_tap_bias_slope=gs_slope(gs_tap_bias);
+  );
+  gs_calibrated_threshold!==threshold || gs_calibrated_knee!==knee ? (
+    gs_calibrated_threshold=threshold; gs_calibrated_knee=knee;
+    gs_detector_floor=gs_db_gain(threshold-knee*0.5);
+  );
 );
 
 function gs_alloc(n) local(base) (
   base=gs_mem; gs_mem+=n; memset(base,0,n); base;
 );
-function gs_hb_init(n coefs) instance(base count c even odd) (
-  count=n; c=coefs; base=gs_alloc(2*n); even=odd=0;
+// Scalar/unrolled histories avoid repeated EEL RAM indexing and loop calls.
+function gs_hb_init(n coefs) instance(count c0 c1 c2 c3 c4 c5 c6 c7
+  x0 x1 x2 x3 x4 x5 x6 x7 y0 y1 y2 y3 y4 y5 y6 y7 even odd) (
+  count=n;
+  c0=coefs[0]; c1=coefs[1]; c2=coefs[2]; c3=coefs[3];
+  n===8 ? (c4=coefs[4]; c5=coefs[5]; c6=coefs[6]; c7=coefs[7];);
+  x0=x1=x2=x3=x4=x5=x6=x7=y0=y1=y2=y3=y4=y5=y6=y7=even=odd=0;
 );
-function gs_hb_pair(a b) instance(base count c even odd) local(i t0 t1) (
-  i=0;
-  loop(count/2,
-    t0=(a-base[count+i])*c[i]+base[i];
-    t1=(b-base[count+i+1])*c[i+1]+base[i+1];
-    base[i]=a; base[i+1]=b;
-    a=gs_zap(t0); b=gs_zap(t1);
-    base[count+i]=a; base[count+i+1]=b;
-    i+=2;
+function gs_hb_pair(a b) instance(count c0 c1 c2 c3 c4 c5 c6 c7
+  x0 x1 x2 x3 x4 x5 x6 x7 y0 y1 y2 y3 y4 y5 y6 y7 even odd) local(t0 t1) (
+  t0=(a-y0)*c0+x0; t1=(b-y1)*c1+x1; x0=a; x1=b;
+  a=abs(t0)<0.000000000000000000000000000001 ? 0 : t0;
+  b=abs(t1)<0.000000000000000000000000000001 ? 0 : t1; y0=a; y1=b;
+  t0=(a-y2)*c2+x2; t1=(b-y3)*c3+x3; x2=a; x3=b;
+  a=abs(t0)<0.000000000000000000000000000001 ? 0 : t0;
+  b=abs(t1)<0.000000000000000000000000000001 ? 0 : t1; y2=a; y3=b;
+  count===8 ? (
+    t0=(a-y4)*c4+x4; t1=(b-y5)*c5+x5; x4=a; x5=b;
+    a=abs(t0)<0.000000000000000000000000000001 ? 0 : t0;
+    b=abs(t1)<0.000000000000000000000000000001 ? 0 : t1; y4=a; y5=b;
+    t0=(a-y6)*c6+x6; t1=(b-y7)*c7+x7; x6=a; x7=b;
+    a=abs(t0)<0.000000000000000000000000000001 ? 0 : t0;
+    b=abs(t1)<0.000000000000000000000000000001 ? 0 : t1; y6=a; y7=b;
   );
   even=a; odd=b;
 );
@@ -68,14 +138,20 @@ function gs_rs_init() (
   this.u1.gs_hb_init(8,gs_coefs1); this.d1.gs_hb_init(8,gs_coefs1);
   this.u2.gs_hb_init(4,gs_coefs2); this.d2.gs_hb_init(4,gs_coefs2);
 );
-function gs_rs_up(input dest) local(a b) (
-  this.u1.gs_hb_up(input); a=this.u1.even; b=this.u1.odd;
-  this.u2.gs_hb_up(a); dest[0]=this.u2.even; dest[1]=this.u2.odd;
-  this.u2.gs_hb_up(b); dest[2]=this.u2.even; dest[3]=this.u2.odd;
+function gs_rs_up(input dest factor) local(a b) (
+  factor===1 ? dest[0]=input : (
+    this.u1.gs_hb_up(input); a=this.u1.even; b=this.u1.odd;
+    factor===2 ? (dest[0]=a; dest[1]=b;) : (
+      this.u2.gs_hb_up(a); dest[0]=this.u2.even; dest[1]=this.u2.odd;
+      this.u2.gs_hb_up(b); dest[2]=this.u2.even; dest[3]=this.u2.odd;
+    );
+  );
 );
-function gs_rs_down(src) local(a b) (
-  a=this.d2.gs_hb_down(src[0],src[1]); b=this.d2.gs_hb_down(src[2],src[3]);
-  this.d1.gs_hb_down(a,b);
+function gs_rs_down(src factor) local(a b) (
+  factor===1 ? src[0] : factor===2 ? this.d1.gs_hb_down(src[0],src[1]) : (
+    a=this.d2.gs_hb_down(src[0],src[1]); b=this.d2.gs_hb_down(src[2],src[3]);
+    this.d1.gs_hb_down(a,b);
+  );
 );
 
 function gs_ch_reset() instance(inDC inFlux preLP outDC outFlux) (
@@ -84,38 +160,61 @@ function gs_ch_reset() instance(inDC inFlux preLP outDC outFlux) (
 function gs_ch_input(x colour) instance(inDC inFlux) local(hp iron) (
   inDC=gs_zap(inDC+gs_input_hp*(x-inDC)); hp=x-inDC;
   inFlux=gs_zap(inFlux+gs_flux*(hp-inFlux));
-  iron=hp-0.12*(inFlux-0.6*gs_soft(inFlux/0.6)); x+colour*(iron-x);
+  colour===0 ? x : (iron=hp-0.12*(inFlux-0.6*gs_soft(inFlux/0.6)); x+colour*(iron-x););
 );
 function gs_ch_output(x outputGain colour) instance(preLP outDC outFlux) local(iron driven) (
   preLP=gs_zap(preLP+gs_amp_lp*(x-preLP)); x+=colour*(preLP-x); x*=outputGain;
   outFlux=gs_zap(outFlux+gs_flux*(x-outFlux));
-  iron=x-0.10*(outFlux-0.8*gs_soft(outFlux/0.8)); driven=gs_amp(iron,1.8,0.04);
-  x+=colour*(driven-x); outDC=gs_zap(outDC+gs_output_hp*(x-outDC)); x-colour*outDC;
+  colour!==0 ? (
+    iron=x-0.10*(outFlux-0.8*gs_soft(outFlux/0.8));
+    driven=1.8*(gs_soft(iron/1.8+0.04)-gs_output_bias_value)/gs_output_bias_slope;
+    x+=colour*(driven-x);
+  );
+  outDC=gs_zap(outDC+gs_output_hp*(x-outDC)); x-colour*outDC;
 );
-function gs_ctrl_reset() instance(charge memory lagged deriv) (
-  charge=memory=lagged=deriv=0;
+function gs_ctrl_reset() instance(charge memory lagged deriv cachedRelease releaseStep reductionDb) (
+  charge=memory=lagged=deriv=reductionDb=0; cachedRelease=-1; releaseStep=0;
 );
-function gs_target(a b q colour all ratio threshold knee) instance(lagged deriv)
-local(measured rectified over desired result left) (
-  left=abs(gs_tap(a,q,colour,all));
-  measured=a===b ? left : max(left,abs(gs_tap(b,q,colour,all)));
-  rectified=(1-all)*measured+all*lagged*gs_gain(q);
-  over=gs_gain_db(rectified)-threshold;
-  desired=min(60,(ratio-1)*gs_knee(over,knee));
-  result=gs_qbase*(gs_db_gain(desired)-1);
-  deriv=desired>=60 ? 0 : -(gs_qbase+result)*(ratio-1)*
-    gs_bound((over+knee*0.5)/knee,0,1)/(gs_qbase+q);
-  result;
+function gs_ctrl_copy(src*) instance(charge memory lagged deriv cachedRelease releaseStep reductionDb) (
+  charge=src.charge; memory=src.memory; lagged=src.lagged; deriv=src.deriv;
+  cachedRelease=src.cachedRelease; releaseStep=src.releaseStep; reductionDb=src.reductionDb;
+);
+function gs_requested_db(a b q colour all ratio threshold knee) instance(lagged over)
+local(measured rectified left) (
+  all===1 ? rectified=lagged*gs_gain(q) : (
+    left=abs(gs_tap(a,q,colour,all));
+    measured=a===b ? left : max(left,abs(gs_tap(b,q,colour,all)));
+    rectified=(1-all)*measured+all*lagged*gs_gain(q);
+  );
+  rectified<=gs_detector_floor ? (over=-knee; 0;) : (
+    over=gs_gain_db(rectified)-threshold;
+    min(60,(ratio-1)*gs_knee(over,knee));
+  );
+);
+function gs_target(a b q colour all ratio threshold knee) instance(over deriv)
+local(desired result) (
+  desired=this.gs_requested_db(a,b,q,colour,all,ratio,threshold,knee);
+  desired===0 ? (deriv=0; 0;) : (
+    result=gs_qbase*(gs_db_gain(desired)-1);
+    deriv=desired>=60 ? 0 : -(gs_qbase+result)*(ratio-1)*
+      gs_bound((over+knee*0.5)/knee,0,1)/(gs_qbase+q);
+    result;
+  );
 );
 function gs_ctrl(a b colour all ratio threshold knee attackTime releaseTime)
-instance(charge memory lagged deriv)
-local(r demand time alpha level guess low high q wanted f next i stop history) (
+instance(charge memory lagged deriv cachedRelease releaseStep reductionDb)
+local(r wantedDb step decay z alpha level guess low high q wanted f next i stop history) (
   lagged=gs_zap(lagged+gs_lag*(max(abs(a),abs(b))-lagged));
   r=ratio+all*((12+8*memory)-ratio);
-  demand=this.gs_target(a,b,charge,colour,all,r,threshold,knee);
-  demand<=charge ? (
-    time=releaseTime*(1+0.75*memory+0.2*all);
-    charge=gs_zap(charge*exp(-1/(time*gs_fs)));
+  wantedDb=this.gs_requested_db(a,b,charge,colour,all,r,threshold,knee);
+  wantedDb<=reductionDb ? (
+    cachedRelease!==releaseTime ? (cachedRelease=releaseTime; releaseStep=1/(releaseTime*gs_fs););
+    step=releaseStep/(1+0.75*memory+0.2*all);
+    decay=1+step*(-1+step*(0.5+step*(-1/6+step*(1/24-step/120))));
+    z=(1-decay)*charge/(gs_qbase+charge);
+    reductionDb=max(0,reductionDb+8.68588963806503655*z*(-1+z*(-0.5+z*(-1/3+z*(-0.25-z/5)))));
+    charge=gs_zap(charge*decay);
+    charge===0 ? reductionDb=0;
   ) : (
     alpha=1/(gs_fs*attackTime*r*(1+0.3*all));
     level=gs_gain_db(max(abs(a),abs(b)));
@@ -142,70 +241,153 @@ local(r demand time alpha level guess low high q wanted f next i stop history) (
       );
     );
     charge=gs_bound(q,0,1000);
+    reductionDb=charge===0 ? 0 : -gs_gain_db(gs_gain(charge));
   );
-  history=gs_bound(-gs_gain_db(gs_gain(charge))/24,0,1);
+  history=gs_bound(reductionDb/24,0,1);
   memory=gs_zap(memory+(history>memory ? gs_mem_up : gs_mem_down)*(history-memory));
   charge;
 );
 
-function gs_reset(twoChannels) instance(stereo initial inL inR wetL wetR outL outR grL grR) (
-  gs_model_init();
-  gs_mem=64; gs_qbase=gs_db_gain(gs_qbias_db); gs_fs=max(8000,srate)*4;
-  gs_smooth=1-exp(-1/(0.002*gs_fs));
-  gs_input_hp=1-exp(-2*$pi*gs_input_highpass_hz/gs_fs);
-  gs_output_hp=1-exp(-2*$pi*gs_output_highpass_hz/gs_fs);
-  gs_flux=1-exp(-2*$pi*35/gs_fs);
-  gs_amp_lp=1-exp(-2*$pi*gs_amplifier_lowpass_hz/gs_fs);
-  gs_mem_up=1-exp(-1/(0.08*gs_fs)); gs_mem_down=1-exp(-1/(0.4*gs_fs));
-  gs_lag=1-exp(-1/(0.00006*gs_fs));
+// Precompute all three coefficient sets outside @sample; switching allocates nothing.
+function gs_prepare_rate(factor dest) local(fs) (
+  fs=max(8000,srate)*factor;
+  dest[0]=fs; dest[1]=1-gs_series_exp(-1/(0.002*fs));
+  dest[2]=1-gs_series_exp(-2*$pi*gs_input_highpass_hz/fs);
+  dest[3]=1-gs_series_exp(-2*$pi*gs_output_highpass_hz/fs);
+  dest[4]=1-gs_series_exp(-2*$pi*35/fs);
+  dest[5]=1-gs_series_exp(-2*$pi*gs_amplifier_lowpass_hz/fs);
+  dest[6]=1-gs_series_exp(-1/(0.08*fs)); dest[7]=1-gs_series_exp(-1/(0.4*fs));
+  dest[8]=1-gs_series_exp(-1/(0.00006*fs));
+);
+function gs_change_os(which) instance(os_active) local(coeffs) (
+  os_active=which; coeffs=which===0 ? gs_native_rate : which===1 ? gs_two_rate : gs_four_rate;
+  gs_fs=coeffs[0]; gs_smooth=coeffs[1]; gs_input_hp=coeffs[2]; gs_output_hp=coeffs[3];
+  gs_flux=coeffs[4]; gs_amp_lp=coeffs[5]; gs_mem_up=coeffs[6]; gs_mem_down=coeffs[7]; gs_lag=coeffs[8];
   this.rsL.gs_rs_init(); this.rsR.gs_rs_init();
+  this.ctrlL.cachedRelease=this.ctrlR.cachedRelease=this.ctrlS.cachedRelease=-1;
+);
+function gs_set_os(which) instance(initial os_active os_requested os_transition os_gain) (
+  which=gs_bound(floor(gs_finite(which,0)+0.5),0,2);
+  initial ? (
+    this.gs_change_os(which); os_requested=which; os_transition=0; os_gain=1; gs_fade_left=0;
+  ) : which!==os_requested ? (
+    os_requested=which; os_transition=os_requested===os_active ? 2 : 1;
+    gs_fade_left=floor((os_transition===2 ? 1-os_gain : os_gain)*gs_fade_len+0.5);
+  );
+);
+function gs_advance_os() instance(os_active os_requested os_transition os_gain) (
+  os_transition===1 ? (
+    gs_fade_left=gs_fade_left>0 ? gs_fade_left-1 : 0;
+    os_gain=gs_fade_left*gs_fade_inv;
+    gs_fade_left===0 ? (this.gs_change_os(os_requested); os_transition=2; gs_fade_left=gs_fade_len;);
+  ) : os_transition===2 ? (
+    gs_fade_left=gs_fade_left>0 ? gs_fade_left-1 : 0;
+    os_gain=1-gs_fade_left*gs_fade_inv;
+    gs_fade_left===0 ? os_transition=0;
+  );
+);
+function gs_reset(twoChannels) instance(stereo initial moving parked bypassed inL inR wetL wetR outL outR grL grR
+  os_active os_requested os_transition os_gain) (
+  gs_model_init();
+  gs_mem=64; gs_qbase=gs_db_gain(gs_qbias_db);
+  gs_native_rate=gs_alloc(9); gs_two_rate=gs_alloc(9); gs_four_rate=gs_alloc(9);
+  gs_prepare_rate(1,gs_native_rate); gs_prepare_rate(2,gs_two_rate); gs_prepare_rate(4,gs_four_rate);
+  gs_fade_len=max(1,ceil(0.002*max(8000,srate))); gs_fade_inv=1/gs_fade_len; gs_fade_left=0;
+  gs_calibrated_all=gs_calibrated_threshold=gs_calibrated_knee=-1;
+  gs_output_bias_value=gs_soft(0.04); gs_output_bias_slope=gs_slope(0.04);
+  this.gs_change_os(0); os_requested=os_transition=0; os_gain=1;
   inL=gs_alloc(4); inR=gs_alloc(4); wetL=gs_alloc(4); wetR=gs_alloc(4);
   this.chL.gs_ch_reset(); this.chR.gs_ch_reset();
   this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset();
-  stereo=twoChannels; initial=1; outL=outR=grL=grR=0;
+  stereo=twoChannels; initial=1; moving=parked=bypassed=0; outL=outR=grL=grR=0;
 );
-function gs_set(inputDb outputDb attack release mode mix colour compression enabled link)
-instance(initial ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
+function gs_set(inputDb outputDb attack release mode mix colour compression enabled link oversampling)
+instance(stereo initial moving ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
   pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
-local(attackPos releasePos) (
+local(attackPos releasePos newLink) (
+  this.gs_set_os(oversampling);
+  newLink=gs_finite(link,1)>0 ? 1 : 0;
+  !initial && stereo && newLink!==tl ? (
+    newLink===0 ? (
+      this.ctrlL.gs_ctrl_copy(this.ctrlS); this.ctrlR.gs_ctrl_copy(this.ctrlS);
+    ) : (
+      this.ctrlR.charge>this.ctrlL.charge ? this.ctrlS.gs_ctrl_copy(this.ctrlR) : this.ctrlS.gs_ctrl_copy(this.ctrlL);
+    );
+  );
   mode=gs_bound(floor(gs_finite(mode,0)+0.5),0,4);
   attackPos=gs_bound(gs_finite(attack,3),1,7); releasePos=gs_bound(gs_finite(release,5),1,7);
   ti=gs_db_gain(gs_bound(gs_finite(inputDb,0),-36,24)); to=gs_db_gain(gs_bound(gs_finite(outputDb,0),-36,24));
-  ta=gs_attack_slow_seconds*(gs_attack_fast_seconds/gs_attack_slow_seconds)^((attackPos-1)/6);
-  tr=gs_release_slow_seconds*(gs_release_fast_seconds/gs_release_slow_seconds)^((releasePos-1)/6);
+  ta=gs_attack_slow_seconds*gs_series_exp((attackPos-1)/6*gs_series_log(gs_attack_fast_seconds/gs_attack_slow_seconds));
+  tr=gs_release_slow_seconds*gs_series_exp((releasePos-1)/6*gs_series_log(gs_release_fast_seconds/gs_release_slow_seconds));
   t_ratio=gs_ratios[mode]; t_threshold=gs_thresholds[mode]; t_knee=gs_knees[mode];
   t_all=mode==4 ? 1 : 0; tm=gs_bound(gs_finite(mix,100)*0.01,0,1); tc=gs_bound(gs_finite(colour,100)*0.01,0,1);
-  tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=gs_finite(link,1)>0 ? 1 : 0;
+  tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=newLink;
   initial ? (
     pi=ti; po=to; pa=ta; pr=tr; p_ratio=t_ratio; p_threshold=t_threshold; p_knee=t_knee;
-    p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; initial=0;
+    p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; initial=0; moving=0;
+    gs_tap_calibration(p_all,p_threshold,p_knee);
+  ) : (
+    moving=pi!==ti || po!==to || pa!==ta || pr!==tr || p_ratio!==t_ratio || p_threshold!==t_threshold ||
+      p_knee!==t_knee || p_all!==t_all || pm!==tm || pc!==tc || pp!==tp || pe!==te || pl!==tl;
   );
 );
+function gs_approach(value goal) local(result) (
+  result=value+gs_smooth*(goal-value);
+  abs(goal-result)<=0.000000000001*max(1,abs(goal)) ? result=goal : gs_transition=1;
+  result;
+);
 function gs_process(left right)
-instance(stereo inL inR wetL wetR outL outR grL grR
+instance(stereo moving parked bypassed inL inR wetL wetR outL outR grL grR os_active os_gain
   ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
   pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
-local(i a b independentL independentR linked qL qR gL gR wet blend) (
-  this.rsL.gs_rs_up(gs_bound(left,-256,256),inL);
-  stereo ? this.rsR.gs_rs_up(gs_bound(right,-256,256),inR);
+local(i a b independentL independentR linked qL qR gL gR wet blend factor) (
+  factor=2^os_active;
+  this.rsL.gs_rs_up(gs_bound(left,-256,256),inL,factor);
+  stereo ? this.rsR.gs_rs_up(gs_bound(right,-256,256),inR,factor);
   i=0;
-  loop(4,
-    pi+=gs_smooth*(ti-pi); po+=gs_smooth*(to-po); pa+=gs_smooth*(ta-pa); pr+=gs_smooth*(tr-pr);
-    p_ratio+=gs_smooth*(t_ratio-p_ratio); p_threshold+=gs_smooth*(t_threshold-p_threshold);
-    p_knee+=gs_smooth*(t_knee-p_knee); p_all+=gs_smooth*(t_all-p_all);
-    pm+=gs_smooth*(tm-pm); pc+=gs_smooth*(tc-pc); pp+=gs_smooth*(tp-pp);
-    pe+=gs_smooth*(te-pe); pl+=gs_smooth*(tl-pl);
+  loop(factor,
+    moving ? (
+      gs_transition=0;
+      pi=gs_approach(pi,ti); po=gs_approach(po,to); pa=gs_approach(pa,ta); pr=gs_approach(pr,tr);
+      p_ratio=gs_approach(p_ratio,t_ratio); p_threshold=gs_approach(p_threshold,t_threshold);
+      p_knee=gs_approach(p_knee,t_knee); p_all=gs_approach(p_all,t_all);
+      pm=gs_approach(pm,tm); pc=gs_approach(pc,tc); pp=gs_approach(pp,tp);
+      pe=gs_approach(pe,te); pl=gs_approach(pl,tl); moving=gs_transition;
+      gs_tap_calibration(p_all,p_threshold,p_knee);
+    );
+    pe===0 ? (
+      !bypassed ? (
+        this.chL.gs_ch_reset(); this.chR.gs_ch_reset();
+        this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset();
+        parked=bypassed=1;
+      );
+      wetL[i]=inL[i]; stereo ? wetR[i]=inR[i]; grL=grR=0;
+    ) : (
+    bypassed=0;
     a=this.chL.gs_ch_input(inL[i]*pi,pc);
     b=stereo ? this.chR.gs_ch_input(inR[i]*pi,pc) : a;
-    independentL=this.ctrlL.gs_ctrl(a,a,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
-    qL=qR=independentL;
-    stereo ? (
-      independentR=this.ctrlR.gs_ctrl(b,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
-      linked=this.ctrlS.gs_ctrl(a,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
-      gL=(1-pl)*gs_gain(independentL)+pl*gs_gain(linked);
-      gR=(1-pl)*gs_gain(independentR)+pl*gs_gain(linked);
-      qL=pl===0 ? independentL : pl===1 ? linked : gs_qbase*(1/gL-1);
-      qR=pl===0 ? independentR : pl===1 ? linked : gs_qbase*(1/gR-1);
+    qL=qR=0;
+    pp===0 || pe===0 ? (
+      !parked ? (
+        this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset(); parked=1;
+      );
+    ) : (
+      parked=0;
+      !stereo ? (
+        qL=qR=this.ctrlL.gs_ctrl(a,a,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+      ) : pl===1 ? (
+        qL=qR=this.ctrlS.gs_ctrl(a,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+      ) : pl===0 ? (
+        qL=this.ctrlL.gs_ctrl(a,a,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+        qR=this.ctrlR.gs_ctrl(b,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+      ) : (
+        independentL=this.ctrlL.gs_ctrl(a,a,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+        independentR=this.ctrlR.gs_ctrl(b,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+        linked=this.ctrlS.gs_ctrl(a,b,pc,p_all,p_ratio,p_threshold,p_knee,pa,pr);
+        gL=(1-pl)*gs_gain(independentL)+pl*gs_gain(linked);
+        gR=(1-pl)*gs_gain(independentR)+pl*gs_gain(linked);
+        qL=gs_qbase*(1/gL-1); qR=gs_qbase*(1/gR-1);
+      );
     );
     qL*=pp; qR*=pp;
     wet=this.chL.gs_ch_output(gs_tap(a,qL,pc,p_all),po,pc); blend=pm*pe;
@@ -214,10 +396,16 @@ local(i a b independentL independentR linked qL qR gL gR wet blend) (
       wet=this.chR.gs_ch_output(gs_tap(b,qR,pc,p_all),po,pc);
       wetR[i]=inR[i]+blend*(wet-inR[i]);
     );
-    grL=gs_gain_db(gs_gain(qL))*pe; grR=gs_gain_db(gs_gain(qR))*pe; i+=1;
+    i===factor-1 ? (grL=gs_gain_db(gs_gain(qL))*pe; grR=stereo ? gs_gain_db(gs_gain(qR))*pe : grL;);
+    );
+    i+=1;
   );
-  outL=this.rsL.gs_rs_down(wetL);
-  outR=stereo ? this.rsR.gs_rs_down(wetR) : outL;
+  outL=this.rsL.gs_rs_down(wetL,factor)*os_gain;
+  outR=stereo ? this.rsR.gs_rs_down(wetR,factor)*os_gain : outL;
+  this.gs_advance_os();
+);
+function gs_latency() instance(os_active) (
+  os_active===0 ? 0 : os_active===1 ? gs_latency_2x_frames : gs_nominal_latency_frames;
 );
 
 // Meter states are independent of the compressor. @gfx only reads snapshots.

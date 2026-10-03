@@ -2,6 +2,8 @@
 @init
 function gs_model_init() (
   gs_oversampling=4;
+  gs_default_oversampling=0;
+  gs_latency_2x_frames=3;
   gs_nominal_latency_frames=4;
   gs_reference_peak_dbfs=-21;
   gs_qbias_db=1;

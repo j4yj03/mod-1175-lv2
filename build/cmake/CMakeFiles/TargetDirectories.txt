@@ -1,5 +1,6 @@
 /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/green-stripe-76.dir
 /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/dsp_tests.dir
+/mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/transitions.dir
 /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/test.dir
 /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/edit_cache.dir
 /mnt/c/Users/sigoehler/Documents/uni/lv2 1175/mod-1175-lv2/build/cmake/CMakeFiles/rebuild_cache.dir

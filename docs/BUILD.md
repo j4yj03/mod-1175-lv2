@@ -137,6 +137,7 @@ git -C /absolute/ysfx submodule update --init thirdparty/dr_libs
 cmake -S tests -B build/parity -DYSFX_SOURCE_DIR=/absolute/ysfx -DCMAKE_BUILD_TYPE=Release
 cmake --build build/parity
 build/parity/jsfx_parity jsfx/GreenStripe76-Mono.jsfx jsfx/GreenStripe76-Stereo.jsfx
+build/parity/benchmark_jsfx jsfx/GreenStripe76-Mono.jsfx jsfx/GreenStripe76-Stereo.jsfx 2 7
 ```
 
 Die GFX-Smoke-Testdatei `tests/jsfx_ui.cpp` kann gegen ein ysfx mit
@@ -165,3 +166,6 @@ python3 tools/package.py \
 
 NAM-/WAV-Dateien, `.git`, temporäre Toolchains und Buildtests werden nicht im
 Source-/JSFX-Paket verteilt. `--dwarf` verweigert x86_64 oder glibc >2.27.
+Aktuelle Projektversion 0.2.0; alte 0.1.x-Pakete haben feste 4×-Verarbeitung
+und keinen Oversampling-Regler. Für Übertragung die Versionsnummer im
+Dateinamen prüfen.

@@ -121,6 +121,19 @@ int main() {
                 const double residual=v+c*(v-0.32*v*v/(1+std::abs(v)))-u;
                 require(std::abs(residual)<1e-10*(1+std::abs(u)),"FET closed-form KCL residual");
             }
+        // Cubic release exp/log updates are valid across the supported rate/time range.
+        for (double rate : {8000.0,44100.0,48000.0,96000.0,384000.0}) {
+            for (double time : {0.05,0.2,1.1}) {
+                const double step=1.0/(rate*4.0*time);
+                const double polynomial=1.0+step*(-1.0+step*(0.5-step/6.0));
+                require(std::abs(polynomial-std::exp(-step))<7e-15,"Release exp error bound");
+                for (double charge : {0.0,0.1,10.0,1000.0}) {
+                    const double z=(1-polynomial)*charge/(greenstripe::qBase()+charge);
+                    const double update=z*(-1+z*(-0.5-z/3));
+                    require(std::abs(update-std::log1p(-z))<4e-14,"Release log error bound");
+                }
+            }
+        }
         std::cout << "DSP acceptance tests: PASS\n";
     } catch (const std::exception& error) {
         std::cerr << "FAIL: " << error.what() << '\n';

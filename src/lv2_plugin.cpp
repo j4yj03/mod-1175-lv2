@@ -20,10 +20,10 @@ const char* const stereoURI = "https://github.com/j4yj03/mod-1175-lv2#green-stri
 
 struct Instance {
     greenstripe::Processor processor;
-    float* ports[15];
+    float* ports[16];
     bool stereo;
     explicit Instance(double rate, bool twoChannels) : processor(rate, twoChannels), stereo(twoChannels) {
-        for (unsigned i = 0; i < 15; ++i) ports[i] = 0;
+        for (unsigned i = 0; i < 16; ++i) ports[i] = 0;
     }
     double value(unsigned index, double fallback) const {
         return ports[index] ? greenstripe::finiteOr(*ports[index], fallback) : fallback;
@@ -38,6 +38,7 @@ struct Instance {
         p.compression = value(base + 7, 1) > 0.0;
         p.enabled = value(base + 8, 1) > 0.0;
         p.stereoLink = !stereo || value(base + 9, 1) > 0.0;
+        p.oversampling = static_cast<int>(greenstripe::bounded(value(stereo ? 15 : 12, 0), 0, 2) + 0.5);
         processor.setParameters(p);
     }
 };
@@ -49,7 +50,7 @@ LV2_Handle instantiate(const LV2_Descriptor* descriptor, double rate, const char
 }
 void connect(LV2_Handle handle, uint32_t port, void* data) {
     Instance* self = static_cast<Instance*>(handle);
-    if (port < (self->stereo ? 15u : 12u)) self->ports[port] = static_cast<float*>(data);
+    if (port < (self->stereo ? 16u : 13u)) self->ports[port] = static_cast<float*>(data);
 }
 void activate(LV2_Handle handle) {
     Instance* self = static_cast<Instance*>(handle);
@@ -60,7 +61,6 @@ void run(LV2_Handle handle, uint32_t frames) {
     Instance* self = static_cast<Instance*>(handle);
     self->update();
     const unsigned latencyPort = self->stereo ? 14 : 11;
-    if (self->ports[latencyPort]) *self->ports[latencyPort] = greenstripe::Processor::latency();
     for (uint32_t i = 0; i < frames; ++i) {
         // Read all inputs before writing to support in-place stereo processing.
         const double left = self->ports[0] ? self->ports[0][i] : 0.0;
@@ -70,6 +70,7 @@ void run(LV2_Handle handle, uint32_t frames) {
         if (self->ports[self->stereo ? 2 : 1]) self->ports[self->stereo ? 2 : 1][i] = static_cast<float>(a);
         if (self->stereo && self->ports[3]) self->ports[3][i] = static_cast<float>(b);
     }
+    if (self->ports[latencyPort]) *self->ports[latencyPort] = self->processor.latency();
 }
 void cleanup(LV2_Handle handle) {
     static_cast<Instance*>(handle)->~Instance();

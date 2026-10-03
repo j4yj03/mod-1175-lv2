@@ -1,6 +1,6 @@
 desc:Green Stripe 76 Stereo
 author:Green Stripe 76 contributors
-version:0.1.0
+version:0.2.0
 tags:dynamics compressor limiter fet
 // SPDX-License-Identifier: MIT
 options:maxmem=8192 prealloc=8192 gfx_hz=30
@@ -17,6 +17,7 @@ slider7:100<0,100,0.1>Colour (%)
 slider8:1<0,1,1{Off,On}>Compression
 slider9:1<0,1,1{Off,On}>Enabled
 slider10:1<0,1,1{Off,On}>Stereo Link
+slider12:0<0,2,1{Off,2x,4x}>Oversampling
 slider11:0<0,26,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Bass Finger Level,08 Bass Pick Punch,09 Bass Fast Grit,10 Kick Weight,11 Snare Crack,12 Toms Body,13 Overheads Gentle,14 Room All Buttons,15 Drum Parallel Crush,16 Guitar Clean Sustain,17 Guitar Rhythm Tight,18 Guitar Colour Only,19 Acoustic Strum,20 Acoustic Finger,21 Piano Gentle,22 Rhodes Body,23 Synth Bass Control,24 Synth Lead Sustain,25 Percussion Snap,26 Stereo Bus Subtle}>Instrument preset
 in_pin:Input L
 in_pin:Input R
@@ -42,7 +43,7 @@ slider11!=gs_last_preset ? (slider11>0 ? gs_apply_preset(slider11); gs_last_pres
 );
 gs_prev1=slider1; gs_prev2=slider2; gs_prev3=slider3; gs_prev4=slider4; gs_prev5=slider5;
 gs_prev6=slider6; gs_prev7=slider7; gs_prev8=slider8; gs_prev9=slider9; gs_prev10=slider10; gs_have_controls=1;
-gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10);
+gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);
 
 @block
 srate!=gs_rate ? (
@@ -50,19 +51,22 @@ srate!=gs_rate ? (
   gs_meter_decay=exp(-1/(0.35*max(8000,srate)));
   gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));
 );
-gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10);
-pdc_delay=gs_nominal_latency_frames; pdc_bot_ch=0; pdc_top_ch=2;
+gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);
+pdc_delay=gs_engine.gs_latency(); pdc_bot_ch=0; pdc_top_ch=2;
+atomic_set(gs_ui_os_active,gs_engine.os_active);
 ext_gr_meter=gs_peakGR; gs_peakGR=0;
 atomic_set(gs_audio_time,time_precise());
-atomic_set(gs_ui_inL,gs_gain_db(gs_inL.peak)); atomic_set(gs_ui_inR,gs_gain_db(gs_inR.peak));
-atomic_set(gs_ui_outL,gs_gain_db(gs_outL.peak)); atomic_set(gs_ui_outR,gs_gain_db(gs_outR.peak));
+atomic_set(gs_ui_inL,gs_gain_db(gs_inL.peak)); atomic_set(gs_ui_inR,gs_gain_db(gs_stereo ? gs_inR.peak : gs_inL.peak));
+atomic_set(gs_ui_outL,gs_gain_db(gs_outL.peak)); atomic_set(gs_ui_outR,gs_gain_db(gs_stereo ? gs_outR.peak : gs_outL.peak));
 atomic_set(gs_ui_inRmsL,gs_gain_db(sqrt(max(0,gs_inL.rms))));
-atomic_set(gs_ui_inRmsR,gs_gain_db(sqrt(max(0,gs_inR.rms))));
+atomic_set(gs_ui_inRmsR,gs_gain_db(sqrt(max(0,gs_stereo ? gs_inR.rms : gs_inL.rms))));
 atomic_set(gs_ui_rmsL,gs_gain_db(sqrt(max(0,gs_outL.rms))));
-atomic_set(gs_ui_rmsR,gs_gain_db(sqrt(max(0,gs_outR.rms))));
-atomic_set(gs_ui_holdL,gs_gain_db(gs_outL.hold)); atomic_set(gs_ui_holdR,gs_gain_db(gs_outR.hold));
+atomic_set(gs_ui_rmsR,gs_gain_db(sqrt(max(0,gs_stereo ? gs_outR.rms : gs_outL.rms))));
+atomic_set(gs_ui_holdL,gs_gain_db(gs_outL.hold)); atomic_set(gs_ui_holdR,gs_gain_db(gs_stereo ? gs_outR.hold : gs_outL.hold));
+atomic_set(gs_ui_inHoldL,gs_gain_db(gs_inL.hold)); atomic_set(gs_ui_inHoldR,gs_gain_db(gs_stereo ? gs_inR.hold : gs_inL.hold));
+atomic_set(gs_ui_inClipL,gs_inL.clip); atomic_set(gs_ui_inClipR,gs_stereo ? gs_inR.clip : gs_inL.clip);
 atomic_set(gs_ui_grL,gs_grL); atomic_set(gs_ui_grR,gs_grR);
-atomic_set(gs_ui_clipL,gs_outL.clip); atomic_set(gs_ui_clipR,gs_outR.clip);
+atomic_set(gs_ui_clipL,gs_outL.clip); atomic_set(gs_ui_clipR,gs_stereo ? gs_outR.clip : gs_outL.clip);
 
 @sample
 gs_rawL=gs_bound(gs_finite(spl0,0),-256,256);
@@ -70,10 +74,10 @@ gs_rawR=gs_bound(gs_finite(spl1,0),-256,256);
 gs_stereo ? gs_engine.gs_process(gs_rawL,gs_rawR) : gs_engine.gs_process(gs_rawL,gs_rawL);
 spl0=gs_engine.outL; spl1=gs_engine.outR;
 gs_inL.gs_meter_sample(gs_rawL); gs_outL.gs_meter_sample(spl0);
-gs_inR.gs_meter_sample(gs_stereo ? gs_rawR : gs_rawL); gs_outR.gs_meter_sample(spl1);
+gs_stereo ? (gs_inR.gs_meter_sample(gs_rawR); gs_outR.gs_meter_sample(spl1););
 gs_peakGR=min(gs_peakGR,min(gs_engine.grL,gs_engine.grR));
 gs_grL=max(-gs_engine.grL,gs_grL*gs_meter_decay);
 gs_grR=max(-gs_engine.grR,gs_grR*gs_meter_decay);
 
-@gfx 820 340
+@gfx 820 380
 gs_draw_ui(gs_stereo);

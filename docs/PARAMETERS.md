@@ -1,7 +1,8 @@
 # Parameter, Ports und Persistenz
 
 Normative Quelle: `data/parameters.json`. TTL und JSFX-Wrappers werden mit
-`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.1.0.
+`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.1.1;
+Portlayout, Wertebereiche und Plugin-URIs sind gegenüber 0.1.0 unverändert.
 
 | Symbol | JSFX-Slider | Bereich | Default | Bedeutung |
 |---|---:|---|---:|---|
@@ -58,7 +59,7 @@ eigentlichen Klangeinstellungen, damit Projekt-Recall keine unerwartete
 Preset-Neuanwendung auslöst.
 
 Änderungen werden bei `@slider` und `@block` übernommen, intern geglättet.
-**Keine samplegenaue `slider_next_chg`-Interpolation in 0.1.0**: die verfügbaren
+**Keine samplegenaue `slider_next_chg`-Interpolation in 0.1.1**: die verfügbaren
 Testhosts implementieren diese REAPER-Funktion nicht vollständig. Das darf in
 der nächsten Session als ausdrückliche Erweiterung hinzugefügt werden.
 

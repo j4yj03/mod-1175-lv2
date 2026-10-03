@@ -20,7 +20,7 @@ Descriptor._fields_ = [('uri', C.c_char_p), ('instantiate', Instantiate), ('conn
                       ('cleanup', Cleanup), ('extension', C.c_void_p)]
 
 
-def render(library, descriptor_index, rate, block, invalid=False, inplace=False):
+def render(library, descriptor_index, rate, block, invalid=False, inplace=False, os_value=0, switch_at=None):
     pointer = library.lv2_descriptor(descriptor_index)
     d = pointer.contents
     stereo = descriptor_index == 1
@@ -29,23 +29,28 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False)
     audio = [(C.c_float * block)() for _ in range(4 if stereo else 2)]
     controls = [C.c_float(v) for v in ([0,0,3,5,0,100,100,1,1,1] if stereo else [0,0,3,5,0,100,100,1,1])]
     latency = C.c_float()
+    oversampling = C.c_float(0 if switch_at is not None else os_value)
     for i, buffer in enumerate(audio):
         output_index = 2 if stereo else 1
         source = audio[i-output_index] if inplace and i>=output_index else buffer
         d.connect(handle,i,C.cast(source,C.c_void_p))
     for i, value in enumerate(controls):
         d.connect(handle,len(audio)+i,C.byref(value))
-    d.connect(handle,len(audio)+len(controls),C.byref(latency))
+    latency_port = len(audio)+len(controls)
+    d.connect(handle,latency_port,C.byref(latency))
+    d.connect(handle,latency_port+1,C.byref(oversampling))
     if invalid:
         controls[0].value = float('nan')
         controls[2].value = float('inf')
     d.activate(handle)
     d.run(handle,0)
-    assert latency.value == 4
+    assert latency.value == (0 if switch_at is not None else (0 if os_value==0 else 3 if os_value==1 else 4)), 'Unexpected initial latency'
     output = []
     total=4096
     for offset in range(0,total,block):
         frames=min(block,total-offset)
+        if switch_at is not None and offset>=switch_at and oversampling.value==0:
+            oversampling.value=os_value
         for i in range(frames):
             audio[0][i]=0.2*math.sin(2*math.pi*1000*(i+offset)/rate)
             if stereo: audio[1][i]=0.08*math.sin(2*math.pi*777*(i+offset)/rate)
@@ -55,6 +60,8 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False)
         result = audio[0 if inplace else (2 if stereo else 1)]
         output.extend(float(result[i]) for i in range(frames))
     assert all(math.isfinite(x) for x in output)
+    if switch_at is not None:
+        assert latency.value == (3 if os_value==1 else 4), 'Latency did not follow oversampling switch'
     d.cleanup(handle)
     return output
 
@@ -71,7 +78,17 @@ def main():
                 assert render(library,index,rate,block)==baseline, 'Block-size-dependent output'
             assert render(library,index,rate,128,inplace=True)==baseline, 'In-place mismatch'
             render(library,index,rate,128,invalid=True)
-    print('LV2 ABI / zero block / in-place / finite / block invariance: PASS')
+            for os_value in (1,2):
+                expected=render(library,index,rate,1,os_value=os_value)
+                for block in (64,128,256,511):
+                    assert render(library,index,rate,block,os_value=os_value)==expected, \
+                        'Block-size-dependent output with oversampling'
+                # Mid-stream switch: blocks aligned to the switch point only.
+                switched=render(library,index,rate,512,os_value=os_value,switch_at=2048)
+                for block in (64,128,256,512):
+                    assert render(library,index,rate,block,os_value=os_value,switch_at=2048)==switched, \
+                        'Oversampling transition is block-size dependent'
+    print('LV2 ABI / zero block / in-place / finite / block invariance / oversampling latency + transitions: PASS')
 
 
 if __name__=='__main__':
