@@ -169,6 +169,9 @@ Enabled-Regler verwenden.
 
 Die LV2-Fassung hat absichtlich keine GR-/Level-Anzeige. JSFX zeigt:
 
+- **MAX:** in jeder Gruppenkopfzeile stehender Maximal-Peak (Peak-Hold) in
+  dBFS, über den Peak-Indikatoren. Die Zahlen aktualisieren sich bewusst
+  nur etwa drei Mal pro Sekunde; der Hold selbst hält zwei Sekunden.
 - **IN:** Peak dBFS vor Input, RMS-Linie, Hold-Marker und Clip-Flag des Eingangs.
 - **GR:** tatsächlicher dynamischer Regelgain in dB, vor Mix und Output.
   Ein kleiner Mixwert macht die angezeigte Wet-GR nicht kleiner.
@@ -188,8 +191,12 @@ AES17-Offset und keine LUFS-Anzeige.
 
 REAPER 7 erhält zusätzlich `ext_gr_meter` als negative GR des vorherigen Blocks,
 bei Dual Mono die stärkste Kanalabschwächung. Die Hostanzeige folgt nicht dem
-Output-Makeup oder der Färbungs-Lautheit. Die Grafik liest Momentaufnahmen;
+Output-Makeup oder der Färbung-Lautheit. Die Grafik liest Momentaufnahmen;
 Öffnen/Schließen verändert den Audiokern nicht.
+
+Titel und OS-Stufe stehen in der Fußzeile und in der Kompaktansicht hinten;
+im MCP-/Mixer-Embedding von REAPER ist nur der obere UI-Streifen sichtbar,
+deshalb beginnen die Kennzahlenzeilen (IN/GR/OUT) direkt am oberen Rand.
 
 ## 5. Erster Arbeitsablauf
 

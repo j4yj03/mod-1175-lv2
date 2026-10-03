@@ -18,9 +18,12 @@ Hardware-Revision A/D nicht mehr bindend.
   Erweiterungsgruppe (Mix/Colour/Compression/Link/Oversampling), grünes
   GS76-Banner, BYPASS als Footswitch, bewusst ohne GR-/Level-Meter;
   Illustrations-PNGs im selben Layout.
-- JSFX-Meter 0.2.1-feinheiten: Skala −60 bis 0 dBFS (0 = Clipping),
-  Orange ab −12 dBFS, Rot ab −3 dBFS, breitere Balken, Peak-Hold 2 s,
-  PK-Zahlen zeigen den Hold statt des schnell fallenden Peaks.
+- JSFX-Meter: Skala −60 bis 0 dBFS (0 = Clipping), Orange ab −12 dBFS,
+  Rot ab −3 dBFS, breitere Balken, Peak-Hold 2 s; MAX-Peak in der
+  Gruppenkopfzeile; alle Zahlen als ~3-Hz-Snapshots in @gfx (Display-
+  Globals, kein Audiozustand); Kopfzeile in die Fußzeile verlagert
+  (REAPER-MCP zeigt nur den oberen Streifen), Kennzahlenzeilen oben,
+  Legende entfernt.
 - JSFX Mono/Stereo mit GR/Peak/RMS/Hold/Clip und Host-GR-Meldung für REAPER 7.
 - 26 Instrumentpresets, zwei `.rpl`-Bänke, eingebauter Selector und Custom-Erkennung.
 - Native Make/CMake-Builds, offizielles MPB-Skript/Rezept, zusätzlicher AArch64-

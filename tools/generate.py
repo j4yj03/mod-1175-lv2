@@ -158,33 +158,29 @@ def metadata(parameters, presets, model):
 
 
 def gui_html(stereo):
-    def knob(symbol, label, size=''):
-        cls = f' gs-knob-{size}' if size else ''
-        return (f'<div class="gs-control"><div class="gs-knob{cls}" mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget-rotation="270"></div>'
+    def knob(symbol, label):
+        return (f'<div class="gs-control"><div class="gs-knob" mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget-rotation="270"></div>'
                 f'<label>{label}</label><span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
-    def select(symbol, options):
-        return '<select mod-role="input-control-port" mod-port-symbol="%s" mod-widget="select">%s</select>' % (
-            symbol, ''.join(f'<option value="{i}">{text}</option>' for i, text in enumerate(options)))
-    ratio = select('ratio', ['4:1','8:1','12:1','20:1','ALL'])
-    compression = select('compression', ['COMP ON','COLOUR ONLY'])
-    oversampling = select('oversampling', ['OS OFF','OS 2x','OS 4x'])
-    link = select('stereo_link', ['LINK','DUAL MONO']) if stereo else ''
+    def select(symbol, label, options):
+        return (f'<div class="gs-sel"><label>{label}</label><select mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget="select">'
+                + ''.join(f'<option value="{i}">{text}</option>' for i, text in enumerate(options)) + '</select></div>')
     inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>' for x in (['in_l','in_r'] if stereo else ['in']))
     outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>' for x in (['out_l','out_r'] if stereo else ['out']))
-    return f'''<!-- Generated. 1176-pedal-inspired arrangement; no GR/level meters in MOD GUI. -->
-<div class="gs76{{{{{{cns}}}}}}">
-<header mod-role="drag-handle"><strong>GREEN STRIPE 76</strong><small>{'STEREO' if stereo else 'MONO'}</small></header>
-<div class="gs-top">{knob('input','INPUT','big')}<span class="gs-led" mod-role="bypass-light"></span>{knob('output','OUTPUT','big')}</div>
-<div class="gs-mid">{knob('attack','ATTACK')}{knob('release','RELEASE')}<div class="gs-ratio"><small>4 · 8 · 12 · 20</small>{ratio}<small>OFF · ALL</small><label>RATIO</label></div></div>
-<div class="gs-ext"><b>GRAY-BOX EXTENSIONS · NOT ON ORIGINAL HARDWARE</b><div class="gs-ext-row">{knob('mix','MIX')}{knob('colour','COLOUR')}<div class="gs-sel"><label>COMPRESSION</label>{compression}</div><div class="gs-sel"><label>LINK</label>{link}</div></div><div class="gs-ext-row"><div class="gs-sel gs-sel-wide"><label>OVERSAMPLING</label>{oversampling}</div></div></div>
-<div class="gs-banner"><b>GS76</b><span>GREEN STRIPE 76</span></div>
-<p class="gs-tagline">INDEPENDENT · 1176-INSPIRED GRAY-BOX</p>
-<div class="gs-foot" mod-role="bypass">BYPASS</div>
+    return f'''<!-- Generated. JSFX-console styling; no GR/level meters in MOD GUI. -->
+<div class="gs76{{{{{{cns}}}}}}" mod-role="drag-handle">
+<div class="gs-groups">
+<div class="gs-group"><b>GAIN</b>{knob('input','INPUT')}{knob('output','OUTPUT')}</div>
+<div class="gs-group"><b>TIME</b>{knob('attack','ATTACK')}{knob('release','RELEASE')}</div>
+<div class="gs-group gs-group-flags"><b>ENGINE</b>{select('ratio','RATIO',['4:1','8:1','12:1','20:1','ALL'])}{select('compression','MODE',['COMP ON','COLOUR ONLY'])}{select('stereo_link','LINK',['LINK','DUAL MONO']) if stereo else ''}</div>
+<div class="gs-group gs-group-wide"><b>COLOUR</b><div class="gs-pair">{knob('mix','MIX')}{knob('colour','COLOUR')}</div>{select('oversampling','OVERSAMPLING',['OS OFF','OS 2x','OS 4x'])}</div>
+</div>
+<footer>
+<div class="gs-title"><b>GREEN STRIPE 76</b><small>FET FEEDBACK · INDEPENDENT 1176-INSPIRED GRAY-BOX · {'STEREO' if stereo else 'MONO'}</small></div>
+<div class="gs-bypass" mod-role="bypass">BYPASS</div><span class="gs-light" mod-role="bypass-light"></span>
+</footer>
 <div class="gs-inputs">{inputs}</div><div class="gs-outputs">{outputs}</div>
 </div>
 '''
-
-
 def jsfx_files(parameters, presets, model):
     files = {}
     preset_eel = ['// Generated instrument starting points; not hardware measurements.', '@init',
