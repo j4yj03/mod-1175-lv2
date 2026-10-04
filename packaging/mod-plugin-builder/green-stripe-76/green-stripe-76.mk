@@ -1,7 +1,7 @@
 # Green Stripe 76 buildroot package recipe (MOD Plugin Builder / Cloud Builder).
 # The cloud builder accepts only this single .mk file, so the source must be
 # fetched from a URL. Update _VERSION to the commit that should be built.
-GREEN_STRIPE_76_VERSION = 77cb8bd54bc41e6a71e6a8222ff3945baa3119d2
+GREEN_STRIPE_76_VERSION = 6a83c964a61e096cc039cfaeec222d0d2feb13ce
 GREEN_STRIPE_76_SITE_METHOD = git
 GREEN_STRIPE_76_SITE = https://github.com/j4yj03/mod-1175-lv2.git
 GREEN_STRIPE_76_LICENSE = MIT, ISC (LV2 ABI header)
