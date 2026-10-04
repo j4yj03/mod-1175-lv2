@@ -21,7 +21,9 @@ def main():
         if source.is_file():
             shutil.copy2(source, args.output / source.name)
     core = args.output / "GreenStripe76-Core.jsfx-inc"
-    text = core.read_text()
+# read_text() without an encoding uses the locale encoding, which on Windows
+#     is cp1252 and mangles the UTF-8 dashes in data/*.json.
+    text = core.read_text(encoding='utf-8')
     target_anchor = "  all===1 ? rectified" if "function gs_requested_db" in text else "  left=abs(gs_tap"
     release_anchor = "    cachedRelease!==releaseTime" if "cachedRelease!==releaseTime" in text else "    time=releaseTime*"
     replacements = [

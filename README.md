@@ -5,14 +5,18 @@ Die Gestaltung ist bewusst **Green Stripe**. Das Projekt greift Funktionsprinzip
 der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 
 Aktuell **0.3.0**: Die Bedienoberfläche ist als querformatiges Edelstahl-Paneel
-mit vier senkrechten Feldern neu aufgebaut — GAIN, TIME, der grüne ENGINE-Bereich
-(Verhältnis, Comp-Kippschalter, Oversampling, Link) und COLOUR (Mix, Colour,
-Transformator). Der Transformator ist als **Auswahl mit fünf Stufen** vorhanden,
+mit **drei senkrechten Bereichen** neu aufgebaut — eine breite GAIN/TIME-Platte, der grüne
+ENGINE-Bereich (Verhältnis, Comp-Kippschalter, Oversampling, Link) und COLOUR (Mix, Colour,
+Transformator). Das grüne Feld trägt den **weißen Produktnamen auf einem dunkelgrünen
+Namensschild**, jeder Poti
+seine **Endanschlag-Markierung** (`Min.`/`Max.`, bei Attack/Release `Slow`/`Fast`)
+neben dem Regler, Mix ist wieder Stahl, **Colour** die einzige orange Fläche und
+eine **bernsteinfarbene Betriebslampe** steht vor dem Bypass. Der Transformator ist als **Auswahl mit fünf Stufen** vorhanden,
 wirkt aber **noch nicht auf den Klang**; die Echtzeit-Umsetzung des
 Gyrator-Kapazität-Modells ist dokumentiert, aber nicht gebaut. Er ist eine
-Klangwahl und wandert daher mit dem Preset: 3 der 31 Presets — *Bass Mojo
-Bite*, *Vintage Blue Grit* und *Huge Sub Weight* — bringen ihre Stufe mit,
-alle anderen starten auf `None`. Oversampling bleibt davon unberührt und
+Klangwahl und wandert daher mit dem Preset: 6 der 36 Presets bringen ihre
+Stufe mit, alle anderen starten auf `None`. Die Presets sind nach
+Instrument/Anwendung gruppiert. Oversampling bleibt davon unberührt und
 startet nach jedem Preset auf Off.
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate

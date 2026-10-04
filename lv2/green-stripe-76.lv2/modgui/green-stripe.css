@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls.
-   Landscape brushed-steel panel with four upright bays. The ENGINE bay is filled
-   solid green ("The Green Stripe"). MIX keeps a polished silver knob so it reads
-   as a utility control rather than part of the colour chain. Bypass is a rocker
-   switch in the lower right corner, the name plate in the lower left.
+   Landscape brushed-steel panel with three upright areas: one wide GAIN/TIME
+   plate in two columns, the green ENGINE bay, and COLOUR. The ENGINE bay is filled
+   solid green ("The Green Stripe") and carries the product name as its title, so
+   the footer only needs the descriptor line. COLOUR is the one orange control and
+   matches the amber status lamp next to the bypass rocker in the lower right.
    Independent 1176-inspired gray-box; no GR or level meters in the MOD GUI.
 
    Contrast rule for this panel: the Dwarf display reads dark ink reliably, pale
@@ -12,12 +13,31 @@
    ENGINE bay also differs in brightness and holds a different control mix.
 
    Knob stacks are vertically centred in their bay (flex, justify-content:center),
-   so the first two bays get equal clearance above and below regardless of how
-   many knobs they hold.
+   so both bays get equal clearance above and below regardless of how many
+   controls they hold. GAIN and TIME share one plate covering exactly the ground
+   the two separate bays used to occupy, split into two columns by a hairline so
+   each knob keeps its own heading.
+
+   The GAIN/TIME and COLOUR surfaces are deliberately flat: one even grey with a
+   border, no gradient, no inset sheen and no brushing. A gradient across a tall
+   narrow plate reads as brushed metal, which was not wanted there. The outer
+   panel keeps its brushing so the two surfaces still read apart.
+
+   The product name is white on its own dark-green plaque instead of directly on
+   the light green field. White on the light field is only 2.46:1, while the rest
+   of the panel needs that field to stay light so its near-black labels keep
+   their contrast. The plaque insets the name from the bay edge and restores
+   7.1:1 for white.
 
    Four Phillips screws sit in the corners of the outer panel. Only the head is
-   drawn: a dark gray disc with two crossing slots, no shaft, no washer. */
-.gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#10161a; font:13px Arial,Helvetica,sans-serif; padding:26px 30px 18px; border:1px solid #6f7679; border-radius:7px;
+   drawn: a dark gray disc with two crossing slots, no shaft, no washer.
+
+   Every knob carries an end-stop legend beside it (Min./Max. on the gain knobs,
+   Slow/Fast on the time knobs). The legend is a sibling of the knob inside a
+   flex row rather than a text line under the knob: a second row would make a
+   two-knob bay taller than a bay that also carries a select, and since the bay
+   bodies are vertically centred the bays would stop lining up. */
+.gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#10161a; font:13px Arial,Helvetica,sans-serif; padding:26px 30px 16px; border:1px solid #6f7679; border-radius:7px;
   background:repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(180deg,#ced4d7 0%,#bcc3c6 46%,#b0b7ba 54%,#c5cbcd 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -2px 6px rgba(0,0,0,.22); }
 
@@ -35,12 +55,23 @@
 .gs76{{{cns}}} .gs-screw-br { bottom:7px; right:7px; }
 
 /* Bays ------------------------------------------------------------------ */
-.gs76{{{cns}}} .gs-bays { display:flex; gap:11px; align-items:stretch; height:254px; position:relative; z-index:22; }
+.gs76{{{cns}}} .gs-bays { display:flex; gap:11px; align-items:stretch; height:268px; position:relative; z-index:22; }
 .gs76{{{cns}}} .gs-bay { flex:1; min-width:0; box-sizing:border-box; position:relative; display:flex; flex-direction:column;
-  padding:19px 9px 10px; border-radius:5px; border:1px solid #8b9296;
-  background:linear-gradient(180deg,#b8bfc1 0%,#a9b0b3 52%,#9ca3a6 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 5px rgba(0,0,0,.26); }
-.gs76{{{cns}}} .gs-bay > b { position:absolute; top:5px; left:0; right:0; text-align:center; font-size:11px; letter-spacing:2.5px; color:#0d1215; }
+  padding:18px 9px 9px; border-radius:5px; border:1px solid #8b9296;
+  background:#aeb5b8;
+  box-shadow:0 2px 5px rgba(0,0,0,.26); }
+/* GAIN/TIME share one plate: flex 2 against the flex 1 of the two remaining
+   bays, so the wide plate covers exactly the previous two-bay width. */
+.gs76{{{cns}}} .gs-bay-wide { flex:2; padding:18px 4px 9px; }
+.gs76{{{cns}}} .gs-pair { display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%; }
+.gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; }
+.gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
+.gs76{{{cns}}} .gs-bay > b, .gs76{{{cns}}} .gs-pair section > b { position:absolute; top:5px; left:0; right:0; text-align:center; font-size:11px; letter-spacing:2.5px; color:#0d1215; }
+/* Product name on its own dark-green plaque, inset from the bay edge. White on
+   the plaque is 7.1:1; white straight on the light field would be 2.46:1. */
+.gs76{{{cns}}} .gs-brand { margin:6px 7px 13px; padding:6px 4px; border-radius:3px; text-align:center;
+  background:#1c5a39; border:1px solid #133f27; box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+  color:#f6faf7; font-size:17px; font-weight:bold; letter-spacing:.6px; }
 /* ENGINE: one flat, fully saturated green field, no gradient. */
 .gs76{{{cns}}} .gs-bay-engine { border-color:#2c6b46; background:#57b87c;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 2px 5px rgba(0,0,0,.30); }
@@ -52,19 +83,21 @@
 .gs76{{{cns}}} .gs-body > :last-child { margin-bottom:0; }
 
 /* Knobs ----------------------------------------------------------------- */
-.gs76{{{cns}}} .gs-control { width:76px; text-align:center; margin:0 auto 8px; }
-.gs76{{{cns}}} .gs-knob { width:48px; height:48px; margin:0 auto; border-radius:50%; position:relative; cursor:ns-resize;
+.gs76{{{cns}}} .gs-control { width:124px; text-align:center; margin:0 auto 10px; }
+.gs76{{{cns}}} .gs-knob-row { display:flex; align-items:center; justify-content:space-between; }
+.gs76{{{cns}}} .gs-scale { font-style:normal; font-size:7.5px; letter-spacing:.4px; color:#1d2427; }
+.gs76{{{cns}}} .gs-knob { width:50px; height:50px; flex:none; border-radius:50%; position:relative; cursor:ns-resize;
   border:2px solid #3f464a;
   background:radial-gradient(circle at 38% 30%,#f2f5f6 0,#c3cacd 36%,#8d9599 72%,#5b6367 100%);
   box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.65); }
-.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:21px; width:4px; height:16px; border-radius:2px; background:#20262a; }
-.gs76{{{cns}}} .gs-control label { display:block; margin:5px 0 0; font-size:9px; letter-spacing:1.2px; color:#10161a; }
-.gs76{{{cns}}} .gs-control span { display:block; margin-top:2px; font-size:10px; color:#10161a; }
-/* MIX: polished silver, clearly apart from the steel-bay knobs. */
-.gs76{{{cns}}} .gs-silver .gs-knob { border-color:#7d8589;
-  background:radial-gradient(circle at 38% 28%,#ffffff 0,#e4eaed 32%,#aab2b6 68%,#798185 100%);
-  box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.9),0 0 0 2px rgba(255,255,255,.30); }
-.gs76{{{cns}}} .gs-silver .gs-knob:after { background:#15191b; }
+.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:22px; width:4px; height:17px; border-radius:2px; background:#20262a; }
+.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; letter-spacing:1.2px; color:#10161a; }
+.gs76{{{cns}}} .gs-control span { display:block; margin-top:1px; font-size:10px; color:#10161a; }
+/* COLOUR: the only orange control, same family as the amber status lamp. */
+.gs76{{{cns}}} .gs-orange .gs-knob { border-color:#8a4a12;
+  background:radial-gradient(circle at 38% 30%,#f8c98a 0,#e5973a 38%,#b8661a 74%,#7d3f0c 100%);
+  box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.55),0 0 0 2px rgba(255,196,120,.32); }
+.gs76{{{cns}}} .gs-orange .gs-knob:after { background:#3a1d05; }
 
 /* Fields: selects and switches ------------------------------------------ */
 .gs76{{{cns}}} .gs-field { width:100%; margin:0 0 7px; }
@@ -81,10 +114,13 @@
 .gs76{{{cns}}} .gs-switch-text { display:block; margin-top:3px; font-size:9px; letter-spacing:1.2px; color:#10161a; }
 
 /* Footer: name plate left, bypass rocker right -------------------------- */
-.gs76{{{cns}}} footer { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:11px 2px 1px; position:relative; z-index:22; }
-.gs76{{{cns}}} .gs-plate b { display:block; font-size:20px; letter-spacing:2.5px; color:#10161a; text-shadow:0 1px 0 rgba(255,255,255,.55); }
-.gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8.5px; letter-spacing:1.6px; color:#2b3236; }
-.gs76{{{cns}}} .gs-bypass { display:flex; align-items:center; gap:8px; padding:6px 11px; border-radius:4px; cursor:pointer;
+/* Footer: descriptor left, bypass and status lamp right. Compressed because the
+   product name moved into the green bay, so the plate is a single line again. */
+.gs76{{{cns}}} footer { display:flex; align-items:center; gap:12px; margin:10px 2px 1px; position:relative; z-index:22; }
+.gs76{{{cns}}} .gs-plate { margin-right:auto; }
+.gs76{{{cns}}} .gs-plate b { display:block; font-size:10px; letter-spacing:2px; color:#10161a; text-shadow:0 1px 0 rgba(255,255,255,.55); }
+.gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8px; letter-spacing:1.6px; color:#2b3236; }
+.gs76{{{cns}}} .gs-bypass { order:2; display:flex; align-items:center; gap:8px; padding:5px 10px; border-radius:4px; cursor:pointer;
   border:1px solid #767d81; background:linear-gradient(180deg,#dde2e4,#b5bcc0);
   box-shadow:0 2px 4px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.7); }
 .gs76{{{cns}}} .gs-bypass i { position:relative; display:block; width:36px; height:16px; border-radius:2px;
@@ -94,6 +130,15 @@
 .gs76{{{cns}}} .gs-bypass em { font-style:normal; font-size:9px; letter-spacing:1.6px; color:#10161a; }
 .gs76{{{cns}}} .gs-bypass.mod-active i:after { left:19px; }
 .gs76{{{cns}}} .gs-bypass.mod-active em { color:#7e1c1c; }
+/* Amber status lamp, the way a valve amp shows it. It stands in front of the
+   switch on the panel, but stays after the bypass in the DOM so the general
+   sibling combinator can read the bypass state: there is no backwards selector
+   and :has() is not dependable on this WebKit. Visual order is therefore set
+   with the order property instead of by moving the element. */
+.gs76{{{cns}}} .gs-lamp { order:1; width:18px; height:18px; border-radius:50%; flex:none;
+  border:1px solid #6a4a20; background:radial-gradient(circle at 40% 34%,#e6a850 0,#a8681f 52%,#5c3a10 100%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.35); }
+.gs76{{{cns}}} .gs-bypass.mod-active ~ .gs-lamp { background:radial-gradient(circle at 40% 34%,#6d5a34 0,#54462a 55%,#3c331e 100%); }
 
 /* Drag/zoom overlay. mod-ui only zooms when the clicked element carries the
    class mod-drag-handle, which it does not add by itself. The overlay spans the

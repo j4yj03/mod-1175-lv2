@@ -197,7 +197,7 @@ Root") und dem Klon des gepinnten ysfx-Standes `5c3452f…`:
 | `make test` (DSP, Übergänge, LV2-ABI, Generator, Bündel) | **PASS** |
 | `build/parity-wsl/jsfx_parity` (Mono + Stereo) | **PASS — 232 Fälle, max = 0 FS** |
 | JSFX-Selector / RPL-Bänke / Custom | **PASS — 52 Presets** |
-| `tools/validate.py` | PASS, 31 Presets/Imports — **nur strukturell**, `rdflib` fehlt |
+| `tools/validate.py` | PASS, 36 Presets/Imports — **nur strukturell**, `rdflib` fehlt |
 
 Damit ist der in `LUT_REFERENCE.md` und `AGENTS.md` geforderte Paritätssatz für
 den aktuellen Stand erstmals belegt und **nicht** nur behauptet.

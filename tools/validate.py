@@ -11,8 +11,10 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def main():
     subprocess.run([sys.executable,str(ROOT/'tools/generate.py'),'--check'],check=True)
-    parameters=json.loads((ROOT/'data/parameters.json').read_text())
-    presets=json.loads((ROOT/'data/presets.json').read_text())
+# read_text() without an encoding uses the locale encoding, which on Windows
+#     is cp1252 and mangles the UTF-8 dashes in data/*.json.
+    parameters=json.loads((ROOT/'data/parameters.json').read_text(encoding='utf-8'))
+    presets=json.loads((ROOT/'data/presets.json').read_text(encoding='utf-8'))
     # Preset value per control port. Derived from the parameter list instead of
     # special-casing symbols, so a new port cannot silently skip this check:
     # 'enabled' and 'link' mirror the preset, appended ports (oversampling,
@@ -38,7 +40,7 @@ def main():
                                   if variant=='stereo' or not s.get('stereo_only')])+1
               for variant,audio in [('mono',2),('stereo',4)]}
     for variant, count in expected.items():
-        ttl=(bundle/(variant+'.ttl')).read_text()
+        ttl=(bundle/(variant+'.ttl')).read_text(encoding='utf-8')
         indices=list(map(int,re.findall(r'lv2:index (\d+)',ttl)))
         assert indices==list(range(count)), (variant,indices)
         assert len(re.findall('lv2:OutputPort, lv2:ControlPort',ttl))==1
@@ -51,10 +53,10 @@ def main():
                 assert f'lv2:symbol "{spec["symbol"]}"' in ttl,spec['symbol']
         assert 'lv2:connectionOptional' in ttl
     for path in (ROOT/'jsfx').glob('*.jsfx*'):
-        content=path.read_text()
+        content=path.read_text(encoding='utf-8')
         for include in re.findall(r'^import (.+)$',content,re.M):
             assert (path.parent/include.strip()).is_file(),include
-    gui=(bundle/'modgui.ttl').read_text()
+    gui=(bundle/'modgui.ttl').read_text(encoding='utf-8')
     for path in re.findall(r'<(modgui/[^>]+)>',gui):
         assert (bundle/path).is_file(),f'Missing asset: {path}'
     try:

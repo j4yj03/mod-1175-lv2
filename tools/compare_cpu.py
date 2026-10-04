@@ -18,7 +18,9 @@ def main():
     parser.add_argument('--after-source', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    before, after = json.loads(args.before.read_text()), json.loads(args.after.read_text())
+# read_text() without an encoding uses the locale encoding, which on Windows
+#     is cp1252 and mangles the UTF-8 dashes in data/*.json.
+    before, after = json.loads(args.before.read_text(encoding='utf-8')), json.loads(args.after.read_text(encoding='utf-8'))
     for key in ('rate', 'block', 'frames', 'repeats', 'gui'):
         if before[key] != after[key]:
             raise SystemExit('Benchmark protocols differ: ' + key)

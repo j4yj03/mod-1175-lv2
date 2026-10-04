@@ -291,6 +291,13 @@ Messwerte. Deshalb:
 | Nur die ersten 10 Slider im Paritätstest prüfen | Angehängte Ports bleiben ungetestet | Indexliste explizit, Selektor ausgenommen |
 | Asymmetrische Vertikalverteilung | Gruppen wirken trotz gleicher Mittelwerte schief | Bounding-Box-Zentren vergleichen |
 | Kontrast/Geometrie geschätzt statt gemessen | Fehler fällt erst auf dem Gerät auf | Messen und den Wert in die Prüfung schreiben |
+| `ImageFont.load_default(size=…)` | wirft vor Pillow 10.1 `TypeError`; ein `except TypeError` auf `load_default()` rendert **jede** Größe als ~11px-Bitmap. Ein 17px-Titel wird 9px hoch und 61px breit statt 116px | Skalierbare TTF laden, `getlength()` zum Zentrieren benutzen, Ergebnis am PNG messen |
+| `Path.read_text()` ohne `encoding` | nutzt die **Locale**: unter Windows cp1252, das UTF-8-Dachs in `data/*.json` wird zu `â€“`. `make check-generated` meldet dann je nach Rechner eine andere Datei als veraltet | immer `encoding='utf-8'`, Generatortest unter **beiden** Interpretern laufen lassen und Ausgaben byteweise vergleichen |
+| `Path.write_text(..., newline=…)` | wirft vor Python 3.10 `TypeError`; der Generator läuft auf der Testmaschine mit 3.9 und kann dort gar nicht schreiben | `open('w', encoding='utf-8', newline='')` und den Text selbst schreiben |
+| Ein-/Ausgabe-Puffer mit `newline=""` schreiben | Mixed Line Endings, diff über ganze Datei | Auf `
+` oder `
+` normalisieren, Zeilenzahl vergleichen |
+| Beschriftung **unter** den Regler | Zweiter Text macht einen Bay höher als einen Select-Bay; bei vertikal zentrierten Inhalten liegen die Bays nicht mehr auf einer Linie | Legende seitlich setzen |
 | ASCII-Ersatzschreibweise in deutschen Notizen | Sieht nach Übertragungsfehler aus | Korrekte Umlaute, Diff kontrollieren |
 | Native Bench als Dwarf-Aussage formuliert | Falsche Leistungsaussage | Relativen Trend nennen, Messort dazusagen |
 

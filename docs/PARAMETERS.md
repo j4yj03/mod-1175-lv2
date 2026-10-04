@@ -33,7 +33,7 @@ wird in Ratio/Threshold/Knie/All-Zielwerte übersetzt und diese geglättet.
 | Port | Verhalten beim Recall | Begründung |
 |---|---|---|
 | `oversampling` | startet immer auf **Off** | Qualitäts-/CPU-Wahl, nicht Teil des Klangs; ein Recall darf nicht ungefragt 4x-Rechenzeit aktivieren |
-| `transformer` | übernimmt den **Wert des Presets**, sonst `None` | Klangwahl; 3 von 31 Presets tragen eine Stufe |
+| `transformer` | übernimmt den **Wert des Presets**, sonst `None` | Klangwahl; 6 von 36 Presets tragen eine Stufe |
 
 Beide Pfade laufen in `tools/generate.py` durch `appended_value()`, deshalb
 können LV2-TTL, JSFX-Selektor und RPL-Bänke nicht auseinanderlaufen.

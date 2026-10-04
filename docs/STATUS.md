@@ -12,15 +12,55 @@ Hardware-Revision A/D nicht mehr bindend.
   Erholung, All Buttons, asymmetrische Färbung und Output nach Detektor.
 - LV2-Mono-/Stereo-Deskriptoren in einem Bundle, Enabled/Compression/Mix/Colour,
   optionaler Link, separate Kanal-/Controllerzustände, keine Meterports.
-- MOD-GUI ab 0.3.0 als querformatiges **Edelstahl-Paneel** mit vier senkrechten
-  Feldern: GAIN (Input/Output) und TIME (Attack/Release) als dunklere Stahlfelder,
-  der **grüne ENGINE-Feld** (Verhältnis, Comp-Kippschalter COMP ON/OFF,
-  Oversampling, Link) als „The Green Stripe", COLOUR (Mix silbern, Colour,
-  Transformator) wieder in Stahl. Namenszug „Green Stripe 76 / FET COMPRESSOR/
-  LIMITER EMULATION / MONO oder STEREO" unten links, Bypass als **Kippschalter**
-  unten rechts. Bays sind dunkler als das Paneel, damit die Gruppierung nicht nur
-  über Farbe trägt; bewusst ohne GR-/Level-Meter. Screenshots/Thumbnails aus
-  `tools/make_assets.py` im selben Layout.
+- Zwei Fehler in der Werkzeugkette gefunden und behoben, die nur auf einem der
+  beiden Rechner sichtbar waren: `tools/generate.py` benutzte
+  `Path.write_text(..., newline='\n')`, und dieses Schlüsselwort gibt es erst ab
+  Python 3.10 — auf der Testmaschine mit **3.9** konnte der Generator überhaupt
+  nicht schreiben und brach mit `TypeError` ab. Und `Path.read_text()` ohne
+  `encoding` nutzt die **Locale**, unter Windows also cp1252; die UTF-8-Dachs in
+  `data/presets.json` wurden dadurch zu `â€“` und `make check-generated` meldete je
+  nach Rechner eine andere Datei als veraltet. Beides ist behoben: der
+  Schreibpfad geht über `open(..., newline='')`, alle `read_text()`-Aufrufe in
+  `tools/` setzen `encoding='utf-8'`. Der Nachweis ist der Bytevergleich: Windows
+  Python 3.9 und WSL-Python erzeugen `docs/PRESETS.md`, `presets.ttl` und
+  `GreenStripe76-Presets.jsfx-inc` jetzt identisch. Ohne diesen Test wäre eine
+  der beiden Plattformen still die falsche gewesen.
+
+MOD-GUI ab 0.3.0 als querformatiges Paneel mit **drei senkrechten Bereichen**:
+  eine **breite GAIN/TIME-Platte** (349 px, fast exakt die Fläche der früheren
+  beiden Bays zusammen) als zweispaltiges Raster mit Haarlinie in der Mitte,
+  sodass jeder Regler seine eigene GAIN- bzw. TIME-Überschrift behält; das
+  **grüne ENGINE-Feld** (Verhältnis, Comp-Kippschalter COMP ON/OFF, Oversampling,
+  Link) als „The Green Stripe"; COLOUR (Mix, Colour, Transformator). Die
+  GAIN/TIME- und die COLOUR-Fläche sind bewusst **glatt**: ein einheitliches Grau
+  `#aeb5b8` ohne Verlauf, ohne Innenkante und ohne Bürstung. Ein Verlauf über ein
+  hohes schmales Feld liest sich als gebürstetes Metall, das war dort nicht
+  gewollt; das Außenpaneel behält seine Bürstung, damit sich die Flächen weiter
+  unterscheiden. **Produktname „Green Stripe 76" in Weiß auf einem eigenen
+  dunkelgrünen Namensschild** `#1c5a39`, 8 px vom Bay-Rand, Text 116 px breit und
+  15 px hoch mit 20/21 px seitlichem und 4 px vertikalem Innenabstand. Das Schild
+  ist keine Geschmacksentscheidung allein: Weiß direkt auf dem hellen Grün wäre
+  nur **2,33:1**, auf dem Schild sind es **7,75:1**, und nur so bleibt die
+  Kontrastregel des Paneels (helle Flächen, fast schwarze Schrift) für alle
+  übrigen Beschriftungen intakt. `#206440` erreichte nur 6,74:1 und wurde
+  verworfen.
+  Jeder Poti trägt seine **Endanschlag-Markierung** daneben: `Min.`/`Max.` auf
+  Input, Output, Mix und Colour, `Slow`/`Fast` auf Attack und Release. Die Legende
+  steht bewusst **neben** statt unter dem Regler: eine zweite Textzeile würde einen
+  Zweiregler-Bay höher machen als einen Bay mit Select, und weil die Bay-Inhalte
+  vertikal zentriert sind, lägen die Bays dann nicht mehr auf einer Linie.
+  Regler 48 → 50 px nominal. **Mix** wieder in Stahl wie die übrigen,
+  **Colour** als einzige orange Fläche, farblich verwandt mit der
+  **bernsteinfarbenen Betriebslampe** (13 → 17 px) **vor** dem Bypass-Kippschalter,
+  11 px links davon. Im DOM bleibt die Lampe **hinter** dem Bypass und wird nur
+  über `order:1` optisch vorgezogen: es gibt keinen Rückwärts-Geschwister-
+  Selektor und `:has()` ist auf diesem WebKit nicht verlässlich. So liest der
+  Selektor `.gs-bypass.mod-active ~ .gs-lamp` weiterhin den Bypass-Zustand; die
+  Lampe zeigt also den Bypass, nicht den `enabled`-Port. Bays sind dunkler als das
+  Paneel, damit die Gruppierung nicht nur über Farbe trägt; bewusst ohne GR-/Level-
+  Meter. Screenshots/Thumbnails aus `tools/make_assets.py` im selben Layout.
+  Nachgemessen: kleinster Textkontrast 7,55:1, Lampe 13 px mit 49/49 Bernstein-
+  pixeln im Kern, Regler-Durchmesser 51 px.
 - Transformator-Auswahl ab 0.3.0: Port `transformer` (LV2 Enum, **Index 16
   Stereo / 13 Mono**, angehängt nach Latenz und Oversampling, `connectionOptional`,
   Default `None`), JSFX slider13, fünf Stufen `None / 60s / 80s / 00s /
@@ -32,9 +72,10 @@ Hardware-Revision A/D nicht mehr bindend.
   deshalb anders behandelt als das Oversampling: `tools/generate.py` führt beide
   angehängten Ports über `appended_value()`, aber Oversampling startet nach jedem
   Recall auf Off (Qualitäts-/CPU-Wahl), während das Transformatorfeld aus dem
-  Preset gelesen wird. Belegt sind 3 von 31 Presets — 28 *Bass Mojo Bite* (`80s`),
-  29 *Vintage Blue Grit* (`60s`), 30 *Huge Sub Weight* (`00s`); die übrigen 28
-  stehen auf `None`. LV2, JSFX-Selektor und RPL-Bänke sind gegen denselben Helper
+  Preset gelesen wird. Belegt sind 6 von 36 Presets — 11 *Guitar Colour Only*
+  (`60s`), 12 *Vintage Blue Grit* (`60s`), 13 *Guitar Cruncher* (`80s`),
+  19 *Bass Mojo Bite* (`80s`), 20 *Huge Sub Weight* (`00s`),
+  24 *Snare Saturated Parallel* (`80s`); die übrigen 30 stehen auf `None`. LV2, JSFX-Selektor und RPL-Bänke sind gegen denselben Helper
   erzeugt, können also nicht auseinanderlaufen; `tests/jsfx_parity.cpp` prüft
   Slider 12 und 13 jetzt mit und liest die erwartete Presetzahl aus dem
   Selektorbereich statt aus einer festen Zahl.
@@ -91,7 +132,7 @@ wurde heute **nicht** wiederholt.
 | CMake-ysfx-Testintegration | PASS: gepinnter Host als Unterprojekt inkl. SHA512-Prüfung, 232 Renderfälle und Benchmarkziel |
 | Generierte Textdateien | PASS, 15 Artefakte check-generated |
 | Turtle/RDF | PASS mit rdflib 7.6.0, alle Bundle-TTL |
-| Presetbereiche/Assets/Includes | PASS: 31 Presets, beide Varianten |
+| Presetbereiche/Assets/Includes | PASS: 36 Presets, beide Varianten |
 | EEL2-Compile | PASS mit gepinntem ysfx, einschließlich tatsächlicher GFX-Sektion |
 | Audio-C++/JSFX-Parität | **PASS: 232 Fälle** (ab 0.2.0 inkl. 72 OS- und 8 OS-Umschaltfälle), größte float-Port-Abweichung **0 FS** (bitgleich) |
 | 0.1.0/0.1.1 Burstregression | PASS: 80 stationäre Fälle (neu@4x gegen Altstand), max Audio ~7,1×10⁻¹⁴ FS, GR ~2,4×10⁻¹¹ dB |

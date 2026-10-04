@@ -208,13 +208,13 @@ Fehler korrigiert; Audio-Beispieldateinamen aktuell keine Downloadlinks.
 | S. 5 | Shanks (UA Webzine 2003): 4:1 und 8:1 für Kompression, 12:1 und 20:1 für Peakbegrenzung | Preset-Ratio-Wahl nach Quelle |
 | S. 7 | All Buttons In: Verhältnis „somewhere between 12:1 and 20:1" (UA-Handbuch 2009); Attack/Release ändern sich mit; anfängliche Transientenverzögerung; Kennlinie ähnelt einem Plateau; „almost resembles a brick wall limiter" | Auswahl von Presets mit Verhältnis 4 |
 | S. 9 | Crane (UA Webzine 2003) „1176 Comp-Distortion Trick": extrem schnelle Zeiten erzeugen bewusst Tieffrequenzverzerrung, wenn der Kompressor innerhalb jeder Periode arbeitet | Presets mit sehr schnellen Zeiten und parallelem Mix |
-| S. 9–10 | Bass: 4:1 häufigster Wert; Elmhirst kombiniert 4:1 **und** 8:1 zusammen (= All Buttons); Zeitkonstanten **weg** vom schnellsten Ende | Presets 07/08/28 |
-| S. 9–10 | Owsinski (2006) Bass: 8:1, Attack „around noon", Release „around 3 or 4 o'clock" — „long attack and short release … to increase articulation" | Preset 28 (Artikulation) |
-| S. 10 | Gesang: Lord-Alge 4:1 mit **schnellem** Release; Elmhirst sehr schnelle Attacke und sehr schneller Release, ~10 dB | Presets 04/09/27 |
+| S. 9–10 | Bass: 4:1 häufigster Wert; Elmhirst kombiniert 4:1 **und** 8:1 zusammen (= All Buttons); Zeitkonstanten **weg** vom schnellsten Ende | Presets 16/17/19 |
+| S. 9–10 | Owsinski (2006) Bass: 8:1, Attack „around noon", Release „around 3 or 4 o'clock" — „long attack and short release … to increase articulation" | Preset 19 (Artikulation) |
+| S. 10 | Gesang: Lord-Alge 4:1 mit **schnellem** Release; Elmhirst sehr schnelle Attacke und sehr schneller Release, ~10 dB | Presets 04/18/07 |
 | S. 10 | Dr Pepper: „attack at 10 o'clock, release at 2 o'clock, and 4:1 ratio with tons of input level" (Jim Scott, Clouser/Vdovin 2004) | Preset 02, Wirkung statt Uhrzeit |
-| S. 16 | Vokal-Testtabelle: (4:1, A7, R7, 7–10 dB), (4:1, A6, R6, 7–10 dB), (4:1, A3, R5, 7–10 dB) | Presets 27/05/03 |
-| S. 21 | Bass-Testtabelle: (A4, R4, 4:1, 3–5 dB), (A4, R4, 8:1, 7–10 dB), (A7, R7, 8:1, 7–10 dB) | Presets 07/08/28 |
-| S. 24 | Raummikro-Testtabelle, durchgehend **lange Attacke und kurzer Release** (A3, R6), bei 4:1 / 8:1 / 12:1 / 20:1 / All Buttons In, 3–10 dB | Preset 14, Raummikro-Einstellung |
+| S. 16 | Vokal-Testtabelle: (4:1, A7, R7, 7–10 dB), (4:1, A6, R6, 7–10 dB), (4:1, A3, R5, 7–10 dB) | Presets 07/05/03 |
+| S. 21 | Bass-Testtabelle: (A4, R4, 4:1, 3–5 dB), (A4, R4, 8:1, 7–10 dB), (A7, R7, 8:1, 7–10 dB) | Presets 16/17/19 |
+| S. 24 | Raummikro-Testtabelle, durchgehend **lange Attacke und kurzer Release** (A3, R6), bei 4:1 / 8:1 / 12:1 / 20:1 / All Buttons In, 3–10 dB | Preset 27, Raummikro-Einstellung |
 | S. 25–26 | Fazit: FET-Verzerrung im Bass bei schnellen Zeiten, aggressiver Charakter bei stark komprimiertem Gesang, All Buttons verändert Transientenschlag und Decay | Begründung der Preset-Namen und Notizen |
 
 Die angegebenen Gain-Reduction-Werte (3–5, 7–10, 10–20 dB) sind **Zielwerte für
@@ -352,6 +352,8 @@ behauptet. Explorative NumPy-Recherche nicht als Hardware-Kalibrierfit genutzt.
 | VOCAL-GUIDE | [How to Use the UAD 1176 on Vocals](https://www.electronicproduction.co.uk/post/1176-vocal-compression-guide), Leiam Sullivan | Vollständig gelesen; Frontkante/Body/Release, Extreme als Lernübung, danach Levelmatching. |
 | PENNY | [The Urei Universal Audio 1176 Compressor](https://penny.cool/tips-and-techniques/the-urei-universal-audio-1176-compressor/), Robert Conlon, Penny Cool Presets | Vollständig gelesen; **Quicksheet-Tabelle** mit Angriffs-/Release-Bereichen je Quelle und Dr.-Pepper-Referenz. Sekundäre Praxis-Zusammenfassung ohne Messwerte, daher nur als Startwert-Ableitung verwendet. |
 
+| TOZZOLI | Three Nifty Tricks for the UA 1176, Rich Tozzoli | Vom Benutzer als Text geliefert, vollständig gelesen; Drum Room Smasher, Vocal Transformer, Guitar Cruncher. Drei benannte Techniken, davon nur eine mit Verhältnisangabe (4:1). Kein Messwert, keine Versionszuordnung. |
+| MTM-SNARE | [How to Compress a Snare Drum Properly](https://www.masteringthemix.com/blogs/learn/how-to-compress-a-snare-drum-properly), Tom Frampton, 12.07.2022 | Vollständig gelesen; 4:1, langsame Attacke, Release musikalisch getaktet, 2–6 dB GR, Farbe/Sättigung statt mehr Kompression. Der Artikel empfiehlt außerdem einen 30-Hz-Hochpass vor dem Kompressor — **das können wir nicht abbilden**, Green Stripe 76 hat keinen EQ. |
 Alle daraus entwickelten Presets sind **eigene Startwerte**. Es wurde kein
 geschützter Artikelvolltext oder fremde Presetbank im Paket nachgebildet.
 

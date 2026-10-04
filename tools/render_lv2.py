@@ -46,10 +46,12 @@ def main():
     if args.block<1: raise SystemExit('Block must be positive')
     rate,ch,signal=read_pcm(args.input)
     stereo=not args.mono and ch==2
-    parameters=json.loads((ROOT/'data/parameters.json').read_text())
+# read_text() without an encoding uses the locale encoding, which on Windows
+#     is cp1252 and mangles the UTF-8 dashes in data/*.json.
+    parameters=json.loads((ROOT/'data/parameters.json').read_text(encoding='utf-8'))
     values={p['symbol']:p['default'] for p in parameters}
     if args.preset:
-        presets=json.loads((ROOT/'data/presets.json').read_text())
+        presets=json.loads((ROOT/'data/presets.json').read_text(encoding='utf-8'))
         if not 1<=args.preset<=len(presets): raise SystemExit('Invalid preset number')
         selected=presets[args.preset-1]; values.update({k:selected[k] for k in values if k in selected})
         values['stereo_link']=selected['link']

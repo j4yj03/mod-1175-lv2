@@ -39,6 +39,19 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
 
 ## 3. Regler
 
+**Aufbau der LV2-Oberfläche.** Drei senkrechte Bereiche nebeneinander: eine
+breite **GAIN/TIME-Platte** mit Input/Output in der linken und Attack/Release in
+der rechten Spalte, das grüne ENGINE-Feld (Verhältnis, Comp-Kippschalter,
+Oversampling, Link) mit dem **Produktnamen als Titel**, und COLOUR (Mix, Colour,
+Transformator). **Mix** teilt sich mit Input, Output, Attack
+und Release die normale Stahloberfläche; **Colour** ist als einziger Regler
+**orange** eingefärbt und markiert damit die Farb-/Sättigungsstufe. Neben jedem
+Regler steht sein Stellbereich: `Min.`/`Max.` bei Input, Output, Mix und Colour,
+`Slow`/`Fast` bei Attack und Release. Unten rechts steht die **bernsteinfarbene
+Betriebslampe links vom Bypass-Kippschalter**; sie zeigt den Bypass-Zustand an
+und leuchtet, solange die Kette aktiv ist. Die JSFX-Fassung zeigt dieselben
+Zusammenhänge mit GR-, Peak-/RMS- und Host-GR-Anzeige, dort ohne Lampe.
+
 ### Input — −36 bis +24 dB
 
 Erhöht den Pegel vor Audiopfad und Regelung. Mehr Input verursacht mehr
@@ -151,7 +164,7 @@ Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
   importierte Factory-Bänke und die LV2-Factory-Presets setzen es auf Off.
 - Anders ist der **Transformator**: er ist eine Klangwahl und wandert mit dem
   Preset. Beim Recall startet er also auf dem Wert des Presets und sonst auf
-  `None`. Belegt in 3 von 31 Presets — *Bass Mojo Bite* (`80s`), *Vintage Blue
+  `None`. Belegt in 6 von 36 Presets — *Guitar Colour Only* (`60s`), *Vintage Blue Grit* (`60s`), *Guitar Cruncher* (`80s`), *Bass Mojo Bite* (`80s`), *Huge Sub Weight* (`00s`), *Snare Saturated Parallel* (`80s`).
   Grit* (`60s`) und *Huge Sub Weight* (`00s`). Er wirkt in 0.3.0 noch nicht auf
   den Klang, wird aber bereits korrekt gespeichert und geladen.
 

@@ -30,7 +30,9 @@ def main():
     parser.add_argument('--toolchain',default='Unspecified; see external build report')
     parser.add_argument('--output',type=Path,default=ROOT/'dist')
     args=parser.parse_args(); args.output.mkdir(parents=True,exist_ok=True)
-    version=json.loads((ROOT/'data/model.json').read_text())['version']
+# read_text() without an encoding uses the locale encoding, which on Windows
+#     is cp1252 and mangles the UTF-8 dashes in data/*.json.
+    version=json.loads((ROOT/'data/model.json').read_text(encoding='utf-8'))['version']
     jsfx=[(p,'GreenStripe76/'+p.name) for p in (ROOT/'jsfx').iterdir() if p.is_file()]
     jsfx += [(ROOT/'LICENSE','GreenStripe76/LICENSE'),(ROOT/'docs/USER_MANUAL.md','GreenStripe76/USER_MANUAL.md'),
              (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md')]
