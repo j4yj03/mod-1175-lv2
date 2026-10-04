@@ -244,7 +244,10 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
    OS-Umschaltung im laufenden Programm (Transport läuft) auf Knackfreiheit prüfen.
 4. 0.2.0-Cross-Build (MPB moddwarf-new) und Symbolfloor neu bestümen; der
    Series-Umbau hat die GLIBC-2.29-Referenzen entfernt, Erwartung weiterhin
-   nur libm/libc mit tieferem Floor.
+   nur libm/libc mit tieferem Floor. Das Buildroot-Rezept ist auf den
+   Cloud-Builder-Fluss umgestellt (git-Quelle mit Commit-SHA statt
+   `SITE_METHOD = local` mit `/root/source`); ein erfolgreicher
+   Cloud-Build und eine Geräteinstallation stehen noch aus.
 5. 0.2.0-Pakete erzeugen (`tools/package.py`) und Herkunft festhalten.
 6. Ergebnisse mit `TEST_REPORT_TEMPLATE.md`; gezielte Änderungen nur anhand
    Befund, C++/EEL2/Tests/Modelldoku gemeinsam.

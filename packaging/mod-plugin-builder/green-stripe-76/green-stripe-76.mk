@@ -1,7 +1,9 @@
-# Local development recipe. Source path inside MPB container is /root/source.
-GREEN_STRIPE_76_VERSION = 0.2.0
-GREEN_STRIPE_76_SITE_METHOD = local
-GREEN_STRIPE_76_SITE = /root/source
+# Green Stripe 76 buildroot package recipe (MOD Plugin Builder / Cloud Builder).
+# The cloud builder accepts only this single .mk file, so the source must be
+# fetched from a URL. Update _VERSION to the commit that should be built.
+GREEN_STRIPE_76_VERSION = 2cb38c621edde56bf5dd8c0bc988a47e240548d2
+GREEN_STRIPE_76_SITE_METHOD = git
+GREEN_STRIPE_76_SITE = https://github.com/j4yj03/mod-1175-lv2.git
 GREEN_STRIPE_76_LICENSE = MIT, ISC (LV2 ABI header)
 GREEN_STRIPE_76_LICENSE_FILES = LICENSE
 GREEN_STRIPE_76_DEPENDENCIES =

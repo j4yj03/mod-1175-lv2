@@ -82,19 +82,43 @@ garantiert keine unveränderliche Toolchain.
 
 ### Buildroot-Rezept
 
-`packaging/mod-plugin-builder/green-stripe-76/green-stripe-76.mk` nach
-`MPB/plugins/package/green-stripe-76/` kopieren. Sein lokaler Sourcepfad ist
-`/root/source`, `DESTDIR/PREFIX=/usr` wird eingehalten. Danach im MPB:
+`packaging/mod-plugin-builder/green-stripe-76/green-stripe-76.mk` ist für den
+**MOD Cloud Builder** (`builder.mod.audio`, Pfad `/buildroot`) und für ein
+lokales MPB geeignet. Dort gilt:
+
+- Es wird **genau eine Datei** akzeptiert: die `.mk`. Es kann **kein Sourcearchiv**
+  hochgeladen werden. Die Quelle muss daher über `_SITE` bezogen werden; ein
+  lokales `SITE_METHOD = local` mit `/root/source` schlägt dort mit
+  `ERROR: /root/source does not exist` fehl.
+- `_VERSION` ist der **Commit-SHA**, nicht `0.2.0`. Buildroot klont diesen Stand.
+  Vor jedem Build den gewünschten Commit pushen und den SHA in der `.mk` eintragen;
+  der Builder baut ausschließlich den committeten Zustand, nie den Working Tree.
+- Die erste Zeile der `.mk` muss ein Kommentar sein. Der Builder leitet den
+  Paketnamen aus dem Text **vor** dem ersten `_VERSION = ` ab; beginnt die Datei
+  direkt mit `PRAEVERSION_`, lehnt er das Rezept als "Invalid package version" ab.
+- Der Builder benennt das Paket selbst um (temporärer Verzeichnisname als
+  Prefix). Der eigene Variablenname ist daher frei wählbar; entscheidend sind nur
+  `_VERSION`, `_BUNDLES` und `$(eval $(generic-package))`.
+- `_BUNDLES` bleibt einzeilig und enthält genau ein Bundle.
+
+Für einen lokalen MPB-Lauf genügt dasselbe Rezept:
 
 ```bash
+mkdir -p mod-plugin-builder/plugins/package/green-stripe-76
+cp packaging/mod-plugin-builder/green-stripe-76/green-stripe-76.mk \
+   mod-plugin-builder/plugins/package/green-stripe-76/
+cd mod-plugin-builder
 ./build moddwarf-new green-stripe-76
 ./build moddwarf-new green-stripe-76-rebuild
 ```
 
-Bei großen Buildsystemänderungen `-dirclean` erwägen. `_BUNDLES` bleibt einzeilig.
-Der DSP braucht keine LV2-Dev-Library: enthalten ist nur der schmale C-ABI-Header.
-MPB-CXXFLAGS werden erhalten, am Ende stehen explizit `-fno-fast-math` und
-`-ffp-contract=off`. Diese Projektflags greifen auch bei Make-Commandline-CXXFLAGS.
+Bei großen Buildsystemänderungen `-dirclean` erwägen.
+`DESTDIR/PREFIX=/usr` wird eingehalten. Der DSP braucht keine LV2-Dev-Library:
+enthalten ist nur der schmale C-ABI-Header. MPB reicht `CC`/`CXX`/`CPPFLAGS`/
+`CXXFLAGS`/`LDFLAGS` als Make-Commandline-Variablen durch; die `+=`-Zeilen der
+Projekt-Makefile werden dadurch überstimmt, `PROJECT_CXXFLAGS` steht weiterhin
+zuletzt und setzt explizit `-fno-fast-math` und `-ffp-contract=off` gegen das
+`-ffast-math` aus `BR2_TARGET_OPTIMIZATION`.
 
 ## 4. Zusätzlich erzeugter AArch64-GCC9-Build
 

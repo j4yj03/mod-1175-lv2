@@ -26,6 +26,9 @@
 .gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#5fd494; box-shadow:0 0 7px #2f9c62; }
 .gs76{{{cns}}} .gs-light.off { background:#1c2a20; box-shadow:none; }
 .gs76{{{cns}}} .gs-light.on { background:#5fd494; box-shadow:0 0 7px #2f9c62; }
-.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:27px; }
-.gs76{{{cns}}} .gs-inputs { left:-11px; } .gs76{{{cns}}} .gs-outputs { right:-11px; }
-.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #54755f; background:#060a07; border-radius:50%; }
+/* Audio connectors. mod-ui adds .mod-audio-input/.mod-audio-output to these
+   elements and draws the connect arrow as their background image, so only the
+   placement is set here: width, height, background and border stay untouched. */
+.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; }
+.gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
+.gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }
