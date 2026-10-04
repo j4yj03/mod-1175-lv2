@@ -1,4 +1,4 @@
-# DSP-Architektur — Green Stripe 76, 0.1.1
+# DSP-Architektur — Green Stripe 76, 0.3.0
 
 ## 1. Status und normative Dateien
 
@@ -201,6 +201,40 @@ Diese Zustände **sind kein Jiles–Atherton-Hysteresemodell**. Sie stellen eine
 geringe, pegel-/frequenzabhängige Klangfärbung dar. Behauptungen über einen
 bestimmten 5002-/Lundahl-Core, Wicklung oder B-H-Kurve wären nicht gerechtfertigt.
 
+### Was `Colour` tatsächlich imitiert
+
+Der Regler `colour` (0…100, intern `0…1`) ist **kein** Transformator- und auch
+kein Röhrenmodell. Er ist ein generischer Regler für **Nichtlinearitäts- und
+Bandbegrenzungs-Textur** und wirkt an genau vier Stellen der Kette. Das ist
+absichtlich so: er soll den Charakter einer analogen Übertragungsstufe
+veränderbar machen, ohne ein einzelnes Gerät zu imitieren.
+
+| Ort | Wirkung | Quelle |
+|---|---|---|
+| FET-Kennlinie | `curvature = colour · (0.24 + 0.08·all)` im Divider; asymmetrische Kompression der positiven Halbwelle | `GreenStripe.hpp`, `fet()` |
+| Tap-Sättigung | `softClip` um einen kleinen, über `clipSlope` normierten Bias; Kleinsignal-Gain bleibt ≈ 1 | `tap()` |
+| Eingang | `flux`-Lowpass, dessen Differenz `softClip`-begrenzt wird: leichte HF-Dichte/-Kompression | `Channel::input()` |
+| Ausgang | Lowpass-Mix, zweiter `flux`-`softClip`, asymmetrisch nachgeführte `softClip`-Stufe um +0,04, plus mit `colour` verschobene DC-Eckfrequenz | `Channel::output()` |
+
+Der wichtigste Punkt ist der erste: Bei `Colour = 0` ist der Divider
+**symmetrisch**. Mit steigendem `Colour` wird die positive Halbwelle stärker
+komprimiert als die negative. Das erzeugt die charakteristische asymmetrische
+Kompression und damit **geradzahlige Verzerrungsanteile**. Die beiden
+`softClip`-Stufen liefern zusätzlich die klassische „driven"-Kompression, und die
+`flux`-Glieder verdichten das obere Ende.
+
+**Was `Colour` ausdrücklich nicht ist:**
+
+- kein Transformator (keine Magnetisierungsinduktivität, keine Hysterese, keine
+  Wicklungserscheinungen, keine Kopplungs-Bassabsenkung, kein Brummen)
+- kein Röhrenmodell (die Trioden-Kennlinie aus `docs/sauce/tube.lib` ist nicht
+  Teil des DSP)
+- kein Jiles–Atherton-Kern und kein Core-/Wicklungsbehauptungsmodell
+
+`MIX` ist bewusst **nicht** Teil dieses Reglers, sondern ein separater
+Dry/Wet-Anteil. Im Panel sitzt der `MIX`-Knopf deshalb silbern und nicht im
+grünen ENGINE-Bay: er ist ein Utilities-Regler, kein Färbungsregler.
+
 ### Gemeinsame `tanh`-Näherung
 
 Audio und Bias-Korrektur benutzen exakt dieselbe [7/6]-Padé-Formel:
@@ -259,7 +293,106 @@ Inputs NaN/Inf → 0; endliche Inputs auf ±256 begrenzt. Die Begrenzung ist
 Robustheit für fehlerhafte Hosts, kein musikalischer Limiter. Extrem kleine
 rekursive Zustände werden auf null gesetzt; keine künstliche Rauschquelle.
 
-## 11. Grenzen und Ausbau
+## 11. Transformator — Steuergerüst vorhanden, Klangmodell offen
+
+Seit 0.3.0 gibt es einen Control-Port `transformer` und ein Dropdown im Panel.
+**Die Auswahl hat derzeit keine Klangwirkung.** Der Wert wird im Parameterpfad
+geführt, von Presets adressiert und im `mod-active`-Zustand gespeichert, ist aber
+noch nicht mit dem Audiopfad verbunden.
+
+### Auswahl
+
+| Wert | Bezeichnung | Herkunft `docs/sauce/xformer.lib` | Topologie |
+|---:|---|---|---|
+| 0 | `None` | kein Transformator | — |
+| 1 | `60s` | `GCOT-SE-01`, 5 W, 70 Hz–15 kHz | single-ended |
+| 2 | `80s` | `GCOT-PP-03` | push-pull |
+| 3 | `00s` | `GCOT-PP-04` | push-pull |
+| 4 | `Symmetric` | `GCSYMETRICAL`, **nur für Testzwecke** | push-pull |
+
+Die Bezeichnungen sind bewusst **neutral** und nennen kein Produkt. Die
+Herkunft, die Gerätebezeichnungen des Originals und die Parameter stehen in
+`docs/SOURCES.md`. Ein Produktname in unserer Oberfläche wäre eine
+Hardwarebehauptung, die `AGENTS.md` ausschließt. `Symmetric` ist in der Quelle
+ausdrücklich als Testschaltung markiert und gehört so gekennzeichnet in die
+Liste.
+
+### Was ein Echtzeit-Port des Modells braucht
+
+Das SPICE-Modell arbeitet mit `DDT`, also einer **Ableitung**:
+
+```
+Bp  P1 C1 V = {Np} * DDT(I(Vp))
+Cc  N1 N2   {C}                       // magnetische Kapazität = Permeanz
+Bc  N2 N3 V = {a} * (ABS(V(N1,N2)))**{n} * SGN(V(N1,N2))   // Sättigung
+Br  N3 N4 I = {b} * (ABS(V(N3,N4)))**{m} * SGN(V(N3,N4))   // Hysterese
+```
+
+Für Echtzeit ist das **nicht direkt** übertragbar. Ein Differentiator im
+Audioband ist numerisch unbrauchbar (Verstärkung ∝ 1/f, Rauschen, Instabilität
+bei 4× Oversampling). Nötig ist stattdessen die **integrierte** Form, also ein
+zustandsbehafteter Flux-Integrator:
+
+- magnetischer Zustand `φ` mit `v = N·dφ/dt`, integriert mit Trapez- oder
+  Bilinearregel (nicht explizit, sonst instabil bei steiler Sättigung)
+- `i(φ)` mit Sättigung `|φ|^n·sgn(φ)` und Hysterese über einen geschlossenen
+  Schleifenpfad, nicht über die ungedämpfte `Br`-Quelle
+- Kopplung: das Übersetzungsverhältnis `Ns/Np` wirkt auf die Wicklungsspannung,
+  die Kopplung selbst verursacht die Bassabsenkung — **das ist genau der
+  Klangeffekt, der interessiert**, und er entsteht nur, wenn beide Wicklungen
+  über denselben Kern geführt werden
+- Kanaltrennung: Flux-Zustand je Kanal/Richtung, analog zu den Resamplerhistorien
+
+Das Modell hat außerdem zwei Eigenschaften, die Prüfung brauchen: Es ist
+**nichtlinear und damit nicht LTI**, und `ABS(V)^n` mit `n` bis 13 verlangt eine
+`pow`-Funktion pro Sample je Wicklung. Beides trifft direkt die Paritäts- und
+CPU-Zusagen dieses Projekts.
+
+### Latenzentscheidung
+
+**Getroffene Festlegung:** Der Latenz-Port meldet **unverändert** 0/3/4 Frames,
+abhängig von Oversampling. Eine GC-Kern-Stufe wird bewusst **nicht** als
+zusätzliche Latenz deklariert.
+
+Begründung: Der Kern verursacht vor allem **Phasendrehung im Tieffrequenzbereich**,
+keine echte Laufzeitverzögerung. Eine deklarierte zusätzliche Latenz würde im Host
+eine Sample-genaue Phasenkompensation auslösen, die genau den Charakter zerstört,
+den man mit einem Transformator wählt. Für Gütekommunikation gilt: das Signal
+ist minimalphasig; ein Phasenverzerrungsfilter wäre die Alternative, nicht mehr
+Latenz.
+
+Ausdrücklich offen und später zu prüfen:
+
+- Ab welchem Pegel der Kern hörbar in die Sättigung geht (`a`, `n`)
+- ob die Kopplungs-Bassabsenkung als eigenständiger Regler getrennt vom
+  Sättigungsteil sinnvoller ist
+- ob die bisherige `flux`-/Lowpass-Färbung in `Colour` zurückgenommen werden
+  muss, wenn ein echter Kern daneben steht — sonst addieren sich zwei Modelle
+  für denselben Effekt
+
+### Mögliche Alternativen zum GC-Kern
+
+Falls sich der GC-Kern als zu teuer, zu schwer paritätisch zu halten oder klanglich
+zu ähnlich zu `Colour` erweist, sind diese Wege geprüft worden:
+
+| Alternative | Vorteil | Nachteil |
+|---|---|---|
+| **Nur Kopplungstiefpass** (LC-Tiefpass je Wicklung, ohne Sättigung) | sehr billig, linear, exakt paritätisch, kein `pow` | keine Sättigung, kein Hysteresepfad; wird ein reiner Bassfilter |
+| **Statische Sättigung ohne Zustand** (`softClip` im Transformatorpfad) | billig, bereits im Kern vorhanden | keine Hysterese, kein Pegel-/Zeitverlauf; ähnelt `Colour` und würde mit ihm kollidieren |
+| **Gedämpfter Oszillator-Nachlauf** als Resonanzmodell | billig, gibt das „Nachsummen" großer Wandler | modeliert Resonanz, nicht Sättigung |
+| **Trapezintegrierter GC-Kern** (geplanter Weg) | echte Sättigung + Hysterese + Kopplung | höchster Aufwand: `pow`, Zustand, Parität, CPU neu messen |
+
+### Vorgesehene Einbauposition
+
+Die Eingangsseite, **vor** der Eingangsstufe. Begründung: Der Eingangstransformator
+prägt den Kompressions-Charakter über die gesamte Kette — der Kompressor „sieht"
+das bereits gesättigte/kopplungsgedämpfte Signal. Eine Ausgangsstufe würde nur
+das fertige Signal färben. Für die Versuche mit Transformatoren am Ausgang wäre
+eine zweite, getrennte Option nötig; das ist bewusst nicht Teil des ersten Schritts.
+
+---
+
+## 12. Grenzen und Ausbau
 
 - Native und JSFX-Parität ist belegt, Hardwaregleichheit nicht.
 - Controller-Attack/Knie/Release abhängig von Betriebszustand; vollständige

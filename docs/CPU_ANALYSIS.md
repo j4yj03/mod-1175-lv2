@@ -228,9 +228,126 @@ Die Profilzähler (`profile_*`) sind hier durchweg 0, weil die Instrumentation
 nur in der per `tools/profile_jsfx_copy.py` erzeugten Kopie existiert — das ist
 das erwartete Verhalten und kein Fehlschlag.
 
-**Nicht geliefert:** REAPER-Gesamt-CPU, Dwarf-Peak-CPU/xruns, Hörtest. Diese
-bleiben für die Entscheidung über eine LUT maßgeblich, siehe
-`docs/LUT_REFERENCE.md`, Vorstudie Route 3.
+**Damit nicht geliefert:** REAPER-Gesamt-CPU und Hörtest. **Inzwischen geliefert:**
+Dwarf-CPU auf echtem Cortex-A35, siehe Abschnitt 5b. Die dort genannten
+Einschränkungen (kein Eingangssignal, keine xruns) gelten weiterhin.
+
+## 5b. Messung auf dem MOD Dwarf (2026-10-04)
+
+Als Nächstes wurde der **echte Zielcodecortex-A35** gemessen. Vorbedingung war
+ein funktionierender AArch64-Build.
+
+### Gerät, Build, Vorbedingungen
+
+| Angabe | Wert |
+|---|---|
+| Gerät | MOD Dwarf, OS **1.13.5.3315**, Kernel **6.1.15-rt7-moddwarf** |
+| CPU | aarch64, Cortex-A35 (`CPU part: 0xd04`), 4 Kerne, 963 MB RAM |
+| Audio | jackd, 48 000 Hz, `-p 128 -n 2`, ALSA `hw:DWARF` |
+| LV2-Pfad | `LV2_PATH=/root/.lv2:/usr/lib/lv2` |
+| Compiler | Arm GNU **9.2-2019.12**, `-O3 -mcpu=cortex-a35`, `-ffp-contract=off` |
+| ABI | `check_abi.py --dwarf`: **PASS**, GLIBC-Floor **2.17**, nur `libm`/`libc` |
+| Binary | `green-stripe-76.so`, 47 984 B, md5 `fba59e9bfb68c32d3d7dc1bf3d2b3f9b` |
+
+Der Build ist ein **Dokumentierter Fallback**, nicht der offizielle
+`moddwarf-new`-Weg (Docker-WSL-Integration war deaktiviert, siehe
+`docs/BUILD.md`). Architektur allein ist kein Gerätetest — deshalb folgen zwei
+echte Nachweise auf dem Gerät:
+
+- `lv2info` lädt das Binary per `dlopen`: *Green Stripe 76 Stereo* mit 16 Ports,
+  *Mono* mit 13 Ports, jeweils exit 0 und leere Fehlerausgabe. Kontrollprobe mit
+  absichtlich falscher URI → exit 255, der Test ist also aussagekräftig.
+- jackd mappt die `.so` als `r-xp`-Segment und führt sie als Plugin aus
+  (`<green_stripe_76_stereo/in_l>` verkettet mit `capture_1`/`playback_1`).
+
+Der Vorbehalt „still requires real firmware load test“ aus `check_abi.py` ist
+damit für diesen Build ausgeräumt.
+
+### Messverfahren
+
+Der Plugin-Host läuft auf dem Dwarf **als Threads im jackd-Prozess**, nicht als
+eigener Prozess. Die DSP-Last des Plugins steckt deshalb in jackds
+`utime+stime`. Gemessen wurde:
+
+- `CLK_TCK` per `os.sysconf("SC_CLK_TCK")` **gelesen** (100), nicht geraten.
+- 40 Samples je 20 s, Abstand 0,5 s; berichtet werden Mittel, Median, Spitze.
+- Pro Bedingung **ein vollständiger Gerätestart**. Ein `systemctl restart
+  jack2.service` genügt nicht: die Hardware-Controlchain behält dann ihren
+  Zustand. Erst der Vollstart übernimmt die Auswahl aus `/root/data/last.json`.
+- Kontrolle je Bedingung: `.so` muss in `/proc/<jackd>/maps` stehen
+  (`plugin_mapped`) und die Binär-md5 muss `fba59e9b…` sein.
+
+Diese md5-Prüfung ist nicht Kosmetik: während der ersten Serie wurde die
+vorhandene ältere Binary `c547a3eb` durch eine UI-Installation ersetzt. Die
+Seriesmessung mit dieser md5 wurde daraufhin **verworfen** und mit dem
+HEAD-Build wiederholt. Die Zahlen beider Serien stimmen innerhalb der
+Streubreite überein.
+
+### Ergebnisse
+
+Last in Prozent **eines** A35-Kerns, jackd inklusive:
+
+| Pedalboard | Block | Plugin gemappt | Mittel | Median | Spitze | Δ zur leeren Kette | je Instanz |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `GS76x0` (leer) | 128 | nein | 10,91 % | 11,96 % | 13,96 % | — | — |
+| `GS76x1` (1× Stereo) | 128 | ja | 24,66 % | 25,88 % | 27,91 % | **+13,75 %** | +13,75 % |
+| `GS76x2` (2× Stereo) | 128 | ja | 37,66 % | 37,86 % | 39,87 % | **+26,75 %** | +13,37 % |
+| `GS76x0` (leer) | 256 | nein | 7,57 % | 7,97 % | 9,97 % | — | — |
+| `GS76x1` (1× Stereo) | 256 | ja | 19,98 % | 19,94 % | 21,93 % | **+12,41 %** | +12,41 % |
+| `GS76x2` (2× Stereo) | 256 | ja | 32,59 % | 31,90 % | 33,90 % | +25,01 % | +12,51 % |
+
+Weitere Datenpunkte aus der ersten Serie (ältere Binary, gleiche Quelle):
+4 Instanzen bei 128 Frames ergaben +52,8 % → **+13,2 % je Instanz**.
+
+**Kernaussage:** Eine Stereo-Instanz kostet rund **12,4–13,8 % eines Kerns**.
+Das ist linear (13,75 / 13,37 / 13,2 für 1 / 2 / 4 Instanzen) und nahezu
+unabhängig von der Blockgröße, wie es für eine Sample-für-Sample-Verarbeitung
+mit fester 4×-Rate erwartbar ist. Auf den vier Kernen entspricht eine Instanz
+etwa **3,4 % der Gesamtleistung**, vier Instenzen rund 13 %.
+
+### Einschränkungen — ausdrücklich offen
+
+- **Ohne Eingangssignal gemessen.** Die Kette war stumm. Der Kompressionsdetektor
+  arbeitet damit auf nahezu null Pegel. Da Reglerdetektor, Filter, Resampler und
+  `softClip` im Green Stripe 76 **pro Sample bedingungslog** laufen und nur die
+  Werte vom Pegel abhängen, ist das für den Audiopfad ein brauchbarer Proxy —
+  es ist aber **keine** Worst-Case-Aussage. Eine Messung mit Signal (z. B.
+  mittels Tone-Generator im Pedalboard) steht aus.
+- **Keine xruns erfasst.** Die Plugin-Host-API ist auf diesem Gerät defekt
+  (Port 5555 nimmt Verbindungen an, beantwortet aber keine Anfrage; siehe
+  unten). xrun-Zähler waren deshalb nicht abfragbar.
+- **Kein Hörtest** und kein REAPER-Vergleich.
+- Die Werte gelten für **diesen** Build mit `-O3 -mcpu=cortex-a35`. Andere
+  Compiler Flags oder Optimierungsstufen ändern sie.
+
+### Nebenbefund: die Plugin-Host-API ist auf diesem Gerät defekt
+
+Unabhängig von der Messung fiel auf, dass `mod-host` **keinen eigenen Prozess**
+hat und auf Port 5555 Verbindungen annimmt, ohne sie zu beantworten. Die
+Oberfläche im Web-UI funktioniert, weil die Pedalboard-Auswahl über die
+Hardware-Controlchain (`/dev/ttyS3`) läuft, nicht über die API. Für die
+Messung war das nicht hinderlich, weil sich `last.json` plus Vollstart als
+Steuerweg erwies. Für Werkzeuge, die auf `/api/host/cpu` und `/api/pedals/load`
+setzen, ist das jedoch eine echte Einschränkung der Testumgebung.
+
+### Konsequenz für die LUT-Frage
+
+Damit liegt erstmals **echte Zielhardware-Daten** vor, und sie sprechen gegen
+eine LUT als CPU-Maßnahme:
+
+- Eine Stereo-Instanz mit rund 13 % Kernlast ist für ein Pedal mit vier Kernen
+  unkritisch; selbst vier Instanzen bleiben bei etwa 13 % der Gesamtleistung.
+- Die Last ist linear und wird nicht von einem einzelnen Hotspot dominiert.
+- Die auf x86 gemessene Analyse zeigte bereits, dass eine `softClip`-Log-LUT
+  **langsamer** ist als die analytische Form und eine Linear-LUT erst ab
+  N=2049 die Genauigkeitsanforderung erfüllt — bei doppelter
+  Tabellenspeichergröße und ohne Geschwindigkeitsgewinn
+  (`docs/LUT_REFERENCE.md`, Route 3).
+
+Eine LUT bleibt damit eine **Modell- und Rechenwegfrage**, keine
+Notwendigkeit für die Echtzeitfähigkeit auf dem Zielgerät. Sie sollte nur
+verfolgt werden, wenn die Genauigkeit des Feedback-Zweigs oder die
+FärbungscharakteristikPriorität bekommt — nicht als CPU-Rettung.
 
 ## 6. Reproduktion
 
@@ -266,7 +383,15 @@ aktuelle Implementierung als „vorher“ vergleichen.
 - CPUvergleich direkt in REAPER bei identischer Rate/Blockgröße, gleichem
   Track-/FX-Routing und GUIzustand wiederholen. Die anderen JSFX nennen und
   vergleichbare Qualität/Modelle einstellen.
-- Dwarf Peak CPU/xruns für 128/256 und mehrere Instanzen messen.
+- **Erledigt:** Dwarf-CPU für 128/256 Frames und 1/2/4 Instanzen, Abschnitt 5b.
+  Ergebnis: rund 13 % eines Kerns je Stereo-Instanz, linear skalierend.
+- **Offen:** xruns auf dem Dwarf. Die Plugin-Host-API antwortet auf diesem Gerät
+  nicht; als nächstes eine andere Quelle prüfen (jackd/JACK-Logs, Alsa-Status
+  der Karte, ALSA `hw:DWARF`-Status-API) statt `/api/host/cpu`.
+- **Offen:** Dwarf-Messung mit Eingangssignal, z. B. Tone-Generator im
+  Pedalboard vor der Stereo-Instanz. Ohne Signal ist der Detektor praktisch
+  stumm; die Zahl 13 % ist eine untere Schranke, kein Worst Case.
+- **Offen:** Hörtest auf dem Dwarf, insbesondere bei vier Instanzen.
 - Falls Restlast zu hoch: LUT-/dreifilterbasierten Control-Kern nach Eichas
   **als kalibrierte weitere Modellstufe** entwickeln, mit unverändertem Colour-
   Audiopfad und klaren Transienten-/THD-/Aliasvergleichsgrenzen.

@@ -20,10 +20,14 @@ const char* const stereoURI = "https://github.com/j4yj03/mod-1175-lv2#green-stri
 
 struct Instance {
     greenstripe::Processor processor;
-    float* ports[16];
+    // Stereo: 4 audio + 10 control + latency + oversampling + transformer.
+    // Mono:   2 audio +  9 control + latency + oversampling + transformer.
+    static const unsigned kStereoPorts = 17;
+    static const unsigned kMonoPorts = 14;
+    float* ports[kStereoPorts];
     bool stereo;
     explicit Instance(double rate, bool twoChannels) : processor(rate, twoChannels), stereo(twoChannels) {
-        for (unsigned i = 0; i < 16; ++i) ports[i] = 0;
+        for (unsigned i = 0; i < kStereoPorts; ++i) ports[i] = 0;
     }
     double value(unsigned index, double fallback) const {
         return ports[index] ? greenstripe::finiteOr(*ports[index], fallback) : fallback;
@@ -39,6 +43,7 @@ struct Instance {
         p.enabled = value(base + 8, 1) > 0.0;
         p.stereoLink = !stereo || value(base + 9, 1) > 0.0;
         p.oversampling = static_cast<int>(greenstripe::bounded(value(stereo ? 15 : 12, 0), 0, 2) + 0.5);
+        p.transformer = static_cast<int>(greenstripe::bounded(value(stereo ? 16 : 13, 0), 0, 4) + 0.5);
         processor.setParameters(p);
     }
 };
@@ -50,7 +55,8 @@ LV2_Handle instantiate(const LV2_Descriptor* descriptor, double rate, const char
 }
 void connect(LV2_Handle handle, uint32_t port, void* data) {
     Instance* self = static_cast<Instance*>(handle);
-    if (port < (self->stereo ? 16u : 13u)) self->ports[port] = static_cast<float*>(data);
+    if (port < (self->stereo ? Instance::kStereoPorts : Instance::kMonoPorts))
+        self->ports[port] = static_cast<float*>(data);
 }
 void activate(LV2_Handle handle) {
     Instance* self = static_cast<Instance*>(handle);

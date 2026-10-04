@@ -4,10 +4,17 @@
 Die Gestaltung ist bewusst **Green Stripe**. Das Projekt greift Funktionsprinzipien
 der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 
-Aktuell **0.2.0**: auswählbares Oversampling (Off/2x/4x, Default Off) als
-separate Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad.
-Im lokalen ysfx-Vergleich etwa 42 % weniger Mono- und 50 % weniger
-Stereo-Link-Rechenzeit gegenüber 0.1.0; Geräte-/REAPER-CPU vor Ort messen.
+Aktuell **0.3.0**: Die Bedienoberfläche ist als querformatiges Edelstahl-Paneel
+mit vier senkrechten Feldern neu aufgebaut — GAIN, TIME, der grüne ENGINE-Bereich
+(Verhältnis, Comp-Kippschalter, Oversampling, Link) und COLOUR (Mix, Colour,
+Transformator). Der Transformator ist als **Auswahl mit fünf Stufen** vorhanden,
+wirkt aber **noch nicht auf den Klang**; die Echtzeit-Umsetzung des
+Gyrator-Kapazität-Modells ist dokumentiert, aber nicht gebaut.
+
+Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
+Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen
+ysfx-Vergleich etwa 42 % weniger Mono- und 50 % weniger Stereo-Link-Rechenzeit
+gegenüber 0.1.0.
 
 ## Lieferumfang
 

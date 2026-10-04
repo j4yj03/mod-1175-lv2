@@ -83,6 +83,42 @@ identisch mit dem historischen Adapter wäre.
 
 ## 3. DIY-Schaltungen und Messdaten
 
+### SPICE-Netzmodelle in `docs/sauce/` (vom Benutzer geliefert)
+
+Lokale Originalmaterialien, vom Benutzer in `docs/sauce/` abgelegt. Sie sind
+**Referenzmaterial**, kein Nachbau und keine Kalibrierungsquelle für unser Modell.
+
+**`xformer.lib`** — Audio-Transformatoren auf Gyrator-Kapazität-Basis. Enthält die
+Subckt-Blöcke `CORE_GC` (magnetische Kapazität, Sättigung, Hysteresezweig),
+`SingleEnded` und `PushPull` sowie vier einsatzbereite Instanzen:
+
+| Subckt | Geräte laut Originalkommentar | Topologie | Kern-Parameter |
+|---|---|---|---|
+| `GCOT-SE-01` | Fender Blackface/Silverface, AA764, AB764 Tweed, 5C1, 5E1, 5F1, Vibro Blackface — 5 W, 70 Hz–15 000 Hz | single-ended | `C=0.000709428 a=8792.792558 n=13 R=31.39505785 b=58.96858796 m=2 Np=2012 Ns=72` |
+| `GCOT-PP-03` | Marshall JMP, JCM 800 100 Watts | push-pull | `C=0.012790087 a=11683.51058 n=6 R=6.259141117 b=4.89849808 m=3 Np=668 Ns=48` |
+| `GCOT-PP-04` | Fender Deluxe Reverb 65 Reissue, Deluxe 68 Custom Reverb | push-pull | `C=0.002610317 a=11434.182 n=8 R=8.860791571 b=10.401883352 m=2 Np=1996 Ns=64` |
+| `GCSYMETRICAL` | **„IMPORTANT: Only for testing purposes"** im Original | push-pull | `C=2e-3 a=1e-5 n=25 R=2.3 b=8.4 m=4 Np=200 Ns=100` |
+
+Der Kopfkommentar nennt als Erzeuger „Audio Transformer Models v3.xlsm". Ein
+Hersteller ist nicht angegeben; die Gerätebezeichnungen stehen nur im Kommentar
+der Fremdquelle und werden in unserer Oberfläche **nicht** verwendet.
+
+**`tube.lib`** — Röhrenmodell `6V6GT` (Triode) mit Triode-Arbeitspunkt-,
+Gitter-, Schirm- und Kathodenstromquellen sowie den Kapazitäten `Cg1=7.5p`,
+`Cak=9p`, `Cg1a=0.7p`. **Nicht Teil unseres DSP** und nicht mit `Colour`
+verknüpft.
+
+**`Push-Pull Transformer (Gyrator-Capacitor).cir`** — Testschaltung des
+Fremdautors, die `xformer.lib` und `tube.lib` einbindet und `GCOT-PP-04` mit zwei
+`6V6GT`-Röhren treibt. Dient nur als Beleg für die vorgesehene Verwendung, nicht
+als Messergebnis.
+
+Zugriffsstand: gelesen und strukturell ausgewertet. **Nicht** als Schaltung
+nachgebaut, **nicht** simuliert, **keine** Messwerte übernommen. Das Modell
+benutzt `DDT` und ist damit nicht direkt echtzeitfähig; die geplante
+Echtzeitform mit integriertem Flux-Zustand ist in
+`docs/DSP_ARCHITECTURE.md`, Abschnitt 11, beschrieben, zusammen mit Alternativen.
+
 ### MASON
 
 - [Building DIY 1176 Compressor](https://www.masonaudio.org/diy/comp1176) — vollständig gelesen.

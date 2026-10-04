@@ -99,16 +99,21 @@ inline double amplifier(double x, double headroom, double bias) {
 
 struct Parameters {
     double input, output, attack, release, mix, colour;
-    int ratio, oversampling;
+    int ratio, oversampling, transformer;
     bool compression, enabled, stereoLink;
     Parameters() : input(0), output(0), attack(3), release(5), mix(100),
         colour(100), ratio(0), oversampling(model::default_oversampling),
-        compression(true), enabled(true), stereoLink(true) {}
+        transformer(0), compression(true), enabled(true), stereoLink(true) {}
 };
 
 struct RunningParameters {
     double inputGain, outputGain, attackTime, releaseTime;
     double ratio, threshold, knee, all, mix, colour, compression, enabled, link;
+    // Selected gyrator-capacitor transformer model. Carried through the
+    // parameter path so the control is live and preset-addressable, but it is
+    // deliberately not connected to the audio path yet: see
+    // docs/DSP_ARCHITECTURE.md, section "Transformator".
+    int transformer;
 };
 
 inline RunningParameters convert(const Parameters& p) {
@@ -131,6 +136,7 @@ inline RunningParameters convert(const Parameters& p) {
     r.compression = p.compression ? 1.0 : 0.0;
     r.enabled = p.enabled ? 1.0 : 0.0;
     r.link = p.stereoLink ? 1.0 : 0.0;
+    r.transformer = std::max(0, std::min(4, p.transformer));
     return r;
 }
 
@@ -519,7 +525,8 @@ private:
         return a.inputGain == b.inputGain && a.outputGain == b.outputGain && a.attackTime == b.attackTime &&
                a.releaseTime == b.releaseTime && a.ratio == b.ratio && a.threshold == b.threshold &&
                a.knee == b.knee && a.all == b.all && a.mix == b.mix && a.colour == b.colour &&
-               a.compression == b.compression && a.enabled == b.enabled && a.link == b.link;
+               a.compression == b.compression && a.enabled == b.enabled && a.link == b.link &&
+               a.transformer == b.transformer;
     }
     void approach(double& value, double goal) {
         value += coefficients_.smooth * (goal - value);

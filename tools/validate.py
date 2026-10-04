@@ -13,20 +13,42 @@ def main():
     subprocess.run([sys.executable,str(ROOT/'tools/generate.py'),'--check'],check=True)
     parameters=json.loads((ROOT/'data/parameters.json').read_text())
     presets=json.loads((ROOT/'data/presets.json').read_text())
+    # Preset value per control port. Derived from the parameter list instead of
+    # special-casing symbols, so a new port cannot silently skip this check:
+    # 'enabled' and 'link' mirror the preset, appended ports (oversampling,
+    # transformer) reset to their documented default.
+    def preset_value(preset,spec):
+        symbol=spec['symbol']
+        if symbol=='enabled':
+            return 1
+        if symbol=='stereo_link':
+            return preset['link']
+        if symbol in preset:
+            return preset[symbol]
+        assert spec.get('lv2_append'),(symbol,'not a preset value and not appended')
+        return spec['default']
     for p in presets:
         for spec in parameters:
             key='link' if spec['symbol']=='stereo_link' else spec['symbol']
-            value=1 if key=='enabled' else 0 if key=='oversampling' else p[key]
+            value=preset_value(p,spec)
             assert spec['min']<=value<=spec['max'],(p['name'],key)
     bundle=ROOT/'lv2/green-stripe-76.lv2'
-    for variant, expected in [('mono',13),('stereo',16)]:
+    # Port count is derived: audio ports plus control ports plus the latency port.
+    expected={variant:audio+len([s for s in parameters
+                                  if variant=='stereo' or not s.get('stereo_only')])+1
+              for variant,audio in [('mono',2),('stereo',4)]}
+    for variant, count in expected.items():
         ttl=(bundle/(variant+'.ttl')).read_text()
         indices=list(map(int,re.findall(r'lv2:index (\d+)',ttl)))
-        assert indices==list(range(expected)), (variant,indices)
+        assert indices==list(range(count)), (variant,indices)
         assert len(re.findall('lv2:OutputPort, lv2:ControlPort',ttl))==1
         assert 'lv2:designation lv2:enabled' in ttl
         assert 'gain_reduction' not in ttl
-        assert 'lv2:symbol "oversampling"' in ttl
+        for spec in parameters:
+            if variant=='mono' and spec.get('stereo_only'):
+                assert f'lv2:symbol "{spec["symbol"]}"' not in ttl,spec['symbol']
+            else:
+                assert f'lv2:symbol "{spec["symbol"]}"' in ttl,spec['symbol']
         assert 'lv2:connectionOptional' in ttl
     for path in (ROOT/'jsfx').glob('*.jsfx*'):
         content=path.read_text()

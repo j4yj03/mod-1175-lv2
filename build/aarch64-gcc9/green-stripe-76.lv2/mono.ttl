@@ -15,9 +15,9 @@
     doap:maintainer [ foaf:name "Green Stripe 76 contributors";
         foaf:homepage <https://github.com/j4yj03/mod-1175-lv2> ];
     mod:brand "GreenStripe"; mod:label "GS76 Mono";
-    lv2:minorVersion 1; lv2:microVersion 1;
+    lv2:minorVersion 3; lv2:microVersion 0;
     lv2:optionalFeature lv2:hardRTCapable;
-    rdfs:comment "Independent FET feedback adaptation. 4x oversampling, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
+    rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port
     [ a lv2:InputPort, lv2:AudioPort; lv2:index 0; lv2:symbol "in"; lv2:name "Input" ],
     [ a lv2:OutputPort, lv2:AudioPort; lv2:index 1; lv2:symbol "out"; lv2:name "Output" ],
@@ -68,9 +68,11 @@
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 9;
       lv2:symbol "compression"; lv2:name "Compression";
-      lv2:shortName "Compress"; lv2:default 1;
+      lv2:shortName "Comp"; lv2:default 1;
       lv2:minimum 0; lv2:maximum 1;
-      lv2:portProperty lv2:integer, lv2:toggled;
+      lv2:portProperty lv2:integer, lv2:enumeration;
+      lv2:scalePoint [ rdfs:label "COMP OFF"; rdf:value 0 ];
+      lv2:scalePoint [ rdfs:label "COMP ON"; rdf:value 1 ];
       pprops:rangeSteps 2 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 10;
       lv2:symbol "enabled"; lv2:name "Enabled";
@@ -79,4 +81,24 @@
       lv2:designation lv2:enabled;
       lv2:portProperty lv2:integer, lv2:toggled;
       pprops:rangeSteps 2 ],
-    [ a lv2:OutputPort, lv2:ControlPort; lv2:index 11; lv2:symbol "latency"; lv2:name "Nominal latency"; lv2:designation lv2:latency; lv2:portProperty lv2:integer, pprops:notOnGUI; units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 4 ] .
+    [ a lv2:OutputPort, lv2:ControlPort; lv2:index 11; lv2:symbol "latency"; lv2:name "Nominal latency"; lv2:designation lv2:latency; lv2:portProperty lv2:integer, pprops:notOnGUI; units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 0 ],
+    [ a lv2:InputPort, lv2:ControlPort; lv2:index 12;
+      lv2:symbol "oversampling"; lv2:name "Oversampling";
+      lv2:shortName "OS"; lv2:default 0;
+      lv2:minimum 0; lv2:maximum 2;
+      lv2:portProperty lv2:integer, lv2:enumeration, lv2:connectionOptional;
+      lv2:scalePoint [ rdfs:label "Off"; rdf:value 0 ];
+      lv2:scalePoint [ rdfs:label "2x"; rdf:value 1 ];
+      lv2:scalePoint [ rdfs:label "4x"; rdf:value 2 ];
+      pprops:rangeSteps 3 ],
+    [ a lv2:InputPort, lv2:ControlPort; lv2:index 13;
+      lv2:symbol "transformer"; lv2:name "Transformer";
+      lv2:shortName "Xfm"; lv2:default 0;
+      lv2:minimum 0; lv2:maximum 4;
+      lv2:portProperty lv2:integer, lv2:enumeration, lv2:connectionOptional;
+      lv2:scalePoint [ rdfs:label "None"; rdf:value 0 ];
+      lv2:scalePoint [ rdfs:label "60s"; rdf:value 1 ];
+      lv2:scalePoint [ rdfs:label "80s"; rdf:value 2 ];
+      lv2:scalePoint [ rdfs:label "00s"; rdf:value 3 ];
+      lv2:scalePoint [ rdfs:label "Symmetric"; rdf:value 4 ];
+      pprops:rangeSteps 5 ] .

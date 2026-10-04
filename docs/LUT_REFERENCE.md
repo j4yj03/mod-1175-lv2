@@ -190,17 +190,31 @@ sodass der Nullpunkt exakt bleibt.
 
 ### Entscheidung
 
-Die Umsetzung ist **bewusst zurückgestellt**. `docs/DECISIONS.md` D12 verlangt
-für LUT-/Dreifilterstrukturen ohnehin **zuerst Zeitdaten/Fitting**, und laut
-`AGENTS.md` darf die EEL2-Seite nur zusammen mit C++ und mit bestandenem
-Paritätssatz geändert werden. Route 3 bleibt damit offen, aber nicht mehr
-unbestimmt: als Kandidat ist nur noch `softClip()`/`gs_soft()` vorgesehen, mit
-den oben gemessenen Tabellengrößen.
+Die Umsetzung ist **zurückgestellt — und als CPU-Maßnahme abgelehnt.**
 
-**Nicht geliefert:** Hörtest, CPU-Vorher/Nachher, `cpu_regression`, Geräte- oder
-REAPER-Messung. Ohne diese bleibt jede LUT-Variante unbelegt. Vor einer
-Umsetzung sind zu erbringen: die Messungen aus Abschnitt 6/7 dieses Dokuments,
-ein belastbarer REAPER-Vergleich und der vollständige Paritätssatz.
+Die ursprüngliche Bedingung aus `docs/DECISIONS.md` D12 (zuerst Zeitdaten) ist
+inzwischen auf dem Zielgerät erfüllt: MOD Dwarf, OS 1.13.5.3315, aarch64
+Cortex-A35, 48 kHz, Block 128/256. Ergebnis: **rund 13 % eines Kerns je
+Stereo-Instanz**, linear skalierend (13,75 / 13,37 / 13,2 % für 1 / 2 / 4
+Instanzen), auf den vier Kernen rund 3,4 % der Gesamtleistung pro Instanz.
+Vollständige Methodik, Rohdaten und Vorbehalte: `docs/CPU_ANALYSIS.md`
+Abschnitt 5b.
+
+Damit fehlt der vorausgesetzte Engpass. Zusätzlich spricht der x86-Mikro-
+benchmark gegen den beabsichtigten Gewinn: eine Log-LUT für `softClip()` ist
+**langsamer** als die analytische Form (9,70 ns gegen 1,87 ns), und eine
+Linear-LUT erreicht die Genauigkeitsgrenze erst bei N = 2049 — ohne
+Geschwindigkeitsvorteil bei doppelter Tabellenspeichergröße.
+
+Eine LUT ist damit allenfalls noch eine **Modell- und Färbungsfrage**, keine
+Rechenwegoptimierung. Sie sollte nur wieder aufgegriffen werden, wenn die
+Feedback- oder die Färbungsgenauigkeit ausdrücklich Priorität bekommt.
+**Kein DSP wurde geändert.**
+
+**Weiterhin nicht geliefert:** Hörtest, `cpu_regression` mit Vorher/Nachher am
+geänderten Pfad, REAPER-Gesamt-CPU, xruns auf dem Dwarf und eine Messung mit
+Eingangssignal. Das Fehlen belegt keine Brauchbarkeit einer LUT, es verhindert
+nur ihre Begründung als CPU-Gewinn.
 
 ## Empfohlene Reihenfolge
 

@@ -1,33 +1,74 @@
 /* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls.
-   Console styling taken from the original JSFX UI: dark green background,
-   group frames like the meter groups, green accents. Independent 1176-
-   inspired gray-box; no GR/level meters in the MOD GUI.
-   Contrast pass: panel lighter than the group wells, borders and all text
-   tones raised, accent brightened for a readable UI on the Dwarf display. */
-.gs76{{{cns}}} { width:660px; color:#f2fff6; background:#1b2a20; border:2px solid #74b189; border-radius:10px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
-.gs76{{{cns}}} .gs-groups { display:flex; gap:12px; margin:14px 14px 0; position:relative; z-index:22; }
-.gs76{{{cns}}} .gs-group { flex:1; background:#0f1a12; border:1px solid #55886a; border-radius:6px; padding:8px 10px 12px; box-sizing:border-box; }
-.gs76{{{cns}}} .gs-group > b { display:block; margin:0 0 10px; font-size:13px; letter-spacing:1px; color:#f2fff6; }
-.gs76{{{cns}}} .gs-group-flags { flex:0 0 158px; }
-.gs76{{{cns}}} .gs-group-wide { flex:1.25; }
-.gs76{{{cns}}} .gs-control { text-align:center; width:72px; margin:0 auto 12px; }
-.gs76{{{cns}}} .gs-pair { display:flex; justify-content:space-around; margin-bottom:10px; }
-.gs76{{{cns}}} label { display:block; margin:7px 0 0; letter-spacing:1px; font-size:10px; color:#d3ecd9; }
-.gs76{{{cns}}} .gs-knob { width:52px; height:52px; border-radius:50%; border:2px solid #6ea882; margin:auto; box-shadow:0 3px 6px rgba(0,0,0,0.55), inset 0 1px 2px rgba(160,230,190,0.28); background:radial-gradient(circle,#46514a 0,#161d18 74%); position:relative; cursor:ns-resize; }
-.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:22px; width:4px; height:17px; background:#7dfab4; border-radius:2px; }
-.gs76{{{cns}}} .gs-control span { display:block; margin-top:4px; color:#bde9cc; font-size:11px; }
-.gs76{{{cns}}} .gs-sel { margin:0 0 10px; }
-.gs76{{{cns}}} .gs-sel label { margin:0 0 4px; font-size:9px; color:#c3ddcd; }
-.gs76{{{cns}}} select { width:100%; color:#f2fff6; background:#0c150e; border:1px solid #6ea882; border-radius:4px; height:26px; }
-.gs76{{{cns}}} .gs-pair .gs-control { margin-bottom:0; }
-.gs76{{{cns}}} footer { display:flex; align-items:center; gap:10px; margin:14px 14px 12px; position:relative; z-index:22; }
-.gs76{{{cns}}} .gs-title { margin-right:auto; }
-.gs76{{{cns}}} .gs-title b { display:block; font-size:16px; letter-spacing:2px; color:#ffffff; }
-.gs76{{{cns}}} .gs-title small { display:block; padding-top:2px; font-size:9px; letter-spacing:1px; color:#c3ddcd; }
-.gs76{{{cns}}} .gs-bypass { padding:6px 12px; background:#27402f; color:#e8fbee; border:1px solid #7fbf96; border-radius:5px; cursor:pointer; letter-spacing:1px; }
-.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#7dfab4; box-shadow:0 0 9px #46c07d; }
-.gs76{{{cns}}} .gs-light.off { background:#26332a; box-shadow:none; }
-.gs76{{{cns}}} .gs-light.on { background:#7dfab4; box-shadow:0 0 9px #46c07d; }
+   Landscape brushed-steel panel with four upright bays. The ENGINE bay is green
+   ("The Green Stripe"). MIX keeps a polished silver knob so it reads as a
+   utility control rather than part of the colour chain. Bypass is a rocker
+   switch in the lower right corner, the name plate in the lower left.
+   Independent 1176-inspired gray-box; no GR or level meters in the MOD GUI.
+
+   Bays are darker than the panel, so the panel/bay contrast does the grouping
+   work without relying on colour alone. Text tones are chosen for readability
+   on the Dwarf display: dark ink on steel, pale ink on the green bay. */
+.gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#1b2124; font:13px Arial,Helvetica,sans-serif; padding:12px; border:1px solid #6f7679; border-radius:7px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(180deg,#ced3d5 0%,#b9c0c3 46%,#adb4b7 54%,#c4cacc 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -2px 6px rgba(0,0,0,.22); }
+
+/* Bays ------------------------------------------------------------------ */
+.gs76{{{cns}}} .gs-bays { display:flex; gap:11px; position:relative; z-index:22; }
+.gs76{{{cns}}} .gs-bay { flex:1; min-width:0; box-sizing:border-box; padding:7px 9px 10px; border-radius:5px; border:1px solid #656d71;
+  background:linear-gradient(180deg,#929a9e 0%,#848c90 52%,#798185 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 2px 5px rgba(0,0,0,.30); }
+.gs76{{{cns}}} .gs-bay > b { display:block; margin:0 0 8px; text-align:center; font-size:11px; letter-spacing:2.5px; color:#e9eff1;
+  text-shadow:0 1px 2px rgba(0,0,0,.55); }
+.gs76{{{cns}}} .gs-bay-engine { border-color:#14512c;
+  background:linear-gradient(180deg,#34865a 0%,#267147 52%,#1d5f3b 100%);
+  box-shadow:inset 0 1px 0 rgba(180,240,205,.35),0 2px 5px rgba(0,0,0,.35); }
+.gs76{{{cns}}} .gs-bay-engine > b { color:#f2fff7; text-shadow:0 1px 2px rgba(0,0,0,.45); }
+.gs76{{{cns}}} .gs-body { display:flex; flex-direction:column; align-items:center; }
+
+/* Knobs ----------------------------------------------------------------- */
+.gs76{{{cns}}} .gs-control { width:76px; text-align:center; margin:0 auto 8px; }
+.gs76{{{cns}}} .gs-knob { width:48px; height:48px; margin:0 auto; border-radius:50%; position:relative; cursor:ns-resize;
+  border:2px solid #4b5256;
+  background:radial-gradient(circle at 38% 30%,#f2f5f6 0,#c3cacd 36%,#8d9599 72%,#5b6367 100%);
+  box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.65); }
+.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:21px; width:4px; height:16px; border-radius:2px; background:#20262a; }
+.gs76{{{cns}}} .gs-control label { display:block; margin:5px 0 0; font-size:9px; letter-spacing:1.2px; color:#f0f5f6; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+.gs76{{{cns}}} .gs-control span { display:block; margin-top:2px; font-size:10px; color:#f7fbfc; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+/* MIX: polished silver, clearly apart from the steel-bay knobs. */
+.gs76{{{cns}}} .gs-silver .gs-knob { border-color:#828a8e;
+  background:radial-gradient(circle at 38% 28%,#ffffff 0,#e4eaed 32%,#aab2b6 68%,#798185 100%);
+  box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.9),0 0 0 2px rgba(255,255,255,.30); }
+.gs76{{{cns}}} .gs-silver .gs-knob:after { background:#15191b; }
+
+/* Fields: selects and switches ------------------------------------------ */
+.gs76{{{cns}}} .gs-field { width:100%; margin:0 0 7px; }
+.gs76{{{cns}}} .gs-field > label { display:block; margin:0 0 3px; font-size:8.5px; letter-spacing:1.4px; color:#eaf0f2; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+.gs76{{{cns}}} select { width:100%; height:23px; color:#f6fafb; border:1px solid #474e52; border-radius:3px; background:#5b6367; font-size:10px; }
+.gs76{{{cns}}} .gs-bay-engine select { background:#1c4f32; border-color:#124026; }
+.gs76{{{cns}}} .gs-switch { position:relative; height:23px; border-radius:3px; cursor:pointer;
+  border:1px solid #2c3235; background:linear-gradient(180deg,#4c5457,#383f42);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.55); }
+.gs76{{{cns}}} .gs-switch i { position:absolute; top:2px; left:2px; width:calc(50% - 4px); height:calc(100% - 4px); border-radius:2px;
+  background:linear-gradient(180deg,#f0f3f4,#bcc3c6);
+  box-shadow:0 1px 3px rgba(0,0,0,.5); transition:left .09s ease-out; }
+.gs76{{{cns}}} .gs-switch.mod-active i { left:calc(50% + 2px); }
+.gs76{{{cns}}} .gs-switch-text { display:block; margin-top:3px; font-size:9px; letter-spacing:1.2px; color:#f2f8f9; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+
+/* Footer: name plate left, bypass rocker right -------------------------- */
+.gs76{{{cns}}} footer { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:11px 2px 1px; position:relative; z-index:22; }
+.gs76{{{cns}}} .gs-plate b { display:block; font-size:20px; letter-spacing:2.5px; color:#12181a; text-shadow:0 1px 0 rgba(255,255,255,.55); }
+.gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8.5px; letter-spacing:1.6px; color:#394245; }
+.gs76{{{cns}}} .gs-bypass { display:flex; align-items:center; gap:8px; padding:6px 11px; border-radius:4px; cursor:pointer;
+  border:1px solid #767d81; background:linear-gradient(180deg,#d6dbdd,#a9b0b3);
+  box-shadow:0 2px 4px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.7); }
+.gs76{{{cns}}} .gs-bypass i { position:relative; display:block; width:36px; height:16px; border-radius:2px;
+  background:#2b3134; box-shadow:inset 0 2px 4px rgba(0,0,0,.65); }
+.gs76{{{cns}}} .gs-bypass i:after { content:""; position:absolute; top:2px; left:2px; width:15px; height:12px; border-radius:2px;
+  background:linear-gradient(180deg,#f4f7f8,#c4cbce); box-shadow:0 1px 2px rgba(0,0,0,.55); transition:left .1s ease-out; }
+.gs76{{{cns}}} .gs-bypass em { font-style:normal; font-size:9px; letter-spacing:1.6px; color:#1d2326; }
+.gs76{{{cns}}} .gs-bypass.mod-active i:after { left:19px; }
+.gs76{{{cns}}} .gs-bypass.mod-active em { color:#8c1f1f; }
+
 /* Drag/zoom overlay. mod-ui only zooms when the clicked element carries the
    class mod-drag-handle, which it does not add by itself. The overlay spans the
    whole box, so every interactive element below is lifted above its z-index 20. */

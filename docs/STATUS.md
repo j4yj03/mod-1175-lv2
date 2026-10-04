@@ -1,6 +1,6 @@
 # Entwicklungsstand und Übergabe
 
-Stand **2026-10-03**, Projekt **0.2.0**. Code und Dokumentation sind umgesetzt.
+Stand **2026-10-04**, Projekt **0.3.0**. Code und Dokumentation sind umgesetzt.
 Dies ist keine bloße Planungsantwort. Benutzerziel: eigener **Green Stripe**,
 Hardware-Revision A/D nicht mehr bindend.
 
@@ -12,12 +12,25 @@ Hardware-Revision A/D nicht mehr bindend.
   Erholung, All Buttons, asymmetrische Färbung und Output nach Detektor.
 - LV2-Mono-/Stereo-Deskriptoren in einem Bundle, Enabled/Compression/Mix/Colour,
   optionaler Link, separate Kanal-/Controllerzustände, keine Meterports.
-- MOD-GUI ab 0.2.0 als 1176-inspiriertes Gray-Box-Layout nach Pedalvorlage:
-  Portrait-Faceplate (Silber, schwarze Regler), INPUT/OUTPUT oben mit
-  Bypass-LED zwischen den Reglern, ATTACK/RELEASE/RATIO-Reihe, Gray-Box-
-  Erweiterungsgruppe (Mix/Colour/Compression/Link/Oversampling), grünes
-  GS76-Banner, BYPASS als Footswitch, bewusst ohne GR-/Level-Meter;
-  Illustrations-PNGs im selben Layout.
+- MOD-GUI ab 0.3.0 als querformatiges **Edelstahl-Paneel** mit vier senkrechten
+  Feldern: GAIN (Input/Output) und TIME (Attack/Release) als dunklere Stahlfelder,
+  der **grüne ENGINE-Feld** (Verhältnis, Comp-Kippschalter COMP ON/OFF,
+  Oversampling, Link) als „The Green Stripe", COLOUR (Mix silbern, Colour,
+  Transformator) wieder in Stahl. Namenszug „Green Stripe 76 / FET COMPRESSOR/
+  LIMITER EMULATION / MONO oder STEREO" unten links, Bypass als **Kippschalter**
+  unten rechts. Bays sind dunkler als das Paneel, damit die Gruppierung nicht nur
+  über Farbe trägt; bewusst ohne GR-/Level-Meter. Screenshots/Thumbnails aus
+  `tools/make_assets.py` im selben Layout.
+- Transformator-Auswahl ab 0.3.0: Port `transformer` (LV2 Enum, **Index 16
+  Stereo / 13 Mono**, angehängt nach Latenz und Oversampling, `connectionOptional`,
+  Default `None`), JSFX slider13, fünf Stufen `None / 60s / 80s / 00s /
+  Symmetric` aus `docs/sauce/xformer.lib`. **Ohne Klangwirkung** — der Wert läuft
+  durch den Parameterpfad und ist preset-adressierbar, ist aber nicht mit dem
+  Audiopfad verbunden. Echtzeitform und Alternativen in `DSP_ARCHITECTURE.md`
+  Abschnitt 11.
+- `compression` trägt ab 0.3.0 explizite Scale-Points `COMP OFF` / `COMP ON`
+  (vorher `lv2:toggled` ohne Beschriftung), damit der Kippschaltertext nicht von
+  undokumentiertem `mod-active`-Verhalten abhängt.
 - JSFX-Meter: Skala −60 bis 0 dBFS (0 = Clipping), Orange ab −12 dBFS,
   Rot ab −3 dBFS, breitere Balken, Peak-Hold 2 s; MAX-Peak in der
   Gruppenkopfzeile; alle Zahlen als ~3-Hz-Snapshots in @gfx (Display-
@@ -120,6 +133,39 @@ verifiziert über KCL-Residual und Parität.
 Series-Umbau (+5 % Mono, +10 % Stereo). Ursache sind die Series-Kernel statt
 libm exp/log im Detector-/Solver-Pfad; der Release-Pfad bleibt seriesbasiert
 wie in 0.1.1. Absolute Kosten weiter klein gegen Realtime.
+
+### CPU-Messung auf dem Zielcodecortex-A35 (MOD Dwarf)
+
+Erstmals auf dem **eigentlichen Zielprozessor** gemessen, nicht nur auf x86_64.
+Gerät: MOD Dwarf, OS 1.13.5.3315, Kernel 6.1.15-rt7-moddwarf, aarch64
+Cortex-A35 (`0xd04`), 4 Kerne, jackd 48 kHz. Build: Arm GNU 9.2-2019.12,
+`-O3 -mcpu=cortex-a35`, `check_abi.py --dwarf` PASS (GLIBC-Floor 2.17).
+
+Der Plugin-Host läuft als Threads im jackd-Prozess; die Last wurde daher über
+jackds `utime+stime` mit gelesenem `CLK_TCK` (100) erfasst, 40 Samples je 20 s,
+**ein Vollstart pro Bedingung** (ein jackd-Neustart genügt nicht, die
+Hardware-Controlchain behält ihren Zustand). Pro Bedingung geprüft: `.so` in
+`/proc/<jackd>/maps` und Binär-md5.
+
+| Block | 0 Instanzen | 1× Stereo | 2× Stereo | je Instanz |
+|---|---:|---:|---:|---:|
+| 128 | 10,91 % | 24,66 % | 37,66 % | **+13,4–13,8 %** |
+| 256 | 7,57 % | 19,98 % | 32,59 % | **+12,4–12,5 %** |
+
+Prozent eines Kerns, jackd inklusive. 4 Instanzen bei 128 Frames: +13,2 % je
+Instanz. Das Verhalten ist linear und nahezu blockgrößenunabhängig, wie es für
+eine feste 4×-Sample-Verarbeitung erwartbar ist. Eine Stereo-Instanz kostet
+damit etwa **3,4 % der vierkernigen Gesamtleistung**.
+
+**Offen und ausdrücklich nicht behauptet:** keine xruns (Plugin-Host-API auf
+diesem Gerät defekt), keine Messung mit Eingangssignal (Detektor praktisch
+stumm, also untere Schranke), kein Hörtest, kein REAPER-Vergleich. Beim ersten
+Durchgang wurde die Binär-md5 durch eine UI-Installation auf eine ältere Binary
+geändert; diese Serie wurde **verworfen** und mit dem HEAD-Build wiederholt.
+
+Für die LUT-Frage ist das entscheidend: Es gibt auf dem Zielgerät keinen
+CPU-Engpass, der eine `softClip`-LUT rechtfertigen würde. Details in
+`CPU_ANALYSIS.md`, Abschnitt 5b.
 
 ### Paritätsbefund 0.2.0 (ULP-Untersuchung)
 
@@ -239,6 +285,15 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 - `slider_next_chg` nicht genutzt; derzeit geglättete Block-/Slidersteuerung.
 - JSFX Mono nimmt linken Eingang auf beide Ausgangspins; keine automatische Summe.
 - Kein Lookahead, kein garantierter True-Peak-/Brickwall-Limiter.
+- **Transformator 0.3.0 ohne Klangwirkung.** Die Auswahl `60s/80s/00s/Symmetric`
+  entspricht `GCOT-SE-01`, `GCOT-PP-03`, `GCOT-PP-04` und `GCSYMETRICAL` aus
+  `docs/sauce/xformer.lib`, aber nichts davon ist mit dem Audiopfad verbunden.
+  Die Dropdown-Beschriftungen sind neutral gewählt; die Gerätenamen der Fremdquelle
+  erscheinen bewusst nicht in der Oberfläche. `Symmetric` ist laut Original
+  Quelltext nur für Tests bestimmt.
+- Das SPICE-Modell benutzt `DDT` (Ableitung) und ist nicht direkt echtzeitfähig.
+  Vorgesehen ist ein integrierter Flux-Zustand; Alternativen und Latenzhaltung in
+  `DSP_ARCHITECTURE.md` Abschnitt 11.
 - NAM-Profilrate A1 unbekannt, Positionsdaten fehlen; nicht als reiner statischer
   Shaper oder kompletter steuerbarer Kompressor behauptet.
 - Capturegewichte/WAVs nicht in Distribution.
@@ -260,7 +315,15 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 5. 0.2.0-Pakete erzeugen (`tools/package.py`) und Herkunft festhalten.
 6. Ergebnisse mit `TEST_REPORT_TEMPLATE.md`; gezielte Änderungen nur anhand
    Befund, C++/EEL2/Tests/Modelldoku gemeinsam.
-7. **Route 3 (Kennlinien-LUT) bleibt zurückgestellt.** Die in
+7. **Transformator-Modell (offen, bewusst zurückgestellt).** Port und Oberfläche
+   stehen, die Klangstufe fehlt. Nächster Schritt wäre ein integrierter
+   Flux-Zustand nach dem Vorbild von `CORE_GC`, kanalgetrennt an der
+   Eingangsseite. Vor dem Bau zu entscheiden: Sättigungsschwelle, ob die
+   Kopplungs-Bassabsenkung als eigener Regler kommt, und ob die `flux`-/`Lowpass`
+   -Färbung in `Colour` zurückgeht. Parität C++/EEL2, Dwarf-CPU und Hörtest
+   sind danach zwingend, weil `ABS(v)^n` bis `n = 13` eine `pow`-Funktion je
+   Wicklung und Sample verlangt.
+8. **Route 3 (Kennlinien-LUT) bleibt zurückgestellt.** Die in
    `docs/LUT_REFERENCE.md` geforderte Vorstudie ist abgeschlossen und gegen den
    C++-Originalkern abgeglichen (bit-exakt, max. rel. Abweichung 0.0). Ein LUT
    für `fet()`/`gs_fet()` braucht drei kontinuierliche Achsen (input, charge,
@@ -269,8 +332,17 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
    das Ziel 10⁻⁴ erst bei **264,8 MiB**; eine praxistaugliche Tabelle von
    16,7 MiB verfehlt es um Faktor 6. Ein LUT für `softClip()`/`gs_soft()`
    erreicht dagegen mit N = 1025 auf logarithmischer Achse 2,84×10⁻⁵ bei
-   16 KiB. **Kein DSP wurde geändert.** Vor einer Umsetzung fehlen weiterhin
-   die REAPER- und Dwarf-Zeitdaten sowie ein Hörtest.
+   16 KiB. **Kein DSP wurde geändert.**
+   Stand nach der Dwarf-Messung: Die **Dwarf-Zeitdaten liegen jetzt vor**
+   (~13 % eines A35-Kerns je Stereo-Instanz, linear skalierend, siehe
+   `CPU_ANALYSIS.md` 5b). Sie zeigen **keinen CPU-Engpass**, der eine LUT
+   rechtfertigen würde; zusammen mit dem x86-Befund, dass eine
+   `softClip`-Log-LUT **langsamer** ist als die analytische Form und erst N = 2049
+   die Genauigkeitsgrenze erreicht, ist die LUT-Frage als CPU-Maßnahme
+   **entschieden abgelehnt**. Sie bleibt allenfalls eine Modell- und
+   Färbungsfrage. Vor einer Umsetzung fehlen weiterhin REAPER-Zeitdaten, ein
+   Hörtest und die Entscheidung, ob die Feedback- oder die Färbungsgenauigkeit
+   überhaupt Priorität bekommen soll.
 
 ## 7. Git / Originaldateien
 

@@ -19,7 +19,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-02> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "02 Dr Pepper Inspired"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -31,7 +32,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-03> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "03 Vocal Natural"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -43,7 +45,8 @@
     [ lv2:symbol "colour"; pset:value 75 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-04> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "04 Vocal Peak Catch"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -55,7 +58,8 @@
     [ lv2:symbol "colour"; pset:value 85 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-05> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "05 Vocal Rock Forward"; lv2:port
     [ lv2:symbol "input"; pset:value 7 ],
@@ -67,7 +71,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-06> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "06 Vocal Grit Parallel"; lv2:port
     [ lv2:symbol "input"; pset:value 10 ],
@@ -79,7 +84,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-07> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "07 Bass Finger Level"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -91,7 +97,8 @@
     [ lv2:symbol "colour"; pset:value 80 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-08> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "08 Bass Pick Punch"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
@@ -103,7 +110,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-09> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "09 Bass Fast Grit"; lv2:port
     [ lv2:symbol "input"; pset:value 8 ],
@@ -115,7 +123,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-10> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "10 Kick Weight"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -127,7 +136,8 @@
     [ lv2:symbol "colour"; pset:value 85 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-11> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "11 Snare Crack"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
@@ -139,7 +149,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-12> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "12 Toms Body"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -151,7 +162,8 @@
     [ lv2:symbol "colour"; pset:value 80 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-13> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "13 Overheads Gentle"; lv2:port
     [ lv2:symbol "input"; pset:value -2 ],
@@ -163,7 +175,8 @@
     [ lv2:symbol "colour"; pset:value 60 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-14> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "14 Room All Buttons"; lv2:port
     [ lv2:symbol "input"; pset:value 12 ],
@@ -175,7 +188,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-15> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "15 Drum Parallel Crush"; lv2:port
     [ lv2:symbol "input"; pset:value 14 ],
@@ -187,7 +201,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-16> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "16 Guitar Clean Sustain"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -199,7 +214,8 @@
     [ lv2:symbol "colour"; pset:value 90 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-17> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "17 Guitar Rhythm Tight"; lv2:port
     [ lv2:symbol "input"; pset:value 1 ],
@@ -211,7 +227,8 @@
     [ lv2:symbol "colour"; pset:value 75 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-18> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "18 Guitar Colour Only"; lv2:port
     [ lv2:symbol "input"; pset:value 6 ],
@@ -223,7 +240,8 @@
     [ lv2:symbol "colour"; pset:value 100 ],
     [ lv2:symbol "compression"; pset:value 0 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-19> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "19 Acoustic Strum"; lv2:port
     [ lv2:symbol "input"; pset:value 1 ],
@@ -235,7 +253,8 @@
     [ lv2:symbol "colour"; pset:value 65 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-20> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "20 Acoustic Finger"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -247,7 +266,8 @@
     [ lv2:symbol "colour"; pset:value 65 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "21 Piano Gentle"; lv2:port
     [ lv2:symbol "input"; pset:value -3 ],
@@ -259,7 +279,8 @@
     [ lv2:symbol "colour"; pset:value 50 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "22 Rhodes Body"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -271,7 +292,8 @@
     [ lv2:symbol "colour"; pset:value 90 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-23> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "23 Synth Bass Control"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -283,7 +305,8 @@
     [ lv2:symbol "colour"; pset:value 70 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-24> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "24 Synth Lead Sustain"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -295,7 +318,8 @@
     [ lv2:symbol "colour"; pset:value 80 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-25> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "25 Percussion Snap"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -307,7 +331,8 @@
     [ lv2:symbol "colour"; pset:value 80 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-26> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "26 Stereo Bus Subtle"; lv2:port
     [ lv2:symbol "input"; pset:value -6 ],
@@ -319,7 +344,8 @@
     [ lv2:symbol "colour"; pset:value 40 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-01> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "01 Neutral Start"; lv2:port
     [ lv2:symbol "input"; pset:value 0 ],
@@ -332,7 +358,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-02> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "02 Dr Pepper Inspired"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -345,7 +372,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-03> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "03 Vocal Natural"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -358,7 +386,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-04> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "04 Vocal Peak Catch"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -371,7 +400,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-05> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "05 Vocal Rock Forward"; lv2:port
     [ lv2:symbol "input"; pset:value 7 ],
@@ -384,7 +414,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-06> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "06 Vocal Grit Parallel"; lv2:port
     [ lv2:symbol "input"; pset:value 10 ],
@@ -397,7 +428,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-07> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "07 Bass Finger Level"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -410,7 +442,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-08> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "08 Bass Pick Punch"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
@@ -423,7 +456,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-09> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "09 Bass Fast Grit"; lv2:port
     [ lv2:symbol "input"; pset:value 8 ],
@@ -436,7 +470,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-10> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "10 Kick Weight"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -449,7 +484,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-11> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "11 Snare Crack"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
@@ -462,7 +498,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-12> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "12 Toms Body"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
@@ -475,7 +512,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 0 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-13> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "13 Overheads Gentle"; lv2:port
     [ lv2:symbol "input"; pset:value -2 ],
@@ -488,7 +526,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-14> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "14 Room All Buttons"; lv2:port
     [ lv2:symbol "input"; pset:value 12 ],
@@ -501,7 +540,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-15> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "15 Drum Parallel Crush"; lv2:port
     [ lv2:symbol "input"; pset:value 14 ],
@@ -514,7 +554,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-16> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "16 Guitar Clean Sustain"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -527,7 +568,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-17> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "17 Guitar Rhythm Tight"; lv2:port
     [ lv2:symbol "input"; pset:value 1 ],
@@ -540,7 +582,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-18> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "18 Guitar Colour Only"; lv2:port
     [ lv2:symbol "input"; pset:value 6 ],
@@ -553,7 +596,8 @@
     [ lv2:symbol "compression"; pset:value 0 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-19> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "19 Acoustic Strum"; lv2:port
     [ lv2:symbol "input"; pset:value 1 ],
@@ -566,7 +610,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-20> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "20 Acoustic Finger"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -579,7 +624,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "21 Piano Gentle"; lv2:port
     [ lv2:symbol "input"; pset:value -3 ],
@@ -592,7 +638,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "22 Rhodes Body"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -605,7 +652,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-23> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "23 Synth Bass Control"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -618,7 +666,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-24> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "24 Synth Lead Sustain"; lv2:port
     [ lv2:symbol "input"; pset:value 3 ],
@@ -631,7 +680,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-25> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "25 Percussion Snap"; lv2:port
     [ lv2:symbol "input"; pset:value 2 ],
@@ -644,7 +694,8 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 0 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-26> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "26 Stereo Bus Subtle"; lv2:port
     [ lv2:symbol "input"; pset:value -6 ],
@@ -657,5 +708,6 @@
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],
-    [ lv2:symbol "oversampling"; pset:value 0 ] .
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
 

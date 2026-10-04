@@ -1,6 +1,6 @@
 desc:Green Stripe 76 Stereo
 author:Green Stripe 76 contributors
-version:0.2.0
+version:0.3.0
 tags:dynamics compressor limiter fet
 // SPDX-License-Identifier: MIT
 options:maxmem=8192 prealloc=8192 gfx_hz=30
@@ -14,10 +14,11 @@ slider4:5<1,7,0.01>Release
 slider5:0<0,4,1{4:1,8:1,12:1,20:1,All Buttons}>Ratio
 slider6:100<0,100,0.1>Mix (%)
 slider7:100<0,100,0.1>Colour (%)
-slider8:1<0,1,1{Off,On}>Compression
+slider8:1<0,1,1{COMP OFF,COMP ON}>Compression
 slider9:1<0,1,1{Off,On}>Enabled
 slider10:1<0,1,1{Off,On}>Stereo Link
 slider12:0<0,2,1{Off,2x,4x}>Oversampling
+slider13:0<0,4,1{None,60s,80s,00s,Symmetric}>Transformer
 slider11:0<0,26,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Bass Finger Level,08 Bass Pick Punch,09 Bass Fast Grit,10 Kick Weight,11 Snare Crack,12 Toms Body,13 Overheads Gentle,14 Room All Buttons,15 Drum Parallel Crush,16 Guitar Clean Sustain,17 Guitar Rhythm Tight,18 Guitar Colour Only,19 Acoustic Strum,20 Acoustic Finger,21 Piano Gentle,22 Rhodes Body,23 Synth Bass Control,24 Synth Lead Sustain,25 Percussion Snap,26 Stereo Bus Subtle}>Instrument preset
 in_pin:Input L
 in_pin:Input R
@@ -37,13 +38,12 @@ gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));
 
 @slider
 slider11!=gs_last_preset ? (slider11>0 ? gs_apply_preset(slider11); gs_last_preset=slider11;) : (
-  gs_have_controls && (slider1!=gs_prev1 || slider2!=gs_prev2 || slider3!=gs_prev3 || slider4!=gs_prev4 || slider5!=gs_prev5 || slider6!=gs_prev6 || slider7!=gs_prev7 || slider8!=gs_prev8 || slider9!=gs_prev9 || slider10!=gs_prev10) ? (
+  gs_have_controls && (slider1!=gs_prev1 || slider2!=gs_prev2 || slider3!=gs_prev3 || slider4!=gs_prev4 || slider5!=gs_prev5 || slider6!=gs_prev6 || slider7!=gs_prev7 || slider8!=gs_prev8 || slider9!=gs_prev9 || slider10!=gs_prev10 || slider12!=gs_prev12 || slider13!=gs_prev13) ? (
     slider11=0; gs_last_preset=0; sliderchange(slider11);
   );
 );
-gs_prev1=slider1; gs_prev2=slider2; gs_prev3=slider3; gs_prev4=slider4; gs_prev5=slider5;
-gs_prev6=slider6; gs_prev7=slider7; gs_prev8=slider8; gs_prev9=slider9; gs_prev10=slider10; gs_have_controls=1;
-gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);
+gs_prev1=slider1; gs_prev2=slider2; gs_prev3=slider3; gs_prev4=slider4; gs_prev5=slider5; gs_prev6=slider6; gs_prev7=slider7; gs_prev8=slider8; gs_prev9=slider9; gs_prev10=slider10; gs_prev12=slider12; gs_prev13=slider13; gs_have_controls=1;
+gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12,slider13);
 
 @block
 srate!=gs_rate ? (
@@ -51,7 +51,7 @@ srate!=gs_rate ? (
   gs_meter_decay=exp(-1/(0.35*max(8000,srate)));
   gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));
 );
-gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);
+gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12,slider13);
 pdc_delay=gs_engine.gs_latency(); pdc_bot_ch=0; pdc_top_ch=2;
 atomic_set(gs_ui_os_active,gs_engine.os_active);
 ext_gr_meter=gs_peakGR; gs_peakGR=0;

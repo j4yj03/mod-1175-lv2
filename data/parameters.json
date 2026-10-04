@@ -6,8 +6,9 @@
   {"symbol":"ratio","name":"Ratio","short":"Ratio","default":0,"min":0,"max":4,"step":1,"labels":["4:1","8:1","12:1","20:1","All Buttons"]},
   {"symbol":"mix","name":"Mix","short":"Mix","default":100,"min":0,"max":100,"step":0.1,"unit":"pc"},
   {"symbol":"colour","name":"Colour","short":"Colour","default":100,"min":0,"max":100,"step":0.1,"unit":"pc"},
-  {"symbol":"compression","name":"Compression","short":"Compress","default":1,"min":0,"max":1,"step":1,"toggle":true},
+  {"symbol":"compression","name":"Compression","short":"Comp","default":1,"min":0,"max":1,"step":1,"labels":["COMP OFF","COMP ON"]},
   {"symbol":"enabled","name":"Enabled","short":"Enabled","default":1,"min":0,"max":1,"step":1,"toggle":true,"designation":"enabled"},
   {"symbol":"stereo_link","name":"Stereo Link","short":"Link","default":1,"min":0,"max":1,"step":1,"toggle":true,"stereo_only":true},
-  {"symbol":"oversampling","name":"Oversampling","short":"OS","default":0,"min":0,"max":2,"step":1,"labels":["Off","2x","4x"],"jsfx_slider":12,"lv2_append":true,"connection_optional":true}
+  {"symbol":"oversampling","name":"Oversampling","short":"OS","default":0,"min":0,"max":2,"step":1,"labels":["Off","2x","4x"],"jsfx_slider":12,"lv2_append":true,"connection_optional":true},
+  {"symbol":"transformer","name":"Transformer","short":"Xfm","default":0,"min":0,"max":4,"step":1,"labels":["None","60s","80s","00s","Symmetric"],"jsfx_slider":13,"lv2_append":true,"connection_optional":true,"no_dsp":true}
 ]

@@ -12,6 +12,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==2 ? (
     slider1=3;
@@ -24,6 +26,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==3 ? (
     slider1=2;
@@ -36,6 +40,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==4 ? (
     slider1=4;
@@ -48,6 +54,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==5 ? (
     slider1=7;
@@ -60,6 +68,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==6 ? (
     slider1=10;
@@ -72,6 +82,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==7 ? (
     slider1=3;
@@ -84,6 +96,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==8 ? (
     slider1=5;
@@ -96,6 +110,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==9 ? (
     slider1=8;
@@ -108,6 +124,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==10 ? (
     slider1=4;
@@ -120,6 +138,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==11 ? (
     slider1=5;
@@ -132,6 +152,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==12 ? (
     slider1=4;
@@ -144,6 +166,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=0;
+    slider12=0;
+    slider13=0;
   );
   which==13 ? (
     slider1=-2;
@@ -156,6 +180,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==14 ? (
     slider1=12;
@@ -168,6 +194,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==15 ? (
     slider1=14;
@@ -180,6 +208,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==16 ? (
     slider1=3;
@@ -192,6 +222,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==17 ? (
     slider1=1;
@@ -204,6 +236,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==18 ? (
     slider1=6;
@@ -216,6 +250,8 @@ function gs_apply_preset(which) (
     slider8=0;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==19 ? (
     slider1=1;
@@ -228,6 +264,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==20 ? (
     slider1=3;
@@ -240,6 +278,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==21 ? (
     slider1=-3;
@@ -252,6 +292,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==22 ? (
     slider1=2;
@@ -264,6 +306,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==23 ? (
     slider1=2;
@@ -276,6 +320,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==24 ? (
     slider1=3;
@@ -288,6 +334,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   which==25 ? (
     slider1=2;
@@ -300,6 +348,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=0;
+    slider12=0;
+    slider13=0;
   );
   which==26 ? (
     slider1=-6;
@@ -312,6 +362,8 @@ function gs_apply_preset(which) (
     slider8=1;
     slider9=1;
     slider10=1;
+    slider12=0;
+    slider13=0;
   );
   sliderchange(1023);
 );

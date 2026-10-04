@@ -145,39 +145,82 @@ def metadata(parameters, presets, model):
             preset_uri = PREFIX + f'preset-{variant}-{i+1:02d}'
             manifest.append(f'<{preset_uri}> a pset:Preset; lv2:appliesTo <{uri}>; '
                             f'rdfs:label "{preset["name"]}"; rdfs:seeAlso <presets.ttl> .')
-            values = dict(preset, enabled=1, stereo_link=preset['link'], oversampling=0)
+            values = dict(preset, enabled=1, stereo_link=preset['link'])
+            # Appended ports are not instrument-preset values; they reset to
+            # their documented default (Off / None) like the JSFX and RPL paths.
+            for q in controls:
+                if q.get('lv2_append'):
+                    values[q['symbol']] = q['default']
             preset_text.append(f'<{preset_uri}> a pset:Preset; lv2:appliesTo <{uri}>; '
                               f'rdfs:label "{preset["name"]}"; lv2:port\n' + ',\n'.join(
                                   f'    [ lv2:symbol "{p["symbol"]}"; pset:value {number(values[p["symbol"]])} ]'
                                   for p in controls) + ' .\n')
-        files[bundle + f'modgui/icon-{variant}.html'] = gui_html(stereo)
+        files[bundle + f'modgui/icon-{variant}.html'] = gui_html(stereo, parameters)
     files[bundle + 'manifest.ttl'] = '\n'.join(manifest) + '\n'
     files[bundle + 'modgui.ttl'] = '\n'.join(gui) + '\n'
     files[bundle + 'presets.ttl'] = '\n'.join(preset_text) + '\n'
     return files
 
 
-def gui_html(stereo):
-    def knob(symbol, label):
-        return (f'<div class="gs-control"><div class="gs-knob" mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget-rotation="270"></div>'
-                f'<label>{label}</label><span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
-    def select(symbol, label, options):
-        return (f'<div class="gs-sel"><label>{label}</label><select mod-role="input-control-port" mod-port-symbol="{symbol}" mod-widget="select">'
-                + ''.join(f'<option value="{i}">{text}</option>' for i, text in enumerate(options)) + '</select></div>')
-    inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>' for x in (['in_l','in_r'] if stereo else ['in']))
-    outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>' for x in (['out_l','out_r'] if stereo else ['out']))
-    return f'''<!-- Generated. JSFX-console styling; no GR/level meters in MOD GUI. -->
+def gui_html(stereo, parameters):
+    """Panel markup for the MOD GUI.
+
+    Landscape brushed-steel panel with four upright bays. The ENGINE bay is the
+    green one. MIX keeps a silver knob so it reads as a utility control rather
+    than part of the colour chain. The bypass is a rocker switch in the lower
+    right corner, the name plate in the lower left. No GR or level meters.
+    """
+    def spec(symbol):
+        return next(p for p in parameters if p['symbol'] == symbol)
+
+    def labels(symbol, override=None):
+        s = spec(symbol)
+        return override if override is not None else s.get('labels', [])
+
+    def knob(symbol, label, cls=''):
+        extra = f' {cls}' if cls else ''
+        return (f'<div class="gs-control{extra}">'
+                f'<div class="gs-knob" mod-role="input-control-port" mod-port-symbol="{symbol}" '
+                f'mod-widget-rotation="270"></div>'
+                f'<label>{label}</label>'
+                f'<span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
+
+    def select(symbol, label, override=None):
+        options = labels(symbol, override)
+        return (f'<div class="gs-field"><label>{label}</label>'
+                f'<select mod-role="input-control-port" mod-port-symbol="{symbol}" '
+                f'mod-widget="select">'
+                + ''.join(f'<option value="{i}">{t}</option>' for i, t in enumerate(options))
+                + '</select></div>')
+
+    def switch(symbol, label):
+        """Custom-drawn rocker. The caption comes from the port scale points via
+        mod-role=input-control-value, so the text does not depend on mod-ui
+        adding a state class."""
+        return (f'<div class="gs-field"><label>{label}</label>'
+                f'<div class="gs-switch" mod-role="input-control-port" '
+                f'mod-port-symbol="{symbol}"><i></i></div>'
+                f'<span class="gs-switch-text" mod-role="input-control-value" '
+                f'mod-port-symbol="{symbol}"></span></div>')
+
+    inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>'
+                     for x in (['in_l', 'in_r'] if stereo else ['in']))
+    outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>'
+                      for x in (['out_l', 'out_r'] if stereo else ['out']))
+    link = select('stereo_link', 'LINK', ['DUAL MONO', 'LINK']) if stereo else ''
+    return f'''<!-- Generated by tools/generate.py. Landscape brushed-steel panel,
+     four upright bays, green ENGINE bay, rocker bypass. No GR/level meters. -->
 <div class="gs76{{{{{{cns}}}}}}" mod-role="drag-handle">
 <div class="mod-drag-handle"></div>
-<div class="gs-groups">
-<div class="gs-group"><b>GAIN</b>{knob('input','INPUT')}{knob('output','OUTPUT')}</div>
-<div class="gs-group"><b>TIME</b>{knob('attack','ATTACK')}{knob('release','RELEASE')}</div>
-<div class="gs-group gs-group-flags"><b>ENGINE</b>{select('ratio','RATIO',['4:1','8:1','12:1','20:1','ALL'])}{select('compression','MODE',['COLOUR ONLY','COMP ON'])}{select('stereo_link','LINK',['DUAL MONO','LINK']) if stereo else ''}</div>
-<div class="gs-group gs-group-wide"><b>COLOUR</b><div class="gs-pair">{knob('mix','MIX')}{knob('colour','COLOUR')}</div>{select('oversampling','OVERSAMPLING',['OS OFF','OS 2x','OS 4x'])}</div>
+<div class="gs-bays">
+<div class="gs-bay"><b>GAIN</b><div class="gs-body">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></div>
+<div class="gs-bay"><b>TIME</b><div class="gs-body">{knob('attack', 'ATTACK')}{knob('release', 'RELEASE')}</div></div>
+<div class="gs-bay gs-bay-engine"><b>ENGINE</b><div class="gs-body">{select('ratio', 'RATIO')}{switch('compression', 'MODE')}{select('oversampling', 'OVERSAMPLING')}{link}</div></div>
+<div class="gs-bay"><b>COLOUR</b><div class="gs-body">{knob('mix', 'MIX', 'gs-silver')}{knob('colour', 'COLOUR')}{select('transformer', 'TRANSFORMER')}</div></div>
 </div>
 <footer>
-<div class="gs-title"><b>GREEN STRIPE 76</b><small>FET FEEDBACK · INDEPENDENT 1176-INSPIRED GRAY-BOX · {'STEREO' if stereo else 'MONO'}</small></div>
-<div class="gs-bypass" mod-role="bypass">BYPASS</div><span class="gs-light" mod-role="bypass-light"></span>
+<div class="gs-plate"><b>Green Stripe 76</b><span>FET COMPRESSOR/LIMITER EMULATION</span><span>{'STEREO' if stereo else 'MONO'}</span></div>
+<div class="gs-bypass" mod-role="bypass"><i></i><em>BYPASS</em></div>
 </footer>
 <div class="gs-inputs">{inputs}</div><div class="gs-outputs">{outputs}</div>
 </div>
@@ -186,11 +229,16 @@ def jsfx_files(parameters, presets, model):
     files = {}
     preset_eel = ['// Generated instrument starting points; not hardware measurements.', '@init',
                   'function gs_apply_preset(which) (']
+    # Appended ports are reset explicitly: oversampling and transformer are not
+    # part of the instrument preset values, but presets are documented to start
+    # from Off and None so that LV2 presets and JSFX presets behave the same.
+    appended = [p for p in parameters if p.get('jsfx_slider', 0) >= 12]
     for i, p in enumerate(presets):
         preset_eel.append(f'  which=={i+1} ? (')
         values = [p[x] for x in ('input','output','attack','release','ratio','mix','colour','compression')]
         values += [1, p['link']]
         preset_eel += [f'    slider{j+1}={number(x)};' for j, x in enumerate(values)]
+        preset_eel += [f'    slider{p["jsfx_slider"]}={number(p["default"])};' for p in appended]
         preset_eel.append('  );')
     preset_eel += ['  sliderchange(1023);', ');', '']
     files['jsfx/GreenStripe76-Presets.jsfx-inc'] = '\n'.join(preset_eel)
@@ -199,7 +247,11 @@ def jsfx_files(parameters, presets, model):
         rpl = [f'<REAPER_PRESET_LIBRARY "Green Stripe 76 {variant}"']
         for preset in presets:
             values = [preset[x] for x in ('input','output','attack','release','ratio','mix','colour','compression')]
-            values += [1,preset['link'],0,0]
+            # slider9 enabled, slider10 link, slider11 preset selector,
+            # slider12 oversampling, slider13 transformer. Both appended
+            # controls reset to their default so a recall cannot keep OS 4x or
+            # a transformer selected behind the preset name.
+            values += [1, preset['link'], 0, 0, 0]
             state = ' '.join([number(x) for x in values] + ['-']*(64-len(values)))
             payload = base64.b64encode((state + ' "' + preset['name'] + '"\x00').encode('utf-8')).decode('ascii')
             rpl += [f'  <PRESET "{preset["name"]}"', '    '+payload, '  >']
@@ -222,6 +274,13 @@ def jsfx_files(parameters, presets, model):
             lines.append(f'slider{slider_index}:{p["default"]}<{p["min"]},{p["max"]},{p["step"]}{labels}>{label}')
         names = 'Custom,' + ','.join(p['name'] for p in presets)
         lines.append(f'slider11:0<0,{len(presets)},1{{{names}}}>Instrument preset')
+        # Control sliders are derived, not hardcoded: appended ports (oversampling,
+        # transformer) must take part in the change detection and in gs_set, or a
+        # manual change would leave a stale instrument preset selected.
+        control_sliders = sorted(p.get('jsfx_slider', i + 1) for i, p in enumerate(parameters))
+        detect = ' || '.join(f'slider{s}!=gs_prev{s}' for s in control_sliders)
+        capture = ' '.join(f'gs_prev{s}=slider{s};' for s in control_sliders)
+        set_call = ','.join(f'slider{s}' for s in control_sliders)
         lines += ['in_pin:Input L', 'in_pin:Input R', 'out_pin:Output L', 'out_pin:Output R',
                   '', '@init', 'ext_nodenorm=1; ext_tail_size=-1; ext_gr_meter=0;',
                   'gfx_ext_retina=1;', f'gs_stereo={1 if stereo else 0};',
@@ -233,17 +292,16 @@ def jsfx_files(parameters, presets, model):
                   'gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));',
                   '', '@slider',
                   'slider11!=gs_last_preset ? (slider11>0 ? gs_apply_preset(slider11); gs_last_preset=slider11;) : (',
-                  '  gs_have_controls && (slider1!=gs_prev1 || slider2!=gs_prev2 || slider3!=gs_prev3 || slider4!=gs_prev4 || slider5!=gs_prev5 || slider6!=gs_prev6 || slider7!=gs_prev7 || slider8!=gs_prev8 || slider9!=gs_prev9 || slider10!=gs_prev10) ? (',
+                  f'  gs_have_controls && ({detect}) ? (',
                   '    slider11=0; gs_last_preset=0; sliderchange(slider11);',
                   '  );', ');',
-                  'gs_prev1=slider1; gs_prev2=slider2; gs_prev3=slider3; gs_prev4=slider4; gs_prev5=slider5;',
-                  'gs_prev6=slider6; gs_prev7=slider7; gs_prev8=slider8; gs_prev9=slider9; gs_prev10=slider10; gs_have_controls=1;',
-                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);',
+                  f'{capture} gs_have_controls=1;',
+                  f'gs_engine.gs_set({set_call});',
                   '', '@block', 'srate!=gs_rate ? (',
                   '  gs_engine.gs_reset(gs_stereo); gs_rate=srate;',
                   '  gs_meter_decay=exp(-1/(0.35*max(8000,srate)));',
                   '  gs_meter_rms=1-exp(-1/(0.3*max(8000,srate)));', ');',
-                  'gs_engine.gs_set(slider1,slider2,slider3,slider4,slider5,slider6,slider7,slider8,slider9,slider10,slider12);',
+                  f'gs_engine.gs_set({set_call});',
                   'pdc_delay=gs_engine.gs_latency(); pdc_bot_ch=0; pdc_top_ch=2;',
                   'atomic_set(gs_ui_os_active,gs_engine.os_active);',
                   'ext_gr_meter=gs_peakGR; gs_peakGR=0;',

@@ -23,7 +23,9 @@
     [ lv2:index 4; lv2:symbol "ratio"; lv2:name "Ratio" ],
     [ lv2:index 5; lv2:symbol "mix"; lv2:name "Mix" ],
     [ lv2:index 6; lv2:symbol "colour"; lv2:name "Colour" ],
-    [ lv2:index 7; lv2:symbol "compression"; lv2:name "Compression" ] ] .
+    [ lv2:index 7; lv2:symbol "compression"; lv2:name "Compression" ],
+    [ lv2:index 8; lv2:symbol "oversampling"; lv2:name "Oversampling" ],
+    [ lv2:index 9; lv2:symbol "transformer"; lv2:name "Transformer" ] ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo> modgui:gui [
     modgui:resourcesDirectory <modgui>;
@@ -40,5 +42,7 @@
     [ lv2:index 5; lv2:symbol "mix"; lv2:name "Mix" ],
     [ lv2:index 6; lv2:symbol "colour"; lv2:name "Colour" ],
     [ lv2:index 7; lv2:symbol "compression"; lv2:name "Compression" ],
-    [ lv2:index 8; lv2:symbol "stereo_link"; lv2:name "Stereo Link" ] ] .
+    [ lv2:index 8; lv2:symbol "stereo_link"; lv2:name "Stereo Link" ],
+    [ lv2:index 9; lv2:symbol "oversampling"; lv2:name "Oversampling" ],
+    [ lv2:index 10; lv2:symbol "transformer"; lv2:name "Transformer" ] ] .
 

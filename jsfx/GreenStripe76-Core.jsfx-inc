@@ -301,9 +301,9 @@ function gs_reset(twoChannels) instance(stereo initial moving parked bypassed in
   this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset();
   stereo=twoChannels; initial=1; moving=parked=bypassed=0; outL=outR=grL=grR=0;
 );
-function gs_set(inputDb outputDb attack release mode mix colour compression enabled link oversampling)
-instance(stereo initial moving ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
-  pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
+function gs_set(inputDb outputDb attack release mode mix colour compression enabled link oversampling transformer)
+instance(stereo initial moving ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl tx
+  pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl px)
 local(attackPos releasePos newLink) (
   this.gs_set_os(oversampling);
   newLink=gs_finite(link,1)>0 ? 1 : 0;
@@ -322,13 +322,14 @@ local(attackPos releasePos newLink) (
   t_ratio=gs_ratios[mode]; t_threshold=gs_thresholds[mode]; t_knee=gs_knees[mode];
   t_all=mode==4 ? 1 : 0; tm=gs_bound(gs_finite(mix,100)*0.01,0,1); tc=gs_bound(gs_finite(colour,100)*0.01,0,1);
   tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=newLink;
+  tx=gs_bound(floor(gs_finite(transformer,0)+0.5),0,4);
   initial ? (
     pi=ti; po=to; pa=ta; pr=tr; p_ratio=t_ratio; p_threshold=t_threshold; p_knee=t_knee;
-    p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; initial=0; moving=0;
+    p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; px=tx; initial=0; moving=0;
     gs_tap_calibration(p_all,p_threshold,p_knee);
   ) : (
     moving=pi!==ti || po!==to || pa!==ta || pr!==tr || p_ratio!==t_ratio || p_threshold!==t_threshold ||
-      p_knee!==t_knee || p_all!==t_all || pm!==tm || pc!==tc || pp!==tp || pe!==te || pl!==tl;
+      p_knee!==t_knee || p_all!==t_all || pm!==tm || pc!==tc || pp!==tp || pe!==te || pl!==tl || px!==tx;
   );
 );
 function gs_approach(value goal) local(result) (
