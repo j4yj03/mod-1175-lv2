@@ -1,31 +1,40 @@
 /* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls.
    Console styling taken from the original JSFX UI: dark green background,
    group frames like the meter groups, green accents. Independent 1176-
-   inspired gray-box; no GR/level meters in the MOD GUI. */
-.gs76{{{cns}}} { width:660px; color:#d9f0db; background:#0b130d; border:2px solid #3d5c47; border-radius:10px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
-.gs76{{{cns}}} .gs-groups { display:flex; gap:12px; margin:14px 14px 0; }
-.gs76{{{cns}}} .gs-group { flex:1; background:#09100b; border:1px solid #3d5c47; border-radius:6px; padding:8px 10px 12px; box-sizing:border-box; }
-.gs76{{{cns}}} .gs-group > b { display:block; margin:0 0 10px; font-size:13px; letter-spacing:1px; color:#d9f0db; }
+   inspired gray-box; no GR/level meters in the MOD GUI.
+   Contrast pass: panel lighter than the group wells, borders and all text
+   tones raised, accent brightened for a readable UI on the Dwarf display. */
+.gs76{{{cns}}} { width:660px; color:#f2fff6; background:#1b2a20; border:2px solid #74b189; border-radius:10px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
+.gs76{{{cns}}} .gs-groups { display:flex; gap:12px; margin:14px 14px 0; position:relative; z-index:22; }
+.gs76{{{cns}}} .gs-group { flex:1; background:#0f1a12; border:1px solid #55886a; border-radius:6px; padding:8px 10px 12px; box-sizing:border-box; }
+.gs76{{{cns}}} .gs-group > b { display:block; margin:0 0 10px; font-size:13px; letter-spacing:1px; color:#f2fff6; }
 .gs76{{{cns}}} .gs-group-flags { flex:0 0 158px; }
 .gs76{{{cns}}} .gs-group-wide { flex:1.25; }
 .gs76{{{cns}}} .gs-control { text-align:center; width:72px; margin:0 auto 12px; }
 .gs76{{{cns}}} .gs-pair { display:flex; justify-content:space-around; margin-bottom:10px; }
-.gs76{{{cns}}} label { display:block; margin:7px 0 0; letter-spacing:1px; font-size:10px; color:#c2dec9; }
-.gs76{{{cns}}} .gs-knob { width:52px; height:52px; border-radius:50%; border:2px solid #2c4234; margin:auto; box-shadow:0 3px 6px rgba(0,0,0,0.55), inset 0 1px 2px rgba(120,180,140,0.18); background:radial-gradient(circle,#2c332c 0,#10150f 74%); position:relative; cursor:ns-resize; }
-.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:22px; width:4px; height:17px; background:#5fd494; border-radius:2px; }
-.gs76{{{cns}}} .gs-control span { display:block; margin-top:4px; color:#9fcdb0; font-size:11px; }
+.gs76{{{cns}}} label { display:block; margin:7px 0 0; letter-spacing:1px; font-size:10px; color:#d3ecd9; }
+.gs76{{{cns}}} .gs-knob { width:52px; height:52px; border-radius:50%; border:2px solid #6ea882; margin:auto; box-shadow:0 3px 6px rgba(0,0,0,0.55), inset 0 1px 2px rgba(160,230,190,0.28); background:radial-gradient(circle,#46514a 0,#161d18 74%); position:relative; cursor:ns-resize; }
+.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:22px; width:4px; height:17px; background:#7dfab4; border-radius:2px; }
+.gs76{{{cns}}} .gs-control span { display:block; margin-top:4px; color:#bde9cc; font-size:11px; }
 .gs76{{{cns}}} .gs-sel { margin:0 0 10px; }
-.gs76{{{cns}}} .gs-sel label { margin:0 0 4px; font-size:9px; color:#adc7b3; }
-.gs76{{{cns}}} select { width:100%; color:#d9f0db; background:#101a12; border:1px solid #3d5c47; border-radius:4px; height:26px; }
+.gs76{{{cns}}} .gs-sel label { margin:0 0 4px; font-size:9px; color:#c3ddcd; }
+.gs76{{{cns}}} select { width:100%; color:#f2fff6; background:#0c150e; border:1px solid #6ea882; border-radius:4px; height:26px; }
 .gs76{{{cns}}} .gs-pair .gs-control { margin-bottom:0; }
-.gs76{{{cns}}} footer { display:flex; align-items:center; gap:10px; margin:14px 14px 12px; }
+.gs76{{{cns}}} footer { display:flex; align-items:center; gap:10px; margin:14px 14px 12px; position:relative; z-index:22; }
 .gs76{{{cns}}} .gs-title { margin-right:auto; }
-.gs76{{{cns}}} .gs-title b { display:block; font-size:16px; letter-spacing:2px; color:#eefcf0; }
-.gs76{{{cns}}} .gs-title small { display:block; padding-top:2px; font-size:9px; letter-spacing:1px; color:#adc7b3; }
-.gs76{{{cns}}} .gs-bypass { padding:6px 12px; background:#12211a; color:#c2dec9; border:1px solid #3d5c47; border-radius:5px; cursor:pointer; letter-spacing:1px; }
-.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#5fd494; box-shadow:0 0 7px #2f9c62; }
-.gs76{{{cns}}} .gs-light.off { background:#1c2a20; box-shadow:none; }
-.gs76{{{cns}}} .gs-light.on { background:#5fd494; box-shadow:0 0 7px #2f9c62; }
-.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:27px; }
-.gs76{{{cns}}} .gs-inputs { left:-11px; } .gs76{{{cns}}} .gs-outputs { right:-11px; }
-.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #54755f; background:#060a07; border-radius:50%; }
+.gs76{{{cns}}} .gs-title b { display:block; font-size:16px; letter-spacing:2px; color:#ffffff; }
+.gs76{{{cns}}} .gs-title small { display:block; padding-top:2px; font-size:9px; letter-spacing:1px; color:#c3ddcd; }
+.gs76{{{cns}}} .gs-bypass { padding:6px 12px; background:#27402f; color:#e8fbee; border:1px solid #7fbf96; border-radius:5px; cursor:pointer; letter-spacing:1px; }
+.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#7dfab4; box-shadow:0 0 9px #46c07d; }
+.gs76{{{cns}}} .gs-light.off { background:#26332a; box-shadow:none; }
+.gs76{{{cns}}} .gs-light.on { background:#7dfab4; box-shadow:0 0 9px #46c07d; }
+/* Drag/zoom overlay. mod-ui only zooms when the clicked element carries the
+   class mod-drag-handle, which it does not add by itself. The overlay spans the
+   whole box, so every interactive element below is lifted above its z-index 20. */
+.gs76{{{cns}}} .mod-drag-handle { z-index:20; }
+/* Audio connectors. mod-ui adds .mod-audio-input/.mod-audio-output to these
+   elements and draws the connect arrow as their background image, so only the
+   placement is set here: width, height, background and border stay untouched. */
+.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
+.gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
+.gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }
