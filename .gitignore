@@ -1,3 +1,6 @@
+docs/sauce/*
+build/wsl/
+build/parity-wsl/
 .deps/
 __pycache__/
 *.pyc

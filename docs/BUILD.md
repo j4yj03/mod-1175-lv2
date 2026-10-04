@@ -31,6 +31,59 @@ Der CMake-Wrapper ist Linux-zielorientiert. DSP-Tests können auch unter Windows
 gebaut werden; native Windows-/macOS-LV2-Metadatennamen sind nicht Teil des
 Dwarf-Lieferziels. Für REAPER auf diesen Systemen JSFX verwenden.
 
+### WSL ohne Root
+
+Falls in einer WSL-Distribution kein Compiler installiert ist und `sudo` kein
+Passwort akzeptiert, lässt sich eine funktionierende Toolchain **ohne Root**
+aus Paketarchiven in ein eigenes Präfix legen. Die Debian/Ubuntu-Archive
+lassen sich mit `apt-get download` (ohne privileges) und `dpkg-deb -x` entpacken.
+
+```bash
+mkdir -p /tmp/debs /tmp/sysroot && cd /tmp/debs
+for p in make g++ gcc cpp gcc-11-base libgcc-11-dev libstdc++-11-dev \
+         libc6-dev linux-libc-dev libisl23 libmpc3 cmake cmake-data \
+         libarchive13 librhash0 libjsoncpp25; do
+  dpkg -s $p >/dev/null 2>&1 || { apt-get download $p && dpkg-deb -x ${p}_*.deb /tmp/sysroot; }
+done
+```
+
+Drei Feinheiten sind dabei zwingend, sonst findet der Build nichts:
+
+1. **`make` nutzt `g++`, nicht `c++`.** `CXX ?= c++` im Makefile überschreibt
+   den Make-Default nicht, weil Built-in-Variablen als *gesetzt* gelten. Es
+   müssen daher Symlinks `g++`, `gcc`, `cc`, `c++` im Präfix liegen.
+2. **Multiarch-Include fehlt in der Standardsuche.** `bits/wordsize.h` und
+   `linux/errno.h` liegen unter `usr/include/x86_64-linux-gnu`, das weder
+   `C_INCLUDE_PATH` noch `CPLUS_INCLUDE_PATH` von sich aus abdecken.
+3. **`libc.so` ist ein Linker-Script mit absolutem Pfad.** Es verweist auf
+   `/usr/lib/x86_64-linux-gnu/libc_nonshared.a`, das ohne Root nicht angelegt
+   werden kann. Abhilfe: das Script im Präfix auf den Präfixpfad umschreiben und
+   dieses Verzeichnis per `-L` **vor** die Systempfade zu legen.
+
+```bash
+S=/tmp/sysroot
+for l in g++-11:g++ gcc-11:gcc gcc-11:cc g++-11:c++ cpp-11:cpp; do
+  ln -sf "$S/usr/bin/${l%%:*}" "$S/usr/bin/${l##*:}"
+done
+mkdir -p "$S/libfix"
+sed "s#/usr/lib/x86_64-linux-gnu/libc_nonshared.a#$S/usr/lib/x86_64-linux-gnu/libc_nonshared.a#" \
+  "$S/usr/lib/x86_64-linux-gnu/libc.so" > "$S/libfix/libc.so"
+export PATH="$S/usr/bin:$PATH" GCC_EXEC_PREFIX="$S/usr/lib/gcc/"
+export C_INCLUDE_PATH="$S/usr/include:$S/usr/include/x86_64-linux-gnu"
+export CPLUS_INCLUDE_PATH="$S/usr/include/c++/11:$S/usr/include/x86_64-linux-gnu/c++/11:$S/usr/include/c++/11/backward:$S/usr/include:$S/usr/include/x86_64-linux-gnu"
+export LIBRARY_PATH="$S/usr/lib/x86_64-linux-gnu:$S/usr/lib/gcc/x86_64-linux-gnu/11"
+export LD_LIBRARY_PATH="$S/usr/lib/x86_64-linux-gnu"
+export LDFLAGS="-L$S/libfix"
+make BUILD_DIR=build/wsl test
+```
+
+Für die Paritätsprüfung zusätzlich cmake im Präfix, dann Abschnitt 5 mit
+`cmake -S tests -B build/parity-wsl -DYSFX_SOURCE_DIR=/tmp/opencode/ysfx`.
+
+**Diese Variante ersetzt kein `sudo apt install build-essential cmake`**, wenn
+das möglich ist: sie ist ein Notbehelf für Gate-Läufe in einer gesperrten
+Umgebung. Der Buildroot-Rezept für das Dwarf-Ziel bleibt davon unberührt.
+
 ## 2. Reproduzierbarkeit
 
 - Alle Tabellen/Ports/Presets aus `data/*.json`.

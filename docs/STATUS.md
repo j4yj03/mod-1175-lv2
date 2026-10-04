@@ -48,6 +48,15 @@ Hardware-Revision A/D nicht mehr bindend.
 
 ## 2. Tatsächlich ausgeführte Prüfungen
 
+**Revalidierung 2026-10-04:** Die nachfolgend als PASS geführten Kernergebnisse
+wurden in dieser Arbeitsumgebung erneut ausgeführt, nachdem eine Toolchain ohne
+Root bereitstand und ysfx `5c3452f…` wiederhergestellt war: `make test` PASS,
+`jsfx_parity` **PASS mit 232 Fällen und max = 0 FS**, `.rpl`/Selector/Custom
+**PASS mit 52 Presets**. Damit sind diese Zeilen heute gemessen und nicht nur
+übernommen. `tools/validate.py` lief dabei nur **strukturell** (kein `rdflib`);
+die Zeile „Turtle/RDF PASS mit rdflib 7.6.0" stammt aus dem Testrechner und
+wurde heute **nicht** wiederholt.
+
 | Prüfung | Stand / Ergebnis |
 |---|---|
 | Native GNU15 Build | PASS, C++11, Warnflags, no-fast-math/FP-contract off |
@@ -251,6 +260,17 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 5. 0.2.0-Pakete erzeugen (`tools/package.py`) und Herkunft festhalten.
 6. Ergebnisse mit `TEST_REPORT_TEMPLATE.md`; gezielte Änderungen nur anhand
    Befund, C++/EEL2/Tests/Modelldoku gemeinsam.
+7. **Route 3 (Kennlinien-LUT) bleibt zurückgestellt.** Die in
+   `docs/LUT_REFERENCE.md` geforderte Vorstudie ist abgeschlossen und gegen den
+   C++-Originalkern abgeglichen (bit-exakt, max. rel. Abweichung 0.0). Ein LUT
+   für `fet()`/`gs_fet()` braucht drei kontinuierliche Achsen (input, charge,
+   curvature) und zwei Polaritätstabellen, weil `fet` nicht ungerade ist
+   (0,342 % bei x = 3). Der Fehler konvergiert sauber mit O(h²) und erreicht
+   das Ziel 10⁻⁴ erst bei **264,8 MiB**; eine praxistaugliche Tabelle von
+   16,7 MiB verfehlt es um Faktor 6. Ein LUT für `softClip()`/`gs_soft()`
+   erreicht dagegen mit N = 1025 auf logarithmischer Achse 2,84×10⁻⁵ bei
+   16 KiB. **Kein DSP wurde geändert.** Vor einer Umsetzung fehlen weiterhin
+   die REAPER- und Dwarf-Zeitdaten sowie ein Hörtest.
 
 ## 7. Git / Originaldateien
 

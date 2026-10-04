@@ -176,13 +176,61 @@ Messungen. Profilcounts nach Änderung:
   Mono/Stereo, alle Modes, Colour 0/100.
 - Größte Audioabweichung etwa **7,1×10⁻¹⁴ FS**, größte GR-Abweichung etwa
   **2,4×10⁻¹¹ dB**. Der Vergleich benutzt die separat gesicherte 0.1.0-Fassung.
-- **152 C++-/JSFX-Paritätsfälle**, jetzt zusätzlich lange Link-/Compression-/
-  Enabled-/Colour-Wechsel. Größte float-Port-Abweichung weiter ~4,17×10⁻⁷ FS.
+- **152 C++-/JSFX-Paritätsfälle** (0.1.1-Stand; der Stand 0.2.0 führt 232),
+  damals zusätzlich lange Link-/Compression-/Enabled-/Colour-Wechsel.
+  Größte float-Port-Abweichung weiter ~4,17×10⁻⁷ FS.
 - Transitiontest: endliche Outputs, gemeinsamer GR nach Link-Anlauf,
   zero-GR im Off-Zustand, keine sprunghafte Gainumschaltung im Probe.
 - Bestehende PluginDoctor-Deltas/Sinusproben reproduziert: alle bisherigen
   Kennlinien-/FFT-Abweichungen bleiben auf dem ursprünglichen Niveau.
 - Analytische Release-Approximation mit Worst-case-Raten/Zeitwerten getestet.
+
+## 5a. Ausgeführter Lauf 2026-10-04 (0.2.0, WSL)
+
+Erstmals wurden in dieser Arbeitsumgebung die **bindenden** Gates tatsächlich
+ausgeführt, statt sie aus früheren Läufen zu übernehmen. Nach dem
+Wiederherstellen der Toolchain (siehe `docs/BUILD.md`, Abschnitt „WSL ohne
+Root") und dem Klon des gepinnten ysfx-Standes `5c3452f…`:
+
+| Prüfung | Ergebnis |
+|---|---|
+| `make test` (DSP, Übergänge, LV2-ABI, Generator, Bündel) | **PASS** |
+| `build/parity-wsl/jsfx_parity` (Mono + Stereo) | **PASS — 232 Fälle, max = 0 FS** |
+| JSFX-Selector / RPL-Bänke / Custom | **PASS — 52 Presets** |
+| `tools/validate.py` | PASS, 26 Presets/Imports — **nur strukturell**, `rdflib` fehlt |
+
+Damit ist der in `LUT_REFERENCE.md` und `AGENTS.md` geforderte Paritätssatz für
+den aktuellen Stand erstmals belegt und **nicht** nur behauptet.
+
+### CPU-Baselinemessung auf dieser Maschine
+
+`make benchmark` (native C++, O3) und `benchmark_jsfx` (EEL2, 48 kHz, Block 128,
+2 s, Warmup + 7 Läufe, Median). Rechenzeit pro Audiosekunde:
+
+| Szenario | C++ ns/Frame | EEL2 s/s |
+|---|---:|---:|
+| Mono normal | 283,1 | 0,0270 |
+| Mono clean | — | 0,0219 |
+| Mono Colour only | — | 0,0197 |
+| Mono Bypass | — | 0,0060 |
+| Stereo Link normal | 367,9 | 0,0439 |
+| Stereo Dual Mono | — | 0,0508 |
+| Stereo Bypass | — | 0,0050 |
+
+**Diese Werte sind nicht mit der Tabelle in Abschnitt 4 vergleichbar.** Sie
+stammen von anderer CPU, anderem Compiler und anderem ysfx-Build als der
+gepaarte 0.1.0/0.1.1-Lauf, und der Projektstand ist inzwischen 0.2.0. Sie sind
+als **Baseline für künftige Paarvergleiche auf dieser Maschine** zu lesen, nicht
+als Fortschrittsnachweis. Insbesondere folgt aus ihnen **keine** Aussage, dass
+0.2.0 gegenüber 0.1.1 schneller geworden wäre.
+
+Die Profilzähler (`profile_*`) sind hier durchweg 0, weil die Instrumentation
+nur in der per `tools/profile_jsfx_copy.py` erzeugten Kopie existiert — das ist
+das erwartete Verhalten und kein Fehlschlag.
+
+**Nicht geliefert:** REAPER-Gesamt-CPU, Dwarf-Peak-CPU/xruns, Hörtest. Diese
+bleiben für die Entscheidung über eine LUT maßgeblich, siehe
+`docs/LUT_REFERENCE.md`, Vorstudie Route 3.
 
 ## 6. Reproduktion
 
