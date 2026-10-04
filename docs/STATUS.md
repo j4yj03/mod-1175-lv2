@@ -28,6 +28,16 @@ Hardware-Revision A/D nicht mehr bindend.
   durch den Parameterpfad und ist preset-adressierbar, ist aber nicht mit dem
   Audiopfad verbunden. Echtzeitform und Alternativen in `DSP_ARCHITECTURE.md`
   Abschnitt 11.
+- Der Transformator ist eine **Klangwahl und wandert mit dem Preset**. Er wird
+  deshalb anders behandelt als das Oversampling: `tools/generate.py` führt beide
+  angehängten Ports über `appended_value()`, aber Oversampling startet nach jedem
+  Recall auf Off (Qualitäts-/CPU-Wahl), während das Transformatorfeld aus dem
+  Preset gelesen wird. Belegt sind 3 von 31 Presets — 28 *Bass Mojo Bite* (`80s`),
+  29 *Vintage Blue Grit* (`60s`), 30 *Huge Sub Weight* (`00s`); die übrigen 28
+  stehen auf `None`. LV2, JSFX-Selektor und RPL-Bänke sind gegen denselben Helper
+  erzeugt, können also nicht auseinanderlaufen; `tests/jsfx_parity.cpp` prüft
+  Slider 12 und 13 jetzt mit und liest die erwartete Presetzahl aus dem
+  Selektorbereich statt aus einer festen Zahl.
 - `compression` trägt ab 0.3.0 explizite Scale-Points `COMP OFF` / `COMP ON`
   (vorher `lv2:toggled` ohne Beschriftung), damit der Kippschaltertext nicht von
   undokumentiertem `mod-active`-Verhalten abhängt.
@@ -65,7 +75,7 @@ Hardware-Revision A/D nicht mehr bindend.
 wurden in dieser Arbeitsumgebung erneut ausgeführt, nachdem eine Toolchain ohne
 Root bereitstand und ysfx `5c3452f…` wiederhergestellt war: `make test` PASS,
 `jsfx_parity` **PASS mit 232 Fällen und max = 0 FS**, `.rpl`/Selector/Custom
-**PASS mit 52 Presets**. Damit sind diese Zeilen heute gemessen und nicht nur
+**PASS mit 62 Presetzuständen**. Damit sind diese Zeilen heute gemessen und nicht nur
 übernommen. `tools/validate.py` lief dabei nur **strukturell** (kein `rdflib`);
 die Zeile „Turtle/RDF PASS mit rdflib 7.6.0" stammt aus dem Testrechner und
 wurde heute **nicht** wiederholt.
@@ -81,7 +91,7 @@ wurde heute **nicht** wiederholt.
 | CMake-ysfx-Testintegration | PASS: gepinnter Host als Unterprojekt inkl. SHA512-Prüfung, 232 Renderfälle und Benchmarkziel |
 | Generierte Textdateien | PASS, 15 Artefakte check-generated |
 | Turtle/RDF | PASS mit rdflib 7.6.0, alle Bundle-TTL |
-| Presetbereiche/Assets/Includes | PASS: 26 Presets, beide Varianten |
+| Presetbereiche/Assets/Includes | PASS: 31 Presets, beide Varianten |
 | EEL2-Compile | PASS mit gepinntem ysfx, einschließlich tatsächlicher GFX-Sektion |
 | Audio-C++/JSFX-Parität | **PASS: 232 Fälle** (ab 0.2.0 inkl. 72 OS- und 8 OS-Umschaltfälle), größte float-Port-Abweichung **0 FS** (bitgleich) |
 | 0.1.0/0.1.1 Burstregression | PASS: 80 stationäre Fälle (neu@4x gegen Altstand), max Audio ~7,1×10⁻¹⁴ FS, GR ~2,4×10⁻¹¹ dB |
@@ -91,7 +101,7 @@ wurde heute **nicht** wiederholt.
 | Native Benchmark 0.2.0 | Mono mode0 0,0146 s/s (+5 % gegen 0.1.1-Stand), Stereo mode0 0,0223 s/s (+10 %); Checksummen stabil; keine Dwarf-Aussage |
 | CPU-Matrix 0.2.0 | Stereo 48k, Bestwert/5: Off+C0 0,0091 s/s; Off+C100 0,0191 (2,1×); 2x+C100 0,0385 (4,2×); 4x+C100 0,0704 (7,7×). Colour verdoppelt wegen nichtlinearem Kern, OS skaliert mit Subframenzahl; keine Dwarf-Aussage |
 | Echte JSFX-CPU-Messung | Uninstrumentiert ysfx: normal Mono ~42 %, Stereo Link ~50 %, clean Stereo ~76 % weniger Zeit |
-| `.rpl`/Selector/Custom | PASS: **52 Presets**, echter ysfx-Banklader/Rendering |
+| `.rpl`/Selector/Custom | PASS: **62 Presetzustände** (31 je Variante), echter ysfx-Banklader/Rendering; prüft auch die angehängten Slider 12/13 |
 | GFX-Offscreen | PASS: Mono/Stereo tatsächlich gezeichnet, Controllerzustand unverändert |
 | NaN/Inf | PASS: native und JSFX-Eingangssanierung; EEL2-NaN-Vergleichsfall korrigiert |
 | Probe-Werkzeuge | PASS: acht PCM24-Proben generiert, 336000-Frame-LV2-Render als float WAV |
@@ -288,6 +298,9 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 - **Transformator 0.3.0 ohne Klangwirkung.** Die Auswahl `60s/80s/00s/Symmetric`
   entspricht `GCOT-SE-01`, `GCOT-PP-03`, `GCOT-PP-04` und `GCSYMETRICAL` aus
   `docs/sauce/xformer.lib`, aber nichts davon ist mit dem Audiopfad verbunden.
+  Die vierte Stufe ist keine Vintage-Variante: `xformer.lib` überschreibt
+  `GCSYMETRICAL` mit `IMPORTANT: Only for testing purposes`. Sie ist eine Referenz
+  mit hoher Schwelle und `n = 25`, keine Bauform.
   Die Dropdown-Beschriftungen sind neutral gewählt; die Gerätenamen der Fremdquelle
   erscheinen bewusst nicht in der Oberfläche. `Symmetric` ist laut Original
   Quelltext nur für Tests bestimmt.
@@ -315,14 +328,25 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 5. 0.2.0-Pakete erzeugen (`tools/package.py`) und Herkunft festhalten.
 6. Ergebnisse mit `TEST_REPORT_TEMPLATE.md`; gezielte Änderungen nur anhand
    Befund, C++/EEL2/Tests/Modelldoku gemeinsam.
-7. **Transformator-Modell (offen, bewusst zurückgestellt).** Port und Oberfläche
-   stehen, die Klangstufe fehlt. Nächster Schritt wäre ein integrierter
-   Flux-Zustand nach dem Vorbild von `CORE_GC`, kanalgetrennt an der
-   Eingangsseite. Vor dem Bau zu entscheiden: Sättigungsschwelle, ob die
-   Kopplungs-Bassabsenkung als eigener Regler kommt, und ob die `flux`-/`Lowpass`
-   -Färbung in `Colour` zurückgeht. Parität C++/EEL2, Dwarf-CPU und Hörtest
-   sind danach zwingend, weil `ABS(v)^n` bis `n = 13` eine `pow`-Funktion je
-   Wicklung und Sample verlangt.
+7. **Transformator-Klangstufe (offen; die Bauentscheidungen sind jetzt getroffen,
+   der Code fehlt noch).** Port und Oberfläche stehen. Festgelegt ist:
+
+   - integrierter, **kanalgetrennter** Flux-Zustand nach dem Vorbild von
+     `CORE_GC`, an der **Eingangsseite**;
+   - **Sättigungsschwelle entschieden:** normierter Flux `u = φ/φ_k` mit
+     `u_knee = 1,0`; `φ_k` je Typ aus `φ_k = (C·ω/a)^(1/(n-1))` am geometrischen
+     Bandmittel — 0,532 (`60s`), 0,337 (`80s`), 0,368 (`00s`). Ein gemeinsamer
+     Wert statt vier absoluter, weil die Modelle nur 1,58 auseinanderliegen
+     und die Reststreuung die Sättigungshärte der Bauarten ausmacht. Herleitung
+     und Tabelle in `DSP_ARCHITECTURE.md` Abschnitt 11;
+   - die **Kopplungs-Bassabsenkung entsteht aus dem gemeinsamen Kern** und wird
+     **nicht** als eigener Regler exponiert;
+   - die `flux`-/`Lowpass`-Färbung in `Colour` bleibt **unverändert**;
+   - Latenz unverändert 0/3/4 Frames.
+
+   Danach zwingend: Parität C++/EEL2, Dwarf-CPU-Messung und Hörtest, weil
+   `ABS(v)^n` bis `n = 13` eine `pow`-Funktion je Wicklung und Sample verlangt
+   und die Integrationsregel bei dieser Steilheit erst erprobt werden muss.
 8. **Route 3 (Kennlinien-LUT) bleibt zurückgestellt.** Die in
    `docs/LUT_REFERENCE.md` geforderte Vorstudie ist abgeschlossen und gegen den
    C++-Originalkern abgeglichen (bit-exakt, max. rel. Abweichung 0.0). Ein LUT

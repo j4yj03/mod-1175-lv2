@@ -1,28 +1,587 @@
 [
-  {"name":"01 Neutral Start","instrument":"Allgemein","input":0,"output":0,"attack":3,"release":5,"ratio":0,"mix":100,"colour":100,"compression":1,"link":1,"target_gr":"2–5 dB","note":"Langsamer Attack, flotter Release; zuerst Input nach Gehör und GR einstellen.","sources":["UA-TIPS"]},
-  {"name":"02 Dr Pepper Inspired","instrument":"Allgemein","input":3,"output":-1,"attack":2.5,"release":5.5,"ratio":0,"mix":100,"colour":100,"compression":1,"link":1,"target_gr":"3–7 dB","note":"Eigene Näherung an die 10-Uhr/2-Uhr/4:1-Idee; keine exakte Hardware-Potentiometerkalibrierung.","sources":["UA-TIPS"]},
-  {"name":"03 Vocal Natural","instrument":"Stimme","input":2,"output":0,"attack":2.5,"release":5,"ratio":0,"mix":100,"colour":75,"compression":1,"link":1,"target_gr":"3–5 dB","note":"Konsonanten erhalten; Satzenden und Atemgeräusche prüfen.","sources":["VOCAL-GUIDE","UA-TIPS"]},
-  {"name":"04 Vocal Peak Catch","instrument":"Stimme","input":4,"output":-1,"attack":5.5,"release":6,"ratio":1,"mix":100,"colour":85,"compression":1,"link":1,"target_gr":"3–7 dB auf Spitzen","note":"Kontrolliert Peaks; kann vor einer langsameren Leveling-Stufe stehen.","sources":["VOCAL-GUIDE"]},
-  {"name":"05 Vocal Rock Forward","instrument":"Stimme","input":7,"output":-3,"attack":3.5,"release":6.3,"ratio":1,"mix":100,"colour":100,"compression":1,"link":1,"target_gr":"5–10 dB","note":"Body und Bewegung mit Release abstimmen; Input bei dünnem Klang reduzieren.","sources":["VOCAL-GUIDE","UA-TIPS"]},
-  {"name":"06 Vocal Grit Parallel","instrument":"Stimme","input":10,"output":-6,"attack":6.5,"release":7,"ratio":4,"mix":30,"colour":100,"compression":1,"link":1,"target_gr":"10–18 dB im Wet-Pfad","note":"Effekt für laute/raue Vocals; Mix langsam erhöhen.","sources":["UA-TIPS"]},
-  {"name":"07 Bass Finger Level","instrument":"Bass","input":3,"output":0,"attack":2.8,"release":4,"ratio":0,"mix":100,"colour":80,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Tiefe Noten auf Regelverzerrung prüfen; Release bei Bedarf langsamer.","sources":["MOORE","UA-TIPS"]},
-  {"name":"08 Bass Pick Punch","instrument":"Bass","input":5,"output":-1,"attack":1.8,"release":5.5,"ratio":1,"mix":85,"colour":100,"compression":1,"link":1,"target_gr":"4–8 dB","note":"Anschlag erhält Gewicht; phasenangepasster Mix ergänzt Direktanteil.","sources":["MOORE"]},
-  {"name":"09 Bass Fast Grit","instrument":"Bass","input":8,"output":-4,"attack":7,"release":7,"ratio":1,"mix":70,"colour":100,"compression":1,"link":1,"target_gr":"6–12 dB","note":"Bewusst schnelle Zeiten für GR-bedingte Rauheit, kein neutraler Bass-Leveler.","sources":["UA-TIPS","MOORE"]},
-  {"name":"10 Kick Weight","instrument":"Drums","input":4,"output":-1,"attack":1.3,"release":4.8,"ratio":0,"mix":80,"colour":85,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Attack langsam, damit Klick bleibt; Release an Abstand der Kicks anpassen.","sources":["UA-TIPS"]},
-  {"name":"11 Snare Crack","instrument":"Drums","input":5,"output":-2,"attack":1.5,"release":6.2,"ratio":1,"mix":85,"colour":100,"compression":1,"link":1,"target_gr":"4–8 dB","note":"Release vor dem nächsten Schlag erholen lassen; langsamster Attack ist trotzdem schnell.","sources":["UA-TIPS"]},
-  {"name":"12 Toms Body","instrument":"Drums","input":4,"output":-1,"attack":2,"release":4.5,"ratio":0,"mix":85,"colour":80,"compression":1,"link":0,"target_gr":"3–7 dB","note":"Stereo-Version als Dual Mono für getrennte Tom-Kanäle; Link nach Routing wählen.","sources":["UA-TIPS"]},
-  {"name":"13 Overheads Gentle","instrument":"Drums","input":-2,"output":1,"attack":1,"release":4.5,"ratio":0,"mix":75,"colour":60,"compression":1,"link":1,"target_gr":"1–3 dB","note":"Stereo Link erhält Balance; Becken dürfen nicht matt oder pumpend werden.","sources":["UA-TIPS","BLACKBIRD"]},
-  {"name":"14 Room All Buttons","instrument":"Drums","input":12,"output":-7,"attack":3,"release":6.5,"ratio":4,"mix":100,"colour":100,"compression":1,"link":1,"target_gr":"10–20 dB","note":"Explosiver Effektpfad, nicht Brickwall; Transientenüberschwinger möglich.","sources":["UA-TIPS","MOORE","AXT-SLAM"]},
-  {"name":"15 Drum Parallel Crush","instrument":"Drums","input":14,"output":-8,"attack":2,"release":7,"ratio":4,"mix":25,"colour":100,"compression":1,"link":1,"target_gr":"12–24 dB im Wet-Pfad","note":"Integrierter Parallelmix vermeidet separate ungeprüfte Dwarf-Zweige.","sources":["UA-TIPS","MUSICGUY"]},
-  {"name":"16 Guitar Clean Sustain","instrument":"E-Gitarre","input":3,"output":0,"attack":2.8,"release":5.8,"ratio":0,"mix":80,"colour":90,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Geeignet nach Amp/Cab; Pedalboard-Pegel vor Input einstellen.","sources":["EICHAS","UA-TIPS"]},
-  {"name":"17 Guitar Rhythm Tight","instrument":"E-Gitarre","input":1,"output":0,"attack":4,"release":5.2,"ratio":0,"mix":80,"colour":75,"compression":1,"link":1,"target_gr":"1–4 dB","note":"Bereits stark verzerrte Gitarren nur leicht verdichten.","sources":["UA-TIPS"]},
-  {"name":"18 Guitar Colour Only","instrument":"E-Gitarre","input":6,"output":-6,"attack":3,"release":5,"ratio":0,"mix":100,"colour":100,"compression":0,"link":1,"target_gr":"0 dB dynamisch","note":"Verstärkerfärbung ohne Regelung; Output beeinflusst die nachfolgende Sättigung.","sources":["UA-TIPS","BLACKBIRD"]},
-  {"name":"19 Acoustic Strum","instrument":"Akustikgitarre","input":1,"output":0,"attack":1.8,"release":5.5,"ratio":0,"mix":80,"colour":65,"compression":1,"link":1,"target_gr":"2–5 dB","note":"Plektrum-Anschlag und Stereo-Balance erhalten.","sources":["MASON"]},
-  {"name":"20 Acoustic Finger","instrument":"Akustikgitarre","input":3,"output":0,"attack":3,"release":4.5,"ratio":0,"mix":90,"colour":65,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Leise Details hervorholen, Raumrauschen und Atemanteile mithören.","sources":["MASON"]},
-  {"name":"21 Piano Gentle","instrument":"Piano","input":-3,"output":1,"attack":1,"release":3.5,"ratio":0,"mix":60,"colour":50,"compression":1,"link":1,"target_gr":"1–3 dB","note":"Konservativer eigener Startwert; keine gemessene historische Einstellung.","sources":["EICHAS"]},
-  {"name":"22 Rhodes Body","instrument":"Keys","input":2,"output":0,"attack":2.5,"release":5,"ratio":0,"mix":85,"colour":90,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Transient und Sustain ausbalancieren, Chorus-Stereobild prüfen.","sources":[]},
-  {"name":"23 Synth Bass Control","instrument":"Synth","input":2,"output":0,"attack":3.5,"release":4,"ratio":1,"mix":90,"colour":70,"compression":1,"link":1,"target_gr":"3–7 dB","note":"Tiefe Dauertöne benötigen ruhigere Release; keine Auto-Gain-Funktion.","sources":["UA-TIPS"]},
-  {"name":"24 Synth Lead Sustain","instrument":"Synth","input":3,"output":0,"attack":3,"release":5.5,"ratio":0,"mix":85,"colour":80,"compression":1,"link":1,"target_gr":"3–6 dB","note":"Delay/Reverb vorzugsweise nach dem Kompressor, wenn deren Tails nicht gepumpt werden sollen.","sources":[]},
-  {"name":"25 Percussion Snap","instrument":"Percussion","input":2,"output":0,"attack":1.3,"release":6.5,"ratio":0,"mix":75,"colour":80,"compression":1,"link":0,"target_gr":"2–5 dB","note":"Dual Mono nur bei tatsächlich unabhängigen Kanälen wählen.","sources":["UA-TIPS"]},
-  {"name":"26 Stereo Bus Subtle","instrument":"Bus","input":-6,"output":1,"attack":1,"release":4.5,"ratio":0,"mix":40,"colour":40,"compression":1,"link":1,"target_gr":"0–2 dB","note":"Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter.","sources":["BLACKBIRD"]}
+  {
+    "name": "01 Neutral Start",
+    "instrument": "Allgemein",
+    "input": 0,
+    "output": 0,
+    "attack": 3,
+    "release": 5,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "2–5 dB",
+    "note": "Langsamer Attack, flotter Release; zuerst Input nach Gehör und GR einstellen.",
+    "sources": [
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "02 Dr Pepper Inspired",
+    "instrument": "Allgemein",
+    "input": 3,
+    "output": -1,
+    "attack": 2.5,
+    "release": 5.5,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–7 dB",
+    "note": "Eigene Näherung an die 10-Uhr/2-Uhr/4:1-Idee; keine exakte Hardware-Potentiometerkalibrierung.",
+    "sources": [
+      "UA-TIPS",
+      "MOORE",
+      "PENNY"
+    ]
+  },
+  {
+    "name": "03 Vocal Natural",
+    "instrument": "Stimme",
+    "input": 2,
+    "output": 0,
+    "attack": 3,
+    "release": 5,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 75,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–5 dB",
+    "note": "Konsonanten erhalten; Satzenden und Atemgeräusche prüfen.",
+    "sources": [
+      "VOCAL-GUIDE",
+      "PENNY",
+      "MOORE"
+    ]
+  },
+  {
+    "name": "04 Vocal Peak Catch",
+    "instrument": "Stimme",
+    "input": 4,
+    "output": -1,
+    "attack": 5.5,
+    "release": 6,
+    "ratio": 1,
+    "mix": 100,
+    "colour": 85,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–7 dB auf Spitzen",
+    "note": "Kontrolliert Peaks; kann vor einer langsameren Leveling-Stufe stehen.",
+    "sources": [
+      "VOCAL-GUIDE"
+    ]
+  },
+  {
+    "name": "05 Vocal Rock Forward",
+    "instrument": "Stimme",
+    "input": 7,
+    "output": -3,
+    "attack": 6,
+    "release": 6,
+    "ratio": 1,
+    "mix": 100,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "5–10 dB",
+    "note": "Body und Bewegung mit Release abstimmen; Input bei dünnem Klang reduzieren.",
+    "sources": [
+      "VOCAL-GUIDE",
+      "MOORE",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "06 Vocal Grit Parallel",
+    "instrument": "Stimme",
+    "input": 10,
+    "output": -6,
+    "attack": 6.5,
+    "release": 7,
+    "ratio": 4,
+    "mix": 30,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "10–18 dB im Wet-Pfad",
+    "note": "Effekt für laute/raue Vocals; Mix langsam erhöhen.",
+    "sources": [
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "07 Bass Finger Level",
+    "instrument": "Bass",
+    "input": 3,
+    "output": 0,
+    "attack": 4,
+    "release": 4,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 80,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Tiefe Noten auf Regelverzerrung prüfen; Release bei Bedarf langsamer.",
+    "sources": [
+      "MOORE",
+      "PENNY",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "08 Bass Pick Punch",
+    "instrument": "Bass",
+    "input": 5,
+    "output": -1,
+    "attack": 4,
+    "release": 4,
+    "ratio": 1,
+    "mix": 85,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "4–8 dB",
+    "note": "Anschlag erhält Gewicht; phasenangepasster Mix ergänzt Direktanteil.",
+    "sources": [
+      "MOORE",
+      "PENNY"
+    ]
+  },
+  {
+    "name": "09 Bass Fast Grit",
+    "instrument": "Bass",
+    "input": 8,
+    "output": -4,
+    "attack": 7,
+    "release": 7,
+    "ratio": 1,
+    "mix": 70,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "6–12 dB",
+    "note": "Bewusst schnelle Zeiten für GR-bedingte Rauheit, kein neutraler Bass-Leveler.",
+    "sources": [
+      "UA-TIPS",
+      "MOORE"
+    ]
+  },
+  {
+    "name": "10 Kick Weight",
+    "instrument": "Drums",
+    "input": 4,
+    "output": -1,
+    "attack": 5,
+    "release": 5,
+    "ratio": 0,
+    "mix": 80,
+    "colour": 85,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Attack langsam, damit Klick bleibt; Release an Abstand der Kicks anpassen.",
+    "sources": [
+      "PENNY",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "11 Snare Crack",
+    "instrument": "Drums",
+    "input": 5,
+    "output": -2,
+    "attack": 5,
+    "release": 6,
+    "ratio": 1,
+    "mix": 85,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "4–8 dB",
+    "note": "Release vor dem nächsten Schlag erholen lassen; langsamster Attack ist trotzdem schnell.",
+    "sources": [
+      "PENNY",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "12 Toms Body",
+    "instrument": "Drums",
+    "input": 4,
+    "output": -1,
+    "attack": 4,
+    "release": 6,
+    "ratio": 0,
+    "mix": 85,
+    "colour": 80,
+    "compression": 1,
+    "link": 0,
+    "target_gr": "3–7 dB",
+    "note": "Stereo-Version als Dual Mono für getrennte Tom-Kanäle; Link nach Routing wählen.",
+    "sources": [
+      "PENNY",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "13 Overheads Gentle",
+    "instrument": "Drums",
+    "input": -2,
+    "output": 1,
+    "attack": 1,
+    "release": 4.5,
+    "ratio": 0,
+    "mix": 75,
+    "colour": 60,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "1–3 dB",
+    "note": "Stereo Link erhält Balance; Becken dürfen nicht matt oder pumpend werden.",
+    "sources": [
+      "UA-TIPS",
+      "BLACKBIRD"
+    ]
+  },
+  {
+    "name": "14 Room All Buttons",
+    "instrument": "Drums",
+    "input": 12,
+    "output": -7,
+    "attack": 3,
+    "release": 6,
+    "ratio": 4,
+    "mix": 100,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "10–20 dB",
+    "note": "Explosiver Effektpfad, nicht Brickwall; Transientenüberschwinger möglich.",
+    "sources": [
+      "UA-TIPS",
+      "MOORE",
+      "AXT-SLAM"
+    ]
+  },
+  {
+    "name": "15 Drum Parallel Crush",
+    "instrument": "Drums",
+    "input": 14,
+    "output": -8,
+    "attack": 2,
+    "release": 7,
+    "ratio": 4,
+    "mix": 25,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "12–24 dB im Wet-Pfad",
+    "note": "Integrierter Parallelmix vermeidet separate ungeprüfte Dwarf-Zweige.",
+    "sources": [
+      "UA-TIPS",
+      "MUSICGUY"
+    ]
+  },
+  {
+    "name": "16 Guitar Clean Sustain",
+    "instrument": "E-Gitarre",
+    "input": 3,
+    "output": 0,
+    "attack": 2.8,
+    "release": 5.8,
+    "ratio": 0,
+    "mix": 80,
+    "colour": 90,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Geeignet nach Amp/Cab; Pedalboard-Pegel vor Input einstellen.",
+    "sources": [
+      "EICHAS",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "17 Guitar Rhythm Tight",
+    "instrument": "E-Gitarre",
+    "input": 1,
+    "output": 0,
+    "attack": 3,
+    "release": 4,
+    "ratio": 0,
+    "mix": 80,
+    "colour": 75,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "1–4 dB",
+    "note": "Bereits stark verzerrte Gitarren nur leicht verdichten.",
+    "sources": [
+      "PENNY",
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "18 Guitar Colour Only",
+    "instrument": "E-Gitarre",
+    "input": 6,
+    "output": -6,
+    "attack": 3,
+    "release": 5,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 100,
+    "compression": 0,
+    "link": 1,
+    "target_gr": "0 dB dynamisch",
+    "note": "Verstärkerfärbung ohne Regelung; Output beeinflusst die nachfolgende Sättigung.",
+    "sources": [
+      "UA-TIPS",
+      "BLACKBIRD"
+    ]
+  },
+  {
+    "name": "19 Acoustic Strum",
+    "instrument": "Akustikgitarre",
+    "input": 1,
+    "output": 0,
+    "attack": 2,
+    "release": 4,
+    "ratio": 0,
+    "mix": 80,
+    "colour": 65,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "2–5 dB",
+    "note": "Plektrum-Anschlag und Stereo-Balance erhalten.",
+    "sources": [
+      "MASON",
+      "PENNY"
+    ]
+  },
+  {
+    "name": "20 Acoustic Finger",
+    "instrument": "Akustikgitarre",
+    "input": 3,
+    "output": 0,
+    "attack": 3,
+    "release": 4.5,
+    "ratio": 0,
+    "mix": 90,
+    "colour": 65,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Leise Details hervorholen, Raumrauschen und Atemanteile mithören.",
+    "sources": [
+      "MASON"
+    ]
+  },
+  {
+    "name": "21 Piano Gentle",
+    "instrument": "Piano",
+    "input": -3,
+    "output": 1,
+    "attack": 1,
+    "release": 3.5,
+    "ratio": 0,
+    "mix": 60,
+    "colour": 50,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "1–3 dB",
+    "note": "Konservativer eigener Startwert; keine gemessene historische Einstellung.",
+    "sources": [
+      "EICHAS"
+    ]
+  },
+  {
+    "name": "22 Rhodes Body",
+    "instrument": "Keys",
+    "input": 2,
+    "output": 0,
+    "attack": 2.5,
+    "release": 5,
+    "ratio": 0,
+    "mix": 85,
+    "colour": 90,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Transient und Sustain ausbalancieren, Chorus-Stereobild prüfen.",
+    "sources": []
+  },
+  {
+    "name": "23 Synth Bass Control",
+    "instrument": "Synth",
+    "input": 2,
+    "output": 0,
+    "attack": 3.5,
+    "release": 4,
+    "ratio": 1,
+    "mix": 90,
+    "colour": 70,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–7 dB",
+    "note": "Tiefe Dauertöne benötigen ruhigere Release; keine Auto-Gain-Funktion.",
+    "sources": [
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "24 Synth Lead Sustain",
+    "instrument": "Synth",
+    "input": 3,
+    "output": 0,
+    "attack": 3,
+    "release": 5.5,
+    "ratio": 0,
+    "mix": 85,
+    "colour": 80,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "3–6 dB",
+    "note": "Delay/Reverb vorzugsweise nach dem Kompressor, wenn deren Tails nicht gepumpt werden sollen.",
+    "sources": []
+  },
+  {
+    "name": "25 Percussion Snap",
+    "instrument": "Percussion",
+    "input": 2,
+    "output": 0,
+    "attack": 1.3,
+    "release": 6.5,
+    "ratio": 0,
+    "mix": 75,
+    "colour": 80,
+    "compression": 1,
+    "link": 0,
+    "target_gr": "2–5 dB",
+    "note": "Dual Mono nur bei tatsächlich unabhängigen Kanälen wählen.",
+    "sources": [
+      "UA-TIPS"
+    ]
+  },
+  {
+    "name": "26 Stereo Bus Subtle",
+    "instrument": "Bus",
+    "input": -6,
+    "output": 1,
+    "attack": 1.5,
+    "release": 3,
+    "ratio": 0,
+    "mix": 40,
+    "colour": 40,
+    "compression": 1,
+    "link": 1,
+    "target_gr": "0–2 dB",
+    "note": "Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter.",
+    "sources": [
+      "BLACKBIRD",
+      "PENNY"
+    ]
+  },
+  {
+    "name": "27 Vocal Squashed",
+    "instrument": "Stimme",
+    "input": 6,
+    "output": -3,
+    "attack": 7,
+    "release": 7,
+    "ratio": 0,
+    "mix": 100,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "transformer": 0,
+    "target_gr": "7–10 dB",
+    "note": "MOORE S.16 Beispiel 1 (4:1, schnellste Attacke und schnellster Release): höchste, am stärksten verdichtete Gesamtdeformation. Satzenden und Atemgeräusche müssen erhalten bleiben, sonst klingt die Stimme eingedrückt.",
+    "sources": [
+      "MOORE",
+      "VOCAL-GUIDE"
+    ]
+  },
+  {
+    "name": "28 Bass Mojo Bite",
+    "instrument": "Bass",
+    "input": 9,
+    "output": -5,
+    "attack": 7,
+    "release": 7,
+    "ratio": 1,
+    "mix": 75,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "transformer": 2,
+    "target_gr": "7–10 dB im Wet-Pfad",
+    "note": "MOORE S.21 Beispiel 3 (A7/R7, 8:1): die schnellsten Zeiten lassen den Kompressor innerhalb jeder Periode arbeiten; das erzeugt die dort beschriebene tieffrequente FET-Verzerrung. Über den Mix-Regler dosiert. Transformatorstufe 80s (push-pull) für den passenden Ansatz.",
+    "sources": [
+      "MOORE"
+    ]
+  },
+  {
+    "name": "29 Vintage Blue Grit",
+    "instrument": "Gitarre",
+    "input": 7,
+    "output": -4,
+    "attack": 4,
+    "release": 4,
+    "ratio": 1,
+    "mix": 70,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "transformer": 1,
+    "target_gr": "4–7 dB",
+    "note": "PENNY-Quicksheet E-Gitarre: mittlere Attacke und mittlerer Release, 4:1 oder 8:1; sie verweist für Extra-Grit auf Blue-Stripe-Emulationen. Der 1176-Absatz in MOORE S.9 nennt die frühen Revisions mit rohem, farbigem Ton. Transformatorstufe 60s (single-ended) für den schmalbandigen Vintage-Charakter.",
+    "sources": [
+      "PENNY",
+      "MOORE"
+    ]
+  },
+  {
+    "name": "30 Huge Sub Weight",
+    "instrument": "E-Bass",
+    "input": 8,
+    "output": -4,
+    "attack": 4,
+    "release": 4,
+    "ratio": 1,
+    "mix": 85,
+    "colour": 100,
+    "compression": 1,
+    "link": 1,
+    "transformer": 3,
+    "target_gr": "6–10 dB",
+    "note": "MOORE S.9 (Owsinski 2006) und S.21: 8:1 mit deutlicher Gain-Reduktion für Bass. „Huge\" meint hier Tiefe und Gewicht, nicht mehr Verhältnis. Transformatorstufe 00s (push-pull mit den meisten Primärwindungen, Np=1996) für die stärkste Kopplungsabsenkung.",
+    "sources": [
+      "MOORE",
+      "PENNY"
+    ]
+  },
+  {
+    "name": "31 Mix Bus Light Glue",
+    "instrument": "Stereo-Bus",
+    "input": -4,
+    "output": 0,
+    "attack": 1.5,
+    "release": 3,
+    "ratio": 0,
+    "mix": 45,
+    "colour": 45,
+    "compression": 1,
+    "link": 1,
+    "transformer": 0,
+    "target_gr": "1–2 dB",
+    "note": "PENNY-Quicksheet Mixbus: langsamste Attacke (1–2), mittlerer bis langsamer Release (2–4), 4:1 und nur 1–2 dB Reduktion. Über den Mix-Regler im Plugin geregelt, weil ein Bus-Zweig ohne Environment-Check gehört werden muss.",
+    "sources": [
+      "PENNY",
+      "BLACKBIRD"
+    ]
+  }
 ]

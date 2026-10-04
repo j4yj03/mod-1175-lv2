@@ -200,6 +200,27 @@ Vollständig gelesen. 31 PDF-Seiten inklusive Titelseite. Qualitative Praxis-
 Evidenz; keine vollständigen Koeffizienten-/Harmonischenmesswerte. Attack-200-µs-
 Fehler korrigiert; Audio-Beispieldateinamen aktuell keine Downloadlinks.
 
+#### Ausgewertete Preset-relevanten Stellen
+
+| Fundstelle | Inhalt | Verwendung |
+|---|---|---|
+| S. 4–5 | Attack 200–800 µs, Release 50 ms–1,1 s; höheres Verhältnis hebt die Schwelle **und** macht das Knie härter; Knie bei 4:1/8:1 weicher, bei 12:1/20:1 härter | Plausibilität unseres Gain Laws, kein Zahlenwert übernommen |
+| S. 5 | Shanks (UA Webzine 2003): 4:1 und 8:1 für Kompression, 12:1 und 20:1 für Peakbegrenzung | Preset-Ratio-Wahl nach Quelle |
+| S. 7 | All Buttons In: Verhältnis „somewhere between 12:1 and 20:1" (UA-Handbuch 2009); Attack/Release ändern sich mit; anfängliche Transientenverzögerung; Kennlinie ähnelt einem Plateau; „almost resembles a brick wall limiter" | Auswahl von Presets mit Verhältnis 4 |
+| S. 9 | Crane (UA Webzine 2003) „1176 Comp-Distortion Trick": extrem schnelle Zeiten erzeugen bewusst Tieffrequenzverzerrung, wenn der Kompressor innerhalb jeder Periode arbeitet | Presets mit sehr schnellen Zeiten und parallelem Mix |
+| S. 9–10 | Bass: 4:1 häufigster Wert; Elmhirst kombiniert 4:1 **und** 8:1 zusammen (= All Buttons); Zeitkonstanten **weg** vom schnellsten Ende | Presets 07/08/28 |
+| S. 9–10 | Owsinski (2006) Bass: 8:1, Attack „around noon", Release „around 3 or 4 o'clock" — „long attack and short release … to increase articulation" | Preset 28 (Artikulation) |
+| S. 10 | Gesang: Lord-Alge 4:1 mit **schnellem** Release; Elmhirst sehr schnelle Attacke und sehr schneller Release, ~10 dB | Presets 04/09/27 |
+| S. 10 | Dr Pepper: „attack at 10 o'clock, release at 2 o'clock, and 4:1 ratio with tons of input level" (Jim Scott, Clouser/Vdovin 2004) | Preset 02, Wirkung statt Uhrzeit |
+| S. 16 | Vokal-Testtabelle: (4:1, A7, R7, 7–10 dB), (4:1, A6, R6, 7–10 dB), (4:1, A3, R5, 7–10 dB) | Presets 27/05/03 |
+| S. 21 | Bass-Testtabelle: (A4, R4, 4:1, 3–5 dB), (A4, R4, 8:1, 7–10 dB), (A7, R7, 8:1, 7–10 dB) | Presets 07/08/28 |
+| S. 24 | Raummikro-Testtabelle, durchgehend **lange Attacke und kurzer Release** (A3, R6), bei 4:1 / 8:1 / 12:1 / 20:1 / All Buttons In, 3–10 dB | Preset 14, Raummikro-Einstellung |
+| S. 25–26 | Fazit: FET-Verzerrung im Bass bei schnellen Zeiten, aggressiver Charakter bei stark komprimiertem Gesang, All Buttons verändert Transientenschlag und Decay | Begründung der Preset-Namen und Notizen |
+
+Die angegebenen Gain-Reduction-Werte (3–5, 7–10, 10–20 dB) sind **Zielwerte für
+den Benutzer**, keine Preset-Felder: unserer Regler hat bewusst keinen
+Threshold. Sie stehen deshalb in `target_gr` und nicht als Zahl im Preset.
+
 ### METHODIK
 
 - Parker/Zavalishin/Le Bivic 2016:
@@ -329,9 +350,34 @@ behauptet. Explorative NumPy-Recherche nicht als Hardware-Kalibrierfit genutzt.
 | REDDIT-USE | [How do you use an 1176?](https://www.reddit.com/r/mixingmastering/comments/s3dayx/how_do_you_use_an_1176/) | Nur Seitenhülle; JSON-Nachfrage 403. Kein verwertbarer Threadtext. |
 | GEARSPACE | [Anything you wouldn't use 1176 on?](https://gearspace.com/threads/anything-you-wouldnt-use-1176-on.625208/) | HTTP 403; keine abgeleiteten Benutzerempfehlungen. |
 | VOCAL-GUIDE | [How to Use the UAD 1176 on Vocals](https://www.electronicproduction.co.uk/post/1176-vocal-compression-guide), Leiam Sullivan | Vollständig gelesen; Frontkante/Body/Release, Extreme als Lernübung, danach Levelmatching. |
+| PENNY | [The Urei Universal Audio 1176 Compressor](https://penny.cool/tips-and-techniques/the-urei-universal-audio-1176-compressor/), Robert Conlon, Penny Cool Presets | Vollständig gelesen; **Quicksheet-Tabelle** mit Angriffs-/Release-Bereichen je Quelle und Dr.-Pepper-Referenz. Sekundäre Praxis-Zusammenfassung ohne Messwerte, daher nur als Startwert-Ableitung verwendet. |
 
 Alle daraus entwickelten Presets sind **eigene Startwerte**. Es wurde kein
 geschützter Artikelvolltext oder fremde Presetbank im Paket nachgebildet.
+
+### Umrechnung der Quellen-Angaben auf unsere Regler
+
+Beide neuen Quellen nennen **Reglerstellungen**, keine Messwerte. Wir übernehmen
+daraus ausschließlich die *musikalische Absicht*, nicht eine Reglerkalibrierung.
+
+Unsere `attack`- und `release`-Parameter liegen ohnehin auf derselben **1–7er
+Skala** wie die Quellen, und die Quellen sind sich über die Leserichtung einig:
+
+- MOORE, S. 16 und 21: „a setting of 7 represents the fastest attack and release
+  times. The control for attack and release works counter clockwise".
+- PENNY: „faster settings are to the right, slower to the left", Vocals 1–3,
+  Drums 5–7.
+
+**Höhere Zahl = schneller.** Wir übernehmen daher direkt die Zahlen der
+Quellen-Tabellen, ohne Umrechnung. Die Preset-Notizen nennen zusätzlich immer
+die *Wirkung* (schnell/langsam, Transienten/Dynamik), damit die Absicht auch
+dann lesbar bleibt, wenn jemand die Zahl nicht kennt.
+
+Nicht übernommen wurden: Uhrzeit-Angaben wie „10 o'clock" oder „2 o'clock". Die
+beiden Quellen beziehen sich auf die **Uhrzeitstellung der Hardware**, und wir
+können die Uhr-Geometrie des Geräts nicht belegen. Stattdessen wird die
+Formulierung in Wirkung übersetzt (langsame Attacke, mittlerer Release) und als
+eigene Näherung gekennzeichnet.
 
 ## 8. Toolchain-Quelle
 

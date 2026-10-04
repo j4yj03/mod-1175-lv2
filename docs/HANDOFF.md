@@ -21,7 +21,7 @@ REAPER-/Dwarf-CPUvergleich mit dieser Fassung, insbesondere OS 2x/4x gegen Off.
 ## Vorhandene Artefakte
 
 - `jsfx/GreenStripe76-Mono.jsfx`, `...-Stereo.jsfx` plus vier Includes.
-- Zwei `.rpl`-Instrumentbänke, 26 Presets je Variante.
+- Zwei `.rpl`-Instrumentbänke, 31 Presets je Variante.
 - Native Bundle `build/native/green-stripe-76.lv2` für den Buildrechner.
 - AArch64-/Cortex-A35-Bundle `build/aarch64-gcc9/green-stripe-76.lv2`.
 - `dist/*-jsfx.zip`, `*-source.zip`, `*-moddwarf.tar.gz`, Herkunftsmanifest,

@@ -9,7 +9,11 @@ mit vier senkrechten Feldern neu aufgebaut — GAIN, TIME, der grüne ENGINE-Ber
 (Verhältnis, Comp-Kippschalter, Oversampling, Link) und COLOUR (Mix, Colour,
 Transformator). Der Transformator ist als **Auswahl mit fünf Stufen** vorhanden,
 wirkt aber **noch nicht auf den Klang**; die Echtzeit-Umsetzung des
-Gyrator-Kapazität-Modells ist dokumentiert, aber nicht gebaut.
+Gyrator-Kapazität-Modells ist dokumentiert, aber nicht gebaut. Er ist eine
+Klangwahl und wandert daher mit dem Preset: 3 der 31 Presets — *Bass Mojo
+Bite*, *Vintage Blue Grit* und *Huge Sub Weight* — bringen ihre Stufe mit,
+alle anderen starten auf `None`. Oversampling bleibt davon unberührt und
+startet nach jedem Preset auf Off.
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
 Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen

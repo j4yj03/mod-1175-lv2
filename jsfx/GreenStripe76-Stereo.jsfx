@@ -19,7 +19,7 @@ slider9:1<0,1,1{Off,On}>Enabled
 slider10:1<0,1,1{Off,On}>Stereo Link
 slider12:0<0,2,1{Off,2x,4x}>Oversampling
 slider13:0<0,4,1{None,60s,80s,00s,Symmetric}>Transformer
-slider11:0<0,26,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Bass Finger Level,08 Bass Pick Punch,09 Bass Fast Grit,10 Kick Weight,11 Snare Crack,12 Toms Body,13 Overheads Gentle,14 Room All Buttons,15 Drum Parallel Crush,16 Guitar Clean Sustain,17 Guitar Rhythm Tight,18 Guitar Colour Only,19 Acoustic Strum,20 Acoustic Finger,21 Piano Gentle,22 Rhodes Body,23 Synth Bass Control,24 Synth Lead Sustain,25 Percussion Snap,26 Stereo Bus Subtle}>Instrument preset
+slider11:0<0,31,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Bass Finger Level,08 Bass Pick Punch,09 Bass Fast Grit,10 Kick Weight,11 Snare Crack,12 Toms Body,13 Overheads Gentle,14 Room All Buttons,15 Drum Parallel Crush,16 Guitar Clean Sustain,17 Guitar Rhythm Tight,18 Guitar Colour Only,19 Acoustic Strum,20 Acoustic Finger,21 Piano Gentle,22 Rhodes Body,23 Synth Bass Control,24 Synth Lead Sustain,25 Percussion Snap,26 Stereo Bus Subtle,27 Vocal Squashed,28 Bass Mojo Bite,29 Vintage Blue Grit,30 Huge Sub Weight,31 Mix Bus Light Glue}>Instrument preset
 in_pin:Input L
 in_pin:Input R
 out_pin:Output L

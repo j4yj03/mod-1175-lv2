@@ -147,8 +147,13 @@ Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
   drei Sättigungspolynome) und verdoppelt die Last gegenüber Colour 0; das
   Oversampling vervielfacht die Subframenzahl entsprechend der Rate. Für
   sparsamen Betrieb Colour und OS zurücknehmen; auf dem Dwarf vor Ort messen.
-- Eingebaute JSFX-Selektorpresets lassen die Einstellung unverändert;
-  importierte Factory-Bänke und die LV2-Factory-Presets setzen Off.
+- Eingebaute JSFX-Selektorpresets lassen das Oversampling unverändert;
+  importierte Factory-Bänke und die LV2-Factory-Presets setzen es auf Off.
+- Anders ist der **Transformator**: er ist eine Klangwahl und wandert mit dem
+  Preset. Beim Recall startet er also auf dem Wert des Presets und sonst auf
+  `None`. Belegt in 3 von 31 Presets — *Bass Mojo Bite* (`80s`), *Vintage Blue
+  Grit* (`60s`) und *Huge Sub Weight* (`00s`). Er wirkt in 0.3.0 noch nicht auf
+  den Klang, wird aber bereits korrekt gespeichert und geladen.
 
 ### Enabled / Bypass
 
@@ -269,8 +274,10 @@ kreativer Bus-Preset, keine Mastering-Empfehlung.
 
 ### Eingebauter Selektor
 
-`Instrument preset` lädt alle Klangregler einschließlich Enabled und Stereo Link.
-Beim anschließenden manuellen Verändern wird die Auswahl auf **Custom** gesetzt.
+`Instrument preset` lädt alle Klangregler einschließlich Enabled, Stereo Link und
+Transformator. Das Oversampling wird bewusst **nicht** übernommen und startet auf
+Off, weil es eine Qualitäts-/CPU-Wahl ist. Beim anschließenden manuellen
+Verändern wird die Auswahl auf **Custom** gesetzt.
 Zum erneuten Laden zuerst Custom, dann denselben Preset wählen, falls die
 Auswahlliste bereits dessen Namen zeigt. REAPER speichert die eigentlichen
 Reglerwerte mit dem Projekt.

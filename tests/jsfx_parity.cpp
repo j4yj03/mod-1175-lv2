@@ -96,26 +96,38 @@ static bool runCase(const char* file, bool stereo, double rate, unsigned block,
     return true;
 }
 
-static bool checkPresets(const char* file) {
+static bool checkPresets(const char* file, unsigned &loaded) {
     ysfx_config_u config(ysfx_config_new()); ysfx_set_log_reporter(config.get(),logger);
     ysfx_u fx(ysfx_new(config.get()));
     if (!ysfx_load_file(fx.get(),file,0) || !ysfx_compile(fx.get(),ysfx_compile_no_gfx)) return false;
     ysfx_set_sample_rate(fx.get(),48000); ysfx_set_block_size(fx.get(),128); ysfx_init(fx.get());
     const std::string bankFile=std::string(file).substr(0,std::string(file).size()-5)+".rpl";
     ysfx_bank_u bank(ysfx_load_bank(bankFile.c_str()));
-    if (!bank || bank->preset_count!=26) return false;
+    // The expected count comes from the preset selector's own range instead of
+    // a hardcoded number, so adding a preset cannot silently skip the check.
+    ysfx_slider_range_t range{};
+    if (!bank || !ysfx_slider_get_range(fx.get(),10,&range)) return false;
+    const unsigned expected=static_cast<unsigned>(range.max);
+    if (!bank || bank->preset_count!=expected) return false;
     std::vector<float> silence(128),l(128),r(128);
     const float* in[]={silence.data(),silence.data()}; float* out[]={l.data(),r.data()};
+    // Sliders the bank state must reproduce exactly. Index 10 is the preset
+    // selector itself and is deliberately excluded; 11 and 12 are the appended
+    // oversampling and transformer ports, so per-preset transformer values get
+    // verified through the selector and the bank, not just by construction.
+    loaded+=bank->preset_count;
+    const uint32_t compared[]={0,1,2,3,4,5,6,7,8,9,11,12};
+    const unsigned comparedCount=sizeof(compared)/sizeof(compared[0]);
     for (unsigned i=0;i<bank->preset_count;++i) {
         if (!ysfx_load_state(fx.get(),bank->presets[i].state)) return false;
         ysfx_process_float(fx.get(),in,out,2,2,128);
-        double values[10];
-        for (unsigned j=0;j<10;++j) values[j]=ysfx_slider_get_value(fx.get(),j);
+        double values[13];
+        for (unsigned j=0;j<comparedCount;++j) values[compared[j]]=ysfx_slider_get_value(fx.get(),compared[j]);
         ysfx_slider_set_value(fx.get(),10,i+1,true);
         ysfx_process_float(fx.get(),in,out,2,2,128);
-        for (unsigned j=0;j<10;++j)
-            if (values[j]!=ysfx_slider_get_value(fx.get(),j)) {
-                std::cerr << "Bank/selector mismatch preset=" << i << " slider=" << j << '\n'; return false;
+        for (unsigned j=0;j<comparedCount;++j)
+            if (values[compared[j]]!=ysfx_slider_get_value(fx.get(),compared[j])) {
+                std::cerr << "Bank/selector mismatch preset=" << i << " slider=" << compared[j] << '\n'; return false;
             }
         ysfx_slider_set_value(fx.get(),0,values[0]+0.1,true);
         ysfx_process_float(fx.get(),in,out,2,2,128);
@@ -163,10 +175,11 @@ int main(int argc,char** argv) {
             passed+=2;
         }
     }
-    if (!checkPresets(argv[1]) || !checkPresets(argv[2])) {
+    unsigned presetLoads=0;
+    if (!checkPresets(argv[1],presetLoads) || !checkPresets(argv[2],presetLoads)) {
         std::cerr << "Preset RPL/selector/custom-state test failed\n"; return 1;
     }
     if (failed) { std::printf("FAILURES: %u\n", failed); return 1; }
     std::cout << "JSFX/native parity: PASS (" << passed << " cases, max=" << maximumError << " FS)\n";
-    std::cout << "JSFX instrument selector / RPL banks / Custom state: PASS (52 presets)\n";
+    std::cout << "JSFX instrument selector / RPL banks / Custom state: PASS (" << presetLoads << " preset states)\n";
 }

@@ -361,14 +361,73 @@ den man mit einem Transformator wählt. Für Gütekommunikation gilt: das Signal
 ist minimalphasig; ein Phasenverzerrungsfilter wäre die Alternative, nicht mehr
 Latenz.
 
-Ausdrücklich offen und später zu prüfen:
+Ab jetzt nicht mehr offen sind:
 
-- Ab welchem Pegel der Kern hörbar in die Sättigung geht (`a`, `n`)
-- ob die Kopplungs-Bassabsenkung als eigenständiger Regler getrennt vom
-  Sättigungsteil sinnvoller ist
-- ob die bisherige `flux`-/Lowpass-Färbung in `Colour` zurückgenommen werden
-  muss, wenn ein echter Kern daneben steht — sonst addieren sich zwei Modelle
-  für denselben Effekt
+- Der Einbauort ist die **Eingangsseite**, vor der Kompressorstufe, mit einem
+  **kanalgetrennten** Flux-Zustand pro Kanal nach dem Vorbild von `CORE_GC`.
+- Die Kopplungs-Bassabsenkung entsteht **aus dem gemeinsamen Kern** und wird
+  **nicht** als eigener Regler exponiert. Sie ist Nebeneffekt, nicht Bedienziel.
+- Die `flux`-/Lowpass-Färbung in `Colour` bleibt **unverändert**. Der Kern soll den
+  Kopplungs- und Sättigungseffekt liefern, nicht eine zweite, parallele
+  Bassabsenkung modellieren.
+
+### Festlegung: Sättigungsschwelle
+
+Die Sättigung setzt ein, wenn der nichtlineare Magnetisierungsstrom den linearen
+Anteil derselben Größe erreicht. Das ist die klassische Knie-Definition
+(permeability fällt auf den linearen Wert). Für den Magnetisierungszweig aus
+`CORE_GC` heißt das:
+
+```
+i_lin   = C · ω · φ              // linearer Anteil bei Frequenz ω
+i_sat   = a · |φ|^n · sgn(φ)     // Sättigungsanteil
+Kniefall:  a · φ_k^n = C · ω · φ_k   →   φ_k = (C · ω / a)^(1/(n-1))
+```
+
+Ausgewertet für die vier Subckte aus `xformer.lib`, jeweils beim geometrischen
+Mittel des angegebenen Übertragungsbands:
+
+| Typ | Subckt | Band | `f_mitte` | `n` | `Np` | `φ_k` |
+|---|---|---|---|---|---|---|
+| `60s` | `GCOT-SE-01` | 70 Hz–15 kHz | 1025 Hz | 13 | 2012 | **0,532** |
+| `80s` | `GCOT-PP-03` | 20 Hz–20 kHz | 633 Hz | 6 | 668 | **0,337** |
+| `00s` | `GCOT-PP-04` | 20 Hz–20 kHz | 633 Hz | 8 | 1996 | **0,368** |
+| `Symmetric` | `GCSYMETRICAL` | — | 633 Hz | 25 | 200 | **1,761** |
+
+Ergebnis der Auswertung: die drei echten Modelle liegen zwischen **0,337** und
+**0,532**, also nur um den Faktor **1,58**. Ein einziger absoluter Schwellwert über
+alle Typen wäre trotzdem falsch, weil die Reststreuung genau die unterschiedliche
+Sättigungshärte der Bauarten ausmacht.
+
+**Getroffene Festlegung:** Der Schwellwert wird als **normierter Flux**
+`u = φ / φ_k` geführt, und die Schwelle liegt bei **`u = 1,0`**. Damit gilt
+
+```
+i_mag(u) = C · ω · φ_k · u  +  a · φ_k^n · |u|^n · sgn(u)
+```
+
+Ein **gemeinsamer** Normierungsparameter für alle vier Modelle, die
+transformatorspezifischen Größen `n`, `Np`, `Ns` bleiben erhalten. `ω` bleibt
+im Kern frequenzabhängig, das ist der Modelleffekt und wird nicht
+weggeglättet — die Abschwächung ist echt.
+
+**Kein zusätzlicher Clamp.** Oberhalb des Knies ist die Steigung sehr hoch
+(`2^n` ist 64× bis 8192× bei `u = 2`), der Flux wächst also von selbst nicht
+weiter. Eine zusätzliche Begrenzung auf `u` wäre falsch, weil sie die
+DDT-Beziehung `v = N·dφ/dt` zerstört und genau den Sättigungscharakter
+beseitigt, den wir modellieren.
+
+Noch zu prüfen, wenn der Kern gebaut wird: Stabilität der Integrationsregel bei
+`n = 13`, CPU-Kosten der `pow`-Funktion und der Hysteresezweig, und ob die
+Kopplungsabsenkung im hörbaren Bereich liegt.
+
+### Einordnung des vierten Modells
+
+`GCSYMETRICAL` ist in `xformer.lib` ausdrücklich mit
+`* IMPORTANT: Only for testing purposes` überschrieben. Die GUI-Bezeichnung
+`Symmetric` ist deshalb **kein** Vintage-Transformator, sondern eine Referenz mit
+hoher Sättigungsschwelle und steiler Nichtlinearität (`n = 25`). Das ist in der
+Dokumentation so zu führen und darf nicht als klangliches Ziel verkauft werden.
 
 ### Mögliche Alternativen zum GC-Kern
 
