@@ -36,7 +36,8 @@ int main() {
         greenstripe::Parameters p;
         p.colour = 0;
         double previous = 0;
-        for (int ratio = 0; ratio < 4; ++ratio) {
+        // Indices 0..4 are the real ratios (2:1 .. 20:1), index 5 is All Buttons.
+        for (int ratio = 0; ratio < 5; ++ratio) {
             p.ratio = ratio;
             p.attack = 7; p.release = 1;
             const std::vector<double> low = render(p, 0.3);
@@ -88,7 +89,7 @@ int main() {
         // All Buttons, silence, extreme controls, and invalid input stay bounded/finite.
         for (double rate : {44100.0,48000.0,96000.0}) {
             greenstripe::Processor processor(rate,true);
-            p=greenstripe::Parameters(); p.input=24; p.output=24; p.ratio=4; p.attack=7; p.release=7;
+            p=greenstripe::Parameters(); p.input=24; p.output=24; p.ratio=5; p.attack=7; p.release=7;
             processor.setParameters(p);
             for (unsigned i=0; i<30000; ++i) {
                 double l,r;

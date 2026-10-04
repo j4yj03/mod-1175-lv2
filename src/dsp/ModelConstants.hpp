@@ -15,9 +15,9 @@ static const double release_fast_seconds = 0.050000000000000003;
 static const double input_highpass_hz = 8;
 static const double output_highpass_hz = 5;
 static const double amplifier_lowpass_hz = 45000;
-static const double ratios[] = {4, 8, 12, 20, 16};
-static const double thresholds_dbfs[] = {-24, -21, -19.5, -18, -22};
-static const double knees_db[] = {6, 4, 3, 2, 1.5};
+static const double ratios[] = {2, 4, 8, 12, 20, 16};
+static const double thresholds_dbfs[] = {-24, -24, -21, -19.5, -18, -22};
+static const double knees_db[] = {6, 6, 4, 3, 2, 1.5};
 static const double halfband_stage1[] = {0.04063346092419326, 0.1505051290226746, 0.30075705599187408, 0.46077450496145061, 0.6095243148961883, 0.73850384111885725, 0.84922381039206607, 0.9497427837050002};
 static const double halfband_stage2[] = {0.040341222658423818, 0.16379193172022141, 0.38282159255650028, 0.73875012537359719};
 } }

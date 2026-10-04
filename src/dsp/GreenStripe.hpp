@@ -102,7 +102,7 @@ struct Parameters {
     int ratio, oversampling, transformer;
     bool compression, enabled, stereoLink;
     Parameters() : input(0), output(0), attack(3), release(5), mix(100),
-        colour(100), ratio(0), oversampling(model::default_oversampling),
+        colour(100), ratio(1), oversampling(model::default_oversampling),
         transformer(0), compression(true), enabled(true), stereoLink(true) {}
 };
 
@@ -117,7 +117,7 @@ struct RunningParameters {
 };
 
 inline RunningParameters convert(const Parameters& p) {
-    const int mode = std::max(0, std::min(4, p.ratio));
+    const int mode = std::max(0, std::min(5, p.ratio));
     const double attack = bounded(finiteOr(p.attack, 3), 1, 7);
     const double release = bounded(finiteOr(p.release, 5), 1, 7);
     RunningParameters r;
@@ -130,7 +130,7 @@ inline RunningParameters convert(const Parameters& p) {
     r.ratio = model::ratios[mode];
     r.threshold = model::thresholds_dbfs[mode];
     r.knee = model::knees_db[mode];
-    r.all = mode == 4 ? 1.0 : 0.0;
+    r.all = mode == 5 ? 1.0 : 0.0;
     r.mix = bounded(finiteOr(p.mix, 100) * 0.01, 0, 1);
     r.colour = bounded(finiteOr(p.colour, 100) * 0.01, 0, 1);
     r.compression = p.compression ? 1.0 : 0.0;

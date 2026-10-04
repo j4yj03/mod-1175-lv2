@@ -11,7 +11,7 @@ bestehenden Ports und die Plugin-URIs sind unverändert.
 | output | 2 | −36…+24 dB | 0 | Gain vor Ausgangsfärbung, hinter Detektor |
 | attack | 3 | 1…7 | 3 | 1 langsam, 7 schnell |
 | release | 4 | 1…7 | 5 | 1 langsam, 7 schnell |
-| ratio | 5 | 0…4, Enum | 0 | 4:1 / 8:1 / 12:1 / 20:1 / All |
+| ratio | 5 | 0…5, Enum | 1 | 2:1 / 4:1 / 8:1 / 12:1 / 20:1 / All |
 | mix | 6 | 0…100 % | 100 | lineare, interne Dry/Wet-Mischung |
 | colour | 7 | 0…100 % | 100 | eigene Audiopfad-Färbungsdosierung |
 | compression | 8 | 0/1, Enum | 1 | dynamische Abschwächung aktiv (`COMP ON`/`COMP OFF`) |
@@ -24,6 +24,29 @@ bestehenden Ports und die Plugin-URIs sind unverändert.
 Alle Klangparameter außer Mode-Auswahl werden in abgeleiteter Form geglättet:
 Gains linear, Zeiten in Sekunden, Threshold/Knie/Ratio linear. Die Mode-Auswahl
 wird in Ratio/Threshold/Knie/All-Zielwerte übersetzt und diese geglättet.
+
+### Ratio-Modi
+
+`ratio` hat seit 0.4.0 sechs Stufen. `2:1` steht vorn, `All Buttons` steht
+hinten; alle previously gültigen Preset-Indizes sind dadurch um eins gewandert.
+
+| Index | Beschriftung | Verhältnis | Schwelle | Knie |
+|---:|---|---:|---:|---:|
+| 0 | 2:1 | 2,0 | −24 dBFS | 6 dB |
+| 1 | 4:1 | 4,0 | −24 dBFS | 6 dB |
+| 2 | 8:1 | 8,0 | −21 dBFS | 4 dB |
+| 3 | 12:1 | 12,0 | −19,5 dBFS | 3 dB |
+| 4 | 20:1 | 20,0 | −18 dBFS | 2 dB |
+| 5 | All Buttons | 16,0 | −22 dBFS | 1,5 dB |
+
+`2:1` ist eine bewusste Erweiterung dieses gray-box-Modells, keine
+Hardwareeigenschaft; die Vorlage kennt keinen 2:1-Schalter. Schwelle und Knie
+sind bewusst mit `4:1` identisch, damit der Vergleich nicht durch zwei
+veränderte Größen erschwert wird. Weil die Gain-Reduction-Kurve bei gleicher
+Schwelle und gleichem Knie linear im dB-Verhältnis steht, ergibt `2:1` ein
+Drittel der Gain Reduction von `4:1`, nicht die Hälfte. Gemessen werden
+1,99974 und 3,99948. Der Default ist `4:1` (Index 1); `All Buttons` verhält sich
+unverändert und ist nur von Index 4 auf Index 5 gewandert.
 
 ### Unterschiedliche Preset-Semantik der angehängten Ports
 

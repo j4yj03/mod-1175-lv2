@@ -45,8 +45,10 @@ Referenz) verfügbar ist:
 1. Sinusbursts auf logarithmisch gestuften Pegeln von −80 bis 0 dBFS
    erzeugen (Stimulus-Material kann mit `tools/make_probes.py` bzw.
    dem Measurement-Probe erweitert werden).
-2. Je Ratio-Stellung (4:1, 8:1, 12:1, 20:1, All Buttons) und Pegel den
-   stationären Ausgangspegel messen; LUT-Paar = 20·log10(out/in).
+2. Je Ratio-Stellung (2:1, 4:1, 8:1, 12:1, 20:1, All Buttons) und Pegel den
+   stationären Ausgangspegel messen; LUT-Paar = 20·log10(out/in). Die
+   2:1-Stellung hat keine Hardware Entsprechung; für sie liefert Route 3
+   eine Modelltabelle, eine echte Messung ist dort nicht möglich.
 3. Pegelstufung und Interpolation wie in der Thesis (log-Stufung,
    lineare Interpolation), Pre-/Post-Gain-Taps vorsehen.
 

@@ -14,7 +14,7 @@
 | 03 Vocal Natural | Stimme | 2 / 0 | 3 / 5 | 4:1 | 100 / 75 | On | None | 3–5 dB |
 | 04 Vocal Peak Catch | Stimme | 4 / -1 | 5.5 / 6 | 8:1 | 100 / 85 | On | None | 3–7 dB auf Spitzen |
 | 05 Vocal Rock Forward | Stimme | 7 / -3 | 6 / 6 | 8:1 | 100 / 100 | On | None | 5–10 dB |
-| 06 Vocal Grit Parallel | Stimme | 10 / -6 | 6.5 / 7 | All | 30 / 100 | On | None | 10–18 dB im Wet-Pfad |
+| 06 Vocal Grit Parallel | Stimme | 10 / -6 | 6.5 / 7 | All Buttons | 30 / 100 | On | None | 10–18 dB im Wet-Pfad |
 | 07 Vocal Squashed | Stimme | 6 / -3 | 7 / 7 | 4:1 | 100 / 100 | On | None | 7–10 dB |
 | 08 Vocal Transformer | Stimme | 4 / 0 | 3 / 5 | Colour only | 100 / 100 | On | None | 0 dB, keine Kompression |
 | 09 Guitar Clean Sustain | E-Gitarre | 3 / 0 | 2.8 / 5.8 | 4:1 | 80 / 90 | On | None | 3–6 dB |
@@ -35,9 +35,9 @@
 | 24 Snare Saturated Parallel | Drums | 6 / -6 | 3 / 6 | 4:1 | 30 / 100 | On | 80s | 10–18 dB im Wet-Pfad |
 | 25 Toms Body | Drums | 4 / -1 | 4 / 6 | 4:1 | 85 / 80 | Off | None | 3–7 dB |
 | 26 Overheads Gentle | Drums | -2 / 1 | 1 / 4.5 | 4:1 | 75 / 60 | On | None | 1–3 dB |
-| 27 Room All Buttons | Drums | 12 / -7 | 3 / 6 | All | 100 / 100 | On | None | 10–20 dB |
+| 27 Room All Buttons | Drums | 12 / -7 | 3 / 6 | All Buttons | 100 / 100 | On | None | 10–20 dB |
 | 28 Drum Room Smasher | Drums | 10 / -5 | 7 / 7 | 4:1 | 75 / 100 | On | None | 8–15 dB |
-| 29 Drum Parallel Crush | Drums | 14 / -8 | 2 / 7 | All | 25 / 100 | On | None | 12–24 dB im Wet-Pfad |
+| 29 Drum Parallel Crush | Drums | 14 / -8 | 2 / 7 | All Buttons | 25 / 100 | On | None | 12–24 dB im Wet-Pfad |
 | 30 Percussion Snap | Drums | 2 / 0 | 1.3 / 6.5 | 4:1 | 75 / 80 | Off | None | 2–5 dB |
 | 31 Piano Gentle | Tasten | -3 / 1 | 1 / 3.5 | 4:1 | 60 / 50 | On | None | 1–3 dB |
 | 32 Rhodes Body | Tasten | 2 / 0 | 2.5 / 5 | 4:1 | 85 / 90 | On | None | 3–6 dB |

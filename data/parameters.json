@@ -1,14 +1,149 @@
 [
-  {"symbol":"input","name":"Input","short":"Input","default":0,"min":-36,"max":24,"step":0.1,"unit":"db"},
-  {"symbol":"output","name":"Output","short":"Output","default":0,"min":-36,"max":24,"step":0.1,"unit":"db"},
-  {"symbol":"attack","name":"Attack","short":"Attack","default":3,"min":1,"max":7,"step":0.01},
-  {"symbol":"release","name":"Release","short":"Release","default":5,"min":1,"max":7,"step":0.01},
-  {"symbol":"ratio","name":"Ratio","short":"Ratio","default":0,"min":0,"max":4,"step":1,"labels":["4:1","8:1","12:1","20:1","All Buttons"]},
-  {"symbol":"mix","name":"Mix","short":"Mix","default":100,"min":0,"max":100,"step":0.1,"unit":"pc"},
-  {"symbol":"colour","name":"Colour","short":"Colour","default":100,"min":0,"max":100,"step":0.1,"unit":"pc"},
-  {"symbol":"compression","name":"Compression","short":"Comp","default":1,"min":0,"max":1,"step":1,"labels":["COMP OFF","COMP ON"]},
-  {"symbol":"enabled","name":"Enabled","short":"Enabled","default":1,"min":0,"max":1,"step":1,"toggle":true,"designation":"enabled"},
-  {"symbol":"stereo_link","name":"Stereo Link","short":"Link","default":1,"min":0,"max":1,"step":1,"toggle":true,"stereo_only":true},
-  {"symbol":"oversampling","name":"Oversampling","short":"OS","default":0,"min":0,"max":2,"step":1,"labels":["Off","2x","4x"],"jsfx_slider":12,"lv2_append":true,"connection_optional":true},
-  {"symbol":"transformer","name":"Transformer","short":"Xfm","default":0,"min":0,"max":4,"step":1,"labels":["None","60s","80s","00s","Symmetric"],"jsfx_slider":13,"lv2_append":true,"connection_optional":true,"no_dsp":true}
+  {
+    "symbol": "input",
+    "name": "Input",
+    "short": "Input",
+    "default": 0,
+    "min": -36,
+    "max": 24,
+    "step": 0.1,
+    "unit": "db"
+  },
+  {
+    "symbol": "output",
+    "name": "Output",
+    "short": "Output",
+    "default": 0,
+    "min": -36,
+    "max": 24,
+    "step": 0.1,
+    "unit": "db"
+  },
+  {
+    "symbol": "attack",
+    "name": "Attack",
+    "short": "Attack",
+    "default": 3,
+    "min": 1,
+    "max": 7,
+    "step": 0.01
+  },
+  {
+    "symbol": "release",
+    "name": "Release",
+    "short": "Release",
+    "default": 5,
+    "min": 1,
+    "max": 7,
+    "step": 0.01
+  },
+  {
+    "symbol": "ratio",
+    "name": "Ratio",
+    "short": "Ratio",
+    "default": 1,
+    "min": 0,
+    "max": 5,
+    "step": 1,
+    "labels": [
+      "2:1",
+      "4:1",
+      "8:1",
+      "12:1",
+      "20:1",
+      "All Buttons"
+    ]
+  },
+  {
+    "symbol": "mix",
+    "name": "Mix",
+    "short": "Mix",
+    "default": 100,
+    "min": 0,
+    "max": 100,
+    "step": 0.1,
+    "unit": "pc"
+  },
+  {
+    "symbol": "colour",
+    "name": "Colour",
+    "short": "Colour",
+    "default": 100,
+    "min": 0,
+    "max": 100,
+    "step": 0.1,
+    "unit": "pc"
+  },
+  {
+    "symbol": "compression",
+    "name": "Compression",
+    "short": "Comp",
+    "default": 1,
+    "min": 0,
+    "max": 1,
+    "step": 1,
+    "labels": [
+      "COMP OFF",
+      "COMP ON"
+    ]
+  },
+  {
+    "symbol": "enabled",
+    "name": "Enabled",
+    "short": "Enabled",
+    "default": 1,
+    "min": 0,
+    "max": 1,
+    "step": 1,
+    "toggle": true,
+    "designation": "enabled"
+  },
+  {
+    "symbol": "stereo_link",
+    "name": "Stereo Link",
+    "short": "Link",
+    "default": 1,
+    "min": 0,
+    "max": 1,
+    "step": 1,
+    "toggle": true,
+    "stereo_only": true
+  },
+  {
+    "symbol": "oversampling",
+    "name": "Oversampling",
+    "short": "OS",
+    "default": 0,
+    "min": 0,
+    "max": 2,
+    "step": 1,
+    "labels": [
+      "Off",
+      "2x",
+      "4x"
+    ],
+    "jsfx_slider": 12,
+    "lv2_append": true,
+    "connection_optional": true
+  },
+  {
+    "symbol": "transformer",
+    "name": "Transformer",
+    "short": "Xfm",
+    "default": 0,
+    "min": 0,
+    "max": 4,
+    "step": 1,
+    "labels": [
+      "None",
+      "60s",
+      "80s",
+      "00s",
+      "Symmetric"
+    ],
+    "jsfx_slider": 13,
+    "lv2_append": true,
+    "connection_optional": true,
+    "no_dsp": true
+  }
 ]

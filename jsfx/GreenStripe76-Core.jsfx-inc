@@ -314,13 +314,13 @@ local(attackPos releasePos newLink) (
       this.ctrlR.charge>this.ctrlL.charge ? this.ctrlS.gs_ctrl_copy(this.ctrlR) : this.ctrlS.gs_ctrl_copy(this.ctrlL);
     );
   );
-  mode=gs_bound(floor(gs_finite(mode,0)+0.5),0,4);
+  mode=gs_bound(floor(gs_finite(mode,0)+0.5),0,5);
   attackPos=gs_bound(gs_finite(attack,3),1,7); releasePos=gs_bound(gs_finite(release,5),1,7);
   ti=gs_db_gain(gs_bound(gs_finite(inputDb,0),-36,24)); to=gs_db_gain(gs_bound(gs_finite(outputDb,0),-36,24));
   ta=gs_attack_slow_seconds*gs_series_exp((attackPos-1)/6*gs_series_log(gs_attack_fast_seconds/gs_attack_slow_seconds));
   tr=gs_release_slow_seconds*gs_series_exp((releasePos-1)/6*gs_series_log(gs_release_fast_seconds/gs_release_slow_seconds));
-  t_ratio=gs_ratios[mode]; t_threshold=gs_thresholds[mode]; t_knee=gs_knees[mode];
-  t_all=mode==4 ? 1 : 0; tm=gs_bound(gs_finite(mix,100)*0.01,0,1); tc=gs_bound(gs_finite(colour,100)*0.01,0,1);
+  t_ratio=gs_ratio_of(mode); t_threshold=gs_threshold_of(mode); t_knee=gs_knee_of(mode);
+  t_all=mode==5 ? 1 : 0; tm=gs_bound(gs_finite(mix,100)*0.01,0,1); tc=gs_bound(gs_finite(colour,100)*0.01,0,1);
   tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=newLink;
   tx=gs_bound(floor(gs_finite(transformer,0)+0.5),0,4);
   initial ? (

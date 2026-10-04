@@ -140,7 +140,7 @@ int main(int argc,char** argv) {
     if (argc!=3) { std::cerr << "Usage: jsfx_parity mono.jsfx stereo.jsfx\n"; return 2; }
     unsigned passed=0, failed=0;
     for (bool stereo : {false,true}) for (double rate : {44100.0,48000.0,96000.0})
-        for (unsigned block : {1u,64u,128u,256u}) for (int mode : {0,1,2,3,4}) {
+        for (unsigned block : {1u,64u,128u,256u}) for (int mode : {0,1,2,3,4,5}) {
             greenstripe::Parameters p; p.ratio=mode;
             p.stereoLink=(mode!=2); p.mix=mode==3?35:100;
             if (!runCase(argv[stereo?2:1],stereo,rate,block,p,0)) ++failed;
@@ -164,7 +164,7 @@ int main(int argc,char** argv) {
             ++passed;
         }
         for (unsigned oversampling : {1u,2u}) for (double rate : {44100.0,48000.0,96000.0})
-            for (unsigned block : {64u,128u}) for (int mode : {0,2,4}) {
+            for (unsigned block : {64u,128u}) for (int mode : {0,2,5}) {
                 greenstripe::Parameters q; q.ratio=mode; q.stereoLink=(mode!=2); q.mix=mode==3?35:100;
                 if (!runCase(argv[stereo?2:1],stereo,rate,block,q,0,oversampling)) ++failed;
                 ++passed;

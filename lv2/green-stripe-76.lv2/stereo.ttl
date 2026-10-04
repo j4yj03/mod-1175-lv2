@@ -47,15 +47,16 @@
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 8;
       lv2:symbol "ratio"; lv2:name "Ratio";
-      lv2:shortName "Ratio"; lv2:default 0;
-      lv2:minimum 0; lv2:maximum 4;
+      lv2:shortName "Ratio"; lv2:default 1;
+      lv2:minimum 0; lv2:maximum 5;
       lv2:portProperty lv2:integer, lv2:enumeration;
-      lv2:scalePoint [ rdfs:label "4:1"; rdf:value 0 ];
-      lv2:scalePoint [ rdfs:label "8:1"; rdf:value 1 ];
-      lv2:scalePoint [ rdfs:label "12:1"; rdf:value 2 ];
-      lv2:scalePoint [ rdfs:label "20:1"; rdf:value 3 ];
-      lv2:scalePoint [ rdfs:label "All Buttons"; rdf:value 4 ];
-      pprops:rangeSteps 5 ],
+      lv2:scalePoint [ rdfs:label "2:1"; rdf:value 0 ];
+      lv2:scalePoint [ rdfs:label "4:1"; rdf:value 1 ];
+      lv2:scalePoint [ rdfs:label "8:1"; rdf:value 2 ];
+      lv2:scalePoint [ rdfs:label "12:1"; rdf:value 3 ];
+      lv2:scalePoint [ rdfs:label "20:1"; rdf:value 4 ];
+      lv2:scalePoint [ rdfs:label "All Buttons"; rdf:value 5 ];
+      pprops:rangeSteps 6 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 9;
       lv2:symbol "mix"; lv2:name "Mix";
       lv2:shortName "Mix"; lv2:default 100;

@@ -13,6 +13,31 @@ Original-Netlist-/SPICE-Fit und keine automatisch aus NAM gewonnene Kalibrierung
 - `tools/generate.py`: generierte Model-Includes, Ports, Presets und Oberflächen.
 - `tests/jsfx_parity.cpp`: tatsächliches Rendern beider Kerne, nicht Textvergleich.
 
+### Modus-Tabellen: EEL2-Lookup statt indizierter Globals
+
+Die Halfband-Koeffizienten bleiben in EEL2 indizierte Globals. Die drei
+Modus-Tabellen (`ratios`, `thresholds_dbfs`, `knees_db`) werden dagegen als
+generierte Lookup-Funktionen `gs_ratio_of`, `gs_threshold_of` und
+`gs_knee_of` ausgegeben.
+
+Grund ist ein messbarer Fehler in nseel: Globale in einem `@init`-Funktionsrumpf
+teilen sich einen Speicherpool, und ein indizierter Schreibvorgang über die
+deklarierte Arraygröße hinaus vergrößert das Array **nicht**, sondern
+überschreibt die folgende Variable. Mit sechs Modi las `gs_ratios[5]` dadurch
+`gs_thresholds[0]` und `gs_thresholds[5]` `gs_knees[0]`. Der Effekt war
+unabhängig von der deklarierten Größe und nicht monoton: 7, 8, 10, 24, 32 und 48
+lieferten plausible Werte, 12, 16 und 18 nicht, und eine Vergrößerung aller drei
+Tabellen verschob zusätzlich die Basiszeiger (`gs_ratios[0]` las dann `6`). Ein
+sentinelbasierter Test bestätigte: Schreibt man `gs_ratios[9]=64`, ist
+`gs_ratios[9]` hinterher nicht `64`, sondern der Wert des Nachbarn. Die
+Modus-Zuordnung war damit zur Laufzeit kaputt, ohne jeden Compilerfehler.
+
+Die Lookup-Funktionen umgehen das vollständig und sind zur Laufzeit billiger.
+Sie verwenden `local(v)` und Zuweisungsanweisungen statt einer
+Ternär-Kette, weil EEL2 weder ein negatives Literal noch eine Klammer direkt
+nach `?` parst. Die C++-Seite behält ihre Arrays aus `ModelConstants.hpp`; die
+Parität zwischen beiden Kernen ist über `tests/jsfx_parity.cpp` belegt.
+
 ## 2. Signalfluss
 
 ```text
@@ -189,6 +214,10 @@ den Nutzen längerer Dynamik, nicht diese konkreten Zahlen.
 AXT zeigt, dass die echte Taste sowohl Bias/Pegel **als auch Thevenin-Impedanzen**
 ändert. Green Stripe bildet diese Gesamtwirkung parametrisch ab, nicht als
 exaktes Schalter-Netzwerk. Im Status als Näherung beibehalten.
+
+Die Taste ist der letzte Modus, Index 5. Bis 0.3.0 stand sie auf Index 4;
+durch das Einfügen von `2:1` an erster Stelle (siehe `docs/PARAMETERS.md`) sind
+alle Preset-Indizes um eins gewandert, das Verhalten selbst ist unverändert.
 
 ## 8. Verstärker- und tieffrequente Färbung
 

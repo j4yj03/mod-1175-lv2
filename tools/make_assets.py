@@ -31,12 +31,15 @@ FOOT_H=36
 H=PAD_TOP+BAY_H+FOOT_MARGIN+FOOT_H+PAD_BOT+2
 
 PANEL_EDGE=(111,118,121)
-# Flat bay fill. The CSS bays carry no gradient and no inset sheen any
-# more, so the renderer must not ramp them either.
-BAY_FILL=(174,181,184)
+# Flat bay fill, one step lighter than the panel waist so the four inner
+# rectangles read as their own plates. The CSS bays carry no gradient and no
+# inset sheen any more, so the renderer must not ramp them either.
+BAY_FILL=(188,195,198)
 BAY_EDGE=(139,146,150)
-ENGINE=(87,184,124); ENGINE_EDGE=(44,107,70)
-PLAQUE=(28,90,57); PLAQUE_EDGE=(19,63,39); PLAQUE_INK=(246,250,247)
+ENGINE=(28,90,57); ENGINE_EDGE=(20,67,42)
+# The name plaque is the same green as the ENGINE field; only the thin light
+# frame tells the two apart. White on it is 7.75:1.
+PLAQUE=(28,90,57); PLAQUE_EDGE=(122,176,148); PLAQUE_INK=(246,250,247)
 INK=(16,22,26)
 KNOB_TOP=(242,245,246); KNOB_MID=(195,204,207); KNOB_LOW=(91,99,103)
 KNOB_EDGE=(63,70,74)
@@ -46,6 +49,9 @@ ORANGE_EDGE=(138,74,18)
 FIELD_BG=(224,229,231); FIELD_EDGE=(111,119,123)
 FIELD_BG_GREEN=(216,231,221); FIELD_EDGE_GREEN=(63,122,88)
 SW_TRACK=(76,84,87); SW_LEVER=(240,243,244)
+# MODE track while compression is off, matching the CSS rocker. The caption on
+# the track is light, not near-black: the track is dark in both states.
+SW_OFF_TOP=(168,52,47); SW_OFF_LOW=(125,32,29); SW_TEXT=(236,240,242)
 FOOT_INK=(16,22,26); SUB_INK=(43,50,54)
 BYPASS_ON=(126,28,28)
 LAMP_ON_TOP=(255,201,120); LAMP_ON_LOW=(168,104,20)
@@ -54,6 +60,7 @@ LAMP_OFF_TOP=(109,90,52); LAMP_OFF_LOW=(60,51,30)
 SCREW_TOP=(124,131,134); SCREW_LOW=(43,48,51); SCREW_SLOT=(24,28,31)
 
 SCREW=15; SCREW_INSET=7
+SCREW_INNER=9; SCREW_INNER_INSET=5
 
 
 # Real outline fonts, because the bitmap fallback cannot be scaled.
@@ -127,37 +134,46 @@ def screw(d,cx,cy,size=SCREW):
 
     The slots stop well short of the rim so a metal ring of a few pixels stays
     visible; a cross that reaches the edge reads as a black blob instead of a
-    screw head.
+    screw head. The inner set is half the size, so its slots are one pixel wide.
     """
     r=size//2
     for i in range(r,0,-1):
         t=1-i/r
         d.ellipse((cx-i,cy-i,cx+i,cy+i),fill=ramp(SCREW_TOP,SCREW_LOW,t))
     half=max(3,r//2+1)
-    d.line((cx,cy-half,cx,cy+half),fill=SCREW_SLOT,width=2)
-    d.line((cx-half,cy,cx+half,cy),fill=SCREW_SLOT,width=2)
+    w=1 if size<12 else 2
+    d.line((cx,cy-half,cx,cy+half),fill=SCREW_SLOT,width=w)
+    d.line((cx-half,cy,cx+half,cy),fill=SCREW_SLOT,width=w)
 
 
-def bay(d,x0,y0,x1,y1,green=False,title=None,brand=False):
+def inner_screws(d,x0,y0,x1,y1):
+    """Four small heads in the corners of one inner rectangle."""
+    s=SCREW_INNER_INSET; r=SCREW_INNER//2
+    for cx,cy in ((x0+s+r,y0+s+r),(x1-s-r,y0+s+r),(x0+s+r,y1-s-r),(x1-s-r,y1-s-r)):
+        screw(d,cx,cy,SCREW_INNER)
+
+
+def bay(d,x0,y0,x1,y1,green=False,title=None,brand=False,screws=False):
     if green:
         d.rectangle((x0+1,y0+1,x1-1,y1-1),fill=ENGINE)
-        d.line((x0+1,y0+1,x1-1,y0+1),fill=(132,214,166))
     else:
         # One even grey, matching the flat CSS fill: no ramp, no top highlight.
         d.rectangle((x0+1,y0+1,x1-1,y1-1),fill=BAY_FILL)
     d.rectangle((x0,y0,x1,y1),outline=ENGINE_EDGE if green else BAY_EDGE)
+    if screws:
+        inner_screws(d,x0,y0,x1,y1)
     if brand:
-        # Product name on its own dark-green plaque, inset from the bay edge.
-        # White on the light green field is only 2.33:1, on the plaque 7.76:1.
+        # Product name on its own plaque. Same green as the field, so only the
+        # thin light frame sets it apart. White on it is 7.75:1.
         f=font(17)
-        px0,py0,px1,py1=x0+7,y0+6,x1-7,y0+32
+        px0,py0,px1,py1=x0+7,y0+5,x1-7,y0+31
         d.rectangle((px0,py0,px1,py1),fill=PLAQUE,outline=PLAQUE_EDGE)
         # Arial draws the glyph body about 4px below the text origin, so
         # py0+2 is what balances the 6px padding inside the plaque.
         d.text((px0+(px1-px0-text_w(f,title))//2,py0+2),title,fill=PLAQUE_INK,font=f)
     elif title:
-        f=font(11)
-        d.text((x0+(x1-x0-text_w(f,title))//2,y0+5),title,fill=INK,font=f)
+        f=font(11,bold=True)
+        d.text((x0+(x1-x0-text_w(f,title))//2,y0+4),title,fill=INK,font=f)
 
 
 def bay_pair(d,x0,y0,x1,y1,left_title,left_items,right_title,right_items):
@@ -167,10 +183,15 @@ def bay_pair(d,x0,y0,x1,y1,left_title,left_items,right_title,right_items):
     renderer and the stylesheet cannot drift apart.
     """
     bay(d,x0,y0,x1,y1)
-    d.text((x0+(x1-x0)//4,y0+5),left_title,fill=INK,font=font(11))
-    d.text((x0+3*(x1-x0)//4,y0+5),right_title,fill=INK,font=font(11))
-    d.line((x0+(x1-x0)//2,y0+1,x0+(x1-x0)//2,y1-1),fill=(147,154,157))
-    for cx,items in (((x0+x0+(x1-x0)//2)//2,left_items),((x0+(x1-x0)//2+x1)//2,right_items)):
+    mid=x0+(x1-x0)//2
+    fb=font(11,bold=True)
+    d.text((x0+(x1-x0)//4-text_w(fb,left_title)//2,y0+4),left_title,fill=INK,font=fb)
+    d.text((x0+3*(x1-x0)//4-text_w(fb,right_title)//2,y0+4),right_title,fill=INK,font=fb)
+    d.line((mid,y0+1,mid,y1-1),fill=(147,154,157))
+    # Each column is its own inner rectangle and carries its own four screws.
+    inner_screws(d,x0,y0,mid,y1)
+    inner_screws(d,mid,y0,x1,y1)
+    for cx,items in ((x0+(mid-x0)//2,left_items),((mid+x1)//2,right_items)):
         bay_body(d,cx,cx-78,cx+78,y0,y1,items)
 
 
@@ -208,15 +229,20 @@ def lamp(d,cx,cy,r=LAMP_R,on=True):
 
 
 def field(d,x0,y0,x1,caption,value,green=False):
-    d.text((x0,y0),caption,fill=INK,font=font(9))
+    # The caption sits on the bay, not in the light field box, so on the dark
+    # ENGINE bay it has to carry the light ink.
+    d.text((x0,y0),caption,fill=PLAQUE_INK if green else INK,font=font(9,bold=True))
     d.rounded_rectangle((x0,y0+11,x1,y0+32),3,
                         fill=FIELD_BG_GREEN if green else FIELD_BG,
                         outline=FIELD_EDGE_GREEN if green else FIELD_EDGE)
     d.text((x0+6,y0+15),value,fill=INK,font=font(10))
 
 
-def rocker(d,x0,y0,x1,y1,on=False):
-    d.rounded_rectangle((x0,y0,x1,y1),3,fill=SW_TRACK,outline=(44,50,53))
+def rocker(d,x0,y0,x1,y1,on=False,red_off=False):
+    """MODE rocker. The track turns red while compression is off."""
+    track=ramp(SW_OFF_TOP,SW_OFF_LOW,.5) if (red_off and not on) else SW_TRACK
+    edge=(74,21,18) if (red_off and not on) else (44,50,53)
+    d.rounded_rectangle((x0,y0,x1,y1),3,fill=track,outline=edge)
     mid=(x0+x1)//2
     lever=(mid-1,y0+2) if not on else (mid+2,y0+2)
     d.rounded_rectangle((lever[0],lever[1],lever[0]+(x1-x0)//2-4,y1-2),2,fill=SW_LEVER)
@@ -231,10 +257,10 @@ def rocker(d,x0,y0,x1,y1,on=False):
 # value line. The legend sits beside the knob, not under it, so it adds no height.
 ITEM={('knob'):(80,0),('rock'):(30,3),('field'):(30,3)}
 KNOB_D=50
-# Height the green bay's name plaque occupies: 6px margin, 6px padding, 17px
-# text, 6px padding, 1px border, 13px clear below. The ENGINE body centres in
+# Height the green bay's name plaque occupies: 5px margin, 6px padding, 17px
+# text, 6px padding, 1px border, 8px clear below. The ENGINE body centres in
 # what is left.
-BRAND_H=43
+BRAND_H=38
 
 
 def bay_body(d,cx,x0,x1,bay_top,bay_bottom,items):
@@ -266,20 +292,21 @@ def bay_body(d,cx,x0,x1,bay_top,bay_bottom,items):
         if item[0]=='knob':
             _,name,value,scale,orange=item
             knob(d,cx,y+27,KNOB_D,orange)
-            # End-stop legend beside the knob, aligned to its centre line. The
-            # control box is 124px wide like the CSS, the knob sits centred.
-            half=62
+            # End-stop legend hugging the knob, aligned to its centre line. The
+            # CSS row is centred with a fixed gap, so both labels sit 8px off
+            # the knob rim rather than at the edges of the 124px control box.
+            rim=KNOB_D//2+3; gap=8
             f7=font(7)
             legend_ink=INK
-            d.text((cx-half,y+24),scale[0],fill=legend_ink,font=f7)
-            d.text((cx+half-text_w(f7,scale[1]),y+24),scale[1],fill=legend_ink,font=f7)
+            d.text((cx-rim-gap-text_w(f7,scale[0]),y+24),scale[0],fill=legend_ink,font=f7)
+            d.text((cx+rim+gap,y+24),scale[1],fill=legend_ink,font=f7)
             d.text((cx-text_w(font(9),name)//2,y+57),name,fill=INK,font=font(9))
             d.text((cx-text_w(font(10),value)//2,y+69),value,fill=INK,font=font(10))
         elif item[0]=='rock':
-            _,caption,value=item[0],item[1],item[2]
-            d.text((x0,y),caption,fill=INK,font=font(9))
-            rocker(d,x0,y+11,x1,y+33,on=True)
-            d.text((x0+8,y+14),value,fill=INK,font=font(10))
+            _,caption,value,green=item[0],item[1],item[2],item[3]
+            d.text((x0,y),caption,fill=PLAQUE_INK if green else INK,font=font(9,bold=True))
+            rocker(d,x0,y+11,x1,y+33,on=True,red_off=True)
+            d.text((x0+8,y+14),value,fill=SW_TEXT,font=font(10))
         else:
             _,caption,value,green=item
             field(d,x0,y,x1,caption,value,green=green)
@@ -312,8 +339,8 @@ def main():
                  'TIME',
                  [('knob','ATTACK','+3.00',('Slow','Fast'),False),
                   ('knob','RELEASE','+5.00',('Slow','Fast'),False)])
-        bay(d,xs[1],top,xs[1]+rest,bot,green=True,title='Green Stripe 76',brand=True)
-        bay(d,xs[2],top,xs[2]+rest,bot,title='COLOUR')
+        bay(d,xs[1],top,xs[1]+rest,bot,green=True,title='Green Stripe 76',brand=True,screws=True)
+        bay(d,xs[2],top,xs[2]+rest,bot,title='COLOUR',screws=True)
         bay_body(d,xs[2]+rest//2,xs[2]+9,xs[2]+rest-9,top,bot,
                  [('knob','MIX','100%',('Min.','Max.'),False),
                   ('knob','COLOUR','100%',('Min.','Max.'),True),
@@ -326,13 +353,13 @@ def main():
         bay_body(d,xs[1]+rest//2,xs[1]+9,xs[1]+rest-9,top+BRAND_H,bot,items)
         # Footer: descriptor left, amber status lamp in front of the switch right.
         fy=H-PAD_BOT-FOOT_H
-        d.text((PAD_X,fy+4),'FET COMPRESSOR/LIMITER EMULATION',fill=FOOT_INK,font=font(10))
-        d.text((PAD_X,fy+18),variant.upper(),fill=SUB_INK,font=font(8))
+        d.text((PAD_X,fy+4),'FET COMPRESSOR/LIMITER EMULATION',fill=FOOT_INK,font=font(10,bold=True))
+        d.text((PAD_X,fy+18),variant.upper(),fill=SUB_INK,font=font(8,bold=True))
         bx1=W-PAD_X-100; bx0=bx1-100
         lamp(d,bx0-10-LAMP_R,fy+17)          # to the left of the rocker
         d.rounded_rectangle((bx0,fy+3,bx1,fy+31),4,fill=(214,219,221),outline=(118,125,129))
         rocker(d,bx0+10,fy+9,bx0+48,fy+25,on=False)
-        d.text((bx0+56,fy+12),'BYPASS',fill=INK,font=font(9))
+        d.text((bx0+56,fy+12),'BYPASS',fill=INK,font=font(9,bold=True))
         # No jacks are drawn: mod-ui renders the connect arrows outside the box,
         # so they are not part of this illustration.
         image.save(target/f'screenshot-{variant}.png')

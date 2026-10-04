@@ -11,7 +11,7 @@ slider1:0<-36,24,0.1>Input (dB)
 slider2:0<-36,24,0.1>Output (dB)
 slider3:3<1,7,0.01>Attack
 slider4:5<1,7,0.01>Release
-slider5:0<0,4,1{4:1,8:1,12:1,20:1,All Buttons}>Ratio
+slider5:1<0,5,1{2:1,4:1,8:1,12:1,20:1,All Buttons}>Ratio
 slider6:100<0,100,0.1>Mix (%)
 slider7:100<0,100,0.1>Colour (%)
 slider8:1<0,1,1{COMP OFF,COMP ON}>Compression

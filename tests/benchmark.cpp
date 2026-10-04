@@ -5,7 +5,7 @@
 
 int main() {
     const unsigned count=48000;
-    for (bool stereo : {false,true}) for (int mode : {0,4}) {
+    for (bool stereo : {false,true}) for (int mode : {0,5}) {
         greenstripe::Processor processor(48000,stereo);
         greenstripe::Parameters p; p.ratio=mode; p.input=6; processor.setParameters(p);
         double checksum=0,l,r;

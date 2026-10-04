@@ -14,24 +14,6 @@ function gs_model_init() (
   gs_input_highpass_hz=8;
   gs_output_highpass_hz=5;
   gs_amplifier_lowpass_hz=45000;
-  gs_ratios=12;
-  gs_ratios[0]=4;
-  gs_ratios[1]=8;
-  gs_ratios[2]=12;
-  gs_ratios[3]=20;
-  gs_ratios[4]=16;
-  gs_thresholds=17;
-  gs_thresholds[0]=-24;
-  gs_thresholds[1]=-21;
-  gs_thresholds[2]=-19.5;
-  gs_thresholds[3]=-18;
-  gs_thresholds[4]=-22;
-  gs_knees=22;
-  gs_knees[0]=6;
-  gs_knees[1]=4;
-  gs_knees[2]=3;
-  gs_knees[3]=2;
-  gs_knees[4]=1.5;
   gs_coefs1=0;
   gs_coefs1[0]=0.04063346092419326;
   gs_coefs1[1]=0.1505051290226746;
@@ -46,4 +28,34 @@ function gs_model_init() (
   gs_coefs2[1]=0.16379193172022141;
   gs_coefs2[2]=0.38282159255650028;
   gs_coefs2[3]=0.73875012537359719;
+);
+
+function gs_ratio_of(m) local(v) (
+  v=16;
+  m===0 ? v=2;
+  m===1 ? v=4;
+  m===2 ? v=8;
+  m===3 ? v=12;
+  m===4 ? v=20;
+  v;
+);
+
+function gs_threshold_of(m) local(v) (
+  v=-22;
+  m===0 ? v=-24;
+  m===1 ? v=-24;
+  m===2 ? v=-21;
+  m===3 ? v=-19.5;
+  m===4 ? v=-18;
+  v;
+);
+
+function gs_knee_of(m) local(v) (
+  v=1.5;
+  m===0 ? v=6;
+  m===1 ? v=6;
+  m===2 ? v=4;
+  m===3 ? v=3;
+  m===4 ? v=2;
+  v;
 );
