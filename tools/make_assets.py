@@ -5,10 +5,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT=Path(__file__).resolve().parents[1]
 
-BG=(11,19,13); EDGE=(61,92,71); GROUP=(9,16,11)
-LABEL=(217,240,219); MUTED=(194,222,201); DIM=(173,199,179); VALUE=(159,205,176)
-ACCENT=(95,212,148); KNOB=(44,51,44); KNOB_EDGE=(44,66,52); DARK=(16,26,18)
-BYPASS_BG=(18,33,26)
+BG=(27,42,32); EDGE=(116,177,137); GROUP=(15,26,18); GROUP_EDGE=(85,136,106)
+LABEL=(242,255,246); MUTED=(211,236,217); DIM=(195,221,205); VALUE=(189,233,204)
+ACCENT=(125,250,180); KNOB=(70,81,74); KNOB_EDGE=(110,168,130); DARK=(12,21,14)
+BYPASS_BG=(39,64,47); BYPASS_TEXT=(232,251,238); TITLE=(255,255,255)
 
 
 def font(size):
@@ -40,7 +40,7 @@ def main():
         d.rounded_rectangle((1,1,658,328),10,outline=EDGE,width=2)
         groups=[('GAIN',14,135),('TIME',161,135),('ENGINE',308,158),('COLOUR',478,168)]
         for name,x,w in groups:
-            d.rounded_rectangle((x,14,x+w,262),6,fill=GROUP,outline=EDGE)
+            d.rounded_rectangle((x,14,x+w,262),6,fill=GROUP,outline=GROUP_EDGE)
             d.text((x+10,22),name,fill=LABEL,font=f_group)
         # GAIN / TIME: stacked knobs with labels and values
         for gx,names in ((14,('INPUT','OUTPUT')),(161,('ATTACK','RELEASE'))):
@@ -62,16 +62,13 @@ def main():
         d.text((488,168),'OVERSAMPLING',fill=DIM,font=f_small)
         select_bar(d,488,180,636,204,'OS OFF / 2x / 4x')
         # footer
-        d.text((14,284),'GREEN STRIPE 76',fill=(238,252,240),font=f_title)
+        d.text((14,284),'GREEN STRIPE 76',fill=TITLE,font=f_title)
         d.text((14,308),'FET FEEDBACK - INDEPENDENT 1176-INSPIRED GRAY-BOX - '+variant.upper(),fill=DIM,font=f_small)
         d.rounded_rectangle((544,284,608,312),5,fill=BYPASS_BG,outline=EDGE)
-        d.text((554,292),'BYPASS',fill=MUTED,font=f_small)
+        d.text((554,292),'BYPASS',fill=BYPASS_TEXT,font=f_small)
         d.ellipse((618,293,630,305),fill=ACCENT)
-        # jacks on the edges
-        ys=(130,157) if variant=='stereo' else (143,)
-        for y in ys:
-            d.ellipse((1,y,21,y+20),fill=(6,10,7),outline=(84,117,95),width=2)
-            d.ellipse((639,y,659,y+20),fill=(6,10,7),outline=(84,117,95),width=2)
+        # No jacks are drawn: mod-ui renders the connect arrows outside the
+        # 660px box, so they are not part of this illustration.
         image.save(target/f'screenshot-{variant}.png')
         image.resize((147,74),Image.Resampling.LANCZOS).save(target/f'thumbnail-{variant}.png')
     print('Generated original MOD PNG assets (static illustration, not live-browser capture)')
