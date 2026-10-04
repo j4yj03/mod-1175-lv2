@@ -168,6 +168,7 @@ def gui_html(stereo):
     outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>' for x in (['out_l','out_r'] if stereo else ['out']))
     return f'''<!-- Generated. JSFX-console styling; no GR/level meters in MOD GUI. -->
 <div class="gs76{{{{{{cns}}}}}}" mod-role="drag-handle">
+<div class="mod-drag-handle"></div>
 <div class="gs-groups">
 <div class="gs-group"><b>GAIN</b>{knob('input','INPUT')}{knob('output','OUTPUT')}</div>
 <div class="gs-group"><b>TIME</b>{knob('attack','ATTACK')}{knob('release','RELEASE')}</div>
