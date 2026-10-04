@@ -172,7 +172,7 @@ def gui_html(stereo):
 <div class="gs-groups">
 <div class="gs-group"><b>GAIN</b>{knob('input','INPUT')}{knob('output','OUTPUT')}</div>
 <div class="gs-group"><b>TIME</b>{knob('attack','ATTACK')}{knob('release','RELEASE')}</div>
-<div class="gs-group gs-group-flags"><b>ENGINE</b>{select('ratio','RATIO',['4:1','8:1','12:1','20:1','ALL'])}{select('compression','MODE',['COLOUR ONLY','COMP ON'])}{select('stereo_link','LINK',['LINK','DUAL MONO']) if stereo else ''}</div>
+<div class="gs-group gs-group-flags"><b>ENGINE</b>{select('ratio','RATIO',['4:1','8:1','12:1','20:1','ALL'])}{select('compression','MODE',['COLOUR ONLY','COMP ON'])}{select('stereo_link','LINK',['DUAL MONO','LINK']) if stereo else ''}</div>
 <div class="gs-group gs-group-wide"><b>COLOUR</b><div class="gs-pair">{knob('mix','MIX')}{knob('colour','COLOUR')}</div>{select('oversampling','OVERSAMPLING',['OS OFF','OS 2x','OS 4x'])}</div>
 </div>
 <footer>
