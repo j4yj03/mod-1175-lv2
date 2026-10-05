@@ -19,9 +19,30 @@ Amplitude und bekannte Phasendifferenz ausdrücklich in `TRANSFORMER_RUNTIME.md`
 
 Spaltfreie Paneele und Titel direkt auf Grün nach Benutzerwunsch. Alle Potis
 nutzen `aluminium.png` als 65-Frame-Filmstrip, Bypass die zwei vertikalen Frames
-von `toggle.png`, Status SVG 28×28 px. Mode ausdrücklich `mod-widget="switch"`
+von `toggle.png`, Status SVG zunächst 28×28 px. Mode ausdrücklich `mod-widget="switch"`
 mit MOD-Klassen `on/off`. Nur der obere Rand ist Drag-Handle. Echter
 MOD-Widget-/jQuery-UI-Browsertest statt bloßer Prüfung der HTML-Zeichenketten.
+
+GUI-Nacharbeit auf Benutzerwunsch: Orange für die Colour-Beschriftung verworfen,
+rechte Platte ohne Gruppentitel. GAIN/TIME mit vollhohen Sektionen, durchgehender
+Trennlinie und identischem Schraubenabstand an den Modulecken. Die 20
+Phillips-Kreuze haben feste individuelle Winkel; nur die Schlitze drehen sich,
+die Beleuchtung der Köpfe bleibt oben links. Sechs kleine Wertefelder in
+Dropdown-Grau, Bypass ohne gedruckte Beschriftung, Pilot-SVG zuletzt auf 44×44 px.
+Leichte Schatten nach rechts unten auf Paneel, Modulkanten und Bedienelementen;
+PNG-Vorschauen schließen den äußeren Schatten auf transparentem Rand mit ein.
+Weitere Verdichtung: Transformer ohne Überschrift, ausgeschriebene Auswahltexte
+mit „Transformer“. Fußbereich 12 px kürzer; LED und Bypass mit gemeinsamer
+Mitte auf der Colour-Poti-Achse. Module und Fußzeile nutzen dasselbe 2:1:1-Raster,
+gleich breite Plätze gleichen unterschiedliche LED-/Schalterbreiten aus.
+ENGINE-Bedienung weiter vereinfacht: keine Überschriften für Mode, Oversampling
+und Link. Mode zeigt `COMP_ON` / `COMP_OFF` im beweglichen Griff, gesteuert
+durch die tatsächlichen MOD-Widgetklassen `on/off`. Die Auswahlfelder tragen
+`No Oversampling` / `2x Oversampling` / `4x Oversampling` sowie `STEREO LINK` /
+`DUAL MONO`; ihre numerische Zuordnung bleibt 0/1/2 bzw. 1/0.
+GAIN/TIME ebenfalls ohne Gruppenüberschriften. Alle drei Potimodule verwenden
+dasselbe Zeilenraster einschließlich reservierter unterer Dropdown-Zeile:
+Input/Attack/Mix und Output/Release/Colour sind dadurch exakt höhengleich.
 
 ## D01 — Eigener Green Stripe
 

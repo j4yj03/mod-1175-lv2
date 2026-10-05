@@ -19,12 +19,46 @@ Hardware-Revision A/D nicht bindend.
   über den Eingang, Dry/Bypass und Latenz 0/3/4 Frames erhalten.
 - **LV2-GUI:** Paneele spaltfrei, Titel ohne Schild direkt auf Grün,
   Aluminium-Filmstrip für alle sechs Potis, Toggle-Bitmap für Bypass,
-  Pilot-On/Off-SVG auf 28×28 px. Mode verwendet jetzt das echte Switch-Widget
+  Pilot-On/Off-SVG auf 44×44 px. Mode verwendet jetzt das echte Switch-Widget
   und dessen `on/off`-Klassen. Nur der obere freie Rand ist Drag-Handle.
 - Vorschau-PNGs werden aus echtem HTML/CSS in Chromium gerendert;
   vorhandene statische Nachzeichnung abgelöst. 36 Presets / 72 Bankzustände.
   Veraltete xformer.lib-Aussagen in Presetnotizen durch die neuen Klangprofile
   ersetzt. Alle Factory-Recall-Wege setzen Oversampling auf Off.
+
+### GUI-Nacharbeit — Rack-Optik, 2026-10-05
+
+- Colour-Beschriftung neutral wie die übrigen Potis; Orange verworfen.
+  Rechte Modulplatte ohne „COLOUR“-Gruppentitel.
+- GAIN/TIME-Sektionen füllen die volle innere Höhe. Durchgehende Trennlinie
+  und vier Phillips-Schrauben je Modul mit denselben Eckabständen wie im
+  grünen und rechten Feld; alle 20 Schraubenkreuze individuell orientiert.
+- Sechs eingerahmte Wertefelder unter den Potibeschriftungen mit gemeinsamer
+  Farbe `#e0e5e7` wie das Transformer-Dropdown.
+- Bypass ohne gedruckte Beschriftung (Tooltip/zugänglicher Name erhalten),
+  Pilot von 28 über 36 auf 44 px vergrößert. Dezente Schatten nach rechts unten,
+  Licht von oben links; Schraubenkopf-Beleuchtung unabhängig vom Schlitzwinkel.
+- Transformer-Auswahl ohne eigene Überschrift, mit selbsterklärenden LV2-GUI-
+  Texten `No Transformer`, `60s Transformer`, `80s Transformer`, `00s Transformer`
+  und `Symmetric Transformer`. Fußbereich um 12 px gekürzt (Paneel 375 px hoch).
+  LED und Bypass teilen eine mittig unter dem Colour-Poti angeordnete Gruppe;
+  gemeinsame Rasterspalten für Module/Fußzeile und gleich breite Steuerplätze.
+  In Mono und Stereo geometrisch geprüft: Mittelpunkt der beiden Bedienelemente
+  exakt auf der Poti-Achse (0 px Abweichung).
+- ENGINE ohne Überschriften für Mode, Oversampling und Link. `COMP_ON` bzw.
+  `COMP_OFF` sitzt direkt im beweglichen Schiebergriff und folgt den MOD-
+  Schaltzuständen. Oversampling zeigt `No Oversampling`, `2x Oversampling`,
+  `4x Oversampling`; Stereoauswahl `STEREO LINK` / `DUAL MONO`.
+  Beide Schiebertexte in Mono/Stereo per echtem MOD-Widget 1→0→1 geprüft:
+  richtige Sichtbarkeit, vollständig innerhalb des Griffs, Controlwerte 0/1.
+- GAIN/TIME-Gruppentitel entfernt. Gemeinsames Zeilenraster für alle Potimodule,
+  mit reservierter Dropdown-Zeile auch links: Input/Attack/Mix sowie
+  Output/Release/Colour jeweils auf derselben Höhe. Mono/Stereo geometrisch
+  geprüft: 0 px Reihenabweichung; LED-/Bypass-Mittelpunkt weiterhin auf der
+  Colour-Achse, Paneelhöhe weiterhin 375 px.
+- Mono-/Stereo-Browsertest mit echten MOD-Widgets bestanden; `make
+  check-generated` (17 Artefakte) und `tools/validate.py` einschließlich
+  RDF-Parsing bestanden. Gerätebedienung/-darstellung weiterhin extern offen.
 
 ### In dieser Umsetzung tatsächlich ausgeführt
 

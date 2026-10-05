@@ -16,7 +16,14 @@ def main():
         for variant in ('mono', 'stereo'):
             page.set_content(page_html(variant), wait_until='load')
             default_controls(page)
-            page.locator('.gs76').screenshot(path=str(GUI/f'screenshot-{variant}.png'))
+            # Include the down-right rack shadow, which an element screenshot
+            # would clip at the panel border. Keep the surrounding area transparent.
+            page.add_style_tag(content='body { background:transparent; }')
+            box = page.locator('.gs76').bounding_box()
+            margin = 24
+            page.screenshot(path=str(GUI/f'screenshot-{variant}.png'), omit_background=True,
+                            clip={'x':box['x']-margin, 'y':box['y']-margin,
+                                  'width':box['width']+2*margin, 'height':box['height']+2*margin})
             image = Image.open(GUI/f'screenshot-{variant}.png')
             image.resize((195, round(image.height*195/image.width)), Image.Resampling.LANCZOS).save(
                 GUI/f'thumbnail-{variant}.png')

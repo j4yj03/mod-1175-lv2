@@ -40,19 +40,35 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
 ## 3. Regler
 
 **Aufbau der LV2-Oberfläche.** Drei senkrechte Bereiche nebeneinander: eine
-breite **GAIN/TIME-Platte** mit Input/Output in der linken und Attack/Release in
-der rechten Spalte, das grüne ENGINE-Feld (Verhältnis, Comp-Kippschalter,
-Oversampling, Link) mit dem **Produktnamen als Titel**, und COLOUR (Mix, Colour,
-Transformator). Die Bereiche schließen spaltfrei aneinander an; der Titel
+breite **GAIN/TIME-Platte ohne Gruppenüberschriften**, mit Input/Output in der
+linken und Attack/Release in der rechten Spalte, das grüne ENGINE-Feld (Verhältnis, Comp-Kippschalter,
+Oversampling, Link) mit dem **Produktnamen als Titel**, und die rechte Platte
+ohne Gruppentitel (Mix, Colour, Transformator). Die Bereiche schließen spaltfrei aneinander an; der Titel
 steht ohne Namensschild direkt auf Grün. Alle Potis verwenden die
-Aluminiumgrafik; die **Colour-Beschriftung** ist orange. Neben jedem
+Aluminiumgrafik; alle Beschriftungen einschließlich **Colour** sind neutral.
+Die sechs Potiwerte stehen jeweils unter der Beschriftung in einem kleinen
+Rechteck mit derselben hellgrauen Fläche wie das Transformer-Dropdown.
+Das Dropdown benötigt keine zusätzliche Überschrift: Es zeigt `No Transformer`,
+`60s Transformer`, `80s Transformer`, `00s Transformer` oder `Symmetric Transformer`.
+Die GAIN/TIME-Trennung reicht von oben bis unten; individuell gedrehte
+Phillips-Schrauben sitzen in allen Modulecken. Input und Attack liegen auf
+derselben Höhe wie Mix, Output und Release auf derselben Höhe wie Colour.
+Dezente Schatten nach rechts
+unten und helle Kanten oben links unterstreichen den Rack-Aufbau. Neben jedem
 Regler steht sein Stellbereich: `Min.`/`Max.` bei Input, Output, Mix und Colour,
 `Slow`/`Fast` bei Attack und Release. Unten rechts steht die **bernsteinfarbene
-Betriebslampe links vom Bypass-Kippschalter**; sie zeigt den Bypass-Zustand an
+Betriebslampe (44×44 px) links vom unbeschrifteten Bypass-Kippschalter**;
+dessen Tooltip bleibt „Bypass“. Die Lampe zeigt den Bypass-Zustand an
 und leuchtet, solange die Kette aktiv ist. Die JSFX-Fassung zeigt dieselben
 Zusammenhänge mit GR-, Peak-/RMS- und Host-GR-Anzeige, dort ohne Lampe.
+Die gemeinsame Mitte von LED und Schalter liegt unter der Achse des Colour-Potis;
+die Fußzeile ist kompakt gehalten.
 Zum Verschieben des LV2-Paneels den **freien oberen Rand** greifen.
-Drehregler verändern nur ihren Wert. Mode zeigt `COMP ON` / `COMP OFF`.
+Drehregler verändern nur ihren Wert. Der Mode-Schieber trägt den aktuellen
+Zustand `COMP_ON` / `COMP_OFF` direkt auf seinem beweglichen Griff; eine
+separate Überschrift entfällt. Auch Oversampling und Link benötigen keine
+Überschrift: Die Auswahltexte lauten `No Oversampling`, `2x Oversampling`,
+`4x Oversampling` beziehungsweise `STEREO LINK` / `DUAL MONO`.
 
 ### Input — −36 bis +24 dB
 

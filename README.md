@@ -11,8 +11,15 @@ Details und Importweg: [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md).
 
 Die drei LV2-Paneelbereiche schließen **spaltfrei** aneinander an. Der weiße
 Produktname steht direkt auf dem grünen Feld. Aluminium-Filmstrip-Potis,
-Bitmap-Bypass und auf 28 px verkleinerte SVG-Betriebslampe nutzen die
-bereitgestellten Assets. `Mode` verwendet das MOD-Schalterwidget; verschieben
+Bitmap-Bypass und auf 44 px skalierte SVG-Betriebslampe nutzen die
+bereitgestellten Assets. Durchgehende GAIN/TIME-Trennung, individuell gedrehte
+Phillips-Eckschrauben und dezente Schatten bei Licht von oben links geben dem
+Paneel eine Rack-Optik. Die rechte Platte trägt keinen Gruppentitel; Colour
+ist neutral beschriftet. Alle sechs Potiwerte stehen in kleinen hellgrauen
+Rechtecken, der Bypass hat keinen aufgedruckten Text. Auch GAIN/TIME tragen
+keine Gruppentitel; Input/Attack/Mix und Output/Release/Colour bilden jeweils
+eine gemeinsame Potireihe.
+`Mode` verwendet das MOD-Schalterwidget; verschieben
 lässt sich das Paneel am oberen Rand, ohne die Reglerbedienung mitzuziehen.
 36 nach Instrument gruppierte Presets; sechs wählen ein Transformatorprofil.
 Alle Factory-Recall-Wege setzen Oversampling auf Off.

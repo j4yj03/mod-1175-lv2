@@ -197,14 +197,11 @@ def metadata(parameters, presets, model):
 def gui_html(stereo, parameters):
     """Panel markup for the MOD GUI.
 
-    Landscape panel with three upright areas. GAIN and TIME share one wide plate
-    that covers exactly the ground the two separate bays used to occupy, laid out
-    as two columns so each knob keeps its own GAIN/TIME heading. The ENGINE bay is
-    the green one and carries the unframed product name as its title, so the footer only
-    needs the descriptor line and the bypass. Every knob gets a min/max legend
-    beside it: Min./Max. on the gain knobs, Slow/Fast on the time knobs. MIX uses
-    the same aluminium filmstrip as everything else; COLOUR has an orange label, matching
-    the amber status lamp next to the bypass. No GR or level meters.
+    Joined rack modules with full-height GAIN/TIME sections and individually
+    oriented Phillips slots. ENGINE carries the unframed product name; the
+    knob modules have no headings and share two aligned rows. All knob labels are neutral, and numeric
+    values sit in small inset fields. The bypass has no printed caption.
+    No GR or level meters.
     """
     def spec(symbol):
         return next(p for p in parameters if p['symbol'] == symbol)
@@ -213,15 +210,14 @@ def gui_html(stereo, parameters):
         s = spec(symbol)
         return override if override is not None else s.get('labels', [])
 
-    def knob(symbol, label, scale=('Min.', 'Max.'), cls=''):
+    def knob(symbol, label, scale=('Min.', 'Max.')):
         """Knob with its end-stop legend.
 
         The legend sits beside the knob rather than under it: a second text row
         would make a two-knob bay taller than a bay that also carries a select,
         and the bay bodies are centred, so the bays would no longer line up.
         """
-        extra = f' {cls}' if cls else ''
-        return (f'<div class="gs-control{extra}">'
+        return (f'<div class="gs-control">'
                 f'<div class="gs-knob-row">'
                 f'<i class="gs-scale">{scale[0]}</i>'
                 f'<div class="gs-knob" mod-role="input-control-port" mod-port-symbol="{symbol}" '
@@ -229,57 +225,60 @@ def gui_html(stereo, parameters):
                 f'<i class="gs-scale">{scale[1]}</i>'
                 f'</div>'
                 f'<label>{label}</label>'
-                f'<span mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
+                f'<span class="gs-value" mod-role="input-control-value" mod-port-symbol="{symbol}"></span></div>')
 
     def select(symbol, label, override=None):
         options = labels(symbol, override)
-        return (f'<div class="gs-field"><label>{label}</label>'
+        caption = f'<label>{label}</label>' if label else ''
+        return (f'<div class="gs-field">{caption}'
                 f'<select mod-role="input-control-port" mod-port-symbol="{symbol}" '
-                f'mod-widget="select">'
+                f'mod-widget="select" aria-label="{spec(symbol)["name"]}">'
                 + ''.join(f'<option value="{i}">{t}</option>' for i, t in enumerate(options))
                 + '</select></div>')
 
-    def switch(symbol, label):
-        """MOD switch widget supplies on/off classes and finite toggle values."""
-        return (f'<div class="gs-field"><label>{label}</label>'
+    def switch(symbol):
+        """MOD on/off classes select the caption inside the moving handle."""
+        return (f'<div class="gs-field">'
                 f'<div class="gs-switch" mod-role="input-control-port" '
-                f'mod-port-symbol="{symbol}" mod-widget="switch"><i></i></div>'
-                f'<span class="gs-switch-text" mod-role="input-control-value" '
-                f'mod-port-symbol="{symbol}"></span></div>')
+                f'mod-port-symbol="{symbol}" mod-widget="switch" aria-label="{spec(symbol)["name"]}">'
+                f'<i><span class="gs-switch-on">COMP_ON</span>'
+                f'<span class="gs-switch-off">COMP_OFF</span></i></div></div>')
 
     inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>'
                      for x in (['in_l', 'in_r'] if stereo else ['in']))
     outputs = ''.join(f'<div class="gs-jack" mod-role="output-audio-port" mod-port-symbol="{x}"></div>'
                       for x in (['out_l', 'out_r'] if stereo else ['out']))
-    link = select('stereo_link', 'LINK', ['DUAL MONO', 'LINK']) if stereo else ''
-    # Four Phillips screws in the corners of the outer panel. Head only: a disc
-    # with two crossing slots, drawn entirely in CSS, no bitmap.
-    screws = ('<i class="gs-screw gs-screw-tl"></i><i class="gs-screw gs-screw-tr"></i>'
-              '<i class="gs-screw gs-screw-bl"></i><i class="gs-screw gs-screw-br"></i>')
-    # A second, smaller set of four in every inner rectangle: GAIN, TIME, ENGINE
-    # and COLOUR. Each parent is position:relative, so the same corner classes
-    # resolve against the rectangle they sit in.
-    iscrews = ('<i class="gs-screw-i gs-screw-i-tl"></i><i class="gs-screw-i gs-screw-i-tr"></i>'
-               '<i class="gs-screw-i gs-screw-i-bl"></i><i class="gs-screw-i gs-screw-i-br"></i>')
-    return f'''<!-- Generated by tools/generate.py. Landscape panel with three upright areas:
-     one wide GAIN/TIME plate in two columns, the solid green ENGINE bay carrying
-     the product name without a plaque, and COLOUR. Asset bypass with amber status lamp placed
-     in front of the switch, corner screws on the panel and a smaller set in every
-     inner rectangle. Light surfaces with near-black text, knob stacks centred,
-     end-stop legend hugging every knob. Joined bays; top rail is the only drag handle.
-     No GR/level meters. -->
+    link = select('stereo_link', '', ['DUAL MONO', 'STEREO LINK']) if stereo else ''
+    oversampling = select('oversampling', '', ['No Oversampling', '2x Oversampling', '4x Oversampling'])
+    transformer_labels = ['No Transformer' if name == 'None' else f'{name} Transformer'
+                          for name in labels('transformer')]
+    def screws(inner, angles):
+        # Rotate only the slots: bezel lighting/shadows always point down-right.
+        cls = 'gs-screw-i' if inner else 'gs-screw'
+        return ''.join(f'<i class="{cls} {cls}-{corner}" aria-hidden="true">'
+                       f'<span class="gs-slot" style="transform:rotate({angle}deg)"></span></i>'
+                       for corner, angle in zip(('tl', 'tr', 'bl', 'br'), angles))
+
+    return f'''<!-- Generated by tools/generate.py. Joined rack modules, full-height
+     GAIN/TIME divider, individually oriented corner screws, neutral knob labels
+     and inset value fields. Unframed product title on green; knob modules untitled.
+     Input/Attack/Mix and Output/Release/Colour share two horizontal rows.
+     Unlabelled bypass beside the amber pilot. Light from upper left.
+     Top rail is the only drag handle. No GR/level meters. -->
 <div class="gs76{{{{{{cns}}}}}}">
 <div class="mod-drag-handle gs-drag" mod-role="drag-handle" title="Paneel verschieben"></div>
-{screws}
+{screws(False, (0, 45, 18, 67))}
 <div class="gs-bays">
-<div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{iscrews}<b>GAIN</b><div class="gs-body">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{iscrews}<b>TIME</b><div class="gs-body">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
-<div class="gs-bay gs-bay-engine">{iscrews}<div class="gs-brand">Green Stripe 76</div><div class="gs-body">{select('ratio', 'RATIO')}{switch('compression', 'MODE')}{select('oversampling', 'OVERSAMPLING')}{link}</div></div>
-<div class="gs-bay">{iscrews}<b>COLOUR</b><div class="gs-body">{knob('mix', 'MIX')}{knob('colour', 'COLOUR', cls='gs-orange')}{select('transformer', 'TRANSFORMER')}</div></div>
+<div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{screws(True, (8, 31, 54, 79))}<div class="gs-body gs-body-knobs">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{screws(True, (13, 38, 61, 84))}<div class="gs-body gs-body-knobs">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
+<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body">{select('ratio', 'RATIO')}{switch('compression')}{oversampling}{link}</div></div>
+<div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>
 <div class="gs-plate"><b>FET COMPRESSOR/LIMITER EMULATION</b><span>{'STEREO' if stereo else 'MONO'}</span></div>
-<div class="gs-bypass" mod-role="bypass" mod-widget="bypass" title="Bypass"><em>BYPASS</em></div>
+<div class="gs-power">
+<div class="gs-bypass" mod-role="bypass" mod-widget="bypass" title="Bypass" aria-label="Bypass"></div>
 <div class="gs-lamp" title="Betriebsanzeige"></div>
+</div>
 </footer>
 <div class="gs-inputs">{inputs}</div><div class="gs-outputs">{outputs}</div>
 </div>
