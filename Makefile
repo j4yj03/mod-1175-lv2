@@ -63,6 +63,10 @@ $(BUILD_DIR)/measurement_probe: tools/measurement_probe.cpp $(HEADERS)
 
 measurement-probe: $(BUILD_DIR)/measurement_probe
 
+$(BUILD_DIR)/preset_probe: tools/preset_probe.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tools/preset_probe.cpp $(LDFLAGS) -o "$@"
+
 install: all
 	mkdir -p "$(DESTDIR)$(LV2DIR)/green-stripe-76.lv2"
 	cp -R "$(BUILD_DIR)/green-stripe-76.lv2/." "$(DESTDIR)$(LV2DIR)/green-stripe-76.lv2/"

@@ -240,7 +240,8 @@ python3 tools/package.py \
 ```
 
 - JSFX-ZIP: alle `.jsfx`, sieben Includes, `.rpl`, Anleitung, Lizenz und
-  Transformatorbank/Runtime-Vertrag zur Herkunfts- und Refit-Dokumentation.
+  Transformatorbank/Runtime-Vertrag zur Herkunfts- und Refit-Dokumentation,
+  außerdem Presetprüfung/2:1-Vorschläge (`PRESET_REVIEW.md`, `PRESET_AUDIT.json`).
 - Source-ZIP: DSP, Metadaten, Werkzeuge, Tests, Doku und AGENTS.
 - LV2-tar.gz: Bundle direkt im Archivroot, ideal für SDK-Upload.
 - Herkunftsmanifest: Architektur, DT_NEEDED, Symbolversionen, Binärhash,

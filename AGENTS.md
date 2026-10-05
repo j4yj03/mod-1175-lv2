@@ -45,6 +45,9 @@
   Compression/Enabled Off parkt Controller. Numerische Release-Approximation
   und Regler-Einrastschwellen nur mit Vorher-/Nachher- und Übergangstests ändern.
 - Generierte TTL/JSFX-Presetdaten über `tools/generate.py` erneuern.
+- Presetprüfung/2:1-Vorschläge in `docs/PRESET_REVIEW.md`; Ziel-GR ist Wet-GR
+  vor Mix. Factory-Werte nur bei ausdrücklich begründetem Klangänderungsauftrag
+  umstellen; Empfehlungen allein sind keine Freigabe zur Bank-Neuabstimmung.
 - Portindizes/-symbole/URIs nicht ohne begründete Versionierung ändern.
 - Kein `-ffast-math`; anfänglich `-ffp-contract=off` für Parität.
 - EEL2 `==` vergleicht mit Toleranz; für gleichartige DSP-Zweige `===` nutzen.

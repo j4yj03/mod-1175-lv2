@@ -33,6 +33,9 @@ ihn nicht und verarbeitet nur linken Input.
 
 Erst Routing, 0/100-%-Mix und GR-/Level-Funktion testen. Danach Projekt speichern,
 schließen, wieder öffnen; Klangregler und Presetwerte müssen erhalten bleiben.
+2:1-Vorschläge aus `PRESET_REVIEW.md` unter eigenen Host-Presetnamen speichern;
+die 36 Factory-Presets behalten ihre Werte. Die Prüfung enthält auch den
+absichtlichen Transformer-None-Zustand von „08 Vocal Transformer“.
 
 ## 3. MOD Dwarf
 

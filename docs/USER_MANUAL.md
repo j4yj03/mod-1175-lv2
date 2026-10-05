@@ -65,10 +65,12 @@ Die gemeinsame Mitte von LED und Schalter liegt unter der Achse des Colour-Potis
 die Fußzeile ist kompakt gehalten.
 Zum Verschieben des LV2-Paneels den **freien oberen Rand** greifen.
 Drehregler verändern nur ihren Wert. Der Mode-Schieber trägt den aktuellen
-Zustand `COMP_ON` / `COMP_OFF` direkt auf seinem beweglichen Griff; eine
+Zustand `COMP ON` / `COMP OFF` direkt auf seinem beweglichen Griff; eine
 separate Überschrift entfällt. Auch Oversampling und Link benötigen keine
 Überschrift: Die Auswahltexte lauten `No Oversampling`, `2x Oversampling`,
 `4x Oversampling` beziehungsweise `STEREO LINK` / `DUAL MONO`.
+Zwischen COMP-Schieber und Oversampling liegen 16 px Abstand. Das Ratio-
+Auswahlfeld ist auf derselben Höhe wie die Wertefelder von Input, Attack und Mix.
 
 ### Input — −36 bis +24 dB
 
@@ -116,6 +118,10 @@ werden, weil die Regelung Teile einzelner Schwingungen mitverfolgt.
 ### Ratio
 
 - **2:1:** sanfte eigene Erweiterung für geringe Regelung.
+  Für eigene Varianten von **31 Piano Gentle** und **35 Stereo Bus Subtle**
+  besonders plausibel. Zuerst nur Ratio ändern, danach Input auf etwa 1–2 dB
+  bzw. 0–2 dB Wet-GR einstellen und Output pegelgleichen. Die Factory-Bank
+  speichert weiterhin 4:1; gemessener Vergleich in `PRESET_REVIEW.md`.
 - **4:1:** offener Ausgangspunkt, breiteres Knie.
 - **8:1:** kräftigere Kontrolle für dynamische Quellen.
 - **12:1 / 20:1:** hohe nominale Kompression für Peaks und Effektpfade.
@@ -260,6 +266,8 @@ deshalb beginnen die Kennzahlenzeilen (IN/GR/OUT) direkt am oberen Rand.
 1. Das richtige Mono-/Stereo-Routing wählen. Extrem heißen Eingangspegel vorher
    im Track-/Pedalboard-Signalweg reduzieren.
 2. `01 Neutral Start` oder ein Instrument-Preset laden.
+   „Neutral“ ist hier ein allgemeiner Startpunkt mit Colour 100 %, kein
+   transparenter Pfad. Für reine Dynamik Colour 0 und Transformer None wählen.
 3. Input langsam erhöhen, bis typische Spitzen die gewünschte GR zeigen.
    Auf dem Dwarf nach Gehör und Pegelvergleich arbeiten.
 4. Attack so einstellen, dass Frontkante und Körper zusammenpassen.
@@ -324,6 +332,10 @@ sind kreative Startpunkte, keine Mastering-Empfehlung.
 
 Die verbindlichen aktuellen Namen, Gruppen und Nummern aller 36 Presets
 stehen in der generierten Tabelle `PRESETS.md`.
+Die erneute Einzelprüfung steht in `PRESET_REVIEW.md`: Ziel-GR gilt immer
+vor Mix und erst nach Input-Abgleich. Auch „Gentle“ kann bei heißer Quelle
+kräftig regeln. Preset **08 Vocal Transformer** bezeichnet den quelleninspirierten
+Colour-only-Trick; der separate Transformator steht dort bewusst auf None.
 
 ## 7. Presets laden und speichern
 

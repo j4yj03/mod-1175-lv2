@@ -30,8 +30,11 @@ Modellbank, feste Pegelnormierung und Refit-Kompatibilität: `TRANSFORMER_RUNTIM
 
 ### Ratio-Modi
 
-`ratio` hat seit 0.4.0 sechs Stufen. `2:1` steht vorn, `All Buttons` steht
-hinten; alle previously gültigen Preset-Indizes sind dadurch um eins gewandert.
+Der aktuelle Stand enthält sechs Ratio-Stufen; `2:1` wurde bereits im
+0.3.0-Entwicklungsstand (Commit `3512096`) ergänzt. `2:1` steht vorn,
+`All Buttons` hinten. Damals verschoben sich die gespeicherten **Ratio-Werte**
+um eins, nicht die Nummern der Instrumentpresets. Ältere eigene Hostzustände
+mit der früheren Fünferliste brauchen eine Kontrolle der Ratio-Auswahl.
 
 | Index | Beschriftung | Verhältnis | Schwelle | Knie |
 |---:|---|---:|---:|---:|
@@ -45,11 +48,18 @@ hinten; alle previously gültigen Preset-Indizes sind dadurch um eins gewandert.
 `2:1` ist eine bewusste Erweiterung dieses gray-box-Modells, keine
 Hardwareeigenschaft; die Vorlage kennt keinen 2:1-Schalter. Schwelle und Knie
 sind bewusst mit `4:1` identisch, damit der Vergleich nicht durch zwei
-veränderte Größen erschwert wird. Weil die Gain-Reduction-Kurve bei gleicher
-Schwelle und gleichem Knie linear im dB-Verhältnis steht, ergibt `2:1` ein
-Drittel der Gain Reduction von `4:1`, nicht die Hälfte. Gemessen werden
+veränderte Größen erschwert wird. Bei festem **Feedback-Tap-Pegel** ist die
+angeforderte dB-GR proportional zu `R−1`, daher 1/3 für 2:1 gegenüber 4:1.
+Das ist **kein** Vergleich bei gleichem Eingang: Der Tap-Pegel ändert sich
+durch die Rückkopplung. Im idealisierten sauberen stationären Bereich oberhalb
+des Knies gilt `GR=(1−1/R)·(L_in−T)`, also dort **2/3** statt 1/3.
+Realer Regelverlauf, Knie, Colour und Zeiten ändern diese Relation.
+Gemessene Sekantenratios sind
 1,99974 und 3,99948. Der Default ist `4:1` (Index 1); `All Buttons` verhält sich
 unverändert und ist nur von Index 4 auf Index 5 gewandert.
+
+Aktuell nutzt kein Factory-Preset 2:1. Vorschläge mit isoliertem Ratiovergleich:
+**31 Piano Gentle** und **35 Stereo Bus Subtle**, siehe `PRESET_REVIEW.md`.
 
 ### Unterschiedliche Preset-Semantik der angehängten Ports
 

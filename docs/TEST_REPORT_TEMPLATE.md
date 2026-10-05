@@ -32,6 +32,8 @@ Datum / Agent / Rechner:
 | Link / Dual Mono / Gegenphase | | | |
 | Compression Off / Enabled / Mix | | | |
 | Presets und Projekt-Recall | | | |
+| Alle 36 Presets: Input-Abgleich / Wet-GR / pegelgleiche Musik | | | |
+| 31 Piano Gentle und 35 Stereo Bus Subtle: 4:1 gegen 2:1 | | | |
 | Meter / Host-GR | | | |
 | GUI offen/geschlossen | | | |
 | Regler-/Automationswechsel | | | |

@@ -2,12 +2,17 @@
 
 > Alle Werte sind eigene Ausgangspunkte, keine Hardwaremessungen.
 > Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.
+> Ziel-GR meint stets die dynamische FET-Abschwächung im Wet-Pfad vor Mix; keine Pegelgarantie für den gespeicherten Inputwert.
 > Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). JSFX-Selektor, importierte Factory-Bänke und LV2-Presets setzen Off.
 
 > Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.
 
 > Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei
 > 6 von 36 Presets auf einer Stufe und sonst auf `None`.
+
+Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:
+[PRESET_REVIEW.md](PRESET_REVIEW.md). Factory-Werte bleiben unverändert; empfohlen zum Ausprobieren sind
+**31 Piano Gentle** und **35 Stereo Bus Subtle**. Zunächst nur Ratio ändern, danach Input auf Ziel-GR einstellen und Output pegelgleichen.
 
 | Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Transformator | Ziel-GR |
 |---|---|---|---|---|---|---|---|---|
@@ -50,7 +55,7 @@
 
 ## 01 Neutral Start
 
-Langsamer Attack, flotter Release; zuerst Input nach Gehör und GR einstellen.
+Allgemeiner Startpunkt mit Attack 3 (ca. 234 µs) und Release 5 (ca. 140 ms); zuerst Input nach Gehör und GR einstellen. Neutral bezeichnet die Ausgangseinstellung, nicht Klangtransparenz: Colour steht auf 100 %, Compression ist aktiv.
 
 Transformator: None.
 Anregungen: UA-TIPS.
@@ -99,7 +104,7 @@ Anregungen: MOORE, VOCAL-GUIDE.
 
 ## 08 Vocal Transformer
 
-TOZZOLI „Vocal Transformer": kein Ratio gedrückt, Kompression ganz aus, das Signal läuft nur durch die Schaltung. Bei uns entspricht das COMP OFF: die Regler werden geparkt, Attack und Release haben dann keine Wirkung, das Signal durchläuft weiter Eingangs-, Varisistor-, Farb- und Ausgangsstufe. Input und Output ausbalancieren für „punch". Die Quelle nennt keine Transformatorstufe, daher None; die Färbung kommt aus dem Colour-Regler.
+TOZZOLI „Vocal Transformer“ ist der Name des quelleninspirierten Tricks: Kompression aus, Audiopfad aktiv. Bei uns wird der Controller geparkt; Attack und Release steuern keine GR. FET-/Verstärkerfärbung über Colour bleibt aktiv. Der separate Eingangstransformator steht bewusst auf None; der Presetname verlangt kein Transformatorprofil. Input +4 dB und Output 0 dB sind nicht pegelkompensiert, deshalb Output nach Gehör abgleichen.
 
 Transformator: None.
 Anregungen: TOZZOLI.
@@ -162,7 +167,7 @@ Anregungen: MOORE, PENNY, UA-TIPS.
 
 ## 17 Bass Pick Punch
 
-Anschlag erhält Gewicht; phasenangepasster Mix ergänzt Direktanteil.
+Anschlag erhält Gewicht; der interne Mix ergänzt Direktanteil mit gemeinsamer Resamplingphase. Colour behält seine eigene Filterphase. Attack 4 ist mit ca. 126 µs schnell; für mehr Frontkante bei Bedarf Richtung 1 zurücknehmen.
 
 Transformator: None.
 Anregungen: MOORE, PENNY.
@@ -190,28 +195,28 @@ Anregungen: MOORE, PENNY.
 
 ## 21 Kick Weight
 
-Attack langsam, damit Klick bleibt; Release an Abstand der Kicks anpassen.
+Attack 5 ist mit ca. 68 µs schnell und kontrolliert den Klick. Soll mehr Frontkante erhalten bleiben, Attack Richtung 1–2 zurücknehmen; Release an den Abstand der Kicks anpassen. Der 80-%-Mix lässt zusätzlich trockenen Anschlag durch.
 
 Transformator: None.
 Anregungen: PENNY, UA-TIPS.
 
 ## 22 Snare Crack
 
-Release vor dem nächsten Schlag erholen lassen; langsamster Attack ist trotzdem schnell.
+Attack 5 (ca. 68 µs) fängt Spitzen schnell ab; 85 % Mix ergänzen trockene Frontkante. Für weniger gekappten Anschlag Attack Richtung 1–2 oder Preset 23 Snare Slow Attack wählen. Release vor dem nächsten Schlag erholen lassen.
 
 Transformator: None.
 Anregungen: PENNY, UA-TIPS.
 
 ## 23 Snare Slow Attack
 
-MTM-SNARE: 4:1, langsame Attacke, Release musikalisch getaktet, 2–6 dB GR für eine einzelne Snare-Spur. Attack steht auf 2 statt 1, weil 1 die langsamste FET-Zeit ist und mit schnellem Release nach MOORE bereits stark tieffrequent verzerrt. Die Quelle verlangt außerdem einen Hochpass um 30 Hz mit 12 dB vor dem Kompressor; Green Stripe 76 hat keinen EQ, das muss im Host passieren.
+MTM-SNARE regt 4:1, langsame Attacke, musikalisch passenden Release und 2–6 dB GR für eine Snare-Spur an. Attack 2 ist unsere relativ langsame Wahl (ca. 433 µs), weiterhin FET-schnell; daraus folgt kein allgemeiner Verzerrungsvorteil gegenüber Attack 1. Der in der Quelle empfohlene Hochpass um 30 Hz mit 12 dB/Okt. muss bei Bedarf im Host ergänzt werden.
 
 Transformator: None.
 Anregungen: MTM-SNARE, MOORE.
 
 ## 24 Snare Saturated Parallel
 
-MTM-SNARE: für einen technisch korrekten, aber langweiligen Snare nicht mehr Kompression, sondern Farbe und Sättigung — „snares love saturation“; 1176-artige Kompressoren liefern die analogartige Färbung. Zu starke Wirkung wird parallel ausgeblendet. Das ausgewogene 80s-Transformatorprofil ist unsere Zuordnung; die Quelle nennt keine Stufe.
+MTM-SNARE motiviert Farbe und Sättigung; die aggressive Ziel-GR von 10–18 dB im Wet-Pfad ist unsere parallele Effektwahl, keine GR-Empfehlung der Quelle. Input auf diese Wirkung abstimmen, Output pegelgleichen, dann über 30 % Mix dosieren. Das 80s-Transformatorprofil ist unsere Zuordnung; die Quelle nennt keine Stufe.
 
 Transformator: 80s.
 Anregungen: MTM-SNARE, UA-TIPS.
@@ -260,7 +265,7 @@ Anregungen: UA-TIPS.
 
 ## 31 Piano Gentle
 
-Konservativer eigener Startwert; keine gemessene historische Einstellung.
+Konservativer eigener Startwert; keine gemessene historische Einstellung. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1, Release 3.5, Mix 60 %, Colour 50 % und Transformer None zunächst beibehalten; Input auf etwa 1–2 dB Wet-GR einstellen und Output neu pegelgleichen. Mehr natürliche Anschlagsdynamik ist das Hörziel, noch kein bestandener Hörtest.
 
 Transformator: None.
 Anregungen: EICHAS.
@@ -288,14 +293,14 @@ Anregungen: Eigener musikalischer Startpunkt.
 
 ## 35 Stereo Bus Subtle
 
-Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter.
+Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1.5, Release 3, Mix 40 %, Colour 40 %, Link On und Transformer None zunächst beibehalten. Für zurückhaltende Verdichtung Input auf 0–2 dB Wet-GR einstellen, Output neu pegelgleichen; geringere Regelung im Testsignal gemessen, Musikbewertung offen.
 
 Transformator: None.
 Anregungen: BLACKBIRD, PENNY.
 
 ## 36 Mix Bus Light Glue
 
-PENNY-Quicksheet Mixbus: langsamste Attacke (1–2), mittlerer bis langsamer Release (2–4), 4:1 und nur 1–2 dB Reduktion. Über den Mix-Regler im Plugin geregelt, weil ein Bus-Zweig ohne Environment-Check gehört werden muss.
+PENNY-Quicksheet Mixbus motiviert Attack 1–2, Release 2–4, 4:1 und 1–2 dB GR. Input bestimmt die Wet-GR; Mix 45 % dosiert lediglich deren Anteil am Ausgang und ändert die Regelung nicht. Deshalb erst Input einstellen, Output pegelgleichen und danach Mix abstimmen. 4:1 bleibt hier als quellenbezogener Ausgangspunkt erhalten.
 
 Transformator: None.
 Anregungen: PENNY, BLACKBIRD.

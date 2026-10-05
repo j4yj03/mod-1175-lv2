@@ -241,8 +241,8 @@ def gui_html(stereo, parameters):
         return (f'<div class="gs-field">'
                 f'<div class="gs-switch" mod-role="input-control-port" '
                 f'mod-port-symbol="{symbol}" mod-widget="switch" aria-label="{spec(symbol)["name"]}">'
-                f'<i><span class="gs-switch-on">COMP_ON</span>'
-                f'<span class="gs-switch-off">COMP_OFF</span></i></div></div>')
+                f'<i><span class="gs-switch-on">COMP ON</span>'
+                f'<span class="gs-switch-off">COMP OFF</span></i></div></div>')
 
     inputs = ''.join(f'<div class="gs-jack" mod-role="input-audio-port" mod-port-symbol="{x}"></div>'
                      for x in (['in_l', 'in_r'] if stereo else ['in']))
@@ -270,7 +270,7 @@ def gui_html(stereo, parameters):
 {screws(False, (0, 45, 18, 67))}
 <div class="gs-bays">
 <div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{screws(True, (8, 31, 54, 79))}<div class="gs-body gs-body-knobs">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{screws(True, (13, 38, 61, 84))}<div class="gs-body gs-body-knobs">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
-<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body">{select('ratio', 'RATIO')}{switch('compression')}{oversampling}{link}</div></div>
+<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}</div>{link}</div></div>
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>
@@ -393,10 +393,14 @@ def jsfx_files(parameters, presets, model):
     transformer_count = sum(1 for p in presets if p.get('transformer', 0))
     docs = ['# Instrument-Presets', '', '> Alle Werte sind eigene Ausgangspunkte, keine Hardwaremessungen.',
             '> Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.',
+            '> Ziel-GR meint stets die dynamische FET-Abschwächung im Wet-Pfad vor Mix; keine Pegelgarantie für den gespeicherten Inputwert.',
             '> Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). JSFX-Selektor, importierte Factory-Bänke und LV2-Presets setzen Off.', '',
             '> Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.', '',
             f'> Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei',
             f'> {transformer_count} von {len(presets)} Presets auf einer Stufe und sonst auf `None`.',
+            '', 'Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:',
+            '[PRESET_REVIEW.md](PRESET_REVIEW.md). Factory-Werte bleiben unverändert; empfohlen zum Ausprobieren sind',
+            '**31 Piano Gentle** und **35 Stereo Bus Subtle**. Zunächst nur Ratio ändern, danach Input auf Ziel-GR einstellen und Output pegelgleichen.',
             '', '| Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Transformator | Ziel-GR |',
             '|---|---|---|---|---|---|---|---|---|']
     # From the port definition, not a second hardcoded list: a new ratio step

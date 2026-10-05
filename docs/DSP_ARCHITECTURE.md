@@ -187,6 +187,12 @@ Kein explizites Base-rate-`z^-1` im Detektorpfad.
 - Charge begrenzt auf 0…1000, GR-Computer auf 60 dB.
 - Ableitung des sauberen Divider-Gains dient als monotone Näherung bei Colour.
 
+Presetprüfung 0.4.0: Der Newton-Nenner wird in beiden Engines ausdrücklich
+als `denominator=1+alpha; denominator-=alpha*derivative` ausgewertet.
+Der vorherige EEL2-Gesamtausdruck konnte die Rundung verändern und bei
+Preset 29 Mono eine andere Newton-/Bisektionsentscheidung auslösen.
+Keine neue Iterationszahl oder Toleranz; Signalbeleg in `PRESET_REVIEW.md`.
+
 Bei geschlossenem Gleichrichter entlädt sich der Zustand exponentiell:
 
 \[
@@ -220,9 +226,11 @@ AXT zeigt, dass die echte Taste sowohl Bias/Pegel **als auch Thevenin-Impedanzen
 ändert. Green Stripe bildet diese Gesamtwirkung parametrisch ab, nicht als
 exaktes Schalter-Netzwerk. Im Status als Näherung beibehalten.
 
-Die Taste ist der letzte Modus, Index 5. Bis 0.3.0 stand sie auf Index 4;
-durch das Einfügen von `2:1` an erster Stelle (siehe `docs/PARAMETERS.md`) sind
-alle Preset-Indizes um eins gewandert, das Verhalten selbst ist unverändert.
+Die Taste ist der letzte Modus, Index 5. Vor der 2:1-Erweiterung im
+0.3.0-Entwicklungsstand stand sie auf Index 4. Mit `2:1` an erster Stelle
+verschoben sich die Ratio-Werte, nicht die Instrument-Presetnummern.
+Die aktuelle Factory-Bank enthält korrekt 4:1/8:1/All bzw. Compression Off;
+2:1-Empfehlungen und Signalprüfung in `PRESET_REVIEW.md`.
 
 ## 8. Verstärker- und tieffrequente Färbung
 

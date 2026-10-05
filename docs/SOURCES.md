@@ -452,13 +452,13 @@ Fehler korrigiert; Audio-Beispieldateinamen aktuell keine Downloadlinks.
 |---|---|---|
 | S. 4–5 | Attack 200–800 µs, Release 50 ms–1,1 s; höheres Verhältnis hebt die Schwelle **und** macht das Knie härter; Knie bei 4:1/8:1 weicher, bei 12:1/20:1 härter | Plausibilität unseres Gain Laws, kein Zahlenwert übernommen |
 | S. 5 | Shanks (UA Webzine 2003): 4:1 und 8:1 für Kompression, 12:1 und 20:1 für Peakbegrenzung | Preset-Ratio-Wahl nach Quelle |
-| S. 7 | All Buttons In: Verhältnis „somewhere between 12:1 and 20:1" (UA-Handbuch 2009); Attack/Release ändern sich mit; anfängliche Transientenverzögerung; Kennlinie ähnelt einem Plateau; „almost resembles a brick wall limiter" | Auswahl von Presets mit Verhältnis 4 |
+| S. 7 | All Buttons In: Verhältnis „somewhere between 12:1 and 20:1" (UA-Handbuch 2009); Attack/Release ändern sich mit; anfängliche Transientenverzögerung; Kennlinie ähnelt einem Plateau; „almost resembles a brick wall limiter" | All-Presets 06/27/29, aktueller Ratio-Index 5; keine Brickwall-Garantie |
 | S. 9 | Crane (UA Webzine 2003) „1176 Comp-Distortion Trick": extrem schnelle Zeiten erzeugen bewusst Tieffrequenzverzerrung, wenn der Kompressor innerhalb jeder Periode arbeitet | Presets mit sehr schnellen Zeiten und parallelem Mix |
-| S. 9–10 | Bass: 4:1 häufigster Wert; Elmhirst kombiniert 4:1 **und** 8:1 zusammen (= All Buttons); Zeitkonstanten **weg** vom schnellsten Ende | Presets 16/17/19 |
-| S. 9–10 | Owsinski (2006) Bass: 8:1, Attack „around noon", Release „around 3 or 4 o'clock" — „long attack and short release … to increase articulation" | Preset 19 (Artikulation) |
-| S. 10 | Gesang: Lord-Alge 4:1 mit **schnellem** Release; Elmhirst sehr schnelle Attacke und sehr schneller Release, ~10 dB | Presets 04/18/07 |
+| S. 9–10 | Bass: 4:1 häufigster Wert; kombinierte Tasten und Zeitkonstanten weg vom schnellsten Ende als eigene Praxisvarianten | Presets 16/17/20 mit mittleren Skalenwerten; 18/19 bewusst schnelle Grit-Ausnahmen, keine elektrische Gleichsetzung einzelner Tastenkombinationen mit All |
+| S. 9–10 | Owsinski (2006) Bass: 8:1, Attack „around noon", Release „around 3 or 4 o'clock" — „long attack and short release … to increase articulation" | Presets 17/20 als eigene Ableitungen; keine Uhrzeitkalibrierung |
+| S. 10 | Gesang: Lord-Alge 4:1 mit **schnellem** Release; Elmhirst sehr schnelle Attacke und sehr schneller Release, ~10 dB | Presets 03/05/07; Ratio und Drive teilweise eigene Abstimmung |
 | S. 10 | Dr Pepper: „attack at 10 o'clock, release at 2 o'clock, and 4:1 ratio with tons of input level" (Jim Scott, Clouser/Vdovin 2004) | Preset 02, Wirkung statt Uhrzeit |
-| S. 16 | Vokal-Testtabelle: (4:1, A7, R7, 7–10 dB), (4:1, A6, R6, 7–10 dB), (4:1, A3, R5, 7–10 dB) | Presets 07/05/03 |
+| S. 16 | Vokal-Testtabelle: (4:1, A7, R7, 7–10 dB), (4:1, A6, R6, 7–10 dB), (4:1, A3, R5, 7–10 dB) | Preset 07 eng angelehnt; 05 mit eigener 8:1-Ratio, 03 mit geringerem GR-Ziel |
 | S. 21 | Bass-Testtabelle: (A4, R4, 4:1, 3–5 dB), (A4, R4, 8:1, 7–10 dB), (A7, R7, 8:1, 7–10 dB) | Presets 16/17/19 |
 | S. 24 | Raummikro-Testtabelle, durchgehend **lange Attacke und kurzer Release** (A3, R6), bei 4:1 / 8:1 / 12:1 / 20:1 / All Buttons In, 3–10 dB | Preset 27, Raummikro-Einstellung |
 | S. 25–26 | Fazit: FET-Verzerrung im Bass bei schnellen Zeiten, aggressiver Charakter bei stark komprimiertem Gesang, All Buttons verändert Transientenschlag und Decay | Begründung der Preset-Namen und Notizen |
@@ -519,7 +519,8 @@ Nicht vollständig zugänglich:
 Ziel/Flags/ABI/Bundles/Ports/GUI/BYPASS und SDK-Protokoll anhand der Dokumente
 und Code geprüft. Hersteller-DD-Kernel/Codecfähigkeit nicht mit Hostrate
 verwechseln. MPB-Defaults enthalten Fast-Math; Projekt override dokumentiert.
-GUI-Rotationswidget im aktuellen MOD-UI-Code bestätigt, Browser/Device noch extern.
+Historisch wurde das GUI-Rotationswidget untersucht. Aktuell Aluminium-Filmstrip
+und echte Switch-/Bypass-Widgets; lokaler Browsertest bestanden, Gerätetest offen.
 
 ### LV2 / JSFX / YSFX
 
@@ -645,6 +646,16 @@ Quellimpedanz, Last-/Stromlieferfähigkeit und Auswahl eines Ausgangsübertrager
 | MTM-SNARE | [How to Compress a Snare Drum Properly](https://www.masteringthemix.com/blogs/learn/how-to-compress-a-snare-drum-properly), Tom Frampton, 12.07.2022 | Vollständig gelesen; 4:1, langsame Attacke, Release musikalisch getaktet, 2–6 dB GR, Farbe/Sättigung statt mehr Kompression. Der Artikel empfiehlt außerdem einen 30-Hz-Hochpass vor dem Kompressor — **das können wir nicht abbilden**, Green Stripe 76 hat keinen EQ. |
 Alle daraus entwickelten Presets sind **eigene Startwerte**. Es wurde kein
 geschützter Artikelvolltext oder fremde Presetbank im Paket nachgebildet.
+
+Erneute Presetprüfung 2026-10-05: `PRESET_REVIEW.md` und `PRESET_AUDIT.json`
+dokumentieren alle 36 aktuellen Zuordnungen und eigene Signalproben. Die
+2:1-Vorschläge für **31 Piano Gentle / 35 Stereo Bus Subtle** sind eigene
+Interpretationen, keine Belege für eine 2:1-Stellung historischer Hardware.
+Die Presetnotizen zu 21/22/23/24/36 unterscheiden jetzt tatsächliche digitale
+Attackzeiten, eigene aggressive GR-Ziele und Input/Output/Mix-Funktionen.
+Die eigene Signalprüfung fand außerdem den EEL2-Rundungsfall im Newton-Nenner
+bei Preset 29; Diagnose und Korrektur sind Entwicklungsbefunde, keine neue
+Literaturquelle oder Hardwaremessung.
 
 ### Umrechnung der Quellen-Angaben auf unsere Regler
 

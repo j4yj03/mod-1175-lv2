@@ -363,7 +363,11 @@ struct Controller {
                 const double f = (1.0 + alpha) * q - charge - alpha * wanted;
                 if (std::abs(f) < 1.0e-10 * (1.0 + charge)) break;
                 if (f > 0.0) high = q; else low = q;
-                const double next = q - f / (1.0 + alpha - alpha * derivative);
+                // Match these evaluation boundaries in EEL2: its optimizer can
+                // reassociate 1+alpha-alpha*derivative and flip the safeguard.
+                double denominator = 1.0 + alpha;
+                denominator -= alpha * derivative;
+                const double next = q - f / denominator;
                 q = next > low && next < high ? next : (low + high) * 0.5;
             }
             charge = bounded(q, 0.0, 1000.0);

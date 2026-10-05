@@ -106,6 +106,7 @@ static bool runCase(const char* file, bool stereo, double rate, unsigned block,
 }
 
 static bool checkPresets(const char* file, unsigned &loaded) {
+    bool signalParity=true;
     ysfx_config_u config(ysfx_config_new()); ysfx_set_log_reporter(config.get(),logger);
     ysfx_u fx(ysfx_new(config.get()));
     if (!ysfx_load_file(fx.get(),file,0) || !ysfx_compile(fx.get(),ysfx_compile_no_gfx)) return false;
@@ -132,6 +133,17 @@ static bool checkPresets(const char* file, unsigned &loaded) {
         ysfx_process_float(fx.get(),in,out,2,2,128);
         double values[13];
         for (unsigned j=0;j<comparedCount;++j) values[compared[j]]=ysfx_slider_get_value(fx.get(),compared[j]);
+        // Render every actual bank setting with a signal, not just slider recall on silence.
+        greenstripe::Parameters p;
+        p.input=values[0]; p.output=values[1]; p.attack=values[2]; p.release=values[3];
+        p.ratio=static_cast<int>(values[4]); p.mix=values[5]; p.colour=values[6];
+        p.compression=values[7]>0; p.enabled=values[8]>0; p.stereoLink=values[9]>0;
+        p.transformer=static_cast<int>(values[12]);
+        if (!runCase(file,std::string(file).find("Stereo")!=std::string::npos,48000,128,p,0,
+                     static_cast<unsigned>(values[11]))) {
+            std::cerr << "Preset signal parity failed: " << i+1 << '\n';
+            signalParity=false;
+        }
         ysfx_slider_set_value(fx.get(),10,i+1,true);
         ysfx_process_float(fx.get(),in,out,2,2,128);
         for (unsigned j=0;j<comparedCount;++j)
@@ -142,7 +154,7 @@ static bool checkPresets(const char* file, unsigned &loaded) {
         ysfx_process_float(fx.get(),in,out,2,2,128);
         if (ysfx_slider_get_value(fx.get(),10)!=0) return false;
     }
-    return true;
+    return signalParity;
 }
 
 int main(int argc,char** argv) {
@@ -201,10 +213,13 @@ int main(int argc,char** argv) {
         }
     }
     unsigned presetLoads=0;
-    if (!checkPresets(argv[1],presetLoads) || !checkPresets(argv[2],presetLoads)) {
+    const bool monoPresets=checkPresets(argv[1],presetLoads);
+    const bool stereoPresets=checkPresets(argv[2],presetLoads);
+    if (!monoPresets || !stereoPresets) {
         std::cerr << "Preset RPL/selector/custom-state test failed\n"; return 1;
     }
     if (failed) { std::printf("FAILURES: %u\n", failed); return 1; }
     std::cout << "JSFX/native parity: PASS (" << passed << " cases, max=" << maximumError << " FS)\n";
-    std::cout << "JSFX instrument selector / RPL banks / Custom state: PASS (" << presetLoads << " preset states)\n";
+    std::cout << "JSFX instrument selector / RPL banks / Custom state / preset signal parity: PASS ("
+              << presetLoads << " preset states)\n";
 }

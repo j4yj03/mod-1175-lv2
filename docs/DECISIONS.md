@@ -36,13 +36,17 @@ mit „Transformer“. Fußbereich 12 px kürzer; LED und Bypass mit gemeinsamer
 Mitte auf der Colour-Poti-Achse. Module und Fußzeile nutzen dasselbe 2:1:1-Raster,
 gleich breite Plätze gleichen unterschiedliche LED-/Schalterbreiten aus.
 ENGINE-Bedienung weiter vereinfacht: keine Überschriften für Mode, Oversampling
-und Link. Mode zeigt `COMP_ON` / `COMP_OFF` im beweglichen Griff, gesteuert
+und Link. Mode zeigt `COMP ON` / `COMP OFF` im beweglichen Griff, gesteuert
 durch die tatsächlichen MOD-Widgetklassen `on/off`. Die Auswahlfelder tragen
 `No Oversampling` / `2x Oversampling` / `4x Oversampling` sowie `STEREO LINK` /
 `DUAL MONO`; ihre numerische Zuordnung bleibt 0/1/2 bzw. 1/0.
 GAIN/TIME ebenfalls ohne Gruppenüberschriften. Alle drei Potimodule verwenden
 dasselbe Zeilenraster einschließlich reservierter unterer Dropdown-Zeile:
 Input/Attack/Mix und Output/Release/Colour sind dadurch exakt höhengleich.
+Auch ENGINE nutzt das gemeinsame Zeilenraster: Ratio-Auswahl und obere
+Potiwerte sind bündig, unabhängig von Mono/Stereo. COMP und Oversampling
+bilden eine Gruppe mit 16 px Innenabstand; die Schiebertexte enthalten
+Leerzeichen statt Unterstrichen.
 
 ## D01 — Eigener Green Stripe
 
@@ -93,10 +97,22 @@ Mono verarbeitet Input L auf beide Outputs; keine unbemerkte L/R-Summierung.
 
 ## D08 — Presets sind Startwerte
 
-26 eigene Instrumentvarianten auf Grundlage zugänglicher Praxisquellen. Keine
+Anfangs 26, aktuell 36 eigene Instrumentvarianten auf Grundlage zugänglicher Praxisquellen. Keine
 universellen Input-/Outputwerte; Ziel-GR zum Abstimmen. `.rpl`-Bänke plus
 eingebauter Selector, Custom nach manuellem Eingriff. Keine „garantierte“
 Klanggleichheit mit originalen Clock-/T-Pad-Stellungen.
+
+Prüfung 2026-10-05: alle 36 gegen Portdaten, LV2/RPL und echte Signalverarbeitung
+abgeglichen. Factory-Klangwerte/Nummern bleiben erhalten; widersprüchliche
+Attack-, Mix-/GR- und Quellenbeschreibungen korrigiert. Piano Gentle und Stereo
+Bus Subtle sind die zwei empfohlenen **eigenen 2:1-Varianten**, keine historische
+1176-Einstellung. Die Drittel-GR-Behauptung bei gleichem Eingang ist korrigiert:
+festes Feedback-Tap-Niveau und festes Eingangsniveau sind nicht dasselbe.
+Vollständige Einzelbewertung und gemessener Ratiovergleich in `PRESET_REVIEW.md`.
+Die erweiterte reale Signalparität fand bei Preset 29 einen EEL2-Rundungsfall
+im Newton-Nenner. Explizite, gespiegelte Zwischenschritte beheben die
+abweichende Intervallwahl; 430 allgemeine und 72 Presetfälle nun bitgleich,
+144 native Vorher-/Nachherfälle ebenfalls. Keine neue Solver-Toleranz.
 
 ## D09 — NAM offline
 

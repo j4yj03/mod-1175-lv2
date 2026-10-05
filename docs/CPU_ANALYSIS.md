@@ -28,6 +28,16 @@ optimierenden C++-Compiler. Diese Messung rechtfertigt keine konkrete
 Cortex-A35-Auslastungsaussage. Neue Geräteprüfung mit Signal, 128/256 Frames,
 mehreren Instanzen und xruns ist im `HANDOFF.md` priorisiert.
 
+### Ergänzende Presetprüfung
+
+Die später ergänzten 72 Preset-Signalvergleiche fanden bei Preset 29 Mono
+einen EEL2-Rundungsfall im Newton-Nenner. Explizite Zwischenschritte in beiden
+Engines sichern jetzt die Auswertungsreihenfolge. Das ist keine CPU-Optimierung
+und keine neue Zeitmessung: 430 allgemeine + 72 Presetfälle sind bitgleich;
+144 C++-Vorher-/Nachherfälle gegen `c3153bf` ebenfalls bitgleich.
+Die obigen Benchmarks werden dadurch nicht als neu gemessen ausgegeben.
+Signalbefund und 2:1-Empfehlungen: `PRESET_REVIEW.md`.
+
 ## Ergebnis
 
 Die CPU-Rückmeldung des Benutzers (etwa vierfacher Verbrauch gegenüber anderen

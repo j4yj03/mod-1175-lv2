@@ -36,16 +36,22 @@
 .gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; box-sizing:border-box; padding:14px 9px 9px;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
 .gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
-.gs76{{{cns}}} .gs-brand { margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
+.gs76{{{cns}}} .gs-brand { position:absolute; top:14px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-bay-engine { border-color:#14432a; background:#1c5a39;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.18),inset -1px -1px 2px rgba(0,0,0,.25); }
 .gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
 .gs76{{{cns}}} .gs-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .gs76{{{cns}}} .gs-body > :last-child { margin-bottom:0; }
 /* Reserve the dropdown row in all knob modules, keeping both pot rows level. */
-.gs76{{{cns}}} .gs-body-knobs { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
+.gs76{{{cns}}} .gs-body-knobs,.gs76{{{cns}}} .gs-body-engine { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-control,.gs76{{{cns}}} .gs-body-knobs > .gs-field { margin:0; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-field { display:flex; }
+/* Ratio ends on the first pot's value row; title is outside this shared grid. */
+.gs76{{{cns}}} .gs-body-engine > .gs-field { display:flex; flex-direction:column; margin:0; }
+.gs76{{{cns}}} .gs-body-engine > .gs-field:first-child { align-self:end; }
+.gs76{{{cns}}} .gs-body-engine select[mod-port-symbol="ratio"] { height:20px; }
+.gs76{{{cns}}} .gs-engine-controls { width:100%; display:flex; flex-direction:column; gap:16px; align-self:start; }
+.gs76{{{cns}}} .gs-engine-controls > .gs-field { margin:0; }
 
 .gs76{{{cns}}} .gs-control { width:136px; text-align:center; margin:0 auto 10px; }
 .gs76{{{cns}}} .gs-knob-row { display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:8px; }

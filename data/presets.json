@@ -12,7 +12,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "2–5 dB",
-    "note": "Langsamer Attack, flotter Release; zuerst Input nach Gehör und GR einstellen.",
+    "note": "Allgemeiner Startpunkt mit Attack 3 (ca. 234 µs) und Release 5 (ca. 140 ms); zuerst Input nach Gehör und GR einstellen. Neutral bezeichnet die Ausgangseinstellung, nicht Klangtransparenz: Colour steht auf 100 %, Compression ist aktiv.",
     "sources": [
       "UA-TIPS"
     ]
@@ -147,7 +147,7 @@
     "link": 1,
     "transformer": 0,
     "target_gr": "0 dB, keine Kompression",
-    "note": "TOZZOLI „Vocal Transformer\": kein Ratio gedrückt, Kompression ganz aus, das Signal läuft nur durch die Schaltung. Bei uns entspricht das COMP OFF: die Regler werden geparkt, Attack und Release haben dann keine Wirkung, das Signal durchläuft weiter Eingangs-, Varisistor-, Farb- und Ausgangsstufe. Input und Output ausbalancieren für „punch\". Die Quelle nennt keine Transformatorstufe, daher None; die Färbung kommt aus dem Colour-Regler.",
+    "note": "TOZZOLI „Vocal Transformer“ ist der Name des quelleninspirierten Tricks: Kompression aus, Audiopfad aktiv. Bei uns wird der Controller geparkt; Attack und Release steuern keine GR. FET-/Verstärkerfärbung über Colour bleibt aktiv. Der separate Eingangstransformator steht bewusst auf None; der Presetname verlangt kein Transformatorprofil. Input +4 dB und Output 0 dB sind nicht pegelkompensiert, deshalb Output nach Gehör abgleichen.",
     "sources": [
       "TOZZOLI"
     ]
@@ -320,7 +320,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "4–8 dB",
-    "note": "Anschlag erhält Gewicht; phasenangepasster Mix ergänzt Direktanteil.",
+    "note": "Anschlag erhält Gewicht; der interne Mix ergänzt Direktanteil mit gemeinsamer Resamplingphase. Colour behält seine eigene Filterphase. Attack 4 ist mit ca. 126 µs schnell; für mehr Frontkante bei Bedarf Richtung 1 zurücknehmen.",
     "sources": [
       "MOORE",
       "PENNY"
@@ -397,7 +397,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "3–6 dB",
-    "note": "Attack langsam, damit Klick bleibt; Release an Abstand der Kicks anpassen.",
+    "note": "Attack 5 ist mit ca. 68 µs schnell und kontrolliert den Klick. Soll mehr Frontkante erhalten bleiben, Attack Richtung 1–2 zurücknehmen; Release an den Abstand der Kicks anpassen. Der 80-%-Mix lässt zusätzlich trockenen Anschlag durch.",
     "sources": [
       "PENNY",
       "UA-TIPS"
@@ -416,7 +416,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "4–8 dB",
-    "note": "Release vor dem nächsten Schlag erholen lassen; langsamster Attack ist trotzdem schnell.",
+    "note": "Attack 5 (ca. 68 µs) fängt Spitzen schnell ab; 85 % Mix ergänzen trockene Frontkante. Für weniger gekappten Anschlag Attack Richtung 1–2 oder Preset 23 Snare Slow Attack wählen. Release vor dem nächsten Schlag erholen lassen.",
     "sources": [
       "PENNY",
       "UA-TIPS"
@@ -436,7 +436,7 @@
     "link": 1,
     "transformer": 0,
     "target_gr": "2–6 dB",
-    "note": "MTM-SNARE: 4:1, langsame Attacke, Release musikalisch getaktet, 2–6 dB GR für eine einzelne Snare-Spur. Attack steht auf 2 statt 1, weil 1 die langsamste FET-Zeit ist und mit schnellem Release nach MOORE bereits stark tieffrequent verzerrt. Die Quelle verlangt außerdem einen Hochpass um 30 Hz mit 12 dB vor dem Kompressor; Green Stripe 76 hat keinen EQ, das muss im Host passieren.",
+    "note": "MTM-SNARE regt 4:1, langsame Attacke, musikalisch passenden Release und 2–6 dB GR für eine Snare-Spur an. Attack 2 ist unsere relativ langsame Wahl (ca. 433 µs), weiterhin FET-schnell; daraus folgt kein allgemeiner Verzerrungsvorteil gegenüber Attack 1. Der in der Quelle empfohlene Hochpass um 30 Hz mit 12 dB/Okt. muss bei Bedarf im Host ergänzt werden.",
     "sources": [
       "MTM-SNARE",
       "MOORE"
@@ -456,7 +456,7 @@
     "link": 1,
     "transformer": 2,
     "target_gr": "10–18 dB im Wet-Pfad",
-    "note": "MTM-SNARE: für einen technisch korrekten, aber langweiligen Snare nicht mehr Kompression, sondern Farbe und Sättigung — „snares love saturation“; 1176-artige Kompressoren liefern die analogartige Färbung. Zu starke Wirkung wird parallel ausgeblendet. Das ausgewogene 80s-Transformatorprofil ist unsere Zuordnung; die Quelle nennt keine Stufe.",
+    "note": "MTM-SNARE motiviert Farbe und Sättigung; die aggressive Ziel-GR von 10–18 dB im Wet-Pfad ist unsere parallele Effektwahl, keine GR-Empfehlung der Quelle. Input auf diese Wirkung abstimmen, Output pegelgleichen, dann über 30 % Mix dosieren. Das 80s-Transformatorprofil ist unsere Zuordnung; die Quelle nennt keine Stufe.",
     "sources": [
       "MTM-SNARE",
       "UA-TIPS"
@@ -590,7 +590,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "1–3 dB",
-    "note": "Konservativer eigener Startwert; keine gemessene historische Einstellung.",
+    "note": "Konservativer eigener Startwert; keine gemessene historische Einstellung. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1, Release 3.5, Mix 60 %, Colour 50 % und Transformer None zunächst beibehalten; Input auf etwa 1–2 dB Wet-GR einstellen und Output neu pegelgleichen. Mehr natürliche Anschlagsdynamik ist das Hörziel, noch kein bestandener Hörtest.",
     "sources": [
       "EICHAS"
     ]
@@ -658,7 +658,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "0–2 dB",
-    "note": "Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter.",
+    "note": "Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1.5, Release 3, Mix 40 %, Colour 40 %, Link On und Transformer None zunächst beibehalten. Für zurückhaltende Verdichtung Input auf 0–2 dB Wet-GR einstellen, Output neu pegelgleichen; geringere Regelung im Testsignal gemessen, Musikbewertung offen.",
     "sources": [
       "BLACKBIRD",
       "PENNY"
@@ -678,7 +678,7 @@
     "link": 1,
     "transformer": 0,
     "target_gr": "1–2 dB",
-    "note": "PENNY-Quicksheet Mixbus: langsamste Attacke (1–2), mittlerer bis langsamer Release (2–4), 4:1 und nur 1–2 dB Reduktion. Über den Mix-Regler im Plugin geregelt, weil ein Bus-Zweig ohne Environment-Check gehört werden muss.",
+    "note": "PENNY-Quicksheet Mixbus motiviert Attack 1–2, Release 2–4, 4:1 und 1–2 dB GR. Input bestimmt die Wet-GR; Mix 45 % dosiert lediglich deren Anteil am Ausgang und ändert die Regelung nicht. Deshalb erst Input einstellen, Output pegelgleichen und danach Mix abstimmen. 4:1 bleibt hier als quellenbezogener Ausgangspunkt erhalten.",
     "sources": [
       "PENNY",
       "BLACKBIRD"

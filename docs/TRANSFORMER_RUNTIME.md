@@ -21,6 +21,13 @@ Vergleichsstufe, kein viertes historisches Modell und kein Port des alten
 Der Referenzfit trifft 18/20 zurückgehaltene Intervalle und 24/33 Trainingsintervalle.
 Diese Restfehler werden durch den Runtime-Port nicht zu Hardwarekalibrierung.
 
+Presetprüfung: 11/12 wählen 60s, 13/19/24 wählen 80s, 20 wählt 00s;
+alle anderen None. Die gespeicherten Input-Gains treiben den Kern zusätzlich:
+„00s clean“ bedeutet größeren Headroom, nicht garantiert geringe Sättigung.
+Die 20-Hz-Anker gelten am Transformator-Eingang nach Input-Gain.
+`08 Vocal Transformer` ist ein Quellen-Trickname und bleibt bewusst None.
+Vollständige Einordnung: `PRESET_REVIEW.md`.
+
 ## Signalweg und Zustand
 
 ```text
@@ -136,8 +143,8 @@ in beiden Engines und eigene Signalprüfungen.
   96/192 kHz ebenfalls innerhalb der definierten 0,85…1,15-%-Abnahmegrenze.
 - Unabhängiger Offlinekern, Bass/DC-/Burstverläufe: maximale rohe
   Ausgangsabweichung **5,42×10⁻¹⁵ FS**, 44,1/48/96/192 kHz.
-- **430** C++/EEL2-Fälle, maximale Float-Port-Abweichung **0 FS**;
-  **72** RPL-/Selector-Presetzustände.
+- **430** allgemeine C++/EEL2-Fälle plus **72 Preset-Signalvergleiche**,
+  maximale Float-Port-Abweichung **0 FS**; **72** RPL-/Selector-Presetzustände.
 - `None` gegen den unabhängig aus Commit `77a25fd` exportierten Kern:
   **144 Fälle bitgleich**, einschließlich Audio/GR/Latenz und Umschaltungen.
 - Tatsächlich geladene LV2-Binary: optionale Portverbindung, hörwirksame

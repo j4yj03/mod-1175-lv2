@@ -7,7 +7,9 @@
 Aktuell **0.4.0** mit hörbaren, refit-fähigen Eingangstransformatoren und
 überarbeiteter MOD-GUI. `TRANSFORMER_RUNTIME.md` beschreibt Bankrevision,
 Modellwechsel, feste Gainnormalisierung und HF-Phasengrenzen. Lokal 430
-bitgleiche C++/EEL2-Fälle, 72 Presetzustände und echter MOD-Widget-Browsertest.
+allgemeine plus 72 Preset-Signalvergleiche bitgleich, 72 Recall-Zustände
+und echter MOD-Widget-Browsertest. Preset 29 deckte einen nun korrigierten
+EEL2-Solver-Rundungsfall auf; mit dem neuen Include-Stand testen.
 Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen.
 
 1. `AGENTS.md` und `docs/STATUS.md` lesen.
@@ -56,6 +58,10 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 - Regler-/Link-/Bypass-/Compressionwechsel, Snapshots/MIDI/Automation.
 - Alle fünf Transformatorstufen, schnelle Modell-/OS-Wechsel, None-Recall und
   sechs farbige Factory-Presets bei pegelgleichem A/B prüfen.
+- `PRESET_REVIEW.md` nutzen: alle 36 Presets auf geeignetem Musikmaterial;
+  31 Piano Gentle und 35 Stereo Bus Subtle separat mit 4:1/2:1 vergleichen.
+  Erst gleiche Inputwerte vergleichen, danach Ziel-GR über Input und Lautheit
+  über Output anpassen. Mix nicht als GR-Einstellung verwenden.
 - Kurzer/langer Burst, Bass, Schlagzeug, Sänger, Guitar, Piano bei pegelgleichem A/B.
 
 ### P2 — Build-/Modellabgleich

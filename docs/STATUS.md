@@ -5,6 +5,46 @@ Hardware-Revision A/D nicht bindend.
 
 ## Aktueller Stand 0.4.0
 
+### Erneute Presetprüfung und 2:1-Vorschläge, 2026-10-05
+
+Vollständige Einzelbewertung aller **36 Presets** in
+[`PRESET_REVIEW.md`](PRESET_REVIEW.md), reproduzierbare Signalwerte und Hashes
+in `PRESET_AUDIT.json`. Alle gespeicherten Klangwerte, Namen, Zielspannen,
+Nummern und Reihenfolgen sind gegenüber `c3153bf` unverändert. Factory-TTL,
+RPL-Bänke und JSFX-Preset-Include bleiben bytegleich.
+
+- Korrekte Ratio-Indizes: aktiv 22 × 4:1, 9 × 8:1, 3 × All; zwei
+  Compression-Off-Presets. Sechs Transformatorzuordnungen weiterhin passend.
+- Notizen zu Neutral, Vocal Transformer, Kick/Snare, Parallel-GR und Mixbus
+  präzisiert. Attack 5 ist ca. **68 µs**, nicht langsam; Ziel-GR ist Wet-GR
+  **vor Mix** und wird vorrangig über Input/Ratio/Regelzeiten eingestellt.
+  Colour/Transformer können die Detektoranregung ebenfalls verändern; ihre
+  eigenen Pegelverluste sind jedoch kein FET-GR-Meterwert.
+- Zwei 2:1-Empfehlungen: **31 Piano Gentle** (1–2 dB Wet-GR) und
+  **35 Stereo Bus Subtle** (0–2 dB Wet-GR). Zunächst nur Ratio ändern,
+  danach Input/Output abstimmen; keine automatische Bank-Neuabstimmung.
+- Die frühere „ein Drittel GR“-Aussage bei gleichem Eingang wurde in
+  `PARAMETERS.md` korrigiert; fester Tap-Pegel ist nicht fester Eingang.
+- **72 LV2/RPL-Zustände** gegen normative Werte geprüft, **216 native
+  Presetfälle + 12 Ratiovergleiche** gerendert: endliche Signale, beide
+  Compression-Off-Presets exakt 0 dB GR. Keine Musik-/Hörabnahme daraus ableiten.
+- Der neue echte Preset-Signal-Paritätssatz fand bei **29 Drum Parallel Crush
+  Mono** eine bisher ungetestete EEL2-Nenner-Rundung mit abweichender
+  Newton-/Bisektionswahl (max. **0,000409722 FS** vor Korrektur).
+  C++/EEL2-Nennerauswertung explizit angeglichen, keine Toleranz gelockert.
+- Abschließend **430 allgemeine + 72 Preset-Signalvergleiche bitgleich**,
+  `make test`, Generator/RDF und CMake/CTest 3/3 PASS. C++-Regression gegen
+  `c3153bf`: **144 Fälle bitgleich Audio/GR/Latenz**. Die korrigierte JSFX kann
+  im genannten Randfall vom alten JSFX-Render abweichen.
+- Paketierung geprüft: `PRESET_REVIEW.md` und `PRESET_AUDIT.json` liegen
+  neben `PRESETS.md` im JSFX-ZIP, ZIP-Integrität PASS.
+
+Noch offen: geeignete Musikquellen, pegelgleiches 4:1-/2:1-Hören und reale
+REAPER-/Dwarf-Abnahme. Die folgenden technischen Implementierungsangaben und
+archivierten älteren Messberichte bleiben ihren jeweiligen Ständen zugeordnet.
+
+### Implementierter Produktstand
+
 - **Transformator hörbar in C++ und JSFX:** None / 60s warm / 80s ausgewogen /
   00s clean / Symmetric als lineare technische Referenz. Eigener lastgekoppelter
   Flux-/Stop-Kern aus dem partiellen Jensen-Offlinefit, keine Übernahme der
@@ -45,8 +85,8 @@ Hardware-Revision A/D nicht bindend.
   gemeinsame Rasterspalten für Module/Fußzeile und gleich breite Steuerplätze.
   In Mono und Stereo geometrisch geprüft: Mittelpunkt der beiden Bedienelemente
   exakt auf der Poti-Achse (0 px Abweichung).
-- ENGINE ohne Überschriften für Mode, Oversampling und Link. `COMP_ON` bzw.
-  `COMP_OFF` sitzt direkt im beweglichen Schiebergriff und folgt den MOD-
+- ENGINE ohne Überschriften für Mode, Oversampling und Link. `COMP ON` bzw.
+  `COMP OFF` sitzt direkt im beweglichen Schiebergriff und folgt den MOD-
   Schaltzuständen. Oversampling zeigt `No Oversampling`, `2x Oversampling`,
   `4x Oversampling`; Stereoauswahl `STEREO LINK` / `DUAL MONO`.
   Beide Schiebertexte in Mono/Stereo per echtem MOD-Widget 1→0→1 geprüft:
@@ -56,6 +96,10 @@ Hardware-Revision A/D nicht bindend.
   Output/Release/Colour jeweils auf derselben Höhe. Mono/Stereo geometrisch
   geprüft: 0 px Reihenabweichung; LED-/Bypass-Mittelpunkt weiterhin auf der
   Colour-Achse, Paneelhöhe weiterhin 375 px.
+- Ratio-Auswahl auf Höhe der Wertefelder Input/Attack/Mix, gleiche Feldhöhe
+  20 px und 0 px vertikale Abweichung in beiden Varianten. Zwischen COMP und
+  Oversampling 16 px Abstand. Texte mit Leerzeichen (`COMP ON` / `COMP OFF`)
+  per echtem MOD-Widget und erneuertem Mono-/Stereo-Rendering geprüft.
 - Mono-/Stereo-Browsertest mit echten MOD-Widgets bestanden; `make
   check-generated` (17 Artefakte) und `tools/validate.py` einschließlich
   RDF-Parsing bestanden. Gerätebedienung/-darstellung weiterhin extern offen.
@@ -70,11 +114,11 @@ Hardware-Revision A/D nicht bindend.
 | Refit-Import | Bank aus archiviertem `profiles.json` bytegleich reproduziert; ungültige Modelle abgelehnt |
 | Source-/JSFX-Paketierung | ZIP-Integrität, sieben Includes/Bank und Ausschluss von Audioarchiven/PDF/NPZ/NAM PASS; Prüfarchive unter `/tmp/opencode/gs76-packages` |
 | RDF | Turtle-Parsing mit rdflib 7.6.0 PASS |
-| C++/EEL2 | **430 Fälle, max. 0 FS**, echte ysfx-Ausführung |
+| C++/EEL2 | **430 allgemeine + 72 Preset-Signalvergleiche, max. 0 FS**, echte ysfx-Ausführung |
 | None gegen vorherigen Commit | **144 Fälle bitgleich**, Audio/GR/Latenz einschließlich OS-/Bypass-Wechsel |
 | CMake/CTest | Unabhängiger Build, **3/3 Tests PASS** |
 | Native ELF | x86_64, nur libm/libc, GLIBC bis 2.4, kein GLIBCXX |
-| RPL/Selector/Custom | **72 Presetzustände PASS** |
+| RPL/Selector/Custom | **72 Presetzustände PASS**, zusätzlich 72 Werteabgleiche mit LV2/Quelldaten |
 | Transformatoranker 20 Hz/48 kHz | 60s **1,00009 %**, 80s **1,00271 %**, 00s **1,00001 %** THD an −14/−8/−2 dBFS |
 | Unabhängige Offline-Referenz | Rohsignalabweichung max. **5,42×10⁻¹⁵ FS**, Bass/DC/Bursts bei 44,1/48/96/192 kHz |
 | HF-Surrogat gegen analog | Amplitude max. **0,3081 dB**, Phase max. **67,91°** abweichend; keine Phasengleichheit |
@@ -97,6 +141,8 @@ im Archiv unten gelten nicht als erneute Abnahme von 0.4.0.
 4. Pegelgleiche Musik-/Transientenprüfung und Alias-/Phasenvergleich.
    Hochfrequente Analogphasengleichheit ist beim aktuellen HF-Surrogat nicht
    gegeben; Low-rate-Aliasing bleibt zu bewerten.
+   `PRESET_REVIEW.md`: Ziel-GR nach Input-Abgleich; Piano Gentle und Stereo
+   Bus Subtle mit 2:1 gegen ihre ursprünglichen 4:1-Werte hören.
 5. Weitere Fits mit neuen Referenzdaten und dokumentierter Bankrevision;
    vorhandenen partiellen Datenblattfit nicht als Hardwarekalibrierung ausgeben.
 

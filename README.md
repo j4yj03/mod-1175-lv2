@@ -23,6 +23,10 @@ eine gemeinsame Potireihe.
 lässt sich das Paneel am oberen Rand, ohne die Reglerbedienung mitzuziehen.
 36 nach Instrument gruppierte Presets; sechs wählen ein Transformatorprofil.
 Alle Factory-Recall-Wege setzen Oversampling auf Off.
+Alle 36 Presets sind erneut gegen Parameterdaten und Laufzeit geprüft.
+**2:1-Vorschläge:** eigene Varianten von **31 Piano Gentle** und
+**35 Stereo Bus Subtle**; die Factory-Werte bleiben erhalten.
+Einzelbewertung und Messvergleich: [PRESET_REVIEW](docs/PRESET_REVIEW.md).
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
 Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen
@@ -73,6 +77,7 @@ Für Dwarf-Build und Installation: [BUILD](docs/BUILD.md),
 |---|---|
 | [USER_MANUAL](docs/USER_MANUAL.md) | Bedienung, Gain-Staging, Stereo, Mix und Instrument-Workflows |
 | [PRESETS](docs/PRESETS.md) | Alle Presetwerte, musikalische Ziele und GR-Richtwerte |
+| [PRESET_REVIEW](docs/PRESET_REVIEW.md) | Prüfung aller 36 Presets, Korrekturen und zwei 2:1-Vorschläge |
 | [REQUIREMENTS](docs/REQUIREMENTS.md) | Verbindlicher Umfang und Zielumgebung |
 | [PARAMETERS](docs/PARAMETERS.md) | Parameter, Portindizes, Einheiten und Hostverhalten |
 | [DSP_ARCHITECTURE](docs/DSP_ARCHITECTURE.md) | Signalfluss, Numerik, Färbung, Grenzen |

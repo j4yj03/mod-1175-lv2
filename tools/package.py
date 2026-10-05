@@ -36,6 +36,8 @@ def main():
     jsfx=[(p,'GreenStripe76/'+p.name) for p in (ROOT/'jsfx').iterdir() if p.is_file()]
     jsfx += [(ROOT/'LICENSE','GreenStripe76/LICENSE'),(ROOT/'docs/USER_MANUAL.md','GreenStripe76/USER_MANUAL.md'),
              (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md'),
+             (ROOT/'docs/PRESET_REVIEW.md','GreenStripe76/PRESET_REVIEW.md'),
+             (ROOT/'docs/PRESET_AUDIT.json','GreenStripe76/PRESET_AUDIT.json'),
              (ROOT/'docs/TRANSFORMER_RUNTIME.md','GreenStripe76/TRANSFORMER_RUNTIME.md'),
              (ROOT/'data/transformers.json','GreenStripe76/transformers.json')]
     zip_package(args.output/f'green-stripe-76-{version}-jsfx.zip',jsfx)

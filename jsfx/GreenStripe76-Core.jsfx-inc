@@ -151,7 +151,7 @@ local(desired result) (
 );
 function gs_ctrl(a b colour all ratio threshold knee attackTime releaseTime)
 instance(charge memory lagged deriv cachedRelease releaseStep reductionDb)
-local(r wantedDb step decay z alpha level guess low high q wanted f next i stop history) (
+local(r wantedDb step decay z alpha level guess low high q wanted f next i stop history denominator) (
   lagged=gs_zap(lagged+gs_lag*(max(abs(a),abs(b))-lagged));
   r=ratio+all*((12+8*memory)-ratio);
   wantedDb=this.gs_requested_db(a,b,charge,colour,all,r,threshold,knee);
@@ -183,7 +183,10 @@ local(r wantedDb step decay z alpha level guess low high q wanted f next i stop 
         f=(1+alpha)*q-charge-alpha*wanted;
         abs(f)<0.0000000001*(1+charge) ? stop=1 : (
           f>0 ? high=q : low=q;
-          next=q-f/(1+alpha-alpha*deriv);
+          // Keep the rounding boundary identical to C++; see Preset 29 regression.
+          denominator=1+alpha;
+          denominator-=alpha*deriv;
+          next=q-f/denominator;
           q=next>low && next<high ? next : (low+high)*0.5;
         );
       );

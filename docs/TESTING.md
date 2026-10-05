@@ -70,6 +70,9 @@ Dies ist kein Analogphasengleichheits- oder vollständiger Aliasnachweis.
 separat exportierten 0.3.0-Kern bauen. Tatsächlich geprüft gegen `77a25fd`:
 144 Fälle bitgleich, sechs Ratios × drei OS × vier Raten × zwei Varianten,
 einschließlich Output-/Link-/OS-/Compression-/Enabled-Wechseln.
+Nach der Preset-29-Nennerkorrektur erneut gegen den 0.4.0-Stand `c3153bf`
+ausgeführt: ebenfalls 144 Fälle bitgleich; der Test unterstützt nun auch
+Referenzheader mit Transformatorbank.
 
 ### MOD-GUI-Browsertest und Vorschau
 
@@ -86,6 +89,22 @@ MOD-Widgets und jQuery-UI-Draglogik aus dem Checkout: Mode 1→0→1, Filmstrip
 mit 65 Frames, endliche Controlwerte, Knopfziehen ohne Paneelbewegung,
 separater Drag-Rand, Bypass/Lampe, spaltfreie Paneele und rahmenloser Titel.
 Gemessen mit Chromium 153.0.8010.12; Geräte-/Firmwaretest bleibt zusätzlich nötig.
+
+### Vollständige Presetprüfung
+
+```bash
+make build/native/preset_probe
+python3 tools/audit_presets.py --probe build/native/preset_probe \
+  --output docs/PRESET_AUDIT.json
+```
+
+72 LV2-/RPL-Zustände gegen normative Parameterwerte; 216 native Fälle
+(36 Presets × Mono/Stereo × Off/2x/4x) mit definiertem Multiton-Burst.
+Weitere 12 Fälle vergleichen die 2:1-Vorschläge für Piano Gentle und Stereo
+Bus Subtle bei drei Sinuspegeln mit 4:1. Endliche Signale und GR-Off geprüft;
+Ziel-GR und musikalische Eignung werden nicht aus beliebigem Testpegel bestätigt.
+Jeder Fall startet frisch. Bedingungen, Quellenhashes und Kennwerte im JSON,
+Bewertung aller Presets in `PRESET_REVIEW.md`.
 
 ## 3. JSFX-Parität
 
@@ -107,6 +126,12 @@ Siehe Buildbefehle in `BUILD.md`. Pinned ysfx-Fork mit echter EEL2-JIT-Ausführu
   zwei Betriebspunkte) und 30 Transformator-/OS-/Bypass-/NaN-/Modellwechsel-Fälle.
   Insgesamt **430** Audiofälle; **72** Presetzustände aus 36 Presets je Variante.
 - Manuelle Änderung setzt den Selector auf Custom.
+- Zusätzlich zu den 430 allgemeinen Fällen rendert der reale ysfx-Banklader
+  alle **72 Presetzustände mit Signal** gegen einen frischen C++-Prozessor;
+  der Recall-Abgleich mit Selector/Custom bleibt erhalten.
+  Hierdurch wurde der All-Buttons-Randfall von Preset 29 erkannt und die
+  EEL2-Auswertungsreihenfolge des Newton-Nenners korrigiert. Die Abnahmegrenze
+  wurde nicht gelockert; alle 502 Signalvergleiche erreichen max. 0 FS.
 
 **Bindende Implementierungsregel (0.2.0):** Alle transzendentalen Ausdrücke,
 die in beide Engines gehören, sind als `seriesLog`/`seriesExp` bzw.

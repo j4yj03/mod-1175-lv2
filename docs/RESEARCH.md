@@ -188,6 +188,11 @@ doch nicht jede Gain-/Transformerbehauptung ist als Schaltplanbeleg belastbar.
 Reddit-/Gearspace-Inhalte waren nicht sinnvoll zugänglich. Keine erfundenen
 Forumtipps als Presetbegründung. Instrumentwerte in `data/presets.json` sind
 musikalische Startpunkte, nicht aus einem Thread übernommene „beste Settings“.
+Die erneute 0.4.0-Prüfung aller 36 Presets steht in `PRESET_REVIEW.md`.
+Die Vorschläge 31 Piano Gentle / 35 Stereo Bus Subtle mit 2:1 stammen aus
+eigener Signal-/Modellbewertung; dafür wird keine zusätzliche externe Quelle
+behauptet. Factory-Werte bleiben erhalten. Mix beeinflusst den Wet-Anteil,
+nicht die vor Mix gemeldete FET-GR.
 
 ## 7. NAM
 

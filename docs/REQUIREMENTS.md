@@ -25,6 +25,9 @@ Input, Output, Attack 1–7, Release 1–7, Ratio 2/4/8/12/20/All,
 Mix, Colour, Compression, Enabled und in Stereo Stereo Link;
 Oversampling Off/2x/4x und Transformator None/60s/80s/00s/Symmetric.
 Gemeinsame Regler im Dual-Mono-Modus. Eingebaute Instrument-Startwerte und `.rpl`.
+36 Factory-Presets; dokumentierte Ziel-GR bezieht sich auf den Wet-Regler vor
+Mix und erfordert Input-Abgleich. 2:1-Varianten für Piano Gentle/Stereo Bus
+Subtle sind eigene Empfehlungen, keine Änderung der Factory-Bank.
 
 ## Technische Eigenschaften
 

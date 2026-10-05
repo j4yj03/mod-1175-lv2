@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — compare None against an independently saved 0.3.0 tree.
+// SPDX-License-Identifier: MIT — compare None against an independently saved previous tree.
 #ifndef GS76_REFERENCE_HEADER
 #error Define GS76_REFERENCE_HEADER to the previous GreenStripe.hpp
 #endif
@@ -7,6 +7,7 @@
 #undef greenstripe
 #undef GREEN_STRIPE_DSP_HPP
 #undef GREEN_STRIPE_MODEL_CONSTANTS_HPP
+#undef GREEN_STRIPE_TRANSFORMER_MODELS_HPP
 #include "dsp/GreenStripe.hpp"
 #include <iostream>
 

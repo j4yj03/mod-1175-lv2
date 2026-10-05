@@ -32,6 +32,11 @@ Architekturdokumentation nachvollziehbar. Kein vollständiger Fremdbibliotheksba
   enthaltenes jQuery/jQuery UI für den externen Browsertest; nicht ins Plugin kopiert.
 - **NumPy** für den unabhängigen Runtime-/Offlinevergleich, SciPy für den
   Offlinefit; beide nicht Teil des Laufzeitplugins.
+- Die neue Presetprüfung (`audit_presets.py`/`preset_probe.cpp`) benötigt nur
+  Python-Standardbibliothek und den eigenen C++11-Kern; keine Musikdateien
+  oder fremden Presetbanken. ysfx prüft zusätzlich alle Bankzustände mit Signal.
+  Die Nennerkorrektur nutzt weiterhin diesen gepinnten ysfx-Host; dessen
+  Compiler/JIT wurde nicht verändert.
 - **rdflib 7.6.0 / pyparsing** für strengere TTL-Prüfung, nur Entwicklung.
 - **Arm GNU-A GCC 9.2-2019.12** für ergänzenden Cross-Build; separate
   Toolchain-Lizenzen, keine Toolchain im Projektpaket.
