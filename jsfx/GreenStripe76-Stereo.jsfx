@@ -1,6 +1,6 @@
 desc:Green Stripe 76 Stereo
 author:Green Stripe 76 contributors
-version:0.3.0
+version:0.4.0
 tags:dynamics compressor limiter fet
 // SPDX-License-Identifier: MIT
 options:maxmem=8192 prealloc=8192 gfx_hz=30

@@ -11,7 +11,7 @@
 
 struct Scenario {
     const char* name;
-    double input, output, ratio, colour, compression, enabled, link;
+    double input, output, ratio, colour, compression, enabled, link, transformer, oversampling;
 };
 
 static void logger(intptr_t, ysfx_log_level level, const char* message) {
@@ -34,12 +34,16 @@ int main(int argc, char** argv) {
     if (!frames || !repeats || repeats > 20) return 2;
     const unsigned block = 128;
     const Scenario scenarios[] = {
-        {"normal", 0, 0, 0, 100, 1, 1, 1},
-        {"all", 6, -3, 4, 100, 1, 1, 1},
-        {"clean", 0, 0, 0, 0, 1, 1, 1},
-        {"colour_only", 6, -6, 0, 100, 0, 1, 1},
-        {"bypass", 0, 0, 0, 100, 1, 0, 1},
-        {"dual_mono", 0, 0, 0, 100, 1, 1, 0},
+        {"normal", 0, 0, 1, 100, 1, 1, 1, 0, 0},
+        {"all", 6, -3, 5, 100, 1, 1, 1, 0, 0},
+        {"clean", 0, 0, 1, 0, 1, 1, 1, 0, 0},
+        {"colour_only", 6, -6, 1, 100, 0, 1, 1, 0, 0},
+        {"bypass", 0, 0, 1, 100, 1, 0, 1, 0, 0},
+        {"dual_mono", 0, 0, 1, 100, 1, 1, 0, 0, 0},
+        {"xf_60s", 0, 0, 1, 100, 1, 1, 1, 1, 0},
+        {"xf_80s", 0, 0, 1, 100, 1, 1, 1, 2, 0},
+        {"xf_00s", 0, 0, 1, 100, 1, 1, 1, 3, 0},
+        {"xf_60s_4x", 0, 0, 1, 100, 1, 1, 1, 1, 2},
     };
     std::vector<float> signalL(frames), signalR(frames), outL(block), outR(block);
     for (unsigned i = 0; i < frames; ++i) {
@@ -61,6 +65,8 @@ int main(int argc, char** argv) {
         const double controls[] = {scenario.input, scenario.output, 3, 5, scenario.ratio, 100,
                                   scenario.colour, scenario.compression, scenario.enabled, scenario.link};
         for (unsigned i = 0; i < 10; ++i) ysfx_slider_set_value(fx.get(), i, controls[i], true);
+        ysfx_slider_set_value(fx.get(),11,scenario.oversampling,true);
+        ysfx_slider_set_value(fx.get(),12,scenario.transformer,true);
         float* outputs[] = {outL.data(), outR.data()};
         std::vector<double> seconds;
         double checksum = 0;

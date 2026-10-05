@@ -1,4 +1,4 @@
-# DSP-Architektur — Green Stripe 76, 0.3.0
+# DSP-Architektur — Green Stripe 76, 0.4.0
 
 ## 1. Status und normative Dateien
 
@@ -8,6 +8,8 @@ Färbung sind eigene Näherungen. Es existiert kein verifizierter transistorweis
 Original-Netlist-/SPICE-Fit und keine automatisch aus NAM gewonnene Kalibrierung.
 
 - `data/model.json`: gemeinsam generierte Konstanten.
+- `data/transformers.json`: validierte Transformatorbank; `TransformerModels.hpp`
+  und `GreenStripe76-Transformers.jsfx-inc` werden gemeinsam daraus erzeugt.
 - `src/dsp/GreenStripe.hpp`: C++11-Implementierung, double-Zustände.
 - `jsfx/GreenStripe76-Core.jsfx-inc`: gleichwertige EEL2-Implementierung.
 - `tools/generate.py`: generierte Model-Includes, Ports, Presets und Oberflächen.
@@ -42,8 +44,9 @@ Parität zwischen beiden Kernen ist über `tests/jsfx_parity.cpp` belegt.
 
 ```text
 Base-rate L/R
-  → 4× interpolation (independent states)
+  → Off/2×/4× interpolation (independent states)
   → Input gain
+  → selected input transformer (independent L/R flux + memory + HF)
   → input DC/low-frequency colour
   → nonlinear FET divider ← control charge
   → preamp colour ─────────────────┐
@@ -53,7 +56,7 @@ Base-rate L/R
   → asymmetric output amplifier   │
   → output DC correction          │
   → high-rate Dry/Wet + Enabled   │
-  → 4× decimation                 │
+  → selected-rate decimation      │
   → float output                  │
                                  └→ magnitude detector / mode law
                                     → implicit charge update
@@ -67,7 +70,8 @@ So wird derselbe Filterzustand nicht mehrfach in einem Solver-Schritt verändert
 
 ## 3. Zeit- und Parametermodell
 
-Abtastrate ist die von Host/REAPER gelieferte Rate, intern `fs_internal=4 fs`.
+Abtastrate ist die von Host/REAPER gelieferte Rate, intern
+`fs_internal=factor·fs`, `factor=1/2/4` für Off/2x/4x.
 Attack und Release werden geometrisch von den Skalen 1–7 abgebildet:
 
 \[
@@ -154,6 +158,7 @@ AC-/DC-Widerstands-/Diodenblock. Ratio-abhängige T/K-Werte:
 
 | Modus | nominale Ratio | Threshold dBFS am Tap | Knie dB |
 |---|---:|---:|---:|
+| 2 | 2 | −24 | 6 |
 | 4 | 4 | −24 | 6 |
 | 8 | 8 | −21 | 4 |
 | 12 | 12 | −19,5 | 3 |
@@ -297,13 +302,13 @@ acht beziehungsweise vier Koeffizienten (fest in Model-JSON). Interpolation
 erhält DC-Gain ohne zusätzliche ×4-Multiplikation. Decimation tauscht die
 chronologischen Paarhälften gemäß dem Polyphasenschema und mittelt mit 0.5.
 
-Je Kanal eigene Up/Down-States. 4× umfasst **nicht nur** Sättigung, sondern auch
-den Regler. Eine zweite/variabel schaltbare Qualitätsstufe ist in 0.1.1 nicht
-enthalten, damit Kalibrierung, CPU und Parität nachvollziehbar bleiben.
+Je Kanal eigene Up/Down-States. Die ausgewählte Rate umfasst Sättigung,
+Transformator und Regler. Seit 0.2.0 Off/2x/4x mit Default Off; Umschaltung
+blendet samplegezählt über je 2 ms aus/ein und setzt die Rate-Historien zurück.
 
 Dry-Abgriff vor Input; Mischung und Enabled erfolgen vor derselben Decimation.
 So entsteht bei internem Bypass keine abrupte Phase-/Latenzumschaltung. Externes
-Host-Bypass kann sich anders verhalten. Vier Frames gemeldete Nominal-PDC,
+Host-Bypass kann sich anders verhalten. 0/3/4 Frames gemeldete Nominal-PDC,
 nicht frequenzunabhängige Filterverzögerung. External parallel routing prüfen.
 
 ## 10. Stereo und RT
@@ -322,7 +327,29 @@ Inputs NaN/Inf → 0; endliche Inputs auf ±256 begrenzt. Die Begrenzung ist
 Robustheit für fehlerhafte Hosts, kein musikalischer Limiter. Extrem kleine
 rekursive Zustände werden auf null gesetzt; keine künstliche Rauschquelle.
 
-## 11. Transformator — Steuergerüst vorhanden, Klangmodell offen
+## 11. Transformator — Laufzeitmodell ab 0.4.0
+
+**Aktueller Vertrag:** [`TRANSFORMER_RUNTIME.md`](TRANSFORMER_RUNTIME.md).
+Die gefitteten 60s/80s/00s-Profile sind in C++ und EEL2 integriert, nach Input
+Gain und vor der bisherigen Eingangsfärbung. `None` ist exakt transparent;
+`Symmetric` ist eine lineare lastgekoppelte Referenz ohne Stop-Gedächtnis.
+Modellwechsel blenden über den Eingang, Stereo-Historien bleiben unabhängig.
+Die normative Bank lässt sich mit `tools/transformer_model.py` neu importieren.
+
+**Die folgenden Abschnitte dokumentieren die frühere 0.3.0-Planung und deren
+Widerlegung.** Aussagen „noch nicht eingebaut“ beziehen sich auf diesen
+historischen Arbeitsstand. Die alten xformer.lib-Zuordnungen/Knieformeln
+werden in 0.4.0 nicht verwendet. Laufzeitkoeffizienten, neue Symmetric-Semantik,
+HF-Diskretisierung und gemessene Grenzen stehen im aktuellen Vertrag oben;
+die Offlineberichte behalten ihre ursprünglichen Messbedingungen.
+
+**SPICE-Befund 2026-10-05:** Die unten dokumentierte frühere GC-/Knie-Planung
+ist durch die inzwischen ausgeführte Simulation **nicht bestätigt**. Die vier
+Netzmodelle besitzen einen instabilen Nullzustand und keine Rückwirkung der
+Sekundärlast. Die Formel für `φ_k` setzt zudem eine Spannung der `Bc`-Quelle
+mit einem Strom gleich. Sie ist damit keine belastbare Schwellenkalibrierung.
+Maßgeblicher neuer Befund und nächster Schritt:
+[SPICE-Bericht](spice_sim/BERICHT.md) und der Abschluss dieses Abschnitts.
 
 Seit 0.3.0 gibt es einen Control-Port `transformer` und ein Dropdown im Panel.
 **Die Auswahl hat derzeit keine Klangwirkung.** Der Wert wird im Parameterpfad
@@ -357,10 +384,11 @@ Bc  N2 N3 V = {a} * (ABS(V(N1,N2)))**{n} * SGN(V(N1,N2))   // Sättigung
 Br  N3 N4 I = {b} * (ABS(V(N3,N4)))**{m} * SGN(V(N3,N4))   // Hysterese
 ```
 
-Für Echtzeit ist das **nicht direkt** übertragbar. Ein Differentiator im
-Audioband ist numerisch unbrauchbar (Verstärkung ∝ 1/f, Rauschen, Instabilität
-bei 4× Oversampling). Nötig ist stattdessen die **integrierte** Form, also ein
-zustandsbehafteter Flux-Integrator:
+Ein direkter diskreter Differentiator verstärkt hohe Frequenzen
+(Betrag ∝ f, nicht 1/f). Für einen physikalisch konsistenten Echtzeit-Port ist
+eine integrierte Zustandsform zu prüfen. Die folgenden Überlegungen stammen
+aus der Planung **vor** dem SPICE-Befund und identifizieren noch kein gültiges
+Flux-Modell der vorhandenen Netlist:
 
 - magnetischer Zustand `φ` mit `v = N·dφ/dt`, integriert mit Trapez- oder
   Bilinearregel (nicht explizit, sonst instabil bei steiler Sättigung)
@@ -400,12 +428,12 @@ Ab jetzt nicht mehr offen sind:
   Kopplungs- und Sättigungseffekt liefern, nicht eine zweite, parallele
   Bassabsenkung modellieren.
 
-### Festlegung: Sättigungsschwelle
+### Frühere Festlegung: Sättigungsschwelle — durch SPICE nicht bestätigt
 
-Die Sättigung setzt ein, wenn der nichtlineare Magnetisierungsstrom den linearen
-Anteil derselben Größe erreicht. Das ist die klassische Knie-Definition
-(permeability fällt auf den linearen Wert). Für den Magnetisierungszweig aus
-`CORE_GC` heißt das:
+Die frühere Planung setzte einen nichtlinearen Magnetisierungsstrom mit einem
+linearen Anteil gleich. Diese Zuordnung ist durch die tatsächlichen Elemente
+von `CORE_GC` **nicht gedeckt**: `Bc` erzeugt eine Spannung. Die damalige,
+hier nur zur Nachvollziehbarkeit erhaltene Rechnung lautete:
 
 ```
 i_lin   = C · ω · φ              // linearer Anteil bei Frequenz ω
@@ -413,8 +441,9 @@ i_sat   = a · |φ|^n · sgn(φ)     // Sättigungsanteil
 Kniefall:  a · φ_k^n = C · ω · φ_k   →   φ_k = (C · ω / a)^(1/(n-1))
 ```
 
-Ausgewertet für die vier Subckte aus `xformer.lib`, jeweils beim geometrischen
-Mittel des angegebenen Übertragungsbands:
+Arithmetisch ausgewertet für die vier Parametersätze aus `xformer.lib`, beim
+geometrischen Mittel des damals angenommenen Übertragungsbands (nur das
+SE-Band steht im Originalkommentar):
 
 | Typ | Subckt | Band | `f_mitte` | `n` | `Np` | `φ_k` |
 |---|---|---|---|---|---|---|
@@ -423,32 +452,23 @@ Mittel des angegebenen Übertragungsbands:
 | `00s` | `GCOT-PP-04` | 20 Hz–20 kHz | 633 Hz | 8 | 1996 | **0,368** |
 | `Symmetric` | `GCSYMETRICAL` | — | 633 Hz | 25 | 200 | **1,761** |
 
-Ergebnis der Auswertung: die drei echten Modelle liegen zwischen **0,337** und
-**0,532**, also nur um den Faktor **1,58**. Ein einziger absoluter Schwellwert über
-alle Typen wäre trotzdem falsch, weil die Reststreuung genau die unterschiedliche
-Sättigungshärte der Bauarten ausmacht.
+Die drei Zahlen liegen zwischen **0,337** und **0,532**, Faktor **1,58**.
+Daraus folgt nach dem SPICE-Befund keine verifizierte Sättigungshärte der
+Bauarten und kein physikalischer Flux-Schwellwert.
 
-**Getroffene Festlegung:** Der Schwellwert wird als **normierter Flux**
-`u = φ / φ_k` geführt, und die Schwelle liegt bei **`u = 1,0`**. Damit gilt
+**Frühere, ausgesetzte Festlegung:** Schwellwert als **normierter Flux**
+`u = φ / φ_k`, Schwelle bei **`u = 1,0`**, mit dem vorgesehenen Ausdruck:
 
 ```
 i_mag(u) = C · ω · φ_k · u  +  a · φ_k^n · |u|^n · sgn(u)
 ```
 
-Ein **gemeinsamer** Normierungsparameter für alle vier Modelle, die
-transformatorspezifischen Größen `n`, `Np`, `Ns` bleiben erhalten. `ω` bleibt
-im Kern frequenzabhängig, das ist der Modelleffekt und wird nicht
-weggeglättet — die Abschwächung ist echt.
-
-**Kein zusätzlicher Clamp.** Oberhalb des Knies ist die Steigung sehr hoch
-(`2^n` ist 64× bis 8192× bei `u = 2`), der Flux wächst also von selbst nicht
-weiter. Eine zusätzliche Begrenzung auf `u` wäre falsch, weil sie die
-DDT-Beziehung `v = N·dφ/dt` zerstört und genau den Sättigungscharakter
-beseitigt, den wir modellieren.
-
-Noch zu prüfen, wenn der Kern gebaut wird: Stabilität der Integrationsregel bei
-`n = 13`, CPU-Kosten der `pow`-Funktion und der Hysteresezweig, und ob die
-Kopplungsabsenkung im hörbaren Bereich liegt.
+Vorgesehen waren ein gemeinsamer Normierungsparameter, unveränderte
+`n`/`Np`/`Ns` und kein zusätzlicher Clamp. Die frühere Annahme, eine steile
+Kennlinie verhindere weiteres Flux-Wachstum automatisch, ist durch die
+unstabilen Originalzustände widerlegt. Vor einer solchen Umsetzung müssen
+zuerst die Netzgleichungen und die Bedeutung des Zustands geklärt werden;
+numerische Integrationsstabilität allein repariert das Modell nicht.
 
 ### Einordnung des vierten Modells
 
@@ -477,6 +497,105 @@ prägt den Kompressions-Charakter über die gesamte Kette — der Kompressor „
 das bereits gesättigte/kopplungsgedämpfte Signal. Eine Ausgangsstufe würde nur
 das fertige Signal färben. Für die Versuche mit Transformatoren am Ausgang wäre
 eine zweite, getrennte Option nötig; das ist bewusst nicht Teil des ersten Schritts.
+
+### Nächster Schritt nach der SPICE-Simulation
+
+Die eigene Offline-Rechnung in `docs/spice_sim/` umfasst 260 Hauptarbeitspunkte,
+76 Diagnoseläufe und vier dokumentierte Abbrüche mit direktem Original-Include.
+Alle Eingangswerte `C`, `a`, `n`, `R`, `b`, `m`, `Np`, `Ns` sind erhalten.
+ngspice 45.2 löst die KCL-äquivalente Zustandsform; eine unabhängige
+DDT-/Hilfsinduktorrealisierung bestätigt sie.
+
+**Die Simulation liefert keine neuen Klang-Kniekoeffizienten.** Sie liefert
+gemessene instabile Wachstumsraten von **0,836965 / 0,483798 / 0,619532 /
+2,235942 s⁻¹** für 60s/80s/00s/Symmetric. Der zugehörige positive Pol folgt
+aus `C·du/dt=j+w`, `N_h·dw/dt=u`, mit `N_h=Np` bzw. `Np/2`.
+Die Hauptfenster zeigen überwiegend Expansion; spätere Fenster sind
+weiterhin zeitabhängig. `φ_k`, Kniebreite, gefittetes `n` und stationärer
+DC-Offset bleiben in `spice_sim/coefficients.json` deshalb `null` mit Begründung.
+
+Vor einem DSP-Umbau müssen eine konsistente Netzform, magnetische Einheiten,
+Vorzeichen, gemeinsamer Kern und Last-Rückwirkung sowie Quellen-/Last-/Biaswerte
+geklärt werden. In der gelieferten Netlist ist `m` ein Exponent, `Rr` liegt
+parallel zu `Br`, und `Bc` liefert eine Spannung statt eines Stroms; die
+bisherige Schwellenformel ist daher keine aus diesem Netz abgeleitete
+physikalische Gleichung. Eine reparierte Netzform wäre ein neues Modell und
+müsste erneut vermessen werden. Erst dessen stabile Daten könnten die
+Eingangsstufe kalibrieren; anschließend C++/EEL2 gemeinsam und Parität prüfen.
+
+**Neue Literaturgrundlage:** de Paiva et al. (2011), *Real-Time Audio
+Transformer Emulation for Virtual Tube Amplifiers*, liefert eine
+bidirektionale GC-/WDF-Struktur, elektrischen Parameterfit und einen
+Referenzparametersatz. Die lokale Netlist ist kein korrekter Port dieser
+Struktur. Als nächster Offline-Kandidat ist Abb. 6(b) mit Tabelle 1 zu
+untersuchen; insbesondere Verlustzweig-Normierung, Sekanten-/
+Differentialpermeanz und verzögerte WDF-Nichtlinearitäten sind vor einer
+Echtzeitentscheidung zu klären. Details und Seitenbelege in
+[`TRANSFORMER_PAPER_REVIEW.md`](TRANSFORMER_PAPER_REVIEW.md).
+
+**Reale 1:1-Zielkurven:** Die später gelesenen Hammond-Datenblätter
+140TEX/560Q in `docs/transformer/` liefern einen passenderen Line-
+Anwendungsbezug als der Paper-Ausgangsübertrager. Besonders der 560Q zeigt
+Amplitude, Phase und THD+N bei mehreren Pegeln und zwei Verschaltungen.
+Auswertung und Ablesebereiche: [`transformer/AUSWERTUNG.md`](transformer/AUSWERTUNG.md).
+Die Kurven ersetzen keine H-Φ-Identifikation; Quellen-/Lastbedingungen,
+dBm-Bezug und tabellierte L-/Impedanzwerte müssen gemeinsam interpretiert
+werden. Der ebenfalls abgelegte LL1930 ist regulär 5,8:1/11,6:1 und keine
+direkt 1:1 qualifizierte Referenz.
+
+**Eingegrenzter Fit mit Schätzungen:** Whitlocks zusätzlich untersuchtes
+Kapitel enthält eine besser bezeichnete 1:1-Line-Eingangsreferenz
+(Jensen JT-11P-1, Quelle 600 Ω, Last 10 kΩ, THD über Pegel/Frequenz).
+`transformer/PARAMETERFIT_GRUNDLAGE.md` empfiehlt diese als ersten
+Fitdatensatz, mit effektiver Flussverkettung statt unidentifizierter
+Kerngeometrie. `FIT_STARTWERTE.json` enthält veröffentlichte Werte und
+ausdrücklich **nicht gefittete** Suchwerte; keine neue normative Modellbank.
+Hysterese, komplexe Magnetisierung und Transienten bleiben ohne neue
+Messungen mehrdeutig. Ein erster Offline-Fit ist mit diesen offengelegten
+Annahmen möglich; die bisherigen GC-Koeffizienten werden daraus nicht
+automatisch übernommen.
+
+**Ergänzende Modellauswahl:** `05_e.pdf` (Macak/Schimmel, DAFx-11)
+motiviert eine einfache dynamische Sättigungsbaseline (Fröhlich oder
+glattes Potenzgesetz) neben einem gedächtnisbehafteten Kandidaten.
+„Ohne Hysterese“ bedeutet dabei weiterhin einen integrierten
+Flussverkettungszustand im lastgekoppelten Netz, nicht statisches
+Audio-Waveshaping. Verlustanteile des gemessenen Erregerstroms dürfen
+bei einem bereits dissipativen Hysteresemodell nicht doppelt gezählt
+werden. Messmethodik und Quellenkritik:
+[`transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md`](transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md).
+
+### Erster ausgeführter Offlinefit — noch kein Produktport
+
+Am 2026-10-05 wurde die Jensen-JT-11P-1-Referenz tatsächlich gegen
+53 Datenblatt-/Ablesebedingungen gefittet. Der ausgewählte partielle
+Gray-Box-Kandidat erreicht 18/20 zurückgehaltene Intervalle; Restfehler
+und 24/33 Trainingstreffer in `transformer/offline_fit/BERICHT.md`.
+Die mitgelieferte Offline-C++-Datei gehört **nicht** zu `src/dsp/` und
+ist nicht Teil des gebauten Plugins.
+
+Die reduzierte Zustandsform arbeitet mit Flussverkettung `lambda`,
+monotoner Fröhlich-/Potenzkennlinie, positiv gewichteten Stop-Zweigen
+und einer linearen RL-Relaxation. Quelle/Last werden gemeinsam gelöst;
+ein effektiver HF-Zweipol ist nachgeschaltet und nicht als vollständig
+identifiziertes Wicklungsnetz ausgegeben. Gedächtnis-/Materialparameter
+bleiben ohne Strom-/Transientenreferenzen mehrdeutig.
+
+**Benutzerwahl umgesetzt:** `60s` warm, früh/weich (p=3), `80s`
+ausgewogen (p=5), `00s` clean/Jensen-artig. `profiles.json` enthält
+die eigenständige Offline-Abstimmung mit 20-Hz-1-%-THD-Ankern bei
+−14/−8/−2 dBFS Peak und HF-`f0` 26/48/108,257 kHz. Diese Werte
+ersetzen erst bei einem gesonderten Produktport die früheren
+unbestätigten Gitarrentrafo-Koeffizienten; Port/UI-Zuordnung allein
+macht sie noch nicht hörbar.
+
+Für die WAV-Proben existiert eine ausdrücklich feste Mittelband-
+normalisierung. Ein späterer Produktport muss Gainpolitik,
+gemeinsame Kanalregler und getrennte Zustände, Bypass/Mix/Recall,
+Hochfeldfortsetzung des 00s-Kerns und ein geeigneteres Rate-/HF-
+Antialiasverfahren festlegen. Die jetzige Tustin-Offlinenäherung
+bei 48 kHz ist nicht als fertiger OS-Off-Produktpfad qualifiziert.
+Erst danach C++/EEL2 gemeinsam, Parität, Übergänge und Geräte-CPU testen.
 
 ---
 

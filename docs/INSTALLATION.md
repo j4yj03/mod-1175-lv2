@@ -5,6 +5,9 @@
 Den vollständigen Projektordner oder `dist/*-source.zip` übertragen. Zum direkten
 JSFX-Test `*-jsfx.zip`; für Dwarf das explizite `*-moddwarf.tar.gz` verwenden.
 Dateien und `SHA256SUMS` gemeinsam mitnehmen.
+Für diesen Stand **0.4.0** verwenden. Alte 0.1.x/0.2.x/0.3.x-Binaries enthalten
+die neue Transformatorstufe nicht. Bei Refits zusätzlich Bankrevision aus
+`data/transformers.json` festhalten; sie verändert den Klang gespeicherter Profilnummern.
 
 ```bash
 sha256sum -c SHA256SUMS
@@ -51,7 +54,7 @@ USB-/Netzverbindung zur Web-GUI herstellen. Standardadresse
 der MOD-SDK-Schnittstelle: **Base64 des gzip-Tarballs als Multipart package**.
 
 ```bash
-base64 < "green-stripe-76-0.1.1-moddwarf.tar.gz" | \
+base64 < "green-stripe-76-0.4.0-moddwarf.tar.gz" | \
   curl --fail --show-error -F 'package=@-' http://192.168.51.1/sdk/install
 ```
 
@@ -69,6 +72,8 @@ oder Herkunftsmanifest. Letzteres liegt neben dem Archiv.
   Toggle; Off entspricht unabhängiger Regelung.
 - Input/Output/Attack/Release/Ratio/Compression/Mix/Colour an Hardware-Regler
   zuweisen, Snapshot speichern und Recall testen.
+- Transformator/OS zuweisen und Wechsel prüfen; Paneel am oberen Rand bewegen,
+  Mode und Bypass klicken, Aluminiumregler ohne Paneelbewegung bedienen.
 - Das UI enthält **keine Meter**; auch die Firmware-LCD-GR-Anzeige ist kein Ziel.
 - Für Messungen eingebautes Dwarf-Input-Noise-Gate und Output-Kompressor
   deaktivieren, Pedalboard-Output-Gain und Input-Gain dokumentieren.

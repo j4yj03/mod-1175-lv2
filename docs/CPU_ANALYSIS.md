@@ -1,5 +1,33 @@
 # CPU-Auswertung und Dissertation-Bezug — 0.1.1
 
+## Ergänzung 0.4.0 — Transformator-Laufzeit, 2026-10-05
+
+Die nachfolgenden 0.1.x/0.2.x-Werte bleiben historische Messungen. Für die neue
+Stufe wurden echte C++- und EEL2-Läufe auf x86_64 ausgeführt, **keine neue
+Dwarf- oder REAPER-Messung**. None überspringt die Transformatorrechnung;
+gewählte Modelle rechnen kanalgetrennt, maximal 40 Solveriterationen, drei
+OS-Koeffizientensätze vorab vorbereitet. Keine Allokation im Audiopfad.
+
+Lokaler C++-Stereo-Lauf bei 48 kHz/OS Off: ungefähr **0,020 s/s mit None**,
+**0,032–0,034 s/s** mit Modell, einschließlich bisherigem Kompressor.
+Dies ist ein kurzer Durchsatzlauf, keine Peak-CPU-Abnahme.
+
+ysfx `5c3452f…`, GCC 15.2, 48 kHz/128 Frames, 1 s Signal, Warmup plus
+Median aus drei Läufen, Grafik nicht ausgeführt (`benchmark_jsfx`):
+
+| Szenario | Mono s/s | Stereo Link s/s |
+|---|---:|---:|
+| None / OS Off | 0,0306 | 0,0451 |
+| 60s / OS Off | 0,1009 | 0,1510 |
+| 80s / OS Off | 0,0847 | 0,1518 |
+| 00s / OS Off | 0,0840 | 0,1598 |
+| 60s / OS 4x | 0,3157 | 0,5668 |
+
+14 Stop-Zweige je Solverauswertung kosten in EEL2 deutlich mehr als im
+optimierenden C++-Compiler. Diese Messung rechtfertigt keine konkrete
+Cortex-A35-Auslastungsaussage. Neue Geräteprüfung mit Signal, 128/256 Frames,
+mehreren Instanzen und xruns ist im `HANDOFF.md` priorisiert.
+
 ## Ergebnis
 
 Die CPU-Rückmeldung des Benutzers (etwa vierfacher Verbrauch gegenüber anderen

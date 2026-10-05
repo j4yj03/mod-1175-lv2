@@ -1,0 +1,54 @@
+target_id,quantity,frequency_hz,input_dbu,value_low,value_high,value_center,unit,split,source_page,origin,note,predicted,inside_interval,measurement_scope,error_to_interval_db
+lf020,response_db,0.2,,-3.65,-3.15,-3.4,dB,train,28,visual_interval,Plot amplitude level unspecified: linear-background fit only; not assumed +4dBu large-signal response,-3.40520206559294,True,linear_background_only_unknown_source_level,
+lf025,response_db,0.25,,-3.35,-2.65,-3.0,dB,train,28,datasheet_bandwidth,Approximate bandwidth with unspecified signal level: linear background only,-2.952897552173716,True,linear_background_only_unknown_source_level,
+lf050,response_db,0.5,,-1.6,-1.15,-1.38,dB,train,28,visual_interval,Unspecified subaudio measurement level: linear background only,-1.4479668901243379,True,linear_background_only_unknown_source_level,
+lf100,response_db,1.0,,-0.65,-0.4,-0.52,dB,train,28,visual_interval,Unspecified subaudio measurement level: linear background only,-0.4838172801989127,True,linear_background_only_unknown_source_level,
+lf200,response_db,2.0,,-0.22,-0.08,-0.15,dB,validation,28,visual_interval,Held out linear-background point; unknown measurement amplitude,-0.13231196651896193,True,linear_background_only_unknown_source_level,
+lf500,response_db,5.0,,-0.09,0.0,-0.035,dB,validation,28,visual_interval,Curve near baseline; linear background only and unknown measurement amplitude,-0.02166456093768723,True,linear_background_only_unknown_source_level,
+lf20,response_db,20.0,4.0,-0.15,0.0,-0.04,dB,train,29,datasheet_min_max,Guaranteed -0.15..0; published typical -0.04 remains comparison value,-0.00825493184850501,True,full_periodic_state_model,
+hf20k,response_db,20000.0,4.0,-0.085,-0.02,-0.05,dB,train,29,datasheet_typical_interval,Typical -0.05 with own readout/typical tolerance; guaranteed -0.15..0,-0.04568211986383508,True,full_periodic_state_model,
+hf40k,response_db,40000.0,4.0,-0.27,-0.08,-0.16,dB,validation,28,visual_interval,Held out high-frequency point,-0.23840603634657898,True,full_periodic_state_model,
+hf80k,response_db,80000.0,4.0,-1.8,-1.3,-1.55,dB,train,28,visual_interval,High-frequency knee visible,-1.6122615446421178,True,full_periodic_state_model,
+hf100k,response_db,100000.0,4.0,-3.35,-2.65,-3.0,dB,train,28,datasheet_bandwidth,Approximate -3 dB bandwidth statement,-2.932537188318554,True,full_periodic_state_model,
+hf150k,response_db,150000.0,4.0,-100.0,-5.4,,dB,validation,28,visual_upper_bound,Curve leaves plotted range; no resolved lower bound and no extrapolated pixel midpoint,-7.174884413278932,True,full_periodic_state_model,
+gain1k,gain_primary_db,1000.0,4.0,-2.6,-2.0,-2.3,dB,validation,29,datasheet_min_max,Actual gain not arbitrarily normalized,-2.2846838434972665,True,full_periodic_state_model,
+zin1k,zin_ohm,1000.0,4.0,12300.0,13700.0,13000.0,ohm,validation,29,datasheet_min_max,Complex input impedance magnitude,12932.179175858188,True,full_periodic_state_model,
+dlp20,dlp_deg,20.0,4.0,0.4,0.85,0.6,degree,train,28,visual_interval,Deviation from shared fitted linear phase; not raw phase,0.9391216522063384,False,full_periodic_state_model,
+dlp50,dlp_deg,50.0,4.0,0.2,0.5,0.32,degree,validation,28,visual_interval,Held out phase-deviation point,0.3951121736846096,True,full_periodic_state_model,
+dlp200,dlp_deg,200.0,4.0,0.0,0.25,0.12,degree,validation,28,visual_interval,Held out phase-deviation point,0.10844651814367576,True,full_periodic_state_model,
+dlp1k,dlp_deg,1000.0,4.0,-0.08,0.1,0.0,degree,train,28,visual_interval,Approximate graph baseline,0.029672174814764918,True,full_periodic_state_model,
+dlp20k,dlp_deg,20000.0,4.0,-0.08,0.08,0.0,degree,train,28,visual_interval,Shared linear phase nuisance; not independently zeroed at each bin,-3.057071093337527e-05,True,full_periodic_state_model,
+t20m20,thd_percent,20.0,-20.0,0.018,0.027,0.022,percent,train,29,visual_interval,Plot labels THD+N; low-level origin remains uncertain,0.01736914383310559,False,full_periodic_state_model,-0.3098818709731308
+t20m10,thd_percent,20.0,-10.0,0.019,0.028,0.023,percent,train,29,visual_interval,Low-level plateau,0.01723634685114181,False,full_periodic_state_model,-0.8461675207308095
+t20p0,thd_percent,20.0,0.0,0.017,0.025,0.021,percent,train,29,visual_interval,Low-level plateau,0.020440763055681224,True,full_periodic_state_model,0.0
+t20p4,thd_percent,20.0,4.0,0.021,0.031,0.025,percent,train,29,datasheet_typical_interval,Published typical anchor; guaranteed maximum 0.10 percent,0.021451291055936163,True,full_periodic_state_model,0.0
+t20p10,thd_percent,20.0,10.0,0.026,0.042,0.034,percent,train,29,visual_interval,Start of high-level rise,0.035913015751469914,True,full_periodic_state_model,0.0
+t20p14,thd_percent,20.0,14.0,0.047,0.075,0.059,percent,train,29,visual_interval,High-level rise,0.06920081176918068,True,full_periodic_state_model,0.0
+t20p16,thd_percent,20.0,16.0,0.077,0.12,0.095,percent,train,29,visual_interval,High-level rise,0.10647858457363597,True,full_periodic_state_model,0.0
+t20p18,thd_percent,20.0,18.0,0.15,0.27,0.21,percent,train,29,visual_interval,High-level rise,0.18736178312230495,True,full_periodic_state_model,0.0
+t20p20,thd_percent,20.0,20.0,0.72,1.3,1.0,percent,train,29,datasheet_typical_interval,Typical 1 percent point; upper end of plot,0.5907995126938267,False,full_periodic_state_model,-1.7178473601625865
+t30m20,thd_percent,30.0,-20.0,0.01,0.016,0.013,percent,validation,29,visual_interval,Entire 30 Hz level curve held out,0.01323574849557257,True,full_periodic_state_model,0.0
+t30p0,thd_percent,30.0,0.0,0.009,0.015,0.012,percent,validation,29,visual_interval,Entire 30 Hz level curve held out,0.015165049499612912,False,full_periodic_state_model,0.0950514631205954
+t30p10,thd_percent,30.0,10.0,0.014,0.024,0.018,percent,validation,29,visual_interval,Entire 30 Hz level curve held out,0.018928403751875628,True,full_periodic_state_model,0.0
+t30p15,thd_percent,30.0,15.0,0.024,0.04,0.031,percent,validation,29,visual_interval,Entire 30 Hz level curve held out,0.02920177533739445,True,full_periodic_state_model,0.0
+t30p20,thd_percent,30.0,20.0,0.045,0.09,0.065,percent,validation,29,visual_interval,Entire 30 Hz level curve held out,0.0795318587269439,True,full_periodic_state_model,0.0
+t30p24,thd_percent,30.0,24.0,0.4,0.9,0.62,percent,validation,29,visual_interval,Entire 30 Hz level curve held out; broad readout,0.6596543055911293,True,full_periodic_state_model,0.0
+t50m20,thd_percent,50.0,-20.0,0.004,0.0075,0.0055,percent,train,29,visual_interval,Low-level plateau,0.008071527519755104,False,full_periodic_state_model,0.6378893686737528
+t50p0,thd_percent,50.0,0.0,0.0045,0.008,0.006,percent,train,29,visual_interval,Low-level plateau,0.008217445085334544,False,full_periodic_state_model,0.2329364702915709
+t50p10,thd_percent,50.0,10.0,0.0055,0.01,0.0075,percent,train,29,visual_interval,Weak distortion,0.009663264781376716,True,full_periodic_state_model,0.0
+t50p15,thd_percent,50.0,15.0,0.008,0.013,0.01,percent,train,29,visual_interval,Start of rise,0.012195450815647579,True,full_periodic_state_model,0.0
+t50p20,thd_percent,50.0,20.0,0.012,0.021,0.016,percent,train,29,visual_interval,High-level rise,0.019289786161421095,True,full_periodic_state_model,0.0
+t50p25,thd_percent,50.0,25.0,0.035,0.07,0.05,percent,train,29,visual_interval,High-level rise,0.0548626842091615,True,full_periodic_state_model,0.0
+t50p28,thd_percent,50.0,28.0,0.095,0.19,0.135,percent,train,29,visual_interval,High-level rise,0.24679389445008562,False,full_periodic_state_model,2.271616206527615
+f4_40,thd_percent,40.0,4.0,0.009,0.014,0.011,percent,train,29,visual_interval,Frequency curve plus4 dBu,0.009228286431363716,True,full_periodic_state_model,0.0
+f4_80,thd_percent,80.0,4.0,0.0034,0.005,0.0041,percent,train,29,visual_interval,Frequency curve plus4 dBu,0.00510118346342905,False,full_periodic_state_model,0.17401877646192215
+f4_160,thd_percent,160.0,4.0,0.0013,0.0021,0.0017,percent,train,29,visual_interval,Frequency curve plus4 dBu,0.00231039858414293,False,full_periodic_state_model,0.8293523002324878
+f4_1000,thd_percent,1000.0,4.0,0.0,0.001,,percent,validation,29,datasheet_upper_bound,One-sided condition; no synthetic noise or exact-zero target,0.00034209784314430803,True,full_periodic_state_model,0.0
+f14_20,thd_percent,20.0,14.0,0.047,0.075,0.059,percent,validation,29,visual_interval,Entire plus14 dBu frequency family held out; duplicates level anchor for cross-plot consistency,0.06920081176918068,True,full_periodic_state_model,0.0
+f14_40,thd_percent,40.0,14.0,0.016,0.029,0.022,percent,validation,29,visual_interval,Plus14 dBu frequency family held out,0.017023507805551355,True,full_periodic_state_model,0.0
+f14_80,thd_percent,80.0,14.0,0.0047,0.0075,0.006,percent,validation,29,visual_interval,Plus14 dBu frequency family held out,0.006005425813619371,True,full_periodic_state_model,0.0
+f14_160,thd_percent,160.0,14.0,0.0018,0.003,0.0023,percent,validation,29,visual_interval,Plus14 dBu frequency family held out,0.0030045874205426905,False,full_periodic_state_model,0.013271798216549044
+f20_40,thd_percent,40.0,20.0,0.023,0.038,0.029,percent,train,29,visual_interval,Frequency curve plus20 dBu,0.03449754273287677,True,full_periodic_state_model,0.0
+f20_80,thd_percent,80.0,20.0,0.0065,0.01,0.008,percent,train,29,visual_interval,Frequency curve plus20 dBu,0.00849437431966404,True,full_periodic_state_model,0.0
+f20_160,thd_percent,160.0,20.0,0.0027,0.0044,0.0035,percent,train,29,visual_interval,Frequency curve plus20 dBu,0.0029986193543694952,True,full_periodic_state_model,0.0
+f20_320,thd_percent,320.0,20.0,0.0011,0.0019,0.0015,percent,validation,29,visual_interval,Held out high-frequency distortion point,0.001502124534334238,True,full_periodic_state_model,0.0

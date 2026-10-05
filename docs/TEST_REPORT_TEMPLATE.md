@@ -8,6 +8,7 @@ Datum / Agent / Rechner:
 - LV2-Binärhash:
 - Toolchain / Image-Digest / Compileflags:
 - JSFX-/RPL-Stand:
+- Transformatorbankrevision / SHA256 (`data/transformers.json`):
 - Architektur und benötigte GLIBC-/GLIBCXX-Versionen:
 
 ## Umgebung
@@ -34,6 +35,9 @@ Datum / Agent / Rechner:
 | Meter / Host-GR | | | |
 | GUI offen/geschlossen | | | |
 | Regler-/Automationswechsel | | | |
+| Transformator None/60s/80s/00s/Symmetric, OS Off/2x/4x | | | |
+| Modellwechsel / None-Recall / sechs Transformatorpresets | | | |
+| MOD Mode / Knopf ohne Paneelbewegung / Drag-Rand / SVG-Lampe | | | |
 | 128 Frames / 256 Frames | | | |
 | 5-Minuten-CPU/xruns | | | |
 | 0.1.0/0.1.1 CPUvergleich, identische Rate/Blöcke/Quelle | | | |

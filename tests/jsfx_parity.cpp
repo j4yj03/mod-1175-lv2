@@ -17,6 +17,7 @@ static double maximumError=0.0;
 static bool runCase(const char* file, bool stereo, double rate, unsigned block,
                     greenstripe::Parameters p, unsigned fixture, unsigned oversampling=0) {
     p.oversampling=static_cast<int>(oversampling);
+    if (fixture==7) p.transformer=1;
     ysfx_config_u config(ysfx_config_new());
     ysfx_set_log_reporter(config.get(),logger);
     ysfx_guess_file_roots(config.get(),file);
@@ -28,13 +29,20 @@ static bool runCase(const char* file, bool stereo, double rate, unsigned block,
                           double(p.compression),double(p.enabled),double(p.stereoLink)};
     for (unsigned i=0;i<10;++i) ysfx_slider_set_value(fx.get(),i,values[i],true);
     ysfx_slider_set_value(fx.get(),11,double(oversampling),true);
+    ysfx_slider_set_value(fx.get(),12,double(p.transformer),true);
     greenstripe::Processor native(rate,stereo); native.setParameters(p);
     std::vector<float> inL(block),inR(block),outL(block),outR(block);
     const float* inputs[]={inL.data(),inR.data()}; float* outputs[]={outL.data(),outR.data()};
     double worst=0, square=0;
-    unsigned total=fixture==4?32768:4096;
+    unsigned total=fixture==4||fixture==7?32768:4096;
     for (unsigned done=0;done<total;done+=block) {
         unsigned n=std::min(block,total-done);
+        if (fixture==7 && done%4096==0) {
+            const int selections[]={1,2,3,4,0,3,1,0};
+            p.transformer=selections[done/4096];
+            ysfx_slider_set_value(fx.get(),12,p.transformer,true);
+            native.setParameters(p);
+        }
         if (fixture==2 && done==2048) {
             p.input=7; p.output=-3; p.attack=6; p.release=2; p.mix=43;
             p.colour=80; p.stereoLink=false; p.ratio=4;
@@ -69,7 +77,7 @@ static bool runCase(const char* file, bool stereo, double rate, unsigned block,
         for (unsigned i=0;i<n;++i) {
             unsigned sample=done+i;
             double envelope=sample<700?0.01:sample<2600?0.42:0.003;
-            inL[i]=fixture==1?(sample==0?0.5f:0.0f):static_cast<float>(envelope*std::sin(6.283185307179586*997*sample/rate));
+            inL[i]=fixture==1?(sample==0?0.5f:0.0f):static_cast<float>(envelope*std::sin(6.283185307179586*(p.transformer?37:997)*sample/rate));
             inR[i]=fixture==1?0.0f:static_cast<float>(0.13*std::sin(6.283185307179586*313*sample/rate));
             if (fixture==3 && sample<2)
                 inL[i]=sample==0 ? std::numeric_limits<float>::quiet_NaN() : std::numeric_limits<float>::infinity();
@@ -87,7 +95,8 @@ static bool runCase(const char* file, bool stereo, double rate, unsigned block,
     maximumError=std::max(maximumError,worst);
     if (worst>0.000002) {
         std::cerr << "Parity failed " << file << " rate=" << rate << " block=" << block
-                  << " mode=" << p.ratio << " max=" << worst << " rms=" << std::sqrt(square/(2*total)) << '\n';
+                  << " mode=" << p.ratio << " xf=" << p.transformer << " fixture=" << fixture
+                  << " max=" << worst << " rms=" << std::sqrt(square/(2*total)) << '\n';
         std::cerr << "State JSFX charge=" << ysfx_read_var(fx.get(),"gs_engine.ctrlL.charge")
                   << " GR=" << ysfx_read_var(fx.get(),"gs_engine.grL")
                   << " native GR=" << native.gainReduction() << '\n';
@@ -147,6 +156,22 @@ int main(int argc,char** argv) {
             ++passed;
         }
     for (bool stereo : {false,true}) {
+        for (int xf : {1,2,3,4}) for (unsigned os : {0u,1u,2u})
+            for (double rate : {44100.0,48000.0,96000.0}) {
+                greenstripe::Parameters q; q.transformer=xf; q.colour=0; q.compression=false;
+                if (!runCase(argv[stereo?2:1],stereo,rate,128,q,0,os)) ++failed;
+                ++passed;
+                q.colour=65; q.compression=true; q.input=12;
+                if (!runCase(argv[stereo?2:1],stereo,rate,64,q,0,os)) ++failed;
+                ++passed;
+            }
+        for (unsigned os : {0u,1u,2u}) {
+            greenstripe::Parameters q; q.transformer=3;
+            for (unsigned fixture : {3u,4u,5u,6u,7u}) {
+                if (!runCase(argv[stereo?2:1],stereo,48000,128,q,fixture,os)) ++failed;
+                ++passed;
+            }
+        }
         greenstripe::Parameters p; p.colour=0; p.compression=false;
         if (!runCase(argv[stereo?2:1],stereo,48000,128,p,1)) ++failed;
         p.enabled=false;

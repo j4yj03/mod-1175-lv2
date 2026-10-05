@@ -7,6 +7,16 @@ sondern aus einer SPICE-Simulation der vorhandenen Netzmodelle abzuleiten.
 
 Stand: Green Stripe 76, Version 0.3.0. Noch **nicht** ausgeführt.
 
+**Durchführung 2026-10-05:** Der obige Stand beschreibt die Auftragserstellung.
+Simulation und Auswertung liegen gemäß Benutzerauftrag unter
+[`docs/spice_sim/`](spice_sim/README.md), insbesondere
+[`BERICHT.md`](spice_sim/BERICHT.md). 260 Hauptarbeitspunkte und 76 Diagnosefälle
+sind gerechnet. Die Modelle besitzen einen instabilen Nullzustand; die
+bisherige Knie-Herleitung ist nicht bestätigt. Nicht identifizierbare
+Klangkoeffizienten sind ausdrücklich als solche ausgewiesen. Die nachfolgenden
+Vorgaben bleiben als ursprünglicher Auftrag erhalten; notwendige
+Syntax-/Messdefinitionskorrekturen sind im Bericht begründet.
+
 ## 0. Ausgangslage
 
 Aktuell ist die Sättigung eine **skalare Kennlinie**, keine Netzsimulation. In

@@ -1,0 +1,116 @@
+{
+  "result": "PASS artifact identity and rerendered anchor checks; partial fit remains partial",
+  "source_sha256": "ff53c5b3c99d0cfbc711661f3f5592646ce997559a01a867d6b0d02462ee0ab5",
+  "fit_repeated_onepercent_dbu": 20.491202424014872,
+  "anchors": [
+    {
+      "profile": "60s",
+      "dbfs_peak": -14.000007888186893,
+      "thd_percent": 1.000000369923285
+    },
+    {
+      "profile": "80s",
+      "dbfs_peak": -8.000006082740466,
+      "thd_percent": 1.0000007150513313
+    },
+    {
+      "profile": "00s",
+      "dbfs_peak": -2.0000054392667637,
+      "thd_percent": 1.00000181243361
+    }
+  ],
+  "wavs": [
+    {
+      "file": "audio/00-input.wav",
+      "frames": 576000,
+      "channels": 1,
+      "rate": 48000,
+      "peak": 0.7943330407142639,
+      "sha256": "f28054e89f7aeae5fd3612900915c0164e88724da207b51fc41e01a1fc161056"
+    },
+    {
+      "file": "audio/00s-AB-input-output.wav",
+      "frames": 576000,
+      "channels": 2,
+      "rate": 48000,
+      "peak": 0.7943330407142639,
+      "sha256": "2c6f1015e1c42f29d6ca5ada11fe8c2946e265bcbbfd50eb540252d6441b8b37"
+    },
+    {
+      "file": "audio/00s-output.wav",
+      "frames": 576000,
+      "channels": 1,
+      "rate": 48000,
+      "peak": 0.7941835522651672,
+      "sha256": "ebb23ca1b100db3d7980bb7d9c28a5a173ec98b5d5b897ad37291e3835e61779"
+    },
+    {
+      "file": "audio/60s-AB-input-output.wav",
+      "frames": 576000,
+      "channels": 2,
+      "rate": 48000,
+      "peak": 0.7943330407142639,
+      "sha256": "eacedf6f1532f9264eb2849b080c18a86c90f133ae71b84d119a34113c09b446"
+    },
+    {
+      "file": "audio/60s-output.wav",
+      "frames": 576000,
+      "channels": 1,
+      "rate": 48000,
+      "peak": 0.7941427230834961,
+      "sha256": "61c274a5c1b0ea25fbcc627038d38e35bb8f4dca20d2984adcaab9cf843dcce3"
+    },
+    {
+      "file": "audio/80s-AB-input-output.wav",
+      "frames": 576000,
+      "channels": 2,
+      "rate": 48000,
+      "peak": 0.7943330407142639,
+      "sha256": "f05ba69898ae24cdfe7fba29711e7edee59671988310a79d43602e328a2fdaa4"
+    },
+    {
+      "file": "audio/80s-output.wav",
+      "frames": 576000,
+      "channels": 1,
+      "rate": 48000,
+      "peak": 0.7940976619720459,
+      "sha256": "08cca004f266b7cd645b722006e3c5cfcb6300d21892cb0cb7a6a112bb86a739"
+    }
+  ],
+  "artifacts": {
+    "BERICHT.md": "88ce44145000c1d8d748c8371db6db5b9d7eba5dee63bb5625ce4bfba6cb56d6",
+    "core.cpp": "a75121831af1fd3543e6642c85f8814e2a328f8431a5247254579b0aed6aa220",
+    "create_profiles.py": "e8c2025dbc20fd68c498327250ea27a57f33f7af0da7c12de0f7dbc6fefba81a",
+    "finalize.py": "ff53c5b3c99d0cfbc711661f3f5592646ce997559a01a867d6b0d02462ee0ab5",
+    "fit-progress.json": "35d892e1c091cad81058622f415d7fe4178c843c4aed22e890787242e8858cbf",
+    "fit.py": "73737099696cd1eb832ab2257143a15243ec33564ede7f2fbbb7277c2db4bedb",
+    "fixture.json": "2f8d09aafed438e089cfcc6387c114c532091df67c688dc2ab234dd70e85c715",
+    "jensen-evaluation.csv": "076fc3a06f7ce3b80b5470551d1f3e4436e0655c8b618d5ff777ff7af39a7a2a",
+    "jensen-fit.json": "4408c92bc418ac214d6fe4078794c3e434dd6a3f3bfc294fc6b4977f12a6db91",
+    "jensen-sweep.csv": "bacc6225bd1ecba26d9d9362c023111ecffa161042a321591b452359b6c10bb0",
+    "linear-fit.json": "fdd64d56e5a9f9b349cb0cf7c1691b15b38e9dc1f01ed5a51cf312e3b8048068",
+    "preview-manifest.json": "3ef57975ba6c076709f80c5df0866a88495b084cd9835a9517435537fecc67aa",
+    "preview-waveforms.npz": "bf31a98a83541e2976a47977169edd8f0de0b756b92a80d30f4d33f16f4f8b73",
+    "profile-matrix.csv": "28040093cee220596208d7f0fa5bac86aea3a5d3b29a5a901f84ceb9514b8d03",
+    "profile-waveforms.npz": "2ed235ea70cc181bd3b4540f86daf202c9a49d6dc970611ed404d696b1ebcadf",
+    "profiles.json": "d5a19f41c68df1f27019ad3af0afc450919b37ba9118e82743c7616591b524a6",
+    "README.md": "76920ee2afe4a37b0e115eb714bbaa8368af94393813c8a7cf6532c3e9dd471f",
+    "reference.py": "4070189735c76794a38f0b8f1ae0c8a943109d375a9ba8c7c4765d4900325899",
+    "render_and_plot.py": "af8f33fc1d1a50893a3ae28385a376b15ef6f6010328126ba439162c4676559e",
+    "requirements.txt": "664f102cbae646ab320ef2aef79d22970ea6d3e5b241138e7e5f7e3834608d48",
+    "targets.csv": "e60a5b4f3f4ed6e6afd38f2693505d489414a59c25d69e6bfe2974d5ee7ca9f1",
+    "validate.py": "00608b55e62f91fca91bb7380c3a4e80a2212e032df44ee2703a59efc3c0086b",
+    "validation.json": "abae07f23ced1327291197ba97ee0f90c66a132f9788420053a49c6454b6b089",
+    "audio/00-input.wav": "f28054e89f7aeae5fd3612900915c0164e88724da207b51fc41e01a1fc161056",
+    "audio/00s-AB-input-output.wav": "2c6f1015e1c42f29d6ca5ada11fe8c2946e265bcbbfd50eb540252d6441b8b37",
+    "audio/00s-output.wav": "ebb23ca1b100db3d7980bb7d9c28a5a173ec98b5d5b897ad37291e3835e61779",
+    "audio/60s-AB-input-output.wav": "eacedf6f1532f9264eb2849b080c18a86c90f133ae71b84d119a34113c09b446",
+    "audio/60s-output.wav": "61c274a5c1b0ea25fbcc627038d38e35bb8f4dca20d2984adcaab9cf843dcce3",
+    "audio/80s-AB-input-output.wav": "f05ba69898ae24cdfe7fba29711e7edee59671988310a79d43602e328a2fdaa4",
+    "audio/80s-output.wav": "08cca004f266b7cd645b722006e3c5cfcb6300d21892cb0cb7a6a112bb86a739",
+    "plots/linear-fit.svg": "4d64e7ab71ca4ecd935335425564bf06dd37294b1b5f95b95111f3dad3e06949",
+    "plots/nonlinear-fit.svg": "8c9985da16facf3acc6f57d0ae3a67743f6ee314cd8e926e5a62bc4db947f105",
+    "plots/preview.svg": "afc0d8ed3f818c15446bab6754770848c1e528ab8f68731e03a38c549eae7c93",
+    "plots/profiles.svg": "0a6f09b0e0a83377d2714e7ac3a2434b9e1fb479140347132a4d981073d20b0d"
+  }
+}

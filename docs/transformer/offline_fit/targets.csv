@@ -1,0 +1,54 @@
+target_id,quantity,frequency_hz,input_dbu,value_low,value_high,value_center,unit,split,source_page,origin,note
+lf020,response_db,0.2,,-3.65,-3.15,-3.4,dB,train,28,visual_interval,Plot amplitude level unspecified: linear-background fit only; not assumed +4dBu large-signal response
+lf025,response_db,0.25,,-3.35,-2.65,-3,dB,train,28,datasheet_bandwidth,Approximate bandwidth with unspecified signal level: linear background only
+lf050,response_db,0.5,,-1.6,-1.15,-1.38,dB,train,28,visual_interval,Unspecified subaudio measurement level: linear background only
+lf100,response_db,1,,-0.65,-0.4,-0.52,dB,train,28,visual_interval,Unspecified subaudio measurement level: linear background only
+lf200,response_db,2,,-0.22,-0.08,-0.15,dB,validation,28,visual_interval,Held out linear-background point; unknown measurement amplitude
+lf500,response_db,5,,-0.09,0,-0.035,dB,validation,28,visual_interval,Curve near baseline; linear background only and unknown measurement amplitude
+lf20,response_db,20,4,-0.15,0,-0.04,dB,train,29,datasheet_min_max,Guaranteed -0.15..0; published typical -0.04 remains comparison value
+hf20k,response_db,20000,4,-0.085,-0.02,-0.05,dB,train,29,datasheet_typical_interval,Typical -0.05 with own readout/typical tolerance; guaranteed -0.15..0
+hf40k,response_db,40000,4,-0.27,-0.08,-0.16,dB,validation,28,visual_interval,Held out high-frequency point
+hf80k,response_db,80000,4,-1.8,-1.3,-1.55,dB,train,28,visual_interval,High-frequency knee visible
+hf100k,response_db,100000,4,-3.35,-2.65,-3,dB,train,28,datasheet_bandwidth,Approximate -3 dB bandwidth statement
+hf150k,response_db,150000,4,-100,-5.4,,dB,validation,28,visual_upper_bound,Curve leaves plotted range; no resolved lower bound and no extrapolated pixel midpoint
+gain1k,gain_primary_db,1000,4,-2.6,-2,-2.3,dB,validation,29,datasheet_min_max,Actual gain not arbitrarily normalized
+zin1k,zin_ohm,1000,4,12300,13700,13000,ohm,validation,29,datasheet_min_max,Complex input impedance magnitude
+dlp20,dlp_deg,20,4,0.4,0.85,0.6,degree,train,28,visual_interval,Deviation from shared fitted linear phase; not raw phase
+dlp50,dlp_deg,50,4,0.2,0.5,0.32,degree,validation,28,visual_interval,Held out phase-deviation point
+dlp200,dlp_deg,200,4,0,0.25,0.12,degree,validation,28,visual_interval,Held out phase-deviation point
+dlp1k,dlp_deg,1000,4,-0.08,0.1,0,degree,train,28,visual_interval,Approximate graph baseline
+dlp20k,dlp_deg,20000,4,-0.08,0.08,0,degree,train,28,visual_interval,Shared linear phase nuisance; not independently zeroed at each bin
+t20m20,thd_percent,20,-20,0.018,0.027,0.022,percent,train,29,visual_interval,Plot labels THD+N; low-level origin remains uncertain
+t20m10,thd_percent,20,-10,0.019,0.028,0.023,percent,train,29,visual_interval,Low-level plateau
+t20p0,thd_percent,20,0,0.017,0.025,0.021,percent,train,29,visual_interval,Low-level plateau
+t20p4,thd_percent,20,4,0.021,0.031,0.025,percent,train,29,datasheet_typical_interval,Published typical anchor; guaranteed maximum 0.10 percent
+t20p10,thd_percent,20,10,0.026,0.042,0.034,percent,train,29,visual_interval,Start of high-level rise
+t20p14,thd_percent,20,14,0.047,0.075,0.059,percent,train,29,visual_interval,High-level rise
+t20p16,thd_percent,20,16,0.077,0.12,0.095,percent,train,29,visual_interval,High-level rise
+t20p18,thd_percent,20,18,0.15,0.27,0.21,percent,train,29,visual_interval,High-level rise
+t20p20,thd_percent,20,20,0.72,1.3,1,percent,train,29,datasheet_typical_interval,Typical 1 percent point; upper end of plot
+t30m20,thd_percent,30,-20,0.010,0.016,0.013,percent,validation,29,visual_interval,Entire 30 Hz level curve held out
+t30p0,thd_percent,30,0,0.009,0.015,0.012,percent,validation,29,visual_interval,Entire 30 Hz level curve held out
+t30p10,thd_percent,30,10,0.014,0.024,0.018,percent,validation,29,visual_interval,Entire 30 Hz level curve held out
+t30p15,thd_percent,30,15,0.024,0.04,0.031,percent,validation,29,visual_interval,Entire 30 Hz level curve held out
+t30p20,thd_percent,30,20,0.045,0.09,0.065,percent,validation,29,visual_interval,Entire 30 Hz level curve held out
+t30p24,thd_percent,30,24,0.4,0.9,0.62,percent,validation,29,visual_interval,Entire 30 Hz level curve held out; broad readout
+t50m20,thd_percent,50,-20,0.004,0.0075,0.0055,percent,train,29,visual_interval,Low-level plateau
+t50p0,thd_percent,50,0,0.0045,0.008,0.006,percent,train,29,visual_interval,Low-level plateau
+t50p10,thd_percent,50,10,0.0055,0.010,0.0075,percent,train,29,visual_interval,Weak distortion
+t50p15,thd_percent,50,15,0.008,0.013,0.010,percent,train,29,visual_interval,Start of rise
+t50p20,thd_percent,50,20,0.012,0.021,0.016,percent,train,29,visual_interval,High-level rise
+t50p25,thd_percent,50,25,0.035,0.07,0.050,percent,train,29,visual_interval,High-level rise
+t50p28,thd_percent,50,28,0.095,0.19,0.135,percent,train,29,visual_interval,High-level rise
+f4_40,thd_percent,40,4,0.009,0.014,0.011,percent,train,29,visual_interval,Frequency curve plus4 dBu
+f4_80,thd_percent,80,4,0.0034,0.005,0.0041,percent,train,29,visual_interval,Frequency curve plus4 dBu
+f4_160,thd_percent,160,4,0.0013,0.0021,0.0017,percent,train,29,visual_interval,Frequency curve plus4 dBu
+f4_1000,thd_percent,1000,4,0,0.001,,percent,validation,29,datasheet_upper_bound,One-sided condition; no synthetic noise or exact-zero target
+f14_20,thd_percent,20,14,0.047,0.075,0.059,percent,validation,29,visual_interval,Entire plus14 dBu frequency family held out; duplicates level anchor for cross-plot consistency
+f14_40,thd_percent,40,14,0.016,0.029,0.022,percent,validation,29,visual_interval,Plus14 dBu frequency family held out
+f14_80,thd_percent,80,14,0.0047,0.0075,0.006,percent,validation,29,visual_interval,Plus14 dBu frequency family held out
+f14_160,thd_percent,160,14,0.0018,0.003,0.0023,percent,validation,29,visual_interval,Plus14 dBu frequency family held out
+f20_40,thd_percent,40,20,0.023,0.038,0.029,percent,train,29,visual_interval,Frequency curve plus20 dBu
+f20_80,thd_percent,80,20,0.0065,0.01,0.008,percent,train,29,visual_interval,Frequency curve plus20 dBu
+f20_160,thd_percent,160,20,0.0027,0.0044,0.0035,percent,train,29,visual_interval,Frequency curve plus20 dBu
+f20_320,thd_percent,320,20,0.0011,0.0019,0.0015,percent,validation,29,visual_interval,Held out high-frequency distortion point

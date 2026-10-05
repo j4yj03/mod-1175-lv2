@@ -1,0 +1,166 @@
+{
+  "status": "UNGEFITTETE Startschätzungen; keine freigegebenen DSP-Parameter",
+  "date": "2026-10-05",
+  "script_sha256": "f2c8866b24feeb030da613de743060998711de5e2eb1ba53033ca765e9652764",
+  "pdf_sha256": {
+    "Audio-Transformers-Chapter.pdf": "0e7a82774a90eee784897962ec3ed8ae17ac26122225a57596ef6c383f3bcc2d",
+    "ourdev_725050HHOGA4.pdf": "7c40a46c8c541a1fb4b50029765f968e2be8f131949dcf425026132e48fae680",
+    "PSW_WhitePaper_Download_Chapter_6.pdf": "c2c9285bdf87da26d1587d515ace16169cbad8234757cc1962ea51962ad1a875"
+  },
+  "recommended_reference": {
+    "name": "Jensen JT-11P-1",
+    "source": "Audio-Transformers-Chapter.pdf, lokale PDF-Seiten 28–29, eingebetteter Stand 1/01",
+    "reason": "1:1-Line-Eingang; definierte Quelle/Last und dBu-Eingangspegel; THD über f und Pegel"
+  },
+  "published_values": {
+    "turns_ratio_secondary_over_primary": 1.0,
+    "source_resistance_ohm": 600.0,
+    "load_resistance_ohm": 10000.0,
+    "primary_dcr_ohm": 1450.0,
+    "secondary_dcr_ohm": 1550.0,
+    "input_impedance_1khz_ohm": {
+      "min": 12300,
+      "typ": 13000,
+      "max": 13700
+    },
+    "gain_1khz_db": {
+      "min": -2.6,
+      "typ": -2.3,
+      "max": -2.0
+    },
+    "response_20hz_db_relative_1khz": {
+      "min": -0.15,
+      "typ": -0.04,
+      "max": 0.0
+    },
+    "response_20khz_db_relative_1khz": {
+      "min": -0.15,
+      "typ": -0.05,
+      "max": 0.0
+    },
+    "deviation_from_linear_phase_deg": {
+      "typ": 0.6,
+      "absolute_max": 2.0
+    },
+    "bandwidth_minus3db_hz": [
+      0.25,
+      100000
+    ],
+    "thd_20hz_at_plus4dbu_percent": {
+      "typ": 0.025,
+      "max": 0.1
+    },
+    "thd_1khz_at_plus4dbu_percent_upper_bound": 0.001,
+    "level_20hz_for_1percent_thd_dbu": {
+      "min": 18,
+      "typ": 20
+    },
+    "output_impedance_1khz_rs50_ohm_typ": 2340,
+    "primary_to_shield_case_capacitance_f": 9.8e-11,
+    "secondary_to_shield_case_capacitance_f": 1.1e-10,
+    "capacitance_caveat": "Schirm-/Gehäusekapazitäten, NICHT automatisch differentielles Ceff",
+    "gain_caveat": "Primärklemmenbezug als Arbeitskonvention, durch Kupferrechnung gestützt",
+    "phase_caveat": "DLP ist NICHT rohe Phase oder vollständige Gruppenlaufzeit",
+    "harmonic_caveat": "Tabelle nennt THD; Grafiken sind THD+N beschriftet, Bandbreite fehlt"
+  },
+  "own_algebraic_checks": {
+    "simple_input_impedance_ohm": 13000.0,
+    "simple_gain_from_primary_terminal_db": -2.278867046136735,
+    "simple_gain_from_open_source_db": -2.6707781674043494,
+    "output_impedance_including_test_load_ohm": 2337.1647509578543,
+    "effective_resistance_generator_ohm": 1740.9926470588234,
+    "effective_resistance_terminal_ohm": 1288.2692307692307,
+    "lm_from_025hz_h": {
+      "generator_reference": 1108.350342664221,
+      "terminal_reference": 820.1376644404668
+    },
+    "one_pole_fc_from_20hz_minus004db_hz": 1.9238384627285638,
+    "lm_from_20hz_minus004db_h": {
+      "generator_reference": 144.02850916758587,
+      "terminal_reference": 106.57569233714047
+    },
+    "lf_caveat": "Verschiedene Einpol-Ersatzwerte; kein Beleg für ein konstantes reales Lm",
+    "two_pole_hf_seed": {
+      "natural_frequency_hz": 107813.88673321101,
+      "q": 0.6590822220533961,
+      "lc_product_h_f": 2.1791687264830734e-12,
+      "origin": "Zwei Amplitudenpunkte, ungeprüfte Phase/Topologie"
+    },
+    "vrms_at_plus4dbu": 1.228292224157363,
+    "vrms_at_plus20dbu": 7.75,
+    "lambda_at_1percent_thd_20hz_terminal_vs": 0.08721814312771967,
+    "lambda_at_1percent_thd_20hz_core_copper_only_vs": 0.07748996562501248,
+    "lambda_caveat": "1%-THD-Anker und Kupfernäherung; kein identifizierter physikalischer Kniefluss",
+    "constant_v_over_f_1percent_level_prediction_dbu": {
+      "20": 20.0,
+      "30": 23.521825181113623,
+      "50": 27.95880017344075,
+      "100": 33.979400086720375
+    },
+    "conditional_560q_capacitance_from_assumed_resonance": {
+      "60000": 5.720482364630633e-09,
+      "100000": 2.059373651267028e-09,
+      "150000": 9.152771783409012e-10
+    },
+    "conditional_560q_caveat": "Resonanz angenommen; Streu-L-Messseite ungeklärt; keine tatsächliche C-Bestimmung",
+    "groupdiy_post8_atan05_deg": 26.56505117707799
+  },
+  "proposed_fixed_assumptions": {
+    "port_ratio": "1:1",
+    "dc_bias_a": 0.0,
+    "initial_remanent_state": 0.0,
+    "source_model": "lineare Theveninquelle; zusätzliche Treibergrenzen zunächst nicht fitten",
+    "audio_mapping": "1-kHz-Sinus mit -18 dBFS PEAK entspricht +4 dBu RMS an Primärklemmen",
+    "volts_per_fs_sample_at_primary_1khz": 13.798017783159699,
+    "volts_per_fs_sample_of_generator_copper_estimate": 14.434849373151685,
+    "full_scale_sine_level_dbu": 22,
+    "onepercent_20hz_level_nominal_dbfs_peak": -2,
+    "even_harmonics": "im symmetrischen Erstmodell null; keine geraden Harmonischen erfunden",
+    "noise": "kein synthetisches Rauschen zum Fitten eines unbekannten Messrauschbodens",
+    "fit_domain": "Flussverkettung lambda in V*s; keine unidentifizierte Kerngeometrie nötig"
+  },
+  "proposed_search_seeds_not_measured": {
+    "effective_low_frequency_lm_h": {
+      "seed": 1000,
+      "min": 100,
+      "max": 2000
+    },
+    "linear_loss_shunt_ohm_if_used": {
+      "seed": 2000000.0,
+      "min": 200000.0,
+      "max": 20000000.0
+    },
+    "hf_natural_frequency_hz": {
+      "seed": 107813.88673321101,
+      "min": 80000,
+      "max": 200000
+    },
+    "hf_q": {
+      "seed": 0.6590822220533961,
+      "min": 0.45,
+      "max": 1.0
+    },
+    "nonlinear_flux_scale_vs": {
+      "seed": 0.08,
+      "min": 0.02,
+      "max": 0.2
+    },
+    "saturation_exponent_candidates": [
+      3,
+      5,
+      7,
+      9
+    ],
+    "hysteresis_strength": "schwach initialisieren und mehrere Lösungen vergleichen; keine identifizierte Zahl",
+    "leakage_inductance_h": null,
+    "differential_winding_capacitance_f": null,
+    "comment": "Bauteil-L/C-Aufteilung nicht zusätzlich frei fitten, wenn nur f0/Q identifiziert werden"
+  },
+  "missing_for_unique_physical_fit": [
+    "komplexe Leerlaufimpedanz bzw. phasenrichtiger Magnetisierungsstrom über Pegel und Frequenz",
+    "getrennte H2/H3/H5 oder referenzierte Wellenformen",
+    "Transienten/Minor-Loops/Remanenz bzw. Wiederanlauf nach Vorbelastung",
+    "zweite Quellen-/Lastbedingung zur Entkopplung von Kern, Verlusten und Parasiten",
+    "Streuinduktivität und differentielles Kapazitätsnetz, falls physikalische Einzelwerte benötigt werden"
+  ]
+}

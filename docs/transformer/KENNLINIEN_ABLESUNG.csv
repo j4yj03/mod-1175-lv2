@@ -1,0 +1,48 @@
+source_file,page,configuration,rs_ohm,rl_ohm,curve_label,quantity,frequency_hz,value_low,value_high,unit,reading_kind,note
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,1 Vpp,relative_response,10,-0.35,-0.25,dB,visual_interval,Response axis printed dBm; reference normalization not specified
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,1 Vpp,relative_response,20,-0.16,-0.08,dB,visual_interval,Relative plotted response; not absolute insertion loss
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,10/19 dBm unresolved,relative_response,10,,-3,dB,upper_bound_at_plot_edge,High-level traces not reliably separable; may continue below plot
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,all levels,relative_response,30,-0.15,0,dB,visual_envelope,Level curves almost coincide
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,all levels,relative_response,1000,-0.05,0.05,dB,visual_envelope,Apparent midband normalization
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,all levels,relative_response,20000,-0.05,0.05,dB,visual_envelope,No resolved high-frequency boost at this point
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,1000,all levels,relative_response,50000,-0.25,-0.1,dB,visual_envelope,Above audio band
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,100,10/19 dBm unresolved,thd_plus_n,10,35,40,percent,visual_envelope,RL=100 as printed; do not silently change to 1000
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,100,10/19 dBm unresolved,thd_plus_n,20,2,5,percent,visual_envelope,Closely overlapping high-level traces; not individual harmonic levels
+ArHamm140TEX_140TEX.pdf,2,1:1,1000,100,10/19 dBm unresolved,thd_plus_n,30,0,0.5,percent,visual_upper_range,Near plot baseline; cannot infer low residual distortion accurately
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,10,-0.22,-0.1,dB,visual_envelope,0/10/27 dBm
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,20,-0.12,-0.03,dB,visual_envelope,0/10/27 dBm
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,1000,-0.03,0.03,dB,visual_envelope,Apparent midband normalization
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,10000,0.05,0.15,dB,visual_envelope,0/10/27 dBm almost coincide
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,20000,0.4,0.55,dB,visual_envelope,Rising high-frequency response
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,all levels,relative_response,30000,0.9,1.1,dB,visual_envelope,True resonance peak outside shown vertical range
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,0 dBm,phase_shift,10,5,6,degree,visual_interval,Positive low-frequency phase
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,10 dBm,phase_shift,10,4.5,5.5,degree,visual_interval,Positive low-frequency phase
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,27 dBm,phase_shift,10,2.5,3.5,degree,visual_interval,Level dependence visible
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,0/10 dBm,phase_shift,20000,-10.5,-9,degree,visual_envelope,Lower plot boundary near -10 degrees
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,27 dBm,phase_shift,20000,-6.5,-5.5,degree,visual_interval,Level dependence visible
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,0 dBm,thd_plus_n,10,0.085,0.1,percent,visual_interval,THD+N includes noise
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,10 dBm,thd_plus_n,10,0.105,0.12,percent,visual_interval,THD+N includes noise
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,27 dBm,thd_plus_n,10,0.2,,percent,lower_bound_at_plot_edge,Curve exceeds displayed range
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,0 dBm,thd_plus_n,20,0.03,0.04,percent,visual_interval,Approximate readout from raster curve
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,10 dBm,thd_plus_n,20,0.045,0.055,percent,visual_interval,Approximate readout from raster curve
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,27 dBm,thd_plus_n,20,0.08,0.1,percent,visual_interval,Approximate readout from raster curve
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,0 dBm,thd_plus_n,1000,0.01,0.02,percent,visual_interval,Midband floor is not an identified harmonic component
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,10 dBm,thd_plus_n,1000,0.003,0.008,percent,visual_interval,Lower percentage at higher level can be noise-related
+ArHamm560Q_560Q.pdf,2,series:series 1:1,40000,40000,27 dBm,thd_plus_n,1000,0,0.005,percent,visual_upper_range,Near raster baseline; not proof of zero distortion
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,10,-0.46,-0.33,dB,visual_envelope,0/10/27 dBm
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,20,-0.28,-0.18,dB,visual_envelope,0/10/27 dBm
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,1000,-0.02,0.02,dB,visual_envelope,Apparent midband normalization
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,10000,0.08,0.13,dB,visual_envelope,0/10/27 dBm almost coincide
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,20000,0.25,0.35,dB,visual_envelope,Rising high-frequency response
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,relative_response,30000,0.5,0.65,dB,visual_envelope,True resonance peak outside shown vertical range
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,0 dBm,phase_shift,10,9,11,degree,visual_interval,Positive low-frequency phase
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,10 dBm,phase_shift,10,6,8,degree,visual_interval,Positive low-frequency phase
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,27 dBm,phase_shift,10,5,7,degree,visual_interval,Level dependence visible
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,0/10 dBm,phase_shift,20000,-12,-9,degree,visual_envelope,Greater phase lag than high-level trace
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,27 dBm,phase_shift,20000,-7,-5,degree,visual_interval,Level dependence visible
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,0 dBm,thd_plus_n,10,0.25,0.3,percent,visual_interval,Different source/load/winding configuration from page 2
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,10 dBm,thd_plus_n,10,0.3,0.36,percent,visual_interval,Different source/load/winding configuration from page 2
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,27 dBm,thd_plus_n,10,1.8,,percent,lower_bound_near_plot_edge,Approximately 2 percent at left boundary; no resolved maximum
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,0/10 dBm,thd_plus_n,20,0.1,0.16,percent,visual_envelope,Low-level traces close together
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,27 dBm,thd_plus_n,20,0.3,0.42,percent,visual_interval,Strong low-frequency rise
+ArHamm560Q_560Q.pdf,3,parallel:parallel 1:1,10000,10000,all levels,thd_plus_n,100,0,0.03,percent,visual_upper_range,Coarse 0.5-percent divisions do not resolve the residual floor

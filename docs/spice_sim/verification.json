@@ -1,0 +1,72 @@
+{
+  "result": "PASS: Messprozess/Artefakte; Modelle NICHT als stabil qualifiziert",
+  "script_sha256": "b29a522d1d0fc521111ee485ec08cce2c7641b737e454ab17179c258a5e2b1ec",
+  "models": 4,
+  "main_points": 260,
+  "diagnostic_points": 76,
+  "literal_aborts": 4,
+  "canonical_deck_reruns": [
+    {
+      "model": "GCOT-SE-01",
+      "netlist": "GCOT-SE-01.cir",
+      "netlist_sha256": "e660674865a36cc82e7746663b3f1f7d87d4fb1b1b31f2a476d17ca966dd822b",
+      "metrics_abs_differences": {
+        "gain_source_db": 0.0,
+        "phase_source_deg": 0.0,
+        "h3_dbc": 0.0,
+        "h5_dbc": 0.0,
+        "output_dc_mean_v": 0.0
+      },
+      "full_native_array_hash_equal": true,
+      "result": "PASS"
+    },
+    {
+      "model": "GCOT-PP-03",
+      "netlist": "GCOT-PP-03.cir",
+      "netlist_sha256": "a4e0fd9ec985767e5d4657ebfa457fae06dc82f479b706c84f3038d972721e8b",
+      "metrics_abs_differences": {
+        "gain_source_db": 0.0,
+        "phase_source_deg": 0.0,
+        "h3_dbc": 0.0,
+        "h5_dbc": 0.0,
+        "output_dc_mean_v": 0.0
+      },
+      "full_native_array_hash_equal": true,
+      "result": "PASS"
+    },
+    {
+      "model": "GCOT-PP-04",
+      "netlist": "GCOT-PP-04.cir",
+      "netlist_sha256": "ed42e3d49c1cd80632a0482d822f5b587a9ec25b7a0a75aec543d75571ca297a",
+      "metrics_abs_differences": {
+        "gain_source_db": 0.0,
+        "phase_source_deg": 0.0,
+        "h3_dbc": 0.0,
+        "h5_dbc": 0.0,
+        "output_dc_mean_v": 0.0
+      },
+      "full_native_array_hash_equal": true,
+      "result": "PASS"
+    },
+    {
+      "model": "GCSYMETRICAL",
+      "netlist": "GCSYMETRICAL.cir",
+      "netlist_sha256": "4e0a264953f8b66e8b9d72c318488e59133ba687c46296479b5d39b6d82c11d0",
+      "metrics_abs_differences": {
+        "gain_source_db": 0.0,
+        "phase_source_deg": 0.0,
+        "h3_dbc": 0.0,
+        "h5_dbc": 0.0,
+        "output_dc_mean_v": 0.0
+      },
+      "full_native_array_hash_equal": true,
+      "result": "PASS"
+    }
+  ],
+  "parameters_unchanged": true,
+  "provenance_verified": true,
+  "waveform_arrays": 668,
+  "stored_waveform_points": 1331489,
+  "finite_monotonic_waveforms": true,
+  "checks": "vollständige Matrix; AC-Referenz; Zeitschritt; Gear; DDT; Last; instabile Eigenmode"
+}

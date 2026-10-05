@@ -3,7 +3,7 @@
 ## 1. Native Linux-Entwicklung
 
 Benötigt: C++11-Compiler, GNU Make, Python 3. Bereits generierte Metadaten und
-PNG-Assets sind enthalten; Nutzer benötigen weder Pillow noch ysfx.
+PNG-Assets sind enthalten; Nutzer benötigen weder Playwright/Pillow noch ysfx.
 
 ```bash
 make
@@ -89,8 +89,13 @@ Umgebung. Der Buildroot-Rezept für das Dwarf-Ziel bleibt davon unberührt.
 - Alle Tabellen/Ports/Presets aus `data/*.json`.
 - `python3 tools/generate.py` aktualisiert die Textartefakte.
 - `make check-generated` erkennt Abweichungen.
-- `python3 tools/make_assets.py` erzeugt Originalillustrationen (Pillow nur für
-  diesen Entwicklungsschritt erforderlich).
+- `python3 tools/make_assets.py` rendert HTML/CSS und die bereitgestellten
+  Assets in Chromium (Playwright und Pillow nur für diesen Entwicklungsschritt).
+  Optional `--browser /pfad/zu/chromium`; es entstehen lokale Vorschauen,
+  keine Dwarf-Screenshots.
+- `data/model.json` referenziert die versionierte `data/transformers.json`.
+  Refit-Import/Validierung und gemeinsame C++-/EEL2-Generierung:
+  `TRANSFORMER_RUNTIME.md`. Neue Bank erfordert Neubuild bzw. neue JSFX-Includes.
 - Je Buildziel **eigenes BUILD_DIR** verwenden. Make kann einen Compilerwechsel
   nicht allein an Binär-Zeitstempeln erkennen.
 - MPB-/Compilerrevision und Compileflags im externen Prüfprotokoll festhalten.
@@ -234,15 +239,18 @@ python3 tools/package.py \
   --toolchain "MPB moddwarf-new COMMIT / compiler version"
 ```
 
-- JSFX-ZIP: alle `.jsfx`, Includes, `.rpl`, Anleitung und Lizenz.
+- JSFX-ZIP: alle `.jsfx`, sieben Includes, `.rpl`, Anleitung, Lizenz und
+  Transformatorbank/Runtime-Vertrag zur Herkunfts- und Refit-Dokumentation.
 - Source-ZIP: DSP, Metadaten, Werkzeuge, Tests, Doku und AGENTS.
 - LV2-tar.gz: Bundle direkt im Archivroot, ideal für SDK-Upload.
 - Herkunftsmanifest: Architektur, DT_NEEDED, Symbolversionen, Binärhash,
   Toolchainbeschreibung und `device_tested=false`.
 - `SHA256SUMS`: Übertragungsprüfung.
 
-NAM-/WAV-Dateien, `.git`, temporäre Toolchains und Buildtests werden nicht im
-Source-/JSFX-Paket verteilt. `--dwarf` verweigert x86_64 oder glibc >2.27.
-Aktuelle Projektversion 0.2.0; alte 0.1.x-Pakete haben feste 4×-Verarbeitung
-und keinen Oversampling-Regler. Für Übertragung die Versionsnummer im
-Dateinamen prüfen.
+NAM-/WAV-Dateien, gepackte Offline-Hördateien, Hersteller-PDFs, NPZ-Rohdaten,
+`.git`, temporäre Toolchains und Buildartefakte werden nicht im Source-/JSFX-
+Paket verteilt. `--dwarf` verweigert x86_64 oder glibc >2.27.
+Aktuelle Projektversion **0.4.0**; ältere Pakete enthalten die hörbaren
+Transformatorprofile nicht. Für Übertragung Version und Bankrevision prüfen.
+Vorhandene alte Cross-Binaries sind kein 0.4.0-Build. Die lokale 0.4.0-Prüfung
+verwendet GCC 15.2 auf x86_64; der aktuelle MPB-/Dwarf-Build ist extern offen.

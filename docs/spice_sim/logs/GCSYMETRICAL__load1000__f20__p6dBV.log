@@ -1,0 +1,49 @@
+Warning: can't find the initialization file spinit.
+
+Note: No compatibility mode selected!
+
+
+Circuit: green stripe 76 - gcsymetrical__load1000__f20__p6dbv
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 601
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+srcp                                         0
+srcn                               1.72781e-16
+p1                                           0
+p2                                 3.88462e-18
+xdut.xgc.xcore1.ps                           0
+xdut.xgc.xcore1.q                            0
+xdut.xgc.xcore1.u                            0
+xdut.xgc.xcore1.w                            0
+xdut.xgc.current1                            0
+xdut.xgc.xcore2.ps                 3.88462e-18
+xdut.xgc.xcore2.q                  3.88462e-18
+xdut.xgc.xcore2.u                            0
+xdut.xgc.xcore2.w                 -1.68896e-18
+xdut.xgc.current2                            0
+out                                          0
+b.xdut.xgc.bs#branch                         0
+b.xdut.xgc.xcore2.bout#branch                0
+v.xdut.xgc.xcore2.vsense#branch     1.68896e-18
+b.xdut.xgc.xcore2.bsat#branch      1.68896e-18
+b.xdut.xgc.xcore1.bout#branch                0
+v.xdut.xgc.xcore1.vsense#branch               0
+b.xdut.xgc.xcore1.bsat#branch                0
+vminus#branch                     -1.68896e-18
+vplus#branch                                 0
+
+
+No. of Data Rows : 24001
+ngspice-45.2 done

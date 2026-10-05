@@ -1,8 +1,79 @@
 # Entwicklungsstand und Übergabe
 
-Stand **2026-10-04**, Projekt **0.3.0**. Code und Dokumentation sind umgesetzt.
-Dies ist keine bloße Planungsantwort. Benutzerziel: eigener **Green Stripe**,
-Hardware-Revision A/D nicht mehr bindend.
+Stand **2026-10-05**, Projekt **0.4.0**. Benutzerziel: eigener **Green Stripe**,
+Hardware-Revision A/D nicht bindend.
+
+## Aktueller Stand 0.4.0
+
+- **Transformator hörbar in C++ und JSFX:** None / 60s warm / 80s ausgewogen /
+  00s clean / Symmetric als lineare technische Referenz. Eigener lastgekoppelter
+  Flux-/Stop-Kern aus dem partiellen Jensen-Offlinefit, keine Übernahme der
+  instabilen xformer.lib. Input treibt den Kern; Colour bleibt eigenständig.
+- **Refit ohne DSP-Umbau:** versionierte normative `data/transformers.json`,
+  Referenz aus `data/model.json`, validierter Import über
+  `tools/transformer_model.py`, gemeinsam generierte C++-/EEL2-Daten.
+  Bankrevision `gs76-input-2026-10-05-v1`; Herkunftshashes in der Bank.
+  Refit-Vertrag, unterstützte Parameter und Projektkompatibilität in
+  [`TRANSFORMER_RUNTIME.md`](TRANSFORMER_RUNTIME.md).
+- Kanalgetrennte Historien, gewählte OS-Rate auch im Kern, 2-ms-Modellblenden
+  über den Eingang, Dry/Bypass und Latenz 0/3/4 Frames erhalten.
+- **LV2-GUI:** Paneele spaltfrei, Titel ohne Schild direkt auf Grün,
+  Aluminium-Filmstrip für alle sechs Potis, Toggle-Bitmap für Bypass,
+  Pilot-On/Off-SVG auf 28×28 px. Mode verwendet jetzt das echte Switch-Widget
+  und dessen `on/off`-Klassen. Nur der obere freie Rand ist Drag-Handle.
+- Vorschau-PNGs werden aus echtem HTML/CSS in Chromium gerendert;
+  vorhandene statische Nachzeichnung abgelöst. 36 Presets / 72 Bankzustände.
+  Veraltete xformer.lib-Aussagen in Presetnotizen durch die neuen Klangprofile
+  ersetzt. Alle Factory-Recall-Wege setzen Oversampling auf Off.
+
+### In dieser Umsetzung tatsächlich ausgeführt
+
+| Prüfung | Ergebnis |
+|---|---|
+| GNU 15.2, C++11, no-fast-math/FP-contract off | Native Build PASS (`build/wsl`) |
+| `make test` | DSP, Übergänge, Transformator, reale LV2-ABI, Refit-Validierung, Metadaten PASS |
+| Generator | 17 Textartefakte konsistent |
+| Refit-Import | Bank aus archiviertem `profiles.json` bytegleich reproduziert; ungültige Modelle abgelehnt |
+| Source-/JSFX-Paketierung | ZIP-Integrität, sieben Includes/Bank und Ausschluss von Audioarchiven/PDF/NPZ/NAM PASS; Prüfarchive unter `/tmp/opencode/gs76-packages` |
+| RDF | Turtle-Parsing mit rdflib 7.6.0 PASS |
+| C++/EEL2 | **430 Fälle, max. 0 FS**, echte ysfx-Ausführung |
+| None gegen vorherigen Commit | **144 Fälle bitgleich**, Audio/GR/Latenz einschließlich OS-/Bypass-Wechsel |
+| CMake/CTest | Unabhängiger Build, **3/3 Tests PASS** |
+| Native ELF | x86_64, nur libm/libc, GLIBC bis 2.4, kein GLIBCXX |
+| RPL/Selector/Custom | **72 Presetzustände PASS** |
+| Transformatoranker 20 Hz/48 kHz | 60s **1,00009 %**, 80s **1,00271 %**, 00s **1,00001 %** THD an −14/−8/−2 dBFS |
+| Unabhängige Offline-Referenz | Rohsignalabweichung max. **5,42×10⁻¹⁵ FS**, Bass/DC/Bursts bei 44,1/48/96/192 kHz |
+| HF-Surrogat gegen analog | Amplitude max. **0,3081 dB**, Phase max. **67,91°** abweichend; keine Phasengleichheit |
+| MOD-Widgets in Chromium | Beide Varianten: Mode, Filmstrip, Drag-Trennung, Bypass/Lampe, Paneelfugen PASS |
+| Lokale Durchsatzmessung | C++ Stereo Off ca. 0,020 s/s None bzw. 0,032–0,034 s/s mit Modell; EEL2-Matrix in `CPU_ANALYSIS.md` |
+
+Testhost ysfx `5c3452fee62583aa3d1b7e877d0c758c4024af89`; MOD-UI
+`7a35aac69781af28997aee7e560a92da7146f318`, Chromium 153.0.8010.12.
+Die lokale Native-Toolchain ist kein Dwarf-Artefakt. Frühere Build-/Gerätewerte
+im Archiv unten gelten nicht als erneute Abnahme von 0.4.0.
+
+### Offene Punkte und nächste konkrete Arbeit
+
+1. 0.4.0 mit MPB `moddwarf-new` bauen, aktuelle AArch64-ABI/Hashes und Pakete
+   erzeugen; vorhandene alte Cross-Binaries nicht als neuen Build übertragen.
+2. `HANDOFF.md`: MOD Dwarf 1.13.5.3315, reale Mode-/Regler-/Drag-/Bypass-
+   Bedienung und neue Assetanzeige prüfen; REAPER 7 Recall/Automation/Host-GR.
+3. Transformator-/OS-Matrix mit Eingangssignal, 128/256 Frames, mehreren
+   Instanzen und mindestens fünf Minuten CPU/xruns je Zustand messen.
+4. Pegelgleiche Musik-/Transientenprüfung und Alias-/Phasenvergleich.
+   Hochfrequente Analogphasengleichheit ist beim aktuellen HF-Surrogat nicht
+   gegeben; Low-rate-Aliasing bleibt zu bewerten.
+5. Weitere Fits mit neuen Referenzdaten und dokumentierter Bankrevision;
+   vorhandenen partiellen Datenblattfit nicht als Hardwarekalibrierung ausgeben.
+
+**Keine Geräte-/Hörtests für 0.4.0 in dieser Arbeitsumgebung ausgeführt.**
+
+## Archiv: Entwicklung bis 0.3.0
+
+Die folgenden Implementierungsbeschreibungen, Prüfstände und „nächsten Schritte“
+sind historisch. Insbesondere „Transformator ohne Klangwirkung“, alte GUI-
+Namensschilder, Fallzahlen, Binärhashes und frühere Modellplanung beschreiben
+den damaligen Stand; der aktuelle Status steht oben.
 
 ## 1. Implementiert
 
@@ -111,6 +182,163 @@ MOD-GUI ab 0.3.0 als querformatiges Paneel mit **drei senkrechten Bereichen**:
   keine GLIBC-2.29-Symbolreferenzen mehr.
 
 ## 2. Tatsächlich ausgeführte Prüfungen
+
+### SPICE-Transformatorprüfung 2026-10-05
+
+Der Auftrag `docs/SPICE_AUFTRAG.md` ist als eigene Offline-Untersuchung
+ausgeführt. Ergebnisse unter **[`docs/spice_sim/`](spice_sim/README.md)**:
+Bericht, vier Einstiegsnetlists, vollständige Mess-CSVs, Wellenformauszüge,
+340 Laufnetlists/-logs, Hash-/Herkunftsmanifeste und Reproduktionsskripte.
+
+- **ngspice 45.2:** 260 Hauptarbeitspunkte (vier Modelle × fünf Frequenzen ×
+  13 Pegel), 76 Diagnosefälle und vier protokollierte Original-Include-Abbrüche.
+  `C/a/n/R/b/m/Np/Ns` unverändert; 48-kHz-Punktabtastungen, analoge H3/H5
+  zusätzlich aus feineren adaptiven Solverzeiten.
+- **Numerisch reproduzierbar:** KCL-Zustandsform gegen unabhängige
+  DDT-/Hilfsinduktorform, Zeitschritthalbierung und Gear/Trapez abgeglichen.
+  Max. Gainänderung bei Zeitschritthalbierung **1,55×10⁻⁷ dB**.
+  Abschließende Wiederholung der vier Einstiegsnetlists: **bitgleiche
+  vollständige Messarrays**. `verify_results.py` bestätigt Betriebspunktmatrix,
+  unveränderte Modellparameter, Provenienz und 668 endliche Wellenformarrays;
+  `SHA256SUMS` enthält 722 geprüfte Artefakte.
+- **Inhaltliches Ergebnis:** Alle vier Netze besitzen einen instabilen
+  Nullzustand; Nullsignal mit `10⁻⁷ V` Anfangsstörung bestätigt die positiven
+  Pole. Keine Rückwirkung der Sekundärlast, kurze Fenster überwiegend
+  Expansion, spätere Fenster driftend. Die bisherige `φ_k`-Herleitung ist
+  dimensionswidrig und **nicht bestätigt**; neue Klang-Kniekoeffizienten,
+  Kniebreite und stationärer DC-Offset sind nicht bestimmbar.
+- **Nächster Schritt:** Netzform, Vorzeichen, Einheiten, gemeinsamer Kern und
+  Last-Rückwirkung klären, anschließend neu simulieren. Die bisherigen
+  Schwellenzahlen sind kein freigegebener DSP-Fit. `Symmetric` bleibt
+  ausschließlich Prüfreferenz. In dieser Arbeit wurden keine DSP-/JSFX-/
+  Presetänderungen und keine Geräte-/Hörtests ausgeführt.
+
+### Ergänzung: Transformator-Paper ausgewertet, 2026-10-05
+
+Die lokale PDF *Real-Time Audio Transformer Emulation for Virtual Tube
+Amplifiers* (de Paiva et al., 2011, DOI 10.1155/2011/347645) wurde vollständig
+gelesen; zentrale Schaltbilder, Formeln und Tabelle 1 zusätzlich visuell
+geprüft. Bericht: [`TRANSFORMER_PAPER_REVIEW.md`](TRANSFORMER_PAPER_REVIEW.md).
+
+- **Nutzbare neue Grundlage:** bidirektionales GC-/WDF-Modell mit gemeinsamem
+  Kern, Leerlauf-Strom-/Spannungsmessung und zweistufigem Parameterfit;
+  vollständiger publizierter Fender-NSC041318-Parametersatz in Tabelle 1.
+- **Einordnung des SPICE-Befunds:** Die lokale `xformer.lib` bildet diese
+  Struktur nicht korrekt ab; ihre Instabilität widerlegt nicht die
+  veröffentlichte GC-Methode.
+- **Offen vor Umsetzung:** `b`-Normierung der Gl. 17/18, Sekanten-/
+  Differentialpermeanz sowie Stabilität der im Paper verwendeten
+  Ein-Sample-Verzögerungen. Periodischer 80-Hz-Fit ist kein Transiententest;
+  historische 96-kHz-PC-Messung ist kein Dwarf-CPU-Nachweis.
+- **Nächster Schritt:** separate Offline-Referenz nach Abb. 6(b)/Tabelle 1
+  aufbauen, gegen WDF-Näherung prüfen, danach Green-Stripe-Skalierung und
+  eigene Stufen bestimmen. Dieser Schritt war Literaturauswertung;
+  keine neue Simulation des Paper-Modells und keine DSP-Änderung.
+
+### Ergänzung: Hersteller-Kennlinien gelesen, 2026-10-05
+
+Alle drei PDFs in `docs/transformer/` (sechs Seiten, acht Diagramme) sind
+als Text und Bild ausgewertet. Bericht:
+[`transformer/AUSWERTUNG.md`](transformer/AUSWERTUNG.md), dazu
+47 ausdrücklich grobe visuelle Ableseintervalle in
+`transformer/KENNLINIEN_ABLESUNG.csv`; PDF-Hashes, CSV-Struktur und
+Seiten-/Intervallbezüge geprüft.
+
+- Hammond **140TEX und 560Q sind 1:1**; Lundahl **LL1930 ist regulär
+  5,8:1/11,6:1** und enthält keine grafischen Kennlinien.
+- Belegt sind vor allem Tiefbass-Nichtlinearität sowie beim 560Q
+  HF-Anhebung und pegelabhängige Phase. Das sind passende Zielkurven
+  für eine Line-Stufe, keine Begründung für starken Breitbandklirr.
+- Offene Quellenfragen: 140TEX-Last 1000 Ω im Frequenzgang versus
+  100 Ω bei THD+N; dBm-Pegelbezug/Normalisierung; L-/Impedanz- und
+  Anschlusskonventionen beim 560Q. THD+N enthält Rauschen, keine
+  getrennten H2/H3/H5 und keine Hystereseschleifen.
+- Nächster Schritt: dokumentierte Quelle/Last und elektrische
+  Volt-Skalierung festlegen, Amplituden-/Phasenziele gemeinsam fitten,
+  anschließend Tiefbass-Nichtlinearität mit geklärter Referenz bewerten.
+  Dies war Datenblattarbeit, keine neue Simulation oder Hardwaremessung.
+
+### Ergänzung: Fitgrundlage und Schätzbereiche, 2026-10-05
+
+Die zusätzlich genannten PDFs und der GroupDIY-Thread sind ausgewertet.
+Bericht: [`transformer/PARAMETERFIT_GRUNDLAGE.md`](transformer/PARAMETERFIT_GRUNDLAGE.md).
+Whitlock und Lundahl-Whitepaper vollständig; McLyman gezielt zu
+Magnetisierung/Materialien/Parasiten; GroupDIY alle 22 Beiträge.
+
+- **Neue konkrete 1:1-Referenz:** das in Whitlock enthaltene Jensen
+  JT-11P-1-Datenblatt, Stand 1/01, mit 600-Ω-Quelle / 10-kΩ-Last,
+  DCR und THD über Pegel/Frequenz. Typischer 1-%-THD-Punkt bei
+  **+20 dBu / 20 Hz**. Für den ersten sauberen Line-Eingangsfit empfohlen.
+- **Schätzen ist für einen ersten Gray-Box-Fit möglich:** effektives
+  LF-L, HF-`f0/Q`, Flux-Skala, schwaches Gedächtnis und explizite digitale
+  Pegelzuordnung. Feste Quellenwerte und eigene Suchbereiche stehen in
+  `transformer/FIT_STARTWERTE.json`; Rechenweg
+  `transformer/estimate_fit_start.py` ausgeführt und plausibilisiert.
+- **Noch fehlend für Eindeutigkeit:** Magnetisierungsstrom, einzelne
+  Harmonische, Transienten/Remanenz und zusätzliche Quellen-/Lastbedingung.
+  Niedriger relativer Pegelklirr kann Hysterese oder Noise enthalten;
+  keine pauschale Noise-Subtraktion. DLP nicht als rohe Phase verwenden.
+- **Nächster Schritt:** Jensen-Kurven mit Intervallen aufbereiten und den
+  eingeschränkten Offline-Fit ausführen; unterschiedliche plausible
+  Parametersätze und zurückgehaltene Messkurven prüfen. Bisher nur
+  Literatur-/Rechenarbeit, kein Jensen-Fitlauf, DSP-Port oder Hörtest.
+
+### Ergänzung: Erregerstrom und weitere Modellquellen, 2026-10-05
+
+Alle sechs HiFiHaven-Seiten / 110 Beiträge, StackExchange-Frage 606060
+mit drei Antworten (offizielle API nach HTTP 403 der Webseite) und die
+vier neu genannten PDFs sind ausgewertet. Bericht:
+[`transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md`](transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md).
+
+- Erregerstrom ist nicht ohne Weiteres reiner Magnetisierungsstrom;
+  Verlust-/Parasitenanteile und Phase/Wirkleistung beim Fit berücksichtigen.
+- `05_e.pdf` liefert einen relevanten Audiovergleich Fröhlich/J-A.
+  Als Baseline zunächst dynamische Sättigung mit korrekter Lastkopplung,
+  dann schwaches Gedächtnis vergleichen; kein Materialparametersatz des
+  Gitarrenausgangsübertragers wird zum Jensen-Eingangsmodell erklärt.
+- Die anderen Papers betreffen 40-kHz-Stromwandler, Wicklungsfehler-FRA
+  und statischen NN-Kennwertfit eines 500-kV-Modells. Verwendbare Methoden,
+  aber keine neuen 1:1-Audiofitdaten. Gedruckte Zeitdivisions-/Statistik-
+  fehler im FRA-Paper und unklare NN-Grafikskalierung dokumentiert.
+- Nächster Schritt bleibt der eingeschränkte Jensen-Offlinefit mit
+  Modellvergleich und Anfangszustands-/Burstprüfungen. Diese Arbeit war
+  Quellenanalyse und algebraische Prüfung, keine neue DSP-/Geräteabnahme.
+
+### Erster Jensen-Offlinefit und drei eigene Profile, 2026-10-05
+
+Der anschließend beauftragte **Fit wurde tatsächlich ausgeführt**.
+Ergebnisse, Skripte und Hörproben:
+[`transformer/offline_fit/`](transformer/offline_fit/README.md),
+Detailbericht [`BERICHT.md`](transformer/offline_fit/BERICHT.md).
+Benutzerentscheidung: **60s warm → 80s ausgewogen → 00s clean**.
+
+- **Jensen JT-11P-1, reduzierter Datenblattfit:** 53 Zielbedingungen,
+  33 Training / 20 zurückgehalten, 18/20 Validierungsintervalle getroffen.
+  Das vollständige Modell trifft 24/33 Trainingsintervalle; Restfehler
+  bleiben ausdrücklich sichtbar. Fröhlich-artiger Flux-Kern mit schwachem
+  positivem Stop-Gedächtnis, Lastkopplung und effektivem HF-Surrogat.
+- **Gemessene Modellwerte:** −2,28468 dB Gain; 0,02145 % THD bei
+  +4 dBu / 20 Hz; 1 % THD bei ca. **+20,49 dBu**. Der typische
+  Herstelleranker +20 dBu wird nicht exakt getroffen (dort ca. 0,591 %).
+  Keine identifizierte Hardware-/Hysteresegleichheit behauptet.
+- **Profile tatsächlich abgeleitet:** 20-Hz-1-%-THD bei **−14/−8/−2
+  dBFS Peak**, gemeinsame Skalierung; 60s weiches p=3-Potenzmodell,
+  80s p=5, 00s Jensen-artig. 20-kHz-Abweichung ungefähr
+  **−1,304/−0,129/−0,046 dB**. `profiles.json` enthält vollständige
+  Offlineparameter, eigene Zielwahl und feste Gainnormalisierung.
+- **Verifikation PASS:** Schrittweitenverfeinerung, unabhängiger
+  DOP853-Solver, kausale 48/96/192-kHz-Bursts, Symmetrie,
+  Kern-Leistungsbilanz und reale Modell-Last-/Quellenrückwirkung.
+  High-rate-HF-Vergleich bis 768 kHz. Das ist kein PASS des gesamten
+  Datenblattfits; dessen Abweichungen sind in der CSV dokumentiert.
+- **Artefakte:** 168 Profil-Arbeitspunkte, Fit-/Vergleichsdiagramme,
+  native Wellenformdaten und sieben 12-s-/48-kHz-Float-WAV-Proben
+  (bei 768 kHz gerendert, antialiasgefiltert). 35 Artefakte gehasht,
+  wiederholte 1-%-Anker und Float-WAV-Struktur geprüft.
+- **Nächster Schritt:** Proben hören und die Profilabstimmung bewerten;
+  bei akzeptiertem partiellen Fit Produktport C++/EEL2 gemeinsam,
+  Rate-/Oversampling-/Übergangskonzept und Dwarf-CPU prüfen.
+  Noch kein Transformator im Laufzeit-DSP und kein Hör-/Gerätetest.
 
 **Revalidierung 2026-10-04:** Die nachfolgend als PASS geführten Kernergebnisse
 wurden in dieser Arbeitsumgebung erneut ausgeführt, nachdem eine Toolchain ohne
@@ -369,12 +597,12 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
 5. 0.2.0-Pakete erzeugen (`tools/package.py`) und Herkunft festhalten.
 6. Ergebnisse mit `TEST_REPORT_TEMPLATE.md`; gezielte Änderungen nur anhand
    Befund, C++/EEL2/Tests/Modelldoku gemeinsam.
-7. **Transformator-Klangstufe (offen; die Bauentscheidungen sind jetzt getroffen,
-   der Code fehlt noch).** Port und Oberfläche stehen. Festgelegt ist:
+7. **Transformator-Klangstufe (offen; Netzmodell nach SPICE-Befund neu klären).**
+   Port und Oberfläche stehen. Die bisherige Planung lautete:
 
    - integrierter, **kanalgetrennter** Flux-Zustand nach dem Vorbild von
      `CORE_GC`, an der **Eingangsseite**;
-   - **Sättigungsschwelle entschieden:** normierter Flux `u = φ/φ_k` mit
+    - **Frühere, jetzt unbestätigte Sättigungsschwelle:** normierter Flux `u = φ/φ_k` mit
      `u_knee = 1,0`; `φ_k` je Typ aus `φ_k = (C·ω/a)^(1/(n-1))` am geometrischen
      Bandmittel — 0,532 (`60s`), 0,337 (`80s`), 0,368 (`00s`). Ein gemeinsamer
      Wert statt vier absoluter, weil die Modelle nur 1,58 auseinanderliegen
@@ -385,7 +613,28 @@ getestet“ oder „hardwareidentisch“ aus den lokalen Ergebnissen ableiten.
    - die `flux`-/`Lowpass`-Färbung in `Colour` bleibt **unverändert**;
    - Latenz unverändert 0/3/4 Frames.
 
-   Danach zwingend: Parität C++/EEL2, Dwarf-CPU-Messung und Hörtest, weil
+   **Neuer Vorrang:** `spice_sim/BERICHT.md` auswerten und eine konsistente
+   Übertrager-Netzform festlegen. Die vorhandenen Modelle sind um Null
+   instabil; eine direkte Übernahme oder die frühere Knieformel liefert
+   keinen belastbaren Klangkern. Danach erst neue Koeffizienten ableiten.
+   Die inzwischen ausgewertete Arbeit de Paiva et al. (2011) liefert dafür
+   eine konkrete Struktur und Tabelle 1 als Referenz; Vorgehen und offene
+   Konventionen stehen in `TRANSFORMER_PAPER_REVIEW.md`.
+   Für ein 1:1-Line-Klangziel zusätzlich `transformer/AUSWERTUNG.md`
+   verwenden: Hammond 140TEX/560Q mit Amplituden-/Phasen-/THD+N-Zielen,
+   deren Quellen-/Last- und Pegelkonventionen vor dem Zahlenfit zu klären sind.
+   Die neue `transformer/PARAMETERFIT_GRUNDLAGE.md` empfiehlt zunächst den
+   besser bezeichneten Jensen-JT-11P-1-Datensatz aus Whitlock und enthält
+   explizite Startschätzungen; damit kann ein eigener eingeschränkter Fit
+   auch ohne zusätzliche Hardwaremessung beginnen.
+   **Inzwischen ausgeführt:** Der erste Jensen-Offlinefit und die drei
+   eigenen Profile liegen in `transformer/offline_fit/` vor. Maßgeblich
+   sind `BERICHT.md`, Fitrestfehler und `profiles.json`, nicht die
+   früheren ungetesteten Schwellen oder Gitarrentrafo-Koeffizienten.
+   Als Nächstes Hörbewertung der WAV-Proben und ein eigener Produktport-
+   Auftrag mit C++/EEL2-Parität und Rate-/CPU-Prüfung.
+
+   Bei späterer Umsetzung zwingend: Parität C++/EEL2, Dwarf-CPU-Messung und Hörtest, weil
    `ABS(v)^n` bis `n = 13` eine `pow`-Funktion je Wicklung und Sample verlangt
    und die Integrationsregel bei dieser Steilheit erst erprobt werden muss.
 8. **Route 3 (Kennlinien-LUT) bleibt zurückgestellt.** Die in

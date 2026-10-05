@@ -1,0 +1,19 @@
+{
+  "reference": "Jensen JT-11P-1, embedded datasheet 1/01",
+  "source_pdf": "../../sauce/Audio-Transformers-Chapter.pdf",
+  "source_sha256": "0e7a82774a90eee784897962ec3ed8ae17ac26122225a57596ef6c383f3bcc2d",
+  "pages": [28, 29],
+  "turns_ratio": 1.0,
+  "source_resistance_ohm": 600.0,
+  "primary_resistance_ohm": 1450.0,
+  "secondary_resistance_ohm": 1550.0,
+  "load_resistance_ohm": 10000.0,
+  "input_level": "RMS at primary terminals; un-loaded sinusoidal source calibrated per operating point",
+  "profile_direction": "60s warm/earlier saturation -> 80s balanced -> 00s clean/Jensen-like",
+  "dc_bias_a": 0.0,
+  "target_intervals": "Own visual readout intervals and published specifications, not original measurement arrays",
+  "subaudio_amplitude_curve": "Measurement level unspecified. Used for linear-background fit only; not asserted to be the large-signal model at +4dBu or infinitesimal virgin-stop response",
+  "validation": "30 Hz level curve, +14 dBu frequency curve and selected amplitude/phase points held out",
+  "digital_mapping": "1 kHz sine at -18 dBFS peak -> +4 dBu RMS primary; one fixed mapping for every profile",
+  "gain_policy": "Export raw loss and explicit fixed small-signal normalization; no level-dependent auto-makeup"
+}

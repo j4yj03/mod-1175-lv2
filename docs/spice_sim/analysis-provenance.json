@@ -1,0 +1,14 @@
+{
+  "script_sha256": "8fbf4f7bf7219b23b8c3cc5442fadd0b0d427bf9907708cd3a1859ce025e4ee5",
+  "input_sha256": {
+    "run-manifest.json": "97bebf5f6e34179415f07b30a194e31c303fb8356c6b99ee97e186f818d4d4ad",
+    "diagnostic-manifest.json": "0c7e4a268dd57d6d671a32592b4c880c414719da588e3942fcbaaa460ec8144a",
+    "diagnostic-results.csv": "edbbe1d376642c59ab05dbb56e66d4b16460f6f3d98d85e6de322a18e3fa1c83",
+    "GCOT-SE-01-results.csv": "5778b6403cf29ea743fdab79039dc999d3bc17f93c8c797d33629c27b5e996a6",
+    "GCOT-PP-03-results.csv": "4ec613ee324f65fbb336c13fb716ec999177e0a331bed303182138a4d464b10b",
+    "GCOT-PP-04-results.csv": "1ef138cd28d11a02fa34f719b982c34d0fbf83d663b95a76b45eb011966682a9",
+    "GCSYMETRICAL-results.csv": "5989f04008d777f766a55b6a6b1dd85f3ae6277b75c1416d0c688cc1b6d618cf"
+  },
+  "numpy": "2.5.3",
+  "matplotlib": "3.11.2"
+}

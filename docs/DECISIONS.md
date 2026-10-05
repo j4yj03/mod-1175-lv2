@@ -1,5 +1,28 @@
 # Entscheidungen und Entwicklungshistorie
 
+## D13 — Refit-fähige Eingangstransformatoren, 0.4.0
+
+Die instabile frühere xformer.lib ist als Laufzeitgrundlage verworfen.
+Eigener partieller Jensen-Datenblattfit mit gemeinsamer Quelle/Last,
+Flussverkettung und positivem Stop-Gedächtnis; Profile 60s warm, 80s
+ausgewogen, 00s clean. `Symmetric` wird zur linearen technischen Referenz.
+Bankrevision und Fit-/Importhashes in `data/transformers.json`, gemeinsamer
+Generator und validierter Import statt eingebetteter handgepflegter Tabellen.
+Keine Dateiladung im Audiothread; Refit bedeutet neuen Build/JSFX-Include-Stand.
+
+Input vor Transformator, Dry davor, Colour unabhängig, Output hinter Detektor.
+Modellwechsel über Eingang aus/ein, OS umfasst den Kern, PDC bleibt 0/3/4.
+HF mit angepassten Polen statt ungeeigneter Base-rate-Tustin-Nullstelle;
+Amplitude und bekannte Phasendifferenz ausdrücklich in `TRANSFORMER_RUNTIME.md`.
+
+## D14 — MOD-GUI mit Hostwidgets und Asset-Vorlagen
+
+Spaltfreie Paneele und Titel direkt auf Grün nach Benutzerwunsch. Alle Potis
+nutzen `aluminium.png` als 65-Frame-Filmstrip, Bypass die zwei vertikalen Frames
+von `toggle.png`, Status SVG 28×28 px. Mode ausdrücklich `mod-widget="switch"`
+mit MOD-Klassen `on/off`. Nur der obere Rand ist Drag-Handle. Echter
+MOD-Widget-/jQuery-UI-Browsertest statt bloßer Prüfung der HTML-Zeichenketten.
+
 ## D01 — Eigener Green Stripe
 
 Anfangs gewünschte Rev.-A-/Blue-Stripe-Nähe, anschließend eigene Green-Stripe-

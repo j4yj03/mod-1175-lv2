@@ -59,6 +59,9 @@ def main():
     gui=(bundle/'modgui.ttl').read_text(encoding='utf-8')
     for path in re.findall(r'<(modgui/[^>]+)>',gui):
         assert (bundle/path).is_file(),f'Missing asset: {path}'
+    css=(bundle/'modgui/green-stripe.css').read_text(encoding='utf-8')
+    for asset in re.findall(r'/resources/(assets/[^{}\)]+)',css):
+        assert (bundle/'modgui'/asset).is_file(),f'Missing control asset: {asset}'
     try:
         import rdflib
     except ImportError:

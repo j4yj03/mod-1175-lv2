@@ -1,0 +1,166 @@
+{
+  "kind": "eigene Offline-Rechnung; keine freigegebenen DSP-Koeffizienten",
+  "original_sha256": "8b5c6ce4015c34abe57ef133063cf4afb1d049f30475c46d8f6b91e6cb0f37ca",
+  "models": {
+    "GCOT-SE-01": {
+      "stage": "60s",
+      "status": "keine Skalar-Kalibrierung ableitbar",
+      "original_parameters": {
+        "C": 0.000709428,
+        "a": 8792.792558,
+        "n": 13.0,
+        "R": 31.39505785,
+        "b": 58.96858796,
+        "m": 2.0,
+        "Np": 2012.0,
+        "Ns": 72.0
+      },
+      "original_formula_arithmetic_only": {
+        "reference_frequency_hz": 1024.6950765959598,
+        "phi_number": 0.5324714596723236,
+        "origin": "Auftragsformel, keine Messung, Einheit nicht belegt"
+      },
+      "phi_k_from_simulation": null,
+      "phi_k_deviation_percent": null,
+      "knee_width_db": null,
+      "fitted_saturation_exponent": null,
+      "stationary_dc_offset_v": null,
+      "unavailable_reason": "Kein zeitinvarianter Arbeitspunkt: instabiler Nullzustand; kein identifizierter magnetischer Fluss; kein positives 1-dB-Knie im Hauptfenster.",
+      "measured_unstable_growth_per_s": 0.83696520811301,
+      "measured_growth_time_constant_s": 1.1947927946187418,
+      "growth_measurement": "netlists/GCOT-SE-01__zero_initial__f20__m30dBV.cir",
+      "short_window_measurement": {
+        "csv": "GCOT-SE-01-results.csv",
+        "case_id": "GCOT-SE-01__main__f1000__p6dBV",
+        "gain_source_db": -8.925879193761801,
+        "compression_source_db": -1.2145526122865586,
+        "capacitor_voltage_peak_v": 0.006292173042824335
+      },
+      "diagnostic_only_state_coefficients": {
+        "source": "algebraische KCL-Reduktion, keine gefitteten Messwerte",
+        "inverse_c": 1409.5863146083886,
+        "inverse_n_half": 0.0004970178926441351
+      }
+    },
+    "GCOT-PP-03": {
+      "stage": "80s",
+      "status": "keine Skalar-Kalibrierung ableitbar",
+      "original_parameters": {
+        "C": 0.012790087,
+        "a": 11683.51058,
+        "n": 6.0,
+        "R": 6.259141117,
+        "b": 4.89849808,
+        "m": 3.0,
+        "Np": 668.0,
+        "Ns": 48.0
+      },
+      "original_formula_arithmetic_only": {
+        "reference_frequency_hz": 632.4555320336759,
+        "phi_number": 0.3370559524947144,
+        "origin": "Auftragsformel, keine Messung, Einheit nicht belegt"
+      },
+      "phi_k_from_simulation": null,
+      "phi_k_deviation_percent": null,
+      "knee_width_db": null,
+      "fitted_saturation_exponent": null,
+      "stationary_dc_offset_v": null,
+      "unavailable_reason": "Kein zeitinvarianter Arbeitspunkt: instabiler Nullzustand; kein identifizierter magnetischer Fluss; kein positives 1-dB-Knie im Hauptfenster.",
+      "measured_unstable_growth_per_s": 0.48379783690931377,
+      "measured_growth_time_constant_s": 2.0669790637932235,
+      "growth_measurement": "netlists/GCOT-PP-03__zero_initial__f20__m30dBV.cir",
+      "short_window_measurement": {
+        "csv": "GCOT-PP-03-results.csv",
+        "case_id": "GCOT-PP-03__main__f1000__p6dBV",
+        "gain_source_db": -12.866653555754862,
+        "compression_source_db": -0.056447686018474386,
+        "capacitor_voltage_peak_v": 0.00033241107232469735
+      },
+      "diagnostic_only_state_coefficients": {
+        "source": "algebraische KCL-Reduktion, keine gefitteten Messwerte",
+        "inverse_c": 78.18555104433614,
+        "inverse_n_half": 0.0029940119760479044
+      }
+    },
+    "GCOT-PP-04": {
+      "stage": "00s",
+      "status": "keine Skalar-Kalibrierung ableitbar",
+      "original_parameters": {
+        "C": 0.002610317,
+        "a": 11434.182,
+        "n": 8.0,
+        "R": 8.860791571,
+        "b": 10.401883352,
+        "m": 2.0,
+        "Np": 1996.0,
+        "Ns": 64.0
+      },
+      "original_formula_arithmetic_only": {
+        "reference_frequency_hz": 632.4555320336759,
+        "phi_number": 0.3676084034708165,
+        "origin": "Auftragsformel, keine Messung, Einheit nicht belegt"
+      },
+      "phi_k_from_simulation": null,
+      "phi_k_deviation_percent": null,
+      "knee_width_db": null,
+      "fitted_saturation_exponent": null,
+      "stationary_dc_offset_v": null,
+      "unavailable_reason": "Kein zeitinvarianter Arbeitspunkt: instabiler Nullzustand; kein identifizierter magnetischer Fluss; kein positives 1-dB-Knie im Hauptfenster.",
+      "measured_unstable_growth_per_s": 0.619531880046372,
+      "measured_growth_time_constant_s": 1.6141219398187383,
+      "growth_measurement": "netlists/GCOT-PP-04__zero_initial__f20__m30dBV.cir",
+      "short_window_measurement": {
+        "csv": "GCOT-PP-04-results.csv",
+        "case_id": "GCOT-PP-04__main__f1000__p6dBV",
+        "gain_source_db": -10.110005543173465,
+        "compression_source_db": -0.5244247333678658,
+        "capacitor_voltage_peak_v": 0.0016768651052490808
+      },
+      "diagnostic_only_state_coefficients": {
+        "source": "algebraische KCL-Reduktion, keine gefitteten Messwerte",
+        "inverse_c": 383.0952332609411,
+        "inverse_n_half": 0.001002004008016032
+      }
+    },
+    "GCSYMETRICAL": {
+      "stage": "Symmetric",
+      "status": "keine Skalar-Kalibrierung ableitbar",
+      "original_parameters": {
+        "C": 0.002,
+        "a": 1e-05,
+        "n": 25.0,
+        "R": 2.3,
+        "b": 8.4,
+        "m": 4.0,
+        "Np": 200.0,
+        "Ns": 100.0
+      },
+      "original_formula_arithmetic_only": {
+        "reference_frequency_hz": 632.4555320336759,
+        "phi_number": 1.7613405250331173,
+        "origin": "Auftragsformel, keine Messung, Einheit nicht belegt"
+      },
+      "phi_k_from_simulation": null,
+      "phi_k_deviation_percent": null,
+      "knee_width_db": null,
+      "fitted_saturation_exponent": null,
+      "stationary_dc_offset_v": null,
+      "unavailable_reason": "Kein zeitinvarianter Arbeitspunkt: instabiler Nullzustand; kein identifizierter magnetischer Fluss; kein positives 1-dB-Knie im Hauptfenster.",
+      "measured_unstable_growth_per_s": 2.2359421284632357,
+      "measured_growth_time_constant_s": 0.4472387667239405,
+      "growth_measurement": "netlists/GCSYMETRICAL__zero_initial__f20__m30dBV.cir",
+      "short_window_measurement": {
+        "csv": "GCSYMETRICAL-results.csv",
+        "case_id": "GCSYMETRICAL__main__f1000__p6dBV",
+        "gain_source_db": -6.218032078099887,
+        "compression_source_db": -8.160955156100158e-05,
+        "capacitor_voltage_peak_v": 0.0022016155755285116
+      },
+      "diagnostic_only_state_coefficients": {
+        "source": "algebraische KCL-Reduktion, keine gefitteten Messwerte",
+        "inverse_c": 500.0,
+        "inverse_n_half": 0.01
+      }
+    }
+  }
+}

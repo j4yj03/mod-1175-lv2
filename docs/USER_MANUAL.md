@@ -43,14 +43,16 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
 breite **GAIN/TIME-Platte** mit Input/Output in der linken und Attack/Release in
 der rechten Spalte, das grüne ENGINE-Feld (Verhältnis, Comp-Kippschalter,
 Oversampling, Link) mit dem **Produktnamen als Titel**, und COLOUR (Mix, Colour,
-Transformator). **Mix** teilt sich mit Input, Output, Attack
-und Release die normale Stahloberfläche; **Colour** ist als einziger Regler
-**orange** eingefärbt und markiert damit die Farb-/Sättigungsstufe. Neben jedem
+Transformator). Die Bereiche schließen spaltfrei aneinander an; der Titel
+steht ohne Namensschild direkt auf Grün. Alle Potis verwenden die
+Aluminiumgrafik; die **Colour-Beschriftung** ist orange. Neben jedem
 Regler steht sein Stellbereich: `Min.`/`Max.` bei Input, Output, Mix und Colour,
 `Slow`/`Fast` bei Attack und Release. Unten rechts steht die **bernsteinfarbene
 Betriebslampe links vom Bypass-Kippschalter**; sie zeigt den Bypass-Zustand an
 und leuchtet, solange die Kette aktiv ist. Die JSFX-Fassung zeigt dieselben
 Zusammenhänge mit GR-, Peak-/RMS- und Host-GR-Anzeige, dort ohne Lampe.
+Zum Verschieben des LV2-Paneels den **freien oberen Rand** greifen.
+Drehregler verändern nur ihren Wert. Mode zeigt `COMP ON` / `COMP OFF`.
 
 ### Input — −36 bis +24 dB
 
@@ -97,6 +99,7 @@ werden, weil die Regelung Teile einzelner Schwingungen mitverfolgt.
 
 ### Ratio
 
+- **2:1:** sanfte eigene Erweiterung für geringe Regelung.
 - **4:1:** offener Ausgangspunkt, breiteres Knie.
 - **8:1:** kräftigere Kontrolle für dynamische Quellen.
 - **12:1 / 20:1:** hohe nominale Kompression für Peaks und Effektpfade.
@@ -124,7 +127,7 @@ Pedalboard-Abzweigung kann wegen fehlender Host-Kompensation anders phasenliegen
 
 Dosiert die Audiopfadfärbung: nichtlinearen FET-Anteil, DC-/Bandbegrenzung,
 asymmetrische Verstärkerkennlinien und niederfrequente Sättigungszustände.
-0 % ist der saubere Modellpfad; die eigentliche Feedback-Kompression bleibt
+0 % ist der saubere Colour-Pfad; ein gewählter Transformator und die Feedback-Kompression bleiben
 aktiv. Der Regler ist eine eigene Erweiterung und kein originaler Hardwareknopf.
 
 ### Compression
@@ -152,21 +155,41 @@ Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
 - Eine Umschaltung im laufenden Signal blendet über etwa 2 ms aus, wechselt
   dann die Filterzustände und blendet wieder ein; der Latenzport folgt nach
   Abschluss der Ausblendung. Kurze Pegelschwankungen während des Wechsels sind
-  möglich, kein Knacksen.
-- Lokal gemessene relative Last (x86-Referenzbuild, Stereo, 48 kHz, Bestwert
+  möglich; Knackfreiheit im realen Host wird extern geprüft.
+- Historische Last ohne Transformator (0.2.0, x86-Referenzbuild, Stereo, 48 kHz, Bestwert
   über fünf Durchläufe, keine Dwarf-Aussage): Off/Colour 0 = 1,0×;
   Off/Colour 100 ≈ 2,1×; 2x/Colour 100 ≈ 4,2×; 4x/Colour 100 ≈ 7,7×. Die
   Färbung enthält den nichtlinearen Kern (FET-Teiler mit Wurzeloperation plus
   drei Sättigungspolynome) und verdoppelt die Last gegenüber Colour 0; das
   Oversampling vervielfacht die Subframenzahl entsprechend der Rate. Für
   sparsamen Betrieb Colour und OS zurücknehmen; auf dem Dwarf vor Ort messen.
-- Eingebaute JSFX-Selektorpresets lassen das Oversampling unverändert;
-  importierte Factory-Bänke und die LV2-Factory-Presets setzen es auf Off.
+  Die zusätzliche 0.4.0-Transformatorlast ist separat in `CPU_ANALYSIS.md` gemessen.
+- JSFX-Selektor, importierte Factory-Bänke und LV2-Factory-Presets setzen
+  Oversampling auf Off.
 - Anders ist der **Transformator**: er ist eine Klangwahl und wandert mit dem
   Preset. Beim Recall startet er also auf dem Wert des Presets und sonst auf
   `None`. Belegt in 6 von 36 Presets — *Guitar Colour Only* (`60s`), *Vintage Blue Grit* (`60s`), *Guitar Cruncher* (`80s`), *Bass Mojo Bite* (`80s`), *Huge Sub Weight* (`00s`), *Snare Saturated Parallel* (`80s`).
-  Grit* (`60s`) und *Huge Sub Weight* (`00s`). Er wirkt in 0.3.0 noch nicht auf
-  den Klang, wird aber bereits korrekt gespeichert und geladen.
+
+### Transformator — None / 60s / 80s / 00s / Symmetric
+
+Ab 0.4.0 hörbar **nach Input und vor der Kompressorstufe**, unabhängig von Colour:
+
+- **None:** kein Transformator; bisheriger Klangpfad.
+- **60s:** warm, weiche/frühe Tiefbasssättigung, stärker abgerundete Höhen.
+- **80s:** ausgewogene Zwischenstufe mit moderater Tiefbasssättigung.
+- **00s:** clean, größter Tiefbass-Headroom und geringe HF-Färbung.
+- **Symmetric:** lineare technische Referenz, keine weitere Vintage-Stufe.
+
+Input bestimmt die Anregung; Output anschließend zum Pegelvergleich einstellen.
+Compression Off lässt die Stufe aktiv, Mix 0/Enabled Off umgehen sie.
+Der Modellwechsel blendet über den Eingang aus/ein (je etwa 2 ms).
+OS Off/2x/4x gilt auch für den Transformator; nominale Latenz bleibt 0/3/4 Frames.
+Die Stufe ist ein partiell datenblattgefittetes Gray-Box-Modell. HF-Phase und
+Aliasverhalten sind nicht mit analoger Hardware gleichzusetzen.
+
+Spätere Bank-Refits können den Klang gespeicherter Projekte verändern.
+Für reproduzierbare Projekte die verwendete Plugin-/JSFX-Version behalten;
+technischer Refit-Weg: `TRANSFORMER_RUNTIME.md`.
 
 ### Enabled / Bypass
 
@@ -239,9 +262,9 @@ Spannungskalibrierung voraus und verändert nicht automatisch Pegel danach.
 
 ### Vocals
 
-`03 Vocal Natural` als Start: 4:1, langsamerer Attack, mittlerer/schnellerer
+Ein natürliches Vocal-Preset als Start: 4:1, langsamerer Attack, mittlerer/schnellerer
 Release. 3–5 dB GR hält den Pegel zusammen, ohne Atem und Satzenden unnötig
-aufzuziehen. Für Peaks `04 Vocal Peak Catch`; bei Rock `05 Vocal Rock Forward`.
+aufzuziehen. Für Peaks ein Peak-Catch-Preset, bei Rock stärkere Regelung wählen.
 
 Laut der Vocal-Praxisquelle kann man zu Lernzwecken absichtlich übertreiben:
 Attack schnell, Release langsam und Input bis 12–15 dB GR. Danach Attack wieder
@@ -250,38 +273,41 @@ Standard-Preset für jede Stimme. All Buttons/7-7 ist ein ausdrücklicher Effekt
 
 ### Bass
 
-`07 Bass Finger Level` erhält den Körper; `08 Bass Pick Punch` bewahrt mehr
+Ein Finger-Bass-Preset erhält den Körper; ein Pick-Bass-Preset bewahrt mehr
 Anschlag. Bei Tieftonknattern Release verlängern oder Input/Colour reduzieren.
-`09 Bass Fast Grit` nutzt diese Rauheit absichtlich. Unterschiedlich gespielte
+Grit-Presets nutzen diese Rauheit absichtlich. Unterschiedlich gespielte
 Noten benötigen Input-Anpassung; kein Preset kann die Aufnahme ersetzen.
 
 ### Kick, Snare, Toms
 
 Attack niedriger, um Frontkante zu erhalten; Release so wählen, dass zwischen
-Schlägen Erholung möglich ist. `10 Kick Weight`, `11 Snare Crack`, `12 Toms Body`
+Schlägen Erholung möglich ist. Die Kick-, Snare- und Tom-Presets
 sind Ausgangspunkte. Dual Mono ist für getrennte Quellen gedacht, nicht als
 automatisch bessere Stereobehandlung.
 
 ### Overheads und Raum
 
-Für natürlichere Overheads `13 Overheads Gentle`, Link On und kleine GR.
-`14 Room All Buttons` ist ein starker Raum-Effekt. Für die gesamte Drumgruppe
-`15 Drum Parallel Crush`: Input im Wet-Pfad kräftig, Output pegelgleichen,
+Für natürlichere Overheads ein sanftes Preset, Link On und kleine GR.
+All Buttons ist ein starker Raum-Effekt. Für die gesamte Drumgruppe
+Parallel-Crush wählen: Input im Wet-Pfad kräftig, Output pegelgleichen,
 Mix zunächst etwa 25 %. Transienten können trotz hoher GR herausragen.
 
 ### Elektrische und akustische Gitarre
 
-`16 Guitar Clean Sustain` nach Amp/Cab ausprobieren. Bereits verzerrte Gitarren
-haben oft wenig verbleibende Dynamik: `17 Guitar Rhythm Tight` zurückhaltend.
-`18 Guitar Colour Only` nutzt nur den Audiopfad. Strumming/Fingerpicking erhalten
-eigene Ausgangspunkte (`19`/`20`); Pickgeräusche und Raumrauschen kontrollieren.
+Clean-Sustain nach Amp/Cab ausprobieren. Bereits verzerrte Gitarren
+haben oft wenig verbleibende Dynamik: Rhythmuskompression zurückhaltend dosieren.
+`Guitar Colour Only` nutzt nur den Audiopfad samt 60s-Transformator.
+Strumming/Fingerpicking haben eigene Startwerte; Pickgeräusche und Raumrauschen kontrollieren.
 
 ### Piano, Rhodes, Synths und Bus
 
-`21 Piano Gentle` bewusst vorsichtig; All Buttons ist hier selten ein neutraler
+Piano bewusst vorsichtig komprimieren; All Buttons ist hier selten ein neutraler
 Start. Rhodes und Synth-Leads können mehr Körper bekommen. Synthbass braucht
-auf langen tieffrequenten Noten ruhige Release. `26 Stereo Bus Subtle` ist ein
-kreativer Bus-Preset, keine Mastering-Empfehlung.
+auf langen tieffrequenten Noten ruhige Release. Subtile Stereo-Bus-Einstellungen
+sind kreative Startpunkte, keine Mastering-Empfehlung.
+
+Die verbindlichen aktuellen Namen, Gruppen und Nummern aller 36 Presets
+stehen in der generierten Tabelle `PRESETS.md`.
 
 ## 7. Presets laden und speichern
 

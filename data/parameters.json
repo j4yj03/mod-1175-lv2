@@ -143,7 +143,6 @@
     ],
     "jsfx_slider": 13,
     "lv2_append": true,
-    "connection_optional": true,
-    "no_dsp": true
+    "connection_optional": true
   }
 ]

@@ -1,0 +1,34 @@
+Green Stripe 76 - GCOT-PP-03__main__f1000__m3dBV
+* 80s; pp; 48 kHz export, adaptive analog solver.
+* dBV refers to open-circuit DIFFERENTIAL source RMS (zero DC).
+* Source/loads are explicit test conditions, not original characterization data.
+.include "../xformer-ngspice.inc"
+.param FREQ=1000 LEVEL_DBV=-3
+.param RS=200 RL=8
+.param AMP={sqrt(2)*10**(LEVEL_DBV/20)}
+Vplus srcp 0 DC 0 AC 0.5 SIN(0 {AMP/2} {FREQ})
+Vminus srcn 0 DC 0 AC 0.5 180 SIN(0 {AMP/2} {FREQ} 0 0 180)
+Rplus srcp p1 {RS/2}
+Rminus srcn p2 {RS/2}
+Xdut p1 0 p2 out 0 GCOT-PP-03
+Rload out 0 {RL}
+.options reltol=1e-07 abstol=1e-14 vntol=1e-12 method=trap
+.control
+set noaskquit
+set numdgt=16
+set wr_vecnames
+set wr_singlescale
+ac dec 200 20 20k
+let source_v = v(srcp,srcn)
+let primary_v = v(p1,p2)
+wrdata GCOT-PP-03__main__f1000__m3dBV-ac.txt source_v primary_v v(out)
+tran 2.0833333333333333e-05 0.050000000000000003 0.040000000000000001 3.9062500000000001e-06
+let source_v = v(srcp,srcn)
+let primary_v = v(p1,p2)
+let cap1_v = v(xdut.xc.xcore1.u)
+let cap2_v = v(xdut.xc.xcore2.u)
+let primary_i = -i(vplus)
+wrdata GCOT-PP-03__main__f1000__m3dBV-transient.txt source_v primary_v v(out) cap1_v cap2_v primary_i
+quit
+.endc
+.end

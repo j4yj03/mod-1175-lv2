@@ -8,6 +8,10 @@ Aufnahmepegel, Rate, Blocksize, Pluginhash und Parameter immer zusammen notieren
 
 ## 2. Automatisierte lokale Prüfungen
 
+Aktueller Stand **0.4.0**. Historische Fallzahlen unten bleiben der
+Entwicklung zugeordnet; maßgeblich sind jetzt **430 Paritätsfälle / 72
+Presetzustände**, ergänzt um Transformator- und MOD-Widget-Prüfungen.
+
 ```bash
 make test
 python3 tools/check_abi.py build/native/green-stripe-76.lv2/green-stripe-76.so
@@ -38,6 +42,51 @@ python3 tools/check_abi.py build/native/green-stripe-76.lv2/green-stripe-76.so
 und GUI-Assets. Mit rdflib zusätzlich Turtle-Syntax. Lilv/MOD-SDK weiterhin als
 externen **semantischen** Metadatencheck benutzen.
 
+`transformer_tests.cpp` prüft kausale 20-Hz-Anker, Stille nach Belastung,
+Polarität, Kanaltrennung, Output/GR, Dry/Bypass, schnelle Modellwechsel und
+Hochfeldbetrieb bei extremen Gains. `test_transformer_model.py` lehnt ungültige
+Refit-Banken ab. `test_lv2.py` verbindet zusätzlich den tatsächlichen
+Transformatorport und prüft Modellauswahl sowie blockinvariante Wechsel bei
+allen OS-Stufen. Die alte optionale Nichtverbindung bleibt geprüft.
+
+### Unabhängiger Transformatorvergleich (NumPy)
+
+```bash
+make build/native/transformer_probe.so
+c++ -std=c++11 -O3 -fPIC -shared -fno-fast-math -ffp-contract=off \
+  docs/transformer/offline_fit/core.cpp -o /tmp/opencode/transformer-reference.so
+python3 tests/test_transformer_reference.py \
+  --runtime build/native/transformer_probe.so \
+  --reference /tmp/opencode/transformer-reference.so
+```
+
+Vergleicht Bass-/DC-/Burstverläufe mit dem unabhängigen Offlinekern und echte
+gerenderte HF-Antworten mit dem analogen Surrogat. Letzter Lauf: rohe
+Abweichung ≤5,42×10⁻¹⁵ FS, HF-Amplitude ≤0,3081 dB; Phase bis 67,91° abweichend.
+Dies ist kein Analogphasengleichheits- oder vollständiger Aliasnachweis.
+
+`tests/none_regression.cpp` lässt sich mit
+`-DGS76_REFERENCE_HEADER='"/pfad/alter/src/dsp/GreenStripe.hpp"'` gegen einen
+separat exportierten 0.3.0-Kern bauen. Tatsächlich geprüft gegen `77a25fd`:
+144 Fälle bitgleich, sechs Ratios × drei OS × vier Raten × zwei Varianten,
+einschließlich Output-/Link-/OS-/Compression-/Enabled-Wechseln.
+
+### MOD-GUI-Browsertest und Vorschau
+
+Entwicklungsabhängigkeiten: Playwright, Chromium, Pillow; externe MOD-UI-Quelle:
+`mod-audio/mod-ui`, geprüft bei `7a35aac69781af28997aee7e560a92da7146f318`.
+
+```bash
+python3 tests/test_modgui.py --mod-ui /pfad/mod-ui
+python3 tools/make_assets.py
+```
+
+Beide akzeptieren `--browser /pfad/chromium`. Der Test lädt die **echten**
+MOD-Widgets und jQuery-UI-Draglogik aus dem Checkout: Mode 1→0→1, Filmstrip
+mit 65 Frames, endliche Controlwerte, Knopfziehen ohne Paneelbewegung,
+separater Drag-Rand, Bypass/Lampe, spaltfreie Paneele und rahmenloser Titel.
+Gemessen mit Chromium 153.0.8010.12; Geräte-/Firmwaretest bleibt zusätzlich nötig.
+
 ## 3. JSFX-Parität
 
 Siehe Buildbefehle in `BUILD.md`. Pinned ysfx-Fork mit echter EEL2-JIT-Ausführung.
@@ -52,14 +101,18 @@ Siehe Buildbefehle in `BUILD.md`. Pinned ysfx-Fork mit echter EEL2-JIT-Ausführu
 - Double-Kern, float Ports, initial kein Fast-Math/FMA.
 - Peak-Abweichung höchstens **2×10⁻⁶ FS** pro Kanal; ab 0.2.0 wird **max=0 FS**
   (bitgleiche Float-Ausgabe) über alle 232 Fälle erreicht.
-- Alle 52 RPL-Presets gegen die eingebauten Selektorwerte abgleichen.
+- Historisch 52, aktuell 72 RPL-Presetzustände gegen die eingebauten Selektorwerte abgleichen.
+- Ab 0.4.0: sechs Ratios im Basissatz, 144 zusätzliche statische
+  Transformatorfälle (vier Profile × drei OS × drei Raten × zwei Varianten ×
+  zwei Betriebspunkte) und 30 Transformator-/OS-/Bypass-/NaN-/Modellwechsel-Fälle.
+  Insgesamt **430** Audiofälle; **72** Presetzustände aus 36 Presets je Variante.
 - Manuelle Änderung setzt den Selector auf Custom.
 
 **Bindende Implementierungsregel (0.2.0):** Alle transzendentalen Ausdrücke,
 die in beide Engines gehören, sind als `seriesLog`/`seriesExp` bzw.
 `gs_series_log`/`gs_series_exp` mit **zeilenweise identischer
 Operationsreihenfolge** umgesetzt (`src/dsp/GreenStripe.hpp` ↔
-`jsfx/GreenStripe76-Core.jsfx-inc`). Hintergrund: EEL2-JIT-`exp`/`log`/`pow`
+`jsfx/GreenStripe76-Numeric.jsfx-inc`). Hintergrund: EEL2-JIT-`exp`/`log`/`pow`
 und libm unterscheiden um ULPs; im Feedback-Solver kippt eine ULP-Differenz
 die Newton-/Bisektionsentscheidung und erzeugt hörbare Pfadunterschiede
 (gemessen 5.9×10⁻⁴ FS bei 96 kHz/2x/12:1). Attack-/Release-Zeiten und

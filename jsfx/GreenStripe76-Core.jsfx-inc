@@ -2,59 +2,10 @@
 // Common double-precision core. Keep in step with src/dsp/GreenStripe.hpp.
 // Calibrated constants are imported from generated GreenStripe76-Model.jsfx-inc.
 import GreenStripe76-Model.jsfx-inc
+import GreenStripe76-Numeric.jsfx-inc
+import GreenStripe76-TransformerCore.jsfx-inc
 
 @init
-// EEL2 exact equality treats unordered NaN as equal on x86; ordered >= avoids it.
-function gs_finite(x fallback) ( abs(x)>=0 && 1000000000000000000000000000000>=abs(x) ? x : fallback; );
-function gs_bound(x lo hi) ( max(lo,min(hi,x)); );
-// Shared transcendental kernels; operation order mirrors src/dsp/GreenStripe.hpp
-// so both engines stay bit-equal through parameter-time attack/release mapping.
-function gs_series_log(g) local(x k y y2 acc) (
-  x=g<0.000000000000001 ? 0.000000000000001 : g;
-  k=0;
-  while(x>=2)( x*=0.5; k+=1; );
-  while(x<1)( x+=x; k-=1; );
-  y=(x-1)/(x+1); y2=y*y;
-  acc=0.034482758620689655;
-  acc=y2*acc+0.037037037037037035;
-  acc=y2*acc+0.040000000000000001;
-  acc=y2*acc+0.043478260869565216;
-  acc=y2*acc+0.047619047619047616;
-  acc=y2*acc+0.052631578947368418;
-  acc=y2*acc+0.058823529411764705;
-  acc=y2*acc+0.066666666666666666;
-  acc=y2*acc+0.076923076923076927;
-  acc=y2*acc+0.090909090909090912;
-  acc=y2*acc+0.1111111111111111;
-  acc=y2*acc+0.14285714285714285;
-  acc=y2*acc+0.20000000000000001;
-  acc=y2*acc+0.33333333333333331;
-  k*0.6931471805599453+2*y*(1+y2*acc);
-);
-function gs_series_exp(x) local(k r acc e) (
-  k=floor(x/0.6931471805599453+0.5);
-  r=x-k*0.6931471805599453;
-  acc=0.000000000011470745597729725;
-  acc=r*acc+0.00000000016059043836821613;
-  acc=r*acc+0.00000000208767569878681;
-  acc=r*acc+0.00000002505210838544172;
-  acc=r*acc+0.00000027557319223985888;
-  acc=r*acc+0.0000027557319223985893;
-  acc=r*acc+0.000024801587301587302;
-  acc=r*acc+0.00019841269841269841;
-  acc=r*acc+0.0013888888888888889;
-  acc=r*acc+0.0083333333333333332;
-  acc=r*acc+0.041666666666666664;
-  acc=r*acc+0.16666666666666666;
-  acc=r*acc+0.5;
-  acc=r*acc+1;
-  acc=r*acc+1;
-  e=k;
-  while(e>0)( acc+=acc; e-=1; );
-  while(e<0)( acc*=0.5; e+=1; );
-  acc;
-);
-function gs_zap(x) ( abs(x)<0.000000000000000000000000000001 ? 0 : x; );
 function gs_db_gain(db) ( gs_series_exp(db*0.1151292546497022842); );
 function gs_gain_db(g) ( 8.68588963806503655*gs_series_log(g); );
 function gs_soft(x) local(x2) (
@@ -101,9 +52,6 @@ function gs_tap_calibration(all threshold knee) (
   );
 );
 
-function gs_alloc(n) local(base) (
-  base=gs_mem; gs_mem+=n; memset(base,0,n); base;
-);
 // Scalar/unrolled histories avoid repeated EEL RAM indexing and loop calls.
 function gs_hb_init(n coefs) instance(count c0 c1 c2 c3 c4 c5 c6 c7
   x0 x1 x2 x3 x4 x5 x6 x7 y0 y1 y2 y3 y4 y5 y6 y7 even odd) (
@@ -264,6 +212,7 @@ function gs_change_os(which) instance(os_active) local(coeffs) (
   gs_fs=coeffs[0]; gs_smooth=coeffs[1]; gs_input_hp=coeffs[2]; gs_output_hp=coeffs[3];
   gs_flux=coeffs[4]; gs_amp_lp=coeffs[5]; gs_mem_up=coeffs[6]; gs_mem_down=coeffs[7]; gs_lag=coeffs[8];
   this.rsL.gs_rs_init(); this.rsR.gs_rs_init();
+  this.xfL.gs_xf_core_reset(); this.xfR.gs_xf_core_reset();
   this.ctrlL.cachedRelease=this.ctrlR.cachedRelease=this.ctrlS.cachedRelease=-1;
 );
 function gs_set_os(which) instance(initial os_active os_requested os_transition os_gain) (
@@ -287,9 +236,16 @@ function gs_advance_os() instance(os_active os_requested os_transition os_gain) 
   );
 );
 function gs_reset(twoChannels) instance(stereo initial moving parked bypassed inL inR wetL wetR outL outR grL grR
-  os_active os_requested os_transition os_gain) (
+  os_active os_requested os_transition os_gain) local(os m) (
   gs_model_init();
   gs_mem=64; gs_qbase=gs_db_gain(gs_qbias_db);
+  gs_xf_stops=gs_alloc(14); gs_xf_thresholds(gs_xf_stops);
+  gs_xf_bank=gs_alloc(12*48);
+  os=0; loop(3,
+    m=1; loop(4,gs_xf_prepare(max(8000,srate)*(2^os),m,gs_xf_bank+(os*4+m-1)*48); m+=1;);
+    os+=1;
+  );
+  this.xfL.gs_xf_init(); this.xfR.gs_xf_init();
   gs_native_rate=gs_alloc(9); gs_two_rate=gs_alloc(9); gs_four_rate=gs_alloc(9);
   gs_prepare_rate(1,gs_native_rate); gs_prepare_rate(2,gs_two_rate); gs_prepare_rate(4,gs_four_rate);
   gs_fade_len=max(1,ceil(0.002*max(8000,srate))); gs_fade_inv=1/gs_fade_len; gs_fade_left=0;
@@ -324,10 +280,12 @@ local(attackPos releasePos newLink) (
   tp=gs_finite(compression,1)>0 ? 1 : 0; te=gs_finite(enabled,1)>0 ? 1 : 0; tl=newLink;
   tx=gs_bound(floor(gs_finite(transformer,0)+0.5),0,4);
   initial ? (
+    this.xfL.gs_xf_reset(tx); this.xfR.gs_xf_reset(tx);
     pi=ti; po=to; pa=ta; pr=tr; p_ratio=t_ratio; p_threshold=t_threshold; p_knee=t_knee;
     p_all=t_all; pm=tm; pc=tc; pp=tp; pe=te; pl=tl; px=tx; initial=0; moving=0;
     gs_tap_calibration(p_all,p_threshold,p_knee);
   ) : (
+    px=tx;
     moving=pi!==ti || po!==to || pa!==ta || pr!==tr || p_ratio!==t_ratio || p_threshold!==t_threshold ||
       p_knee!==t_knee || p_all!==t_all || pm!==tm || pc!==tc || pp!==tp || pe!==te || pl!==tl || px!==tx;
   );
@@ -340,9 +298,10 @@ function gs_approach(value goal) local(result) (
 function gs_process(left right)
 instance(stereo moving parked bypassed inL inR wetL wetR outL outR grL grR os_active os_gain
   ti to ta tr t_ratio t_threshold t_knee t_all tm tc tp te tl
-  pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl)
-local(i a b independentL independentR linked qL qR gL gR wet blend factor) (
+   pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl px)
+local(i a b independentL independentR linked qL qR gL gR wet blend factor xfL xfR bank) (
   factor=2^os_active;
+  bank=gs_xf_bank+os_active*4*48;
   this.rsL.gs_rs_up(gs_bound(left,-256,256),inL,factor);
   stereo ? this.rsR.gs_rs_up(gs_bound(right,-256,256),inR,factor);
   i=0;
@@ -359,14 +318,17 @@ local(i a b independentL independentR linked qL qR gL gR wet blend factor) (
     pe===0 ? (
       !bypassed ? (
         this.chL.gs_ch_reset(); this.chR.gs_ch_reset();
+        this.xfL.gs_xf_reset(px); this.xfR.gs_xf_reset(px);
         this.ctrlL.gs_ctrl_reset(); this.ctrlR.gs_ctrl_reset(); this.ctrlS.gs_ctrl_reset();
         parked=bypassed=1;
       );
       wetL[i]=inL[i]; stereo ? wetR[i]=inR[i]; grL=grR=0;
     ) : (
     bypassed=0;
-    a=this.chL.gs_ch_input(inL[i]*pi,pc);
-    b=stereo ? this.chR.gs_ch_input(inR[i]*pi,pc) : a;
+    xfL=this.xfL.gs_xf_process(inL[i]*pi,px,bank,gs_fs);
+    xfR=stereo ? this.xfR.gs_xf_process(inR[i]*pi,px,bank,gs_fs) : xfL;
+    a=this.chL.gs_ch_input(xfL,pc);
+    b=stereo ? this.chR.gs_ch_input(xfR,pc) : a;
     qL=qR=0;
     pp===0 || pe===0 ? (
       !parked ? (

@@ -1,0 +1,76 @@
+Warning: can't find the initialization file spinit.
+
+Note: No compatibility mode selected!
+
+
+Circuit: green stripe 76 - gcsymetrical__literal__f1000__p0dbv
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 601
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+srcp                                         0
+srcn                               8.65956e-17
+p1                                           0
+p2                                 1.94692e-18
+xdut.xgc.c3                                  0
+xdut.xgc.c4                        1.94692e-18
+xdut.xgc.p1_vmeas_0                          0
+xdut.xgc.c1                                  0
+xdut.xgc.c2_vmeas_1                1.94692e-18
+xdut.xgc.c2                        1.94692e-18
+xdut.xgc.xgc1.n3                             0
+xdut.xgc.xgc2.n3                   1.94692e-18
+out                                          0
+b.xdut.xgc.bs#branch                         0
+v.xdut.xgc.v_bp1#branch                      0
+v.xdut.xgc.v_bp2#branch                      0
+b.xdut.xgc.xgc2.bc#branch          8.46487e-19
+b.xdut.xgc.xgc1.bc#branch                    0
+b.xdut.xgc.bp2#branch                        0
+v.xdut.xgc.vp2#branch             -8.46487e-19
+b.xdut.xgc.bp1#branch                        0
+v.xdut.xgc.vp1#branch                        0
+vminus#branch                     -8.46487e-19
+vplus#branch                                 0
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+Warning: singular matrix:  check nodes xdut.xgc.c1 and b.xdut.xgc.bp1#branch
+
+
+No. of Data Rows : 0
+doAnalyses: TRAN:  Timestep too small; time = 4.16667e-07, timestep = 4.88281e-18: trouble with node "b.xdut.xgc.bs#branch"
+
+
+tran simulation(s) aborted
+Warning from checkvalid: vector srcp is not available or has zero length.
+Error: RHS "v(srcp,srcn)" invalid
+Warning from checkvalid: vector p1 is not available or has zero length.
+Error: RHS "v(p1,p2)" invalid
+Warning from checkvalid: vector xdut.xgc.c1 is not available or has zero length.
+Error: RHS "v(xdut.xgc.c1,xdut.xgc.c3)" invalid
+Warning from checkvalid: vector xdut.xgc.c2 is not available or has zero length.
+Error: RHS "v(xdut.xgc.c2,xdut.xgc.c4)" invalid
+Warning from checkvalid: vector vplus#branch is not available or has zero length.
+Error: RHS "-i(vplus)" invalid
+Error: no such vector source_v
+ngspice-45.2 done

@@ -1,0 +1,43 @@
+{
+  "render_script_sha256": "af8f33fc1d1a50893a3ae28385a376b15ef6f6010328126ba439162c4676559e",
+  "profiles_sha256": "d5a19f41c68df1f27019ad3af0afc450919b37ba9118e82743c7616591b524a6",
+  "assets": [
+    {
+      "profile": "00s",
+      "source_rate_hz": 768000,
+      "audio_rate_hz": 48000,
+      "frames": 576000,
+      "peak_fs": 0.7941835438053039,
+      "peak_difference_fs": 0.21013198635490105,
+      "clipping_applied": false,
+      "post_peak_normalization": false,
+      "wav_sha256": "ebb23ca1b100db3d7980bb7d9c28a5a173ec98b5d5b897ad37291e3835e61779"
+    },
+    {
+      "profile": "80s",
+      "source_rate_hz": 768000,
+      "audio_rate_hz": 48000,
+      "frames": 576000,
+      "peak_fs": 0.7940976414623767,
+      "peak_difference_fs": 0.315817225863064,
+      "clipping_applied": false,
+      "post_peak_normalization": false,
+      "wav_sha256": "08cca004f266b7cd645b722006e3c5cfcb6300d21892cb0cb7a6a112bb86a739"
+    },
+    {
+      "profile": "60s",
+      "source_rate_hz": 768000,
+      "audio_rate_hz": 48000,
+      "frames": 576000,
+      "peak_fs": 0.7941427473568341,
+      "peak_difference_fs": 0.39574773932138224,
+      "clipping_applied": false,
+      "post_peak_normalization": false,
+      "wav_sha256": "61c274a5c1b0ea25fbcc627038d38e35bb8f4dca20d2984adcaab9cf843dcce3"
+    }
+  ],
+  "probe_description": "20/50/100Hz bursts -18/-8/-2dBFS plus 80/240/1200Hz multitone",
+  "stereo_AB": "left original input, right fixed-normalized profile output; no phase alignment",
+  "resampling": "scipy.signal.resample_poly, Kaiser default antialias FIR, 768k -> 48k",
+  "listening_test": "not performed"
+}

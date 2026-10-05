@@ -4,11 +4,13 @@
 
 | Bestandteil | Herkunft | Lizenz/Verwendung |
 |---|---|---|
-| Green Stripe DSP/JSFX/UI/Tools/Dokumentation | Eigenimplementierung dieser Session | MIT, `LICENSE` |
+| Green Stripe DSP/JSFX/Paneel/Tools/Dokumentation | Eigenimplementierung dieser Session; bereitgestellte Assets separat unten | MIT, `LICENSE` |
 | `src/lv2_abi.h` | Schmale ABI-Deklarationen aus LV2 core | ISC-Hinweis vollständig im Header |
 | Halfband-Allpass-Prinzip | Laurent de Soras HIIR, Designer/Rekursion | Mathematisches Prinzip unabhängig implementiert; Referenz WTFPL v2 |
 | Padé-[7/6]-tanh-Formel | Mathematische Approximation, Schroeder-Artikel/weitere Referenzen | Formel eigenständig in C++/EEL; kein Rust-/JUCE-Quellcode kopiert |
-| PNG/CSS/JSFX-Grafik | Eigene Originalgestaltung | MIT |
+| Transformator-Runtime | Eigener Offline-Datenblattfit/Flux-Kern, `transformer/offline_fit/` | MIT-Code, Referenzdaten/Herkunft in `SOURCES.md`, keine Hardwarekalibrierung |
+| Paneel/CSS/JSFX-Grafik | Eigene Gestaltung | MIT |
+| `aluminium.png`, `toggle.png`, `pilot_on.svg`, `pilot_off.svg` | Vom Benutzer im Projekt bereitgestellte Assets | Als Vorlagen übernommen; keine zusätzliche Urheber-/Lizenzherkunft behauptet |
 
 Quellreferenz LV2:
 `https://raw.githubusercontent.com/lv2/lv2/master/include/lv2/core/lv2.h`.
@@ -25,7 +27,11 @@ Architekturdokumentation nachvollziehbar. Kein vollständiger Fremdbibliotheksba
 - **JoepVanlier/ysfx**, Commit `5c3452fee62583aa3d1b7e877d0c758c4024af89`,
   Library Apache-2.0 mit eigenen Drittkomponenten. Nur extern gegen Testprogramme
   gelinkt; nicht im Runtime-Plugin/JSFX-Paket enthalten.
-- **Pillow** für Original-PNG-Erzeugung, nur Entwicklung.
+- **Playwright/Chromium und Pillow** für HTML/CSS-Vorschauen, nur Entwicklung.
+- **MOD-UI** `7a35aac69781af28997aee7e560a92da7146f318`: echte Widgets und
+  enthaltenes jQuery/jQuery UI für den externen Browsertest; nicht ins Plugin kopiert.
+- **NumPy** für den unabhängigen Runtime-/Offlinevergleich, SciPy für den
+  Offlinefit; beide nicht Teil des Laufzeitplugins.
 - **rdflib 7.6.0 / pyparsing** für strengere TTL-Prüfung, nur Entwicklung.
 - **Arm GNU-A GCC 9.2-2019.12** für ergänzenden Cross-Build; separate
   Toolchain-Lizenzen, keine Toolchain im Projektpaket.

@@ -24,7 +24,9 @@
 
 ## DSP und Kompatibilität
 
-- Normative Konstanten/Parameter: `data/model.json`, `data/parameters.json`.
+- Normative Konstanten/Parameter: `data/model.json`, `data/parameters.json`,
+  referenzierte Modellbank `data/transformers.json`; Refit-Vertrag in
+  `docs/TRANSFORMER_RUNTIME.md`. Generator validiert beide Engines gemeinsam.
 - C++11, LV2-C-ABI, keine GUI-/JUCE-/WebView-Abhängigkeit im DSP.
 - `run()`/`@sample`: keine Allokationen, Datei-/Netzzugriffe oder unbeschränkten
   Schleifen. DSP arbeitet intern in double, Audioports in float.
@@ -32,6 +34,9 @@
 - Keine implizite Auto-Makeup-Funktion oder verdeckter Brickwall-Limiter.
 - 4× Oversampling umfasst Regelkreis und Audiopfad. Zeiten beziehen sich auf
   die interne Rate. Resamplerhistorien sind je Kanal/Richtung getrennt.
+- Ab 0.4.0 umfasst die gewählte Rate auch den Eingangstransformator.
+  Modellwechsel über Eingang überblenden; `None` exakt transparent.
+  Bank-Refits ändern bestehende Projektklänge: Revision/Herkunft und Tests erneuern.
 - Optionaler Link verwendet Betragspegel; L+R-Summierung darf gegenphasige
   Signale nicht aus der Detektion entfernen.
 - JSFX-Grafik verändert keine Audiozustände. Meter sind getrennte Zustände.

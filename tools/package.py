@@ -35,13 +35,17 @@ def main():
     version=json.loads((ROOT/'data/model.json').read_text(encoding='utf-8'))['version']
     jsfx=[(p,'GreenStripe76/'+p.name) for p in (ROOT/'jsfx').iterdir() if p.is_file()]
     jsfx += [(ROOT/'LICENSE','GreenStripe76/LICENSE'),(ROOT/'docs/USER_MANUAL.md','GreenStripe76/USER_MANUAL.md'),
-             (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md')]
+             (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md'),
+             (ROOT/'docs/TRANSFORMER_RUNTIME.md','GreenStripe76/TRANSFORMER_RUNTIME.md'),
+             (ROOT/'data/transformers.json','GreenStripe76/transformers.json')]
     zip_package(args.output/f'green-stripe-76-{version}-jsfx.zip',jsfx)
     source=[]
     excluded={'.git','build','dist','.deps','__pycache__','test-results'}
     for p in ROOT.rglob('*'):
         relative=p.relative_to(ROOT)
-        if p.is_file() and not any(x in excluded for x in relative.parts) and p.suffix not in ('.nam','.wav','.pyc','.so'):
+        if relative.parts[:4] == ('docs','transformer','offline_fit','audio'):
+            continue  # Offline audition material, including compressed WAV archives.
+        if p.is_file() and not any(x in excluded for x in relative.parts) and p.suffix.lower() not in ('.nam','.wav','.pyc','.so','.pdf','.npz'):
             source.append((p,'green-stripe-76/'+str(relative)))
     zip_package(args.output/f'green-stripe-76-{version}-source.zip',source)
     if args.bundle:

@@ -1,6 +1,6 @@
 # Anforderungen und Abgrenzung
 
-Stand: Benutzerentscheidungen dieser Session, 2026-10-03.
+Stand: Benutzerentscheidungen bis 2026-10-05, Produkt 0.4.0.
 
 ## Produkt
 
@@ -21,8 +21,9 @@ Stand: Benutzerentscheidungen dieser Session, 2026-10-03.
 
 ## Bedienfunktionen
 
-Input, Output, Attack 1–7, Release 1–7, Ratio 4/8/12/20/All,
-Mix, Colour, Compression, Enabled und in Stereo Stereo Link.
+Input, Output, Attack 1–7, Release 1–7, Ratio 2/4/8/12/20/All,
+Mix, Colour, Compression, Enabled und in Stereo Stereo Link;
+Oversampling Off/2x/4x und Transformator None/60s/80s/00s/Symmetric.
 Gemeinsame Regler im Dual-Mono-Modus. Eingebaute Instrument-Startwerte und `.rpl`.
 
 ## Technische Eigenschaften
@@ -30,7 +31,11 @@ Gemeinsame Regler im Dual-Mono-Modus. Eingebaute Instrument-Startwerte und `.rpl
 - DSP-C++11, keine Runtime-Abhängigkeit auf JUCE, React, X11 oder NAM.
 - Audiopfad float-Ports, double-Zustände, keine Lookahead-Puffer.
 - Pro Sample begrenzte numerische Arbeit, keine Audio-Allokationen.
-- 4×-Polyphasen-IIR-Verarbeitung für Audiopfad und Regelung.
+- Off/2x/4x-Verarbeitung für Audiopfad, Transformator und Regelung; Default Off.
+- Transformatorbank refit-fähig, gemeinsame validierte Daten für C++/EEL2;
+  getrennte Kanalzustände, feste Gainnormalisierung, geglättete Modellwechsel.
+- LV2-GUI: spaltfreie innere Paneele, Produktname ohne Schild; bereitgestellte
+  Aluminium-/Toggle-/Pilot-Assets, separater Drag-Rand und funktionsfähiger Mode-Schalter.
 - Input-Staging, nichtlinearer FET-Divider, post-cell Feedback-Abgriff vor Output,
   programabhängige Entladung und separater All-Modus.
 - Geglättete Parameteränderungen und interner Bypass.

@@ -2,7 +2,9 @@
 
 > Alle Werte sind eigene Ausgangspunkte, keine Hardwaremessungen.
 > Input bis zur gewünschten GR anpassen, Output anschließend pegelgleichen.
-> Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). Der eingebaute JSFX-Selektor lässt sie unverändert; importierte Factory-Bänke und LV2-Presets setzen Off.
+> Oversampling ist eine separate Qualitäts-/CPU-Auswahl (Default Off). JSFX-Selektor, importierte Factory-Bänke und LV2-Presets setzen Off.
+
+> Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.
 
 > Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei
 > 6 von 36 Presets auf einer Stufe und sonst auf `None`.
@@ -118,21 +120,21 @@ Anregungen: PENNY, UA-TIPS.
 
 ## 11 Guitar Colour Only
 
-Verstärkerfärbung ohne Regelung; Output beeinflusst die nachfolgende Sättigung. Transformatormodell 60s (single-ended, höchste Sättigungsschwelle φ=0.532) für die mildeste Vintage-Färbung; die Quelle benennt keine Stufe, die Zuordnung ist unsere.
+Verstärkerfärbung ohne Regelung; Output beeinflusst die nachfolgende Sättigung. Eigenes Transformatorprofil 60s für warme, früh einsetzende Tiefbasssättigung und HF-Abrundung; die Quelle benennt keine Stufe, die Zuordnung ist unsere.
 
 Transformator: 60s.
 Anregungen: UA-TIPS, BLACKBIRD.
 
 ## 12 Vintage Blue Grit
 
-PENNY-Quicksheet E-Gitarre: mittlere Attacke und mittlerer Release, 4:1 oder 8:1; sie verweist für Extra-Grit auf Blue-Stripe-Emulationen. Der 1176-Absatz in MOORE S.9 nennt die frühen Revisions mit rohem, farbigem Ton. Transformatorstufe 60s (single-ended) für den schmalbandigen Vintage-Charakter.
+PENNY-Quicksheet E-Gitarre: mittlere Attacke und mittlerer Release, 4:1 oder 8:1; sie verweist für Extra-Grit auf Blue-Stripe-Emulationen. Der 1176-Absatz in MOORE S.9 nennt die frühen Revisionen mit rohem, farbigem Ton. Eigenes Transformatorprofil 60s für Wärme und weiche Tiefbasssättigung, ohne Revisionsbehauptung.
 
 Transformator: 60s.
 Anregungen: PENNY, MOORE.
 
 ## 13 Guitar Cruncher
 
-TOZZOLI „Guitar Cruncher": Output zurückgenommen, Input weit über die 3-Uhr-Stellung hinaus, 4:1, Attack und Release ganz rechts; zum Aufhellen des Pumpens Release nach links. Bluestripe ist eine Hardware-Revision mit grundsätzlich mehr Verzerrung; Green Stripe 76 hat keinen Revisionsschalter, die Transformatormodell-Zuordnung ist deshalb unsere Interpretation — 80s hat die niedrigste Sättigungsschwelle (φ=0.337) und damit den stärksten Grit. Uhrzeiten werden nicht umgerechnet, siehe METHODIK in docs/SOURCES.md.
+TOZZOLI „Guitar Cruncher“: Output zurückgenommen, Input weit über die 3-Uhr-Stellung hinaus, 4:1, Attack und Release ganz rechts; zum Aufhellen des Pumpens Release nach links. Green Stripe 76 hat keinen Revisionsschalter: Das eigene 80s-Profil ergänzt ausgewogene Tiefbasssättigung zwischen 60s und 00s. Uhrzeiten werden nicht umgerechnet, siehe METHODIK in docs/SOURCES.md.
 
 Transformator: 80s.
 Anregungen: TOZZOLI, MOORE.
@@ -174,14 +176,14 @@ Anregungen: UA-TIPS, MOORE.
 
 ## 19 Bass Mojo Bite
 
-MOORE S.21 Beispiel 3 (A7/R7, 8:1): die schnellsten Zeiten lassen den Kompressor innerhalb jeder Periode arbeiten; das erzeugt die dort beschriebene tieffrequente FET-Verzerrung. Über den Mix-Regler dosiert. Transformatorstufe 80s (push-pull) für den passenden Ansatz.
+MOORE S.21 Beispiel 3 (A7/R7, 8:1): die schnellsten Zeiten lassen den Kompressor innerhalb jeder Periode arbeiten; das erzeugt die dort beschriebene tieffrequente FET-Verzerrung. Über den Mix-Regler dosiert. Eigenes 80s-Transformatorprofil für zusätzliche, moderate Tiefbasssättigung.
 
 Transformator: 80s.
 Anregungen: MOORE.
 
 ## 20 Huge Sub Weight
 
-MOORE S.9 (Owsinski 2006) und S.21: 8:1 mit deutlicher Gain-Reduktion für Bass. „Huge" meint hier Tiefe und Gewicht, nicht mehr Verhältnis. Transformatorstufe 00s (push-pull mit den meisten Primärwindungen, Np=1996) für die stärkste Kopplungsabsenkung.
+MOORE S.9 (Owsinski 2006) und S.21: 8:1 mit deutlicher Gain-Reduktion für Bass. „Huge“ meint hier Tiefe und Gewicht, nicht mehr Verhältnis. Eigenes 00s-Profil mit größtem Tiefbass-Headroom und zurückhaltender HF-Färbung; keine Bassanhebung oder bestimmte Wicklung behauptet.
 
 Transformator: 00s.
 Anregungen: MOORE, PENNY.
@@ -209,7 +211,7 @@ Anregungen: MTM-SNARE, MOORE.
 
 ## 24 Snare Saturated Parallel
 
-MTM-SNARE: für einen technisch korrekten, aber langweiligen Snare nicht mehr Kompression, sondern Farbe und Sättigung — „snares love saturation"; 1176-artige Kompressoren liefern die analogartige Färbung. Zu starke Wirkung wird parallel ausgeblendet. Transformatormodell ist unsere Zuordnung (niedrigste Sättigungsschwelle φ=0.337), die Quelle nennt keine Stufe.
+MTM-SNARE: für einen technisch korrekten, aber langweiligen Snare nicht mehr Kompression, sondern Farbe und Sättigung — „snares love saturation“; 1176-artige Kompressoren liefern die analogartige Färbung. Zu starke Wirkung wird parallel ausgeblendet. Das ausgewogene 80s-Transformatorprofil ist unsere Zuordnung; die Quelle nennt keine Stufe.
 
 Transformator: 80s.
 Anregungen: MTM-SNARE, UA-TIPS.

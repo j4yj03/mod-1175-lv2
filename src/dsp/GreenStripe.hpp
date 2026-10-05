@@ -5,6 +5,7 @@
 #define GREEN_STRIPE_DSP_HPP
 
 #include "ModelConstants.hpp"
+#include "TransformerModels.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -18,8 +19,7 @@ inline double finiteOr(double x, double fallback = 0.0) {
     return std::isfinite(x) ? x : fallback;
 }
 // Shared transcendental kernels with mirrored EEL2 operation order, so both
-// engines stay bit-equal through parameter-time attack/release mapping. Used
-// only when parameters change; the per-sample path keeps libm/EEL2 calls.
+// engines stay bit-equal through parameter mapping and nonlinear solvers.
 inline double seriesLog(double g) {
     double x = g < 1.0e-15 ? 1.0e-15 : g;
     int k = 0;
@@ -76,6 +76,8 @@ inline double gainDb(double gain) {
 }
 inline double zap(double x) { return std::abs(x) < 1.0e-30 ? 0.0 : x; }
 
+#include "Transformer.hpp"
+
 inline double softClip(double x) {
     if (x >= 5.0) return 1.0;
     if (x <= -5.0) return -1.0;
@@ -109,10 +111,7 @@ struct Parameters {
 struct RunningParameters {
     double inputGain, outputGain, attackTime, releaseTime;
     double ratio, threshold, knee, all, mix, colour, compression, enabled, link;
-    // Selected gyrator-capacitor transformer model. Carried through the
-    // parameter path so the control is live and preset-addressable, but it is
-    // deliberately not connected to the audio path yet: see
-    // docs/DSP_ARCHITECTURE.md, section "Transformator".
+    // Refit-able input transformer bank; selection crossfades inside its stage.
     int transformer;
 };
 
@@ -381,6 +380,7 @@ public:
     explicit Processor(double sampleRate, bool stereo = true)
         : coefficients_(sampleRate, 1), nativeCoefficients_(sampleRate, 1),
           twoCoefficients_(sampleRate, 2), fourCoefficients_(sampleRate, 4),
+          transformerBank_(sampleRate),
           stereo_(stereo), initial_(true), smoothing_(false), parked_(false), bypassed_(false),
           activeOS_(0), requestedOS_(0), osTransition_(0),
           osFadeLength_(static_cast<unsigned>(std::max(1.0, std::ceil(0.002 * sampleRate)))),
@@ -407,13 +407,18 @@ public:
         }
         target_ = next;
         if (initial_) {
+            for (unsigned i=0; i<2; ++i) transformers_[i].reset(target_.transformer);
             running_ = target_; initial_ = false; smoothing_ = false;
             calibration_.update(running_);
         }
-        else smoothing_ = !sameParameters(running_, target_);
+        else {
+            running_.transformer=target_.transformer;
+            smoothing_ = !sameParameters(running_, target_);
+        }
     }
     void reset() {
         for (int i = 0; i < 2; ++i) { resamplers_[i].reset(); channels_[i].reset(); }
+        for (int i = 0; i < 2; ++i) transformers_[i].reset();
         for (int i = 0; i < 3; ++i) controllers_[i].reset();
         calibration_.reset();
         lastGR_[0] = lastGR_[1] = 0.0;
@@ -435,6 +440,7 @@ public:
             if (running_.enabled == 0.0) {
                 if (!bypassed_) {
                     for (int j = 0; j < 2; ++j) channels_[j].reset();
+                    for (int j = 0; j < 2; ++j) transformers_[j].reset(running_.transformer);
                     for (int j = 0; j < 3; ++j) controllers_[j].reset();
                     parked_ = bypassed_ = true;
                 }
@@ -444,9 +450,13 @@ public:
                 continue;
             }
             bypassed_ = false;
-            const double a = channels_[0].input(in[0][i] * running_.inputGain,
+            const double xfL=transformers_[0].process(in[0][i]*running_.inputGain,
+                running_.transformer,transformerBank_.c[activeOS_],coefficients_.fs);
+            const double xfR=stereo_ ? transformers_[1].process(in[1][i]*running_.inputGain,
+                running_.transformer,transformerBank_.c[activeOS_],coefficients_.fs) : xfL;
+            const double a = channels_[0].input(xfL,
                                                running_.colour, coefficients_);
-            const double b = stereo_ ? channels_[1].input(in[1][i] * running_.inputGain,
+            const double b = stereo_ ? channels_[1].input(xfR,
                                                running_.colour, coefficients_) : a;
             double qL = 0.0, qR = 0.0;
             const bool park = running_.compression == 0.0 || running_.enabled == 0.0;
@@ -504,6 +514,7 @@ private:
         activeOS_ = selected;
         coefficients_ = selected == 0 ? nativeCoefficients_ : selected == 1 ? twoCoefficients_ : fourCoefficients_;
         for (int i = 0; i < 2; ++i) resamplers_[i].reset();
+        for (int i = 0; i < 2; ++i) transformers_[i].core.reset();
         for (int i = 0; i < 3; ++i) controllers_[i].cachedRelease = -1.0;
     }
     void advanceOversamplingTransition() {
@@ -546,6 +557,8 @@ private:
     }
     Coefficients coefficients_;
     const Coefficients nativeCoefficients_, twoCoefficients_, fourCoefficients_;
+    const TransformerBank transformerBank_;
+    TransformerStage transformers_[2];
     bool stereo_, initial_, smoothing_, parked_, bypassed_;
     RunningParameters running_, target_;
     Resampler resamplers_[2];

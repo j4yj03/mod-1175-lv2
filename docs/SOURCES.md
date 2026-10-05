@@ -16,6 +16,15 @@ Technische Primärbelege haben Vorrang vor Praxisblogs/Forummeinungen.
 | EICHAS | `../PhD_Thesis_Felix_Eichas.pdf`, Felix Eichas, 2019 | Volltext aller Kapitel, 166 PDF-Seiten; 1176-Fallstudie Rev.-D-Nachbau, S.60–78; Modell 6.4–6.5 |
 | USER-LINKS | `../quellen.txt` | Alle sechs ursprünglichen URLs untersucht |
 | NAM-LOCAL | `../UREI_Universal Audio 1176/desc.txt` und vier `.nam` | JSON/Metadaten/Hashes aller vier; siehe NAM_PROFILES; keine Capture-Settings erfunden |
+| PAIVA-TRANSFORMER-2011 | `docs/sauce/Real-Time_Audio_Transformer_Emulation_for_Virtual_.pdf` | Volltext und ausgewählte Formel-/Schaltbildseiten geprüft am 2026-10-05; GC-/WDF-Modell, Messverfahren und publizierter Fender-Parametersatz; siehe TRANSFORMER_PAPER_REVIEW |
+| TRAFO-DATASHEETS | drei lokale PDFs in `docs/transformer/` | Hammond 140TEX/560Q und Lundahl LL1930, alle sechs Seiten und acht Rasterkennlinien geprüft am 2026-10-05; siehe transformer/AUSWERTUNG |
+| WHITLOCK-AUDIO | `docs/sauce/Audio-Transformers-Chapter.pdf` | vollständig gelesen; Audio-Grundlagen, Messbedingungen und eingebettetes JT-11P-1-Datenblatt als neue 1:1-Fitreferenz |
+| MCLYMAN-2004 | `docs/sauce/ourdev_725050HHOGA4.pdf` | 534-seitiges Entwurfshandbuch; relevante Abschnitte zu Magnetisierung/Materialien, Entwurfszusammenhängen und Kapitel 17 zu Parasiten ausgewertet |
+| LUNDAHL-PSW-6 | `docs/sauce/PSW_WhitePaper_Download_Chapter_6.pdf` | sieben Seiten vollständig gelesen; Ken DeLoria, elektrische Ersatzbilder und Quellen-/Lastabhängigkeit |
+| BAL-ONCU-CT-2014 | `docs/sauce/Effects of a current transformers magnetizing current on the dri.pdf` | vollständiger Artikel, lineares Stromwandler-/Zener-Treibermodell bei 40 kHz; Methodik, keine Audio-Koeffizienten |
+| SHADID-IFRA-2022 | `docs/sauce/Application_of_the_Impulse_Response_of_Transformer_Winding_for_Detection_of_Internal_Turn-to-Turn_Short_Circuits.pdf` | sechs Seiten vollständig, Impuls-FRA; gedruckte Zeitdivisions-/Statistikfehler dokumentiert |
+| WU-NN-2019 | `docs/sauce/Research_on_Calculation_Method_of_Transformer_Magnetizing_Current_Based_on_Neural_Network_Fitting.pdf` | fünf Seiten vollständig, statischer Kennwertfit eines PSCAD-500-kV-Modells; keine Audio-Wellenformsynthese |
+| MACAK-SCHIMMEL-2011 | `docs/sauce/05_e.pdf` | vier Artikelseiten plus Bereinigungsseite; Fröhlich/Jiles–Atherton in Push-pull-Gitarrenendstufe, eigener Modellvergleich angeregt |
 
 Eichas: gedruckte Seite +15 = lokale PDF-Seite. Offizieller PDF ohne vorgeschaltete
 Bereinigungsseite: +14. DOI-/Repositorybeleg:
@@ -31,6 +40,100 @@ Keine veröffentlichten 1176-LUT-/WAV-/MAT-Beilagen im geprüften Repository gef
 Gerats Masterarbeit 2016 nicht öffentlich im Volltext gefunden.
 
 ## 2. Hersteller- und historische Schaltungsquellen
+
+### TRAFO-DATASHEETS — reale Audioübertrager
+
+Vom Benutzer bereitgestellte lokale Herstellerdatenblätter, am 2026-10-05
+vollständig gelesen; Diagramme zusätzlich als Seitenbilder und vergrößerte
+Original-Raster geprüft. Keine externen Messdateien ergänzt.
+
+| Datei unter `docs/transformer/` | Umfang / Stand | Inhalt |
+|---|---|---|
+| `ArHamm140TEX_140TEX.pdf` | 2 S.; PDF-Erstellung 2012-07-13 | 1:1, 1-kΩ-Lineübertrager, Nickel-Kern; Frequenzgang und THD+N bei 1 Vpp / 10 / 19 dBm |
+| `ArHamm560Q_560Q.pdf` | 3 S.; PDF-Erstellung 2014-01-27 | 1:1 mit geteilten Wicklungen; Frequenzgang/Phase/THD+N bei 0 / 10 / 27 dBm, Serie 40k/40k und parallel 10k/10k |
+| `ArLL1930_Lundahl_LL1930.pdf` | 1 S.; R181217 | **5,8:1 bzw. 11,6:1**, kein regulär 1:1 spezifizierter Typ; tabellierte Frequenzgang-/Verzerrungsgrenzen bei +30 dBu Primärsignal |
+
+SHA256 in obiger Reihenfolge:
+
+```text
+710d7f729bd951414c25028408046d46c555cbb934bee25c55a210721d3ed314
+05631df2c160b4b15197b5dd87878ab92a72b6a0d95b8c47465b35f7b0b4ff0f
+6a7fee4d50094ee3ff3a1465a2e2748598201a237f1c78784d436c4464a49863
+```
+
+**Quellenkritik:** Beim 140TEX steht im Frequenzgangtitel `RL=1000`, im
+THD+N-Titel `RL=100`; offen, ob andere Messung oder Druckfehler. Hohe
+Pegelkurven überlagern sich, y-Achse des Frequenzgangs fälschlich/uneindeutig
+`dBm`. Beim 560Q passen tabellierte Induktivität, Impedanz und Tieffrequenz-
+phase nicht ohne weitere Modell-/Messkonventionen in ein einfaches
+konstantes-L-Ersatzbild. dBm-Pegelmessstelle und Normalisierung sind bei
+beiden Hammond-Blättern unzureichend bezeichnet. LL1930-PDF-Metadatentitel
+lautet `LL1931`, das sichtbare Blatt eindeutig `LL1930`.
+
+Auswertung: [`transformer/AUSWERTUNG.md`](transformer/AUSWERTUNG.md).
+47 eigene **grobe visuelle Ableseintervalle**, ausdrücklich keine
+Hersteller-Rohdaten: `transformer/KENNLINIEN_ABLESUNG.csv`.
+THD+N ist keine H3/H5-Auflösung; keine B-H-/H-Φ-Schleifen enthalten.
+Diese Quellen liefern Referenzbedingungen für ein Line-Übertragermodell,
+keinen identifizierten vollständigen GC-/Hystereseparametersatz und keine
+1176-Revisionskalibrierung.
+
+### WHITLOCK-AUDIO / MCLYMAN-2004 / LUNDAHL-PSW-6
+
+Zusätzliche lokale Transformatorquellen, am **2026-10-05** ausgewertet:
+
+**Bill Whitlock, *Audio Transformers***, ursprünglich Kapitel 11 im
+*Handbook for Sound Engineers*, 3. Auflage, Glen Ballou (Hrsg.), 2001;
+lokale Fassung mit Copyright 2001/2006. 31 PDF-Seiten einschließlich
+Bereinigungs- und Titelseite; gedruckte Seite +2 = PDF-Seite. Volltext
+vollständig gelesen, zentrale Abbildungen 17–23 und die eingebetteten
+Datenblattseiten zusätzlich visuell geprüft.
+
+- S. 9–12: Pegel-/Frequenz-/Quellenabhängigkeit von Klirr, relative
+  Kleinpegeldistorsion durch Hysterese, LF-Permeabilität und HF-Dämpfung.
+- S. 24–25: explizite Messbedingungen und Grenzen unvollständiger Angaben.
+- **PDF 28–29:** historisches Jensen **JT-11P-1**-Datenblatt, Stand 1/01,
+  1:1-Line-Eingang, 600-Ω-Quelle / 10-kΩ-Last. Primär-/Sekundär-DCR
+  1,45/1,55 kΩ; typische THD 0,025 % bei +4 dBu/20 Hz; typischer
+  1-%-THD-Punkt **+20 dBu/20 Hz**, mindestens +18 dBu. Kurven über
+  Pegel und Frequenz, 0,25-Hz–100-kHz-Bandbreite, DLP. Pegel als
+  Eingangspegel bezeichnet; Schirmkapazitäten nicht mit differentieller
+  Wicklungskapazität verwechseln. DLP ist keine rohe Phase. Grafiken
+  tragen THD+N-Achsen, Tabelle nennt THD; Restnoise/Analyzerbandbreite offen.
+- SHA256:
+  `0e7a82774a90eee784897962ec3ed8ae17ac26122225a57596ef6c383f3bcc2d`.
+
+**Colonel Wm. T. McLyman, *Transformer and Inductor Design Handbook*,
+Third Edition, Revised and Expanded**, Marcel Dekker, 2004,
+ISBN 0-8247-5393-3. Lokale Datei `ourdev_725050HHOGA4.pdf`, 534 Seiten.
+Gezielte Lektüre, **keine behauptete Komplettlektüre des Buchs**:
+Kap. 1 (PDF 22–49), relevante Teile von Kap. 2 (PDF 51–60, 73–75,
+83–99), Beginn Kap. 5 (192–197), Kap. 17 vollständig (448–461),
+Faraday Gl. 21-B12 (PDF 522). OCR teils beschädigt; Tabelle 2-1,
+Materialschleifen und relevante Kapazitäts-/Ersatzbildseiten visuell geprüft.
+
+- Permeabilitätsdefinitionen, Material-/Luftspalt-/Biasabhängigkeit,
+  B-H-Schleifen und Verlustgesetze; Materialbereiche als Priors, nicht
+  als identifizierte Hammond-/Jensen-Werte.
+- Kap. 17: Streuinduktivität, verteilte Wicklungs-/Kopplungskapazitäten,
+  Resonanzformel und Messschaltung. Identifizierte Ersatzglieder statt
+  ungeprüfter Übernahme von Leistungswandlerparametern.
+- SHA256:
+  `7c40a46c8c541a1fb4b50029765f968e2be8f131949dcf425026132e48fae680`.
+
+**Ken DeLoria, *Chapter 6: Exploring the Electrical Characteristics of
+Audio Transformers***, Lundahl Transformers / ProSoundWeb, sieben Seiten,
+PDF-Metadaten 2014. Volltext vollständig, Ersatzbilder S. 2–3 visuell
+geprüft. `Lp/R/Ll/Ct`, Quellen-/Last- und Kabelabhängigkeit; vereinfachte
+Ersatzbilder und Herstellerdarstellung, kein neuer nichtlinearer Datensatz.
+SHA256:
+`c2c9285bdf87da26d1587d515ace16169cbad8234757cc1962ea51962ad1a875`.
+
+Gemeinsame Auswertung, verbleibende Fitdaten und **eigene Startschätzungen**:
+[`transformer/PARAMETERFIT_GRUNDLAGE.md`](transformer/PARAMETERFIT_GRUNDLAGE.md).
+`FIT_STARTWERTE.json` / `estimate_fit_start.py` kennzeichnen feste
+Quellenwerte, abgeleitete Ersatzwerte und frei gewählte Annahmen. Noch kein
+Fit-/Simulationsnachweis für den Jensen-Kandidaten.
 
 ### UA-MANUAL-2009
 
@@ -113,11 +216,41 @@ Fremdautors, die `xformer.lib` und `tube.lib` einbindet und `GCOT-PP-04` mit zwe
 `6V6GT`-Röhren treibt. Dient nur als Beleg für die vorgesehene Verwendung, nicht
 als Messergebnis.
 
-Zugriffsstand: gelesen und strukturell ausgewertet. **Nicht** als Schaltung
-nachgebaut, **nicht** simuliert, **keine** Messwerte übernommen. Das Modell
-benutzt `DDT` und ist damit nicht direkt echtzeitfähig; die geplante
-Echtzeitform mit integriertem Flux-Zustand ist in
-`docs/DSP_ARCHITECTURE.md`, Abschnitt 11, beschrieben, zusammen mit Alternativen.
+Zugriffsstand **2026-10-05**: Originalmodelle gelesen und jetzt offline mit
+**ngspice 45.2** untersucht. Die Röhren-Testschaltung selbst wurde nicht
+simuliert. Die folgenden Ergebnisse sind **eigene Rechnungen**, keine externe
+Quelle und keine übernommene Hardwarekalibrierung.
+
+#### Eigener Rechenweg: SPICE-Transformatorprüfung
+
+- Auftrag: `docs/SPICE_AUFTRAG.md`; Ergebnisse gemäß Benutzerpfad in
+  [`docs/spice_sim/BERICHT.md`](spice_sim/BERICHT.md), alle 260 Arbeitspunkte in
+  `spice_sim/MESSWERTE.md` und den vier `*-results.csv`.
+- Original `xformer.lib`, SHA256:
+  `8b5c6ce4015c34abe57ef133063cf4afb1d049f30475c46d8f6b91e6cb0f37ca`.
+  Originaldatei und sämtliche acht Modellkoeffizienten je Typ erhalten.
+- 4 × 5 Frequenzen × 13 Pegel, 20 Hz–20 kHz, −30…+6 dBV; 48-kHz-Export,
+  zusätzliche native adaptive Zeitpunkte für H3/H5 oberhalb Nyquist.
+  200 Ω differentielle Quelle / 8 Ω Last sind ausdrücklich **eigene
+  Prüfbedingungen**, keine aus der Fremdquelle belegte Charakterisierung.
+- Direkte `DDT(I(...))`-Includes brechen in ngspice ab; Logs archiviert.
+  Simulation mit algebraisch äquivalenter Zustands-Netlist; unabhängige
+  Hilfsinduktor-DDT-Realisierung, Zeitschritt-/Solver-/Last- und Langzeitproben.
+  Insgesamt 76 Diagnoseläufe neben Hauptmatrix und vier Original-Abbruchversuchen.
+- Befund: alle vier Netze haben einen instabilen Nullzustand und keine
+  Last-Rückwirkung. `m` ist kein Kopplungsfaktor, `Rr`/`Br` liegen parallel.
+  Die geplante `φ_k`-Formel setzt Spannung und Strom gleich und ist nicht
+  durch die Simulation bestätigt. Kein belastbarer Transformator-Knie-Fit;
+  nicht bestimmbare Werte in `spice_sim/coefficients.json` ausdrücklich `null`.
+- Simulatorherkunft: Ubuntu-Paket `ngspice 45.2+ds-1`, unprivilegiert unter
+  `/tmp/opencode` entpackt; Versionsausgabe und Binärhash im Run-Manifest.
+  Keine neuen Bauteilmodelle heruntergeladen. Die erzeugten Includes sind
+  abgeleitete Darstellungen des lokalen Materials, keine zusätzliche
+  externe Modellquelle.
+
+Die bisherige GC-/Flux-Planung in `DSP_ARCHITECTURE.md`, Abschnitt 11, ist
+damit als unbestätigt gekennzeichnet; der nächste Schritt ist die Klärung
+einer konsistenten Netzform, bevor Echtzeit-Koeffizienten abgeleitet werden.
 
 ### MASON
 
@@ -186,6 +319,119 @@ Parameterstreuung/Ohmik-/Solverkontext; kein bauteilidentischer Green-Stripe-
 Transistorfit daraus behauptet.
 
 ## 4. Wissenschaftliche und Antialiasingquellen
+
+### Eigene Rechnung: erster Jensen-Datenblattfit, 2026-10-05
+
+Die in WHITLOCK-AUDIO enthaltenen historischen JT-11P-1-Kurven wurden
+in `docs/transformer/offline_fit/targets.csv` als Herstellergrenzen und
+eigene Ableseintervalle aufbereitet. **Das Fitergebnis ist keine externe
+Quelle**, sondern eine eigene Gray-Box-Rechnung gegen diese Quelle.
+
+- 53 Zielbedingungen, 33 Training / 20 Validierung. Seiten-/Hash- und
+  Betrags-/Pegelbezüge geführt; Subaudio-Amplitudenpegel unbekannt, daher
+  dort nur elektrischer linearer Hintergrund, keine Großsignalzertifizierung.
+- 36 Basis-Kernfits, acht lineare Starts und Verfeinerungen. Fröhlich-
+  artiger Flux-Kern mit eigener Stop-Gedächtnis-/Relaxationsnäherung;
+  HF-Kaskade effektives Surrogat, keine identifizierte parasitäre Bauteilbank.
+- **Partieller Fit:** 18/20 zurückgehaltene Intervalle, 24/33 Training.
+  Fehlende Magnetisierungs-/Harmonischen-/Transientenreferenzen bleiben
+  sichtbar. Kein „Jensen identisch“ aus dieser Offline-Rechnung ableiten.
+- Drei Profile nach Benutzerwahl warm/ausgewogen/clean sind **eigene
+  Ableitungen** mit gemeinsamen 1:1-/Quellen-/Lastbedingungen,
+  −14/−8/−2-dBFS-1-%-THD-Ankern. Keine Jahrzehnt-/Revisionstreue.
+- Tatsächliche Offlineprüfungen und Abhängigkeiten in
+  [`transformer/offline_fit/BERICHT.md`](transformer/offline_fit/BERICHT.md).
+  NumPy/SciPy-Optimierung, eigener C++11-Referenzrenderer,
+  GNU g++15.2, high-rate WAV-Render. Keine Änderung der Originalquelle.
+
+### Weitere Transformator-/Identifikationsarbeiten, 2026-10-05
+
+Alle vier folgenden lokalen PDFs vollständig als Text gelesen; zentrale
+Modellgleichungen, Tabellen und Ergebnisgrafiken zusätzlich visuell geprüft.
+Detailauswertung:
+[`transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md`](transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md).
+
+**BAL-ONCU-CT-2014:** Güngör Bal, Selim Öncü, *Effects of a current
+transformer's magnetizing current on the driving voltage in self-oscillating
+converters*, Turk J Elec Eng & Comp Sci 22 (2014), S. 191–201,
+DOI **10.3906/elk-1205-38**. 13 PDF-Seiten; Artikel beginnt auf PDF 3.
+Stromwandler 1:40/45/50, 3F3-Ferrit, 40 kHz, Zener-Treiberlast.
+Lineare ungesättigte Magnetisierung; Kernverluste und Kapazitäten explizit
+vernachlässigt. Stromaufteilung/Lastinteraktion methodisch nutzbar,
+Millihenry-/Zenerparameter nicht als Line-Übertrager-Fit übernommen.
+SHA256:
+`8cf8e6fedd5c5140cad5d8f0bfee7df7149644ab73370a744965431d738b06e4`.
+
+**SHADID-IFRA-2022:** Mozon Shadid, Noureddine Harid, Braham Barkat,
+Ashwin Manjunath, *Application of the Impulse Response of Transformer
+Winding for Detection of Internal Turn-to-Turn Short Circuits*, UPEC 2022,
+DOI **10.1109/UPEC55022.2022.9917862**, sechs Seiten.
+10-kVA-/0,4-kV-/50-Hz-Dreiphasentrafos, Fehlerdiagnose über Impuls-FRA.
+Messkonfigurationen methodisch nützlich; Gl. 1/2 (`h(t)=Vout/Vin`) nicht
+als korrekte Entfaltung übernehmen. Korrelationszähler fehlerhaft gedruckt,
+2-/20-MHz-Bereichsangabe widersprüchlich. Keine Audio-Sättigungsdaten.
+SHA256:
+`cd5a7fc2966a27d86db4c062b2f4a8956d63276f2cfa044d38472eb5edc0adbb`.
+
+**WU-NN-2019:** Guoxing Wu, Peng Wang, Yonghao Ren, Yuanda Song,
+Sheng Lin, *Research on Calculation Method of Transformer Magnetizing
+Current Based on Neural Network Fitting*, IEEE APAP 2019, S. 969–973,
+DOI **10.1109/APAP47170.2019.9225003** (zusätzlich per Crossref abgeglichen).
+Fünf Seiten. Vier statische Kennwertnetze auf Daten eines PSCAD-Modells
+eines 500-kV-Autotransformators; DC-Biasraster als Eingang, kein
+sampleweises Audiomodell. DC-/Extremwertgrafiken ohne erklärte Skalierung
+nicht zueinander konsistent. Keine veröffentlichten Audiofitdaten oder
+verifizierte Generalisierung auf unsere Anwendung.
+SHA256:
+`b6dbf690f748cc7f13ee5409eac7e89c6d38e6483251417a947a0519605aef0c`.
+
+**MACAK-SCHIMMEL-2011:** Jaromir Macak, Jiri Schimmel, *Simulation of
+a Vacuum-Tube Push-Pull Guitar Power Amplifier*, DAFx-11, Proceedings
+S. 59–62. Lokale Datei `05_e.pdf`, fünf Seiten einschließlich
+Bereinigungsseite. Dynamischer Fröhlich-Sättigungskern und modifizierter
+Jiles–Atherton-Kern, Vergleich mit kompletter Engl-Combo. Im untersuchten
+Aufbau ähnliche Ergebnisse und Unterschiede vor allem unter etwa 150 Hz;
+kein genereller Nachweis entbehrlicher Hysterese bei Line-Pegeln.
+Kernwerte experimentell gewählt, kein isolierter 1:1-Hardwarefit.
+SHA256:
+`a2f04f897eb7cfbe8efa23a141f859cefaf6cf371670bbe65786537c85027d63`.
+
+### PAIVA-TRANSFORMER-2011
+
+Rafael Cauduro Dias de Paiva, Jyri Pakarinen, Vesa Välimäki und Miikka Tikander:
+*Real-Time Audio Transformer Emulation for Virtual Tube Amplifiers*, EURASIP
+Journal on Advances in Signal Processing, 2011, Artikel 347645, 15 Seiten.
+DOI: [10.1155/2011/347645](https://doi.org/10.1155/2011/347645).
+Ausgewertet wurde die **lokale Benutzer-PDF**, nicht eine neu beschaffte
+Webfassung. Titelseite: Creative Commons Attribution, Version nicht angegeben.
+
+- 16 lokale PDF-Seiten einschließlich vorgeschalteter Bereinigungsseite;
+  gedruckte Seite +1 = lokale PDF-Seite.
+- SHA256 der gelesenen Datei:
+  `2eec0c710e8d3927e5f412032cbe1b5bc2a5e17b3d57e01b6a44fe4428b35dd5`.
+- Volltext aller Artikelseiten mit `pypdf` gelesen; Abb. 6/7, Gl. 16–33
+  und Tabelle 1 zusätzlich an gerenderten Seitenbildern geprüft.
+- S. 6–9: bidirektionale GC-/WDF-Struktur mit gemeinsamem Kern,
+  Wicklungsverlusten und parasitären Elementen. S. 7–8: Leerlaufmessung
+  von Strom/Spannung, H–Φ-Schleife, gewichteter Sättigungsfit, Verlustfit.
+- **Tabelle 1, S. 11:** konkreter Parametersatz für Fender NSC041318;
+  `N1=100`, `N2=6.47`, `C=24.7 mF`, `a=900`, `n=7`, `r=0.077 Ω`,
+  `b=4.46`, `m=4` plus Wicklungs-/Streu-/Kapazitätswerte. Modellnormierung,
+  keine identifizierten realen Windungszahlen. Für Hammond T1750V
+  Vergleichsmessungen, keine zweite vollständige Parametertabelle.
+- Aussagegrenzen: periodische Messungen, 80-Hz-Schleifenfit, 20-Hz–10-kHz-
+  Sweeps; Transienten offen. WDF benutzt verzögerte Nichtlinearitätszustände,
+  deren Instabilitätsrisiko ausdrücklich genannt wird. Historische
+  96-kHz-/PC-Echtzeitdemonstration ist kein Dwarf-Leistungsnachweis.
+- Eigene Formelprüfung: Sekanten-/Differentialpermeanz unterscheiden;
+  `b`-Normierung von Gl. 17/18 und Vorzeichen von Gl. 29–32 vor Portierung
+  klären. Keine stillschweigende Korrektur veröffentlichter Koeffizienten.
+
+Auswertung und nächste Schritte:
+[`TRANSFORMER_PAPER_REVIEW.md`](TRANSFORMER_PAPER_REVIEW.md).
+Die Paper-Struktur ist **nicht identisch** mit der zuvor simulierten lokalen
+`xformer.lib`; deren negativer Befund widerlegt nicht die GC-Methode.
+In diesem Literaturarbeitsschritt wurde das Paper-Modell nicht simuliert.
 
 ### MOORE
 
@@ -342,6 +588,49 @@ behauptet. Explorative NumPy-Recherche nicht als Hardware-Kalibrierfit genutzt.
 
 ## 7. Benutzer-Praxislinks
 
+### HIFIHAVEN-REPEAT-COILS / SE-EXCITATION
+
+- [HiFiHaven, Thread 10495](https://hifihaven.org/index.php?threads/why-you%E2%80%99re-not-crazy-to-use-repeating-coils-bridging-transformers-between-digital-and-analog-audio.10495/):
+  **alle sechs Seiten / 110 Beiträge**, 24.06.2023–18.01.2025, am
+  2026-10-05 gelesen. Hinweise auf Last-/Kabel-/Dämpfungsabhängigkeit,
+  FFT, Tiefbassklirr und Ringing. Subjektive Berichte und Scope-Fotos
+  belegen weder „fehlende digitale Information“ noch eine vollständige
+  Übertragerkennlinie. Die konkreten 150-mH-/220-pF-/RC-Werte in
+  #60–76 gehören zu einem **separaten Ausgangsfilter**, nicht zum
+  identifizierten Kernmodell eines WE/Jensen. Vorschaubilder zugänglich;
+  Original-Scope-Anhänge HTTP 403. Kein behaupteter vollständiger
+  Attachment-/Audio-Amateur-PDF-Test.
+- [Electronics StackExchange, Frage 606060](https://electronics.stackexchange.com/questions/606060/difference-between-the-excitation-current-of-a-transformer-and-the-magnetizing-c):
+  Direktseite HTTP 403, StackPrinter ohne Inhalt; **Frage und alle drei
+  Antworten über offizielle StackExchange-API gelesen**, zusätzlich die
+  Fragekommentare. Antworten Andy aka / Louis / Eng. Omar Eyad;
+  CC BY-SA 4.0 laut API. Erregerstrom als Summe aus Magnetisierung und
+  Verlustanteil im Ersatzmodell; Inrush als Anfangszustandsvorgang.
+  Belastungsunabhängigkeit nur bei entsprechend festgehaltener
+  Kernspannung; keine universelle momentane Stromzerlegung aus RMS-Werten.
+
+Gemeinsame Auswertung mit Korrekturen zur Mess-/Modellmethodik in
+`transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md`. Keine neuen
+Audio-Referenzmesswerte aus den Forumsmeinungen abgeleitet.
+
+### GROUPDIY-CATHODE-2017
+
+[help with 1:1 transformer choice for cathode follower](https://groupdiy.com/threads/help-with-1-1-transformer-choice-for-cathode-follower.65719/),
+22 Beiträge vom 14.–17.04.2017, am 2026-10-05 vollständig zugänglich
+gelesen. Kontext: kapazitiv gekoppelter Kathodenfolger, etwa 55 Ω
+Quellimpedanz, Last-/Stromlieferfähigkeit und Auswahl eines Ausgangsübertragers.
+
+- #2/#5/#7: DCR, Magnetisierungs-/Streuinduktivität und Kapazitäten
+  zusammen mit Quelle/Last beurteilen. #10–12: kleinere Induktivität bei
+  Parallelverschaltung kann den Treiber belasten.
+- Quellenkritik: #8 enthält `atan(0,5)=45°`; eigene Nachrechnung ergibt
+  **26,565°**. Die +22-dBu-/Peak-Angabe in #3 ist ebenfalls nicht
+  rechnerisch konsistent. Produkt-/Klangempfehlungen und 2000-H-Angabe
+  in #13 nicht als unabhängig verifizierte Daten übernehmen.
+- Kein kalibrierter Messsatz; Attachment und nachgelagerte Fremdlinks
+  nicht als verifizierte Schaltung gelesen. Fachlicher Zusammenhang in
+  `transformer/PARAMETERFIT_GRUNDLAGE.md`.
+
 | ID | Quelle | Zugriff und Entwurfsnutzen |
 |---|---|---|
 | UA-TIPS | [1176 Classic Limiter Collection: Tips & Tricks](https://www.uaudio.com/blogs/ua/1176-collection-tips) | Vollständig gelesen; Regler, Dr Pepper, All/Parallel/Grit/Colour-only. Ursprünglichen Trackingparameter weggelassen. |
@@ -411,3 +700,18 @@ Beleg einer bestimmten Revision. Versuch 4/5 sind Colour-only, Versuch 6
 Native periodische Impuls- und kohärente Sinusproben reproduzieren die Daten;
 gefaltete-Harmonischenkandidaten sind als Qualitätsprüfpunkte dokumentiert.
 Keine Zeit-/Stereo-/Geräte-Abnahme ergänzen, die in den Dateien nicht vorhanden ist.
+## Laufzeitzuordnung 0.4.0
+
+Die Transformator-Laufzeit verwendet den eigenen partiellen Jensen-Offlinefit
+und die davon abgeleiteten Profile aus `transformer/offline_fit/profiles.json`.
+`data/transformers.json` enthält Bankrevision, Import-SHA256 und Fit-SHA256.
+Die früheren xformer.lib-Knie-/Wicklungszuordnungen sind historische Planung,
+keine aktuellen Produktkoeffizienten. Importvertrag und Grenzen:
+[`TRANSFORMER_RUNTIME.md`](TRANSFORMER_RUNTIME.md).
+
+MOD-Widgetprüfung: `mod-audio/mod-ui`, Commit
+`7a35aac69781af28997aee7e560a92da7146f318`, `html/js/modgui.js` SHA256
+`49ef2446f4990955f9f1e4ad9085aef3c1e8cd35a60ceba98242cd146d14b06f`.
+Filmstrip-Größenbestimmung, `switchWidget`/`bypassWidget` und Drag-Handle aus
+dieser Quelle tatsächlich im lokalen Chromium ausgeführt. Assetvorlagen vom
+Benutzer bereitgestellt; Herkunftseinordnung in `THIRD_PARTY.md`.

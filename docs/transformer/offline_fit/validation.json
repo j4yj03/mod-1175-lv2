@@ -1,0 +1,293 @@
+{
+  "status": "PASS numerical reference checks; partial data-sheet fit, not hardware equality",
+  "library_sha256": "89f825e60e49b7bdf8a0570612e51da30e70de0405a12f90e8a6a0bc90527e08",
+  "fit_sha256": "4408c92bc418ac214d6fe4078794c3e434dd6a3f3bfc294fc6b4977f12a6db91",
+  "profiles_sha256": "d5a19f41c68df1f27019ad3af0afc450919b37ba9118e82743c7616591b524a6",
+  "script_sha256": "00608b55e62f91fca91bb7380c3a4e80a2212e032df44ee2703a59efc3c0086b",
+  "source_sha256": {
+    "core.cpp": "a75121831af1fd3543e6642c85f8814e2a328f8431a5247254579b0aed6aa220",
+    "reference.py": "4070189735c76794a38f0b8f1ae0c8a943109d375a9ba8c7c4765d4900325899",
+    "fit.py": "73737099696cd1eb832ab2257143a15243ec33564ede7f2fbbb7277c2db4bedb"
+  },
+  "periodic_step_convergence": [
+    {
+      "frequency_hz": 20,
+      "input_dbu": -20,
+      "thd_step_error_db": 6.548400144422531e-05,
+      "gain_step_error_db": 2.018307121431917e-08,
+      "shooting_error": 4.660548206039672e-13,
+      "solver_iterations": 2.0
+    },
+    {
+      "frequency_hz": 20,
+      "input_dbu": 4,
+      "thd_step_error_db": 1.8157531995741235e-05,
+      "gain_step_error_db": 1.7469554691729172e-08,
+      "shooting_error": 2.9119068267746684e-13,
+      "solver_iterations": 2.0
+    },
+    {
+      "frequency_hz": 20,
+      "input_dbu": 20,
+      "thd_step_error_db": -5.356541630289387e-05,
+      "gain_step_error_db": 2.8102943083752052e-08,
+      "shooting_error": 4.231684447297823e-13,
+      "solver_iterations": 2.0
+    },
+    {
+      "frequency_hz": 30,
+      "input_dbu": 24,
+      "thd_step_error_db": -7.905650889908322e-05,
+      "gain_step_error_db": 1.915412806141603e-08,
+      "shooting_error": 4.4700354528970365e-13,
+      "solver_iterations": 3.0
+    },
+    {
+      "frequency_hz": 50,
+      "input_dbu": 28,
+      "thd_step_error_db": -5.7338380182441605e-05,
+      "gain_step_error_db": 5.075822873124025e-09,
+      "shooting_error": 3.95593280355655e-13,
+      "solver_iterations": 2.0
+    },
+    {
+      "frequency_hz": 1000,
+      "input_dbu": 4,
+      "thd_step_error_db": 2.805356650987868e-05,
+      "gain_step_error_db": 1.0872858169364008e-10,
+      "shooting_error": 3.725291830656424e-13,
+      "solver_iterations": 2.0
+    }
+  ],
+  "independent_dop853": {
+    "reference": {
+      "thd_percent": 0.004977926486169247,
+      "gain_primary_db": -2.2846850794601723,
+      "gain_source_db": -2.6786792603778737,
+      "phase_primary_deg": 0.2506028804315967,
+      "primary_rms_v": 3.88420105995762,
+      "source_rms_v": 4.064446500947961,
+      "output_h1_rms_v": 2.9858463019663626,
+      "flux_peak_vs": 0.015524388974336901,
+      "primary_current_rms_a": 0.00030058115644031655,
+      "h2_dbc": -270.87318070764417,
+      "h3_dbc": -86.11154371092867,
+      "h5_dbc": -105.90651509581843,
+      "output_dc_v": -3.4558156507334507e-15,
+      "max_solver_iterations": 2.0,
+      "periodic_shooting_error": 2.910571089698166e-13,
+      "input_impedance_ohm": 12922.304433101273
+    },
+    "measurement": {
+      "thd_percent": 0.004977897721269681,
+      "fundamental_peak_v": 4.222624335009805,
+      "dc_v": -2.1317360431775474e-07
+    },
+    "thd_error_db": -5.019147342688426e-05
+  },
+  "causal_burst_stability": [
+    {
+      "profile": "00s",
+      "rate_hz": 48000,
+      "peak_v": 10.582021127332926,
+      "tail_v": 0.0077410576716455005,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "00s",
+      "rate_hz": 96000,
+      "peak_v": 10.582023344919438,
+      "tail_v": 0.0077410583404372985,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "00s",
+      "rate_hz": 192000,
+      "peak_v": 10.582024557376453,
+      "tail_v": 0.007741058897887102,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "80s",
+      "rate_hz": 48000,
+      "peak_v": 10.48694631545565,
+      "tail_v": 0.0020602737771798964,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "80s",
+      "rate_hz": 96000,
+      "peak_v": 10.486946215021717,
+      "tail_v": 0.002060271887990111,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "80s",
+      "rate_hz": 192000,
+      "peak_v": 10.486946190081063,
+      "tail_v": 0.0020602719619014984,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "60s",
+      "rate_hz": 48000,
+      "peak_v": 10.19598878822485,
+      "tail_v": 9.925278223132231e-05,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "60s",
+      "rate_hz": 96000,
+      "peak_v": 10.19598844894229,
+      "tail_v": 9.925281404316551e-05,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    },
+    {
+      "profile": "60s",
+      "rate_hz": 192000,
+      "peak_v": 10.195988363836612,
+      "tail_v": 9.925255479153861e-05,
+      "odd_symmetry_error_v": 0.0,
+      "max_iterations": 3.0
+    }
+  ],
+  "power_and_loading": [
+    {
+      "profile": "00s",
+      "source_power_w": 0.0004908310126935831,
+      "copper_power_w": 0.00013102192415126877,
+      "load_power_w": 0.00035422962638426234,
+      "core_cycle_average_power_w": 5.579462158051954e-06,
+      "power_balance_error_w": 2.202285662861181e-20,
+      "thd_rs50_percent": 0.02894438969797171,
+      "thd_rs2000_percent": 0.05786403116416151
+    },
+    {
+      "profile": "80s",
+      "source_power_w": 0.0004938297590285234,
+      "copper_power_w": 0.00013289451641842012,
+      "load_power_w": 0.0003538491348726155,
+      "core_cycle_average_power_w": 7.086107737487712e-06,
+      "power_balance_error_w": 6.268043809681823e-20,
+      "thd_rs50_percent": 0.1310096481240258,
+      "thd_rs2000_percent": 0.26186885372429636
+    },
+    {
+      "profile": "60s",
+      "source_power_w": 0.0005125766826555851,
+      "copper_power_w": 0.00015157463168552715,
+      "load_power_w": 0.00035242938834210296,
+      "core_cycle_average_power_w": 8.572662627954976e-06,
+      "power_balance_error_w": 1.0164395367051604e-20,
+      "thd_rs50_percent": 1.1903917294664317,
+      "thd_rs2000_percent": 2.3748862651521274
+    }
+  ],
+  "causal_high_rate_convergence": [
+    {
+      "profile": "00s",
+      "measurements": [
+        {
+          "rate_hz": 192000,
+          "thd_percent": 2.858277920031127e-05,
+          "fundamental_peak_v": 4.2375675872979475,
+          "dc_v": -0.00014626427547288453
+        },
+        {
+          "rate_hz": 384000,
+          "thd_percent": 2.870256728534888e-05,
+          "fundamental_peak_v": 4.23763996647198,
+          "dc_v": -0.00014719373852915067
+        },
+        {
+          "rate_hz": 768000,
+          "thd_percent": 2.871449815548331e-05,
+          "fundamental_peak_v": 4.237657796283917,
+          "dc_v": -0.00014742540471901676
+        }
+      ],
+      "high_rate_gain_error_db": -3.6545684430021606e-05
+    },
+    {
+      "profile": "80s",
+      "measurements": [
+        {
+          "rate_hz": 192000,
+          "thd_percent": 3.964726687959795e-05,
+          "fundamental_peak_v": 4.238687663394221,
+          "dc_v": -0.00017424942262723016
+        },
+        {
+          "rate_hz": 384000,
+          "thd_percent": 4.050549438359963e-05,
+          "fundamental_peak_v": 4.238797510966906,
+          "dc_v": -0.0001753474298742831
+        },
+        {
+          "rate_hz": 768000,
+          "thd_percent": 4.0657888553046415e-05,
+          "fundamental_peak_v": 4.2388243565123656,
+          "dc_v": -0.00017562205335820298
+        }
+      ],
+      "high_rate_gain_error_db": -5.501010750013431e-05
+    },
+    {
+      "profile": "60s",
+      "measurements": [
+        {
+          "rate_hz": 192000,
+          "thd_percent": 3.174739068678693e-05,
+          "fundamental_peak_v": 4.19550424687583,
+          "dc_v": -0.00019255486220476762
+        },
+        {
+          "rate_hz": 384000,
+          "thd_percent": 3.465703800106207e-05,
+          "fundamental_peak_v": 4.196743366017565,
+          "dc_v": -0.00019376155191971528
+        },
+        {
+          "rate_hz": 768000,
+          "thd_percent": 3.531048182754968e-05,
+          "fundamental_peak_v": 4.197046342156063,
+          "dc_v": -0.00019406399090946623
+        }
+      ],
+      "high_rate_gain_error_db": -0.0006270391312136053
+    }
+  ],
+  "data_sheet_scores": {
+    "train": {
+      "count": 33,
+      "inside_intervals": 24,
+      "outside": [
+        "dlp20",
+        "t20m20",
+        "t20m10",
+        "t20p20",
+        "t50m20",
+        "t50p0",
+        "t50p28",
+        "f4_80",
+        "f4_160"
+      ]
+    },
+    "validation": {
+      "count": 20,
+      "inside_intervals": 18,
+      "outside": [
+        "t30p0",
+        "f14_160"
+      ]
+    }
+  }
+}

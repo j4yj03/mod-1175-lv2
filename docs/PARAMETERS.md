@@ -1,7 +1,7 @@
 # Parameter, Ports und Persistenz
 
 Normative Quelle: `data/parameters.json`. TTL und JSFX-Wrappers werden mit
-`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.3.0.
+`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.4.0.
 Gegenüber 0.1.1 kamen `oversampling` und `transformer` hinzu; die Indizes der
 bestehenden Ports und die Plugin-URIs sind unverändert.
 
@@ -17,13 +17,16 @@ bestehenden Ports und die Plugin-URIs sind unverändert.
 | compression | 8 | 0/1, Enum | 1 | dynamische Abschwächung aktiv (`COMP ON`/`COMP OFF`) |
 | enabled | 9 | 0/1 | 1 | interner Bypass; LV2 designation enabled |
 | stereo_link | 10 | 0/1 | 1 | Stereo: gemeinsamer Gain / Dual Mono |
-| Instrument preset | 11 | 0…31 | 0 | JSFX-only: Custom oder Instrumentstartwert |
+| Instrument preset | 11 | 0…36 | 0 | JSFX-only: Custom oder Instrumentstartwert |
 | oversampling | 12 | 0…2, Enum | 0 | Off / 2x / 4x; Qualitäts-/CPU-Wahl, **nicht** im Preset |
-| transformer | 13 | 0…4, Enum | 0 | None / 60s / 80s / 00s / Symmetric; ohne Klangwirkung in 0.3.0 |
+| transformer | 13 | 0…4, Enum | 0 | None / 60s / 80s / 00s / Symmetric; hörbare Eingangsmodelle, Symmetric linear |
 
 Alle Klangparameter außer Mode-Auswahl werden in abgeleiteter Form geglättet:
 Gains linear, Zeiten in Sekunden, Threshold/Knie/Ratio linear. Die Mode-Auswahl
 wird in Ratio/Threshold/Knie/All-Zielwerte übersetzt und diese geglättet.
+Transformatorwechsel blenden den Modellanteil über den ungefärbten Eingang
+aus/ein (je 2 ms), statt elektrische Modellparameter zu interpolieren.
+Modellbank, feste Pegelnormierung und Refit-Kompatibilität: `TRANSFORMER_RUNTIME.md`.
 
 ### Ratio-Modi
 
@@ -89,7 +92,8 @@ DSP-Portnummern. `:bypass` ist ein Hostsymbol und kein LV2-Audio-/Control-Port.
 
 ## JSFX-Verhalten
 
-Das vollständige Paket enthält zwei `.jsfx`, Core/Model/Presets/UI-Includes und
+Das vollständige Paket enthält zwei `.jsfx`, sieben Includes (Core, Model,
+Numeric, TransformerCore, Transformers, Presets, UI) und
 zwei `.rpl`-Bänke. Reglerwerte speichert REAPER normal im Projekt. Es wird kein
 laufender GR-/Resamplerzustand serialisiert; reguläres `@init` setzt die Historie
 zurück. Bei Abtastratenwechsel werden Rate und Koeffizienten aktualisiert.

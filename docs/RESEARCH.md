@@ -4,6 +4,12 @@ Gesamter Quellenkatalog: `SOURCES.md`. Im Folgenden stehen die fachlichen
 Erkenntnisse und ihre Aussagegrenzen. Letzte Zielkorrektur des Benutzers:
 **eigener Green Stripe, Revision A oder D unerheblich**.
 
+**Produktstand 0.4.0:** Die am Ende dieses Dokuments beschriebenen Offlinefits
+sind inzwischen als refit-fähige Eingangsstufe portiert. Der konkrete
+Runtime-Vertrag und die getrennten Amplituden-/Phasengrenzen stehen in
+`TRANSFORMER_RUNTIME.md`. Historische Quellen-/Fitberichte bleiben inhaltlich
+erhalten und sind keine zusätzliche Geräte- oder Hardwareabnahme.
+
 ## 1. Lokale Materialien
 
 ### `../1176.js`
@@ -211,3 +217,174 @@ aktive Stereoregler, Off-/Bypass-Reglerarbeit, Sample-exp/log bei Entladung,
 mehrfacher Bias und EEL2-RAM-Schleifen. Stationäres Verhalten gegen gesicherte
 0.1.0 geprüft. Details, Messzahlen und weitere LUT-/Mehrzeitkonstanten-
 Kalibrierempfehlung in `CPU_ANALYSIS.md`.
+
+## 10. Transformator-Identifikation nach de Paiva et al., 2011
+
+Am 2026-10-05 wurde die vom Benutzer bereitgestellte PDF *Real-Time Audio
+Transformer Emulation for Virtual Tube Amplifiers* vollständig ausgewertet.
+Detailbericht mit Formeln, Tabelle 1 und Seitenbelegen:
+[`TRANSFORMER_PAPER_REVIEW.md`](TRANSFORMER_PAPER_REVIEW.md).
+
+Die Arbeit schließt eine konkrete Lücke: Sie liefert ein **bidirektionales
+GC-/WDF-Modell**, einen **elektrischen Mess-/Fitablauf** und einen
+**vollständigen Referenzparametersatz** für einen Fender NSC041318.
+Die beiden Wicklungen teilen einen Kern; Laständerungen wirken auf den
+Treiber zurück. Damit unterscheidet sich die Struktur wesentlich von der
+instabilen lokalen `xformer.lib`, die zuvor in `spice_sim/` untersucht wurde.
+
+Der Fit benötigt keine bekannte Kerngeometrie: Strom an der angeregten
+Wicklung und Spannung an der offenen Wicklung liefern die H–Φ-Schleife.
+Die Mittellinie bestimmt `C/a/n` über gewichtete kleinste Quadrate;
+Schleifenbreite, Remanenz und Koerzitivpunkte informieren den Verlustzweig.
+Windungszahlen dürfen bei erhaltenem Verhältnis als Normierung gewählt
+werden. Ein neuer Green-Stripe-Parametersatz braucht dennoch elektrische
+Referenzdaten oder ausdrücklich eigene Klangziele und eine Volt-/dBFS-Skalierung.
+
+Die Formel `H_s=Φ/C+a|Φ/C|^n·sgn(Φ/C)` macht zudem deutlich:
+Eine selbst definierte Gleichheit der linearen/nichtlinearen Beiträge führt
+zu `Φ_k=C·a^(-1/(n-1))`, nicht zur bisherigen Projektformel mit `ω`.
+Das ist eine algebraische Definition in gewählter Normierung, kein
+gemessener 1-dB-Kompressionspunkt. Frequenzabhängigkeit entsteht durch
+Spannungsintegration und Beschaltung.
+
+Offen bleiben vor Reproduktion die `b`-Normierung des Widerstandszweigs
+und die Unterscheidung von Sekanten- zu Differentialpermeanz. Der Paper-WDF
+verwendet Ein-Sample-Verzögerungen; der Artikel nennt selbst Stabilitäts-
+und Transientengrenzen. Empfohlen ist deshalb zuerst eine **separate
+Offline-Referenz mit Tabelle 1**, dann der Vergleich des günstigen WDF-
+Kandidaten bei 48/96/192 kHz. Noch kein Paper-Modell implementiert oder
+validiert, kein neuer Echtzeit-/Presetparametersatz.
+
+## 11. Reale Line-Übertrager: Hammond und Lundahl
+
+Die drei lokalen Datenblätter in `docs/transformer/` wurden am 2026-10-05
+vollständig einschließlich aller acht Diagramme ausgewertet.
+Bericht: [`transformer/AUSWERTUNG.md`](transformer/AUSWERTUNG.md),
+47 grobe Ableseintervalle in `transformer/KENNLINIEN_ABLESUNG.csv`.
+
+- **140TEX:** 1:1, 1-kΩ-Anwendung, nahezu ebener Audioband-Frequenzgang,
+  auffällige Großsignal-Absenkung/THD+N hauptsächlich unter etwa 20–30 Hz.
+  Die Lastangaben der beiden Diagramme unterscheiden sich (1000/100 Ω);
+  absolute Schwelle und einzelne hohe Pegelkurven daher nicht präzise fitten.
+- **560Q:** 1:1, Serien-/Parallelschaltung separat bei 40k/40k bzw.
+  10k/10k vermessen. Neben Tiefbass-THD+N ist die HF-Anhebung relevant:
+  bei 20 kHz grob +0,5 dB (Serie) bzw. +0,3 dB (parallel), mit etwa
+  −10° Phase für die niedrigeren Pegel. Die echte Resonanzspitze liegt
+  außerhalb des sichtbaren Amplitudenbereichs. Mittelband-THD+N teilweise
+  mit Messrauschboden vereinbar, keine direkte H3-Zielkurve.
+- **LL1930:** spezifiziert 5,8:1/11,6:1, nicht 1:1; keine Diagramme,
+  nur Grenzen bei +30 dBu Primärsignal: <0,1 % bei 50 Hz, <1 % bei
+  25 Hz und 20 Hz–30 kHz ±0,1 dB unter den genannten Bedingungen.
+
+Konsequenz: de Paiva liefert Modellstruktur/Identifikation, die Hammond-
+Blätter liefern für Green Stripe passendere **Line-Übertrager-Zielkurven**.
+Amplitude und Phase zuerst gemeinsam abstimmen, dann die Tiefbass-
+Nichtlinearität. Vor einem physikalischen Zahlenfit müssen dBm-Bezug,
+Normalisierung und L-/Impedanzkonventionen geklärt werden. Eine skalare
+breitbandige Sättigung oder ein eindeutiger Hysteresefit lässt sich aus
+diesen Kurven allein nicht begründen.
+
+## 12. Parameterfit mit Schätzungen: neue Literatur und Jensen-Referenz
+
+Die zusätzliche Recherche vom 2026-10-05 ist in
+[`transformer/PARAMETERFIT_GRUNDLAGE.md`](transformer/PARAMETERFIT_GRUNDLAGE.md)
+zusammengeführt. Whitlocks *Audio Transformers* und DeLorias/Lundahls
+Chapter 6 wurden vollständig gelesen, McLymans 534-seitiges Handbuch
+gezielt in den relevanten Magnetisierungs-/Material-/Parasitenabschnitten.
+Der GroupDIY-Thread war vollständig mit 22 Beiträgen zugänglich.
+
+**Wichtigster neuer Datensatz:** Whitlock enthält das historische
+**Jensen JT-11P-1**-Datenblatt mit 1:1, 600-Ω-Quelle, 10-kΩ-Last,
+1,45/1,55-kΩ-DCR, THD-Kurven über Pegel/Frequenz und definierten dBu-
+Eingangspegeln. Typisch +20 dBu bei 20 Hz für 1 % THD ist ein belastbarerer
+Kalibrieranker als die uneindeutig bezeichneten Hammond-dBm-Kurven.
+Als erste saubere Line-Eingangsreferenz ist der Jensen daher empfohlen;
+Hammond bleibt jeweils eigenes Zielbild.
+
+Eine erste **effektive** Identifikation kann mit expliziten Annahmen beginnen:
+Fluxverkettung statt unbekannter Kerngeometrie, positive Verlustglieder,
+effektives HF-`f0/Q`, symmetrischer Null-Bias, eigene Volt-/dBFS-Zuordnung.
+Reproduzierbare Startrechnungen in `transformer/estimate_fit_start.py` und
+`FIT_STARTWERTE.json`; keine fertigen DSP-Koeffizienten. Breiter LF-L-Suchraum
+ist nötig: einzelne Bandbreiten-/Amplitudenpunkte implizieren verschiedene
+Einpolwerte; ein konstantes L muss nicht das ganze Band beschreiben.
+
+Für einen eindeutigen Bauteilfit fehlen weiter Magnetisierungsstrom,
+getrennte H2/H3/H5, Minor-Loops/Transienten und eine zweite Last-/
+Quellenbedingung. Schätzungen machen diese Information nicht überflüssig,
+ermöglichen aber einen nachvollziehbaren ersten Gray-Box-Kandidaten.
+
+**Korrektur einer möglichen Fehlinterpretation:** Sinkender relativer
+Kleinpegelklirr muss kein Messrauschen sein. Whitlock zeigt auch reale
+Hystereseverzerrung bei kleinen Pegeln. THD+N-Plateaubereiche deshalb als
+unsicher behandeln, nicht pauschal als Noise entfernen. Außerdem ist
+Jensens DLP keine rohe Phase. GroupDIY #8 enthält einen Rechenfehler
+(`atan(0,5)` ist 26,565°, nicht 45°); Erfahrungsbeiträge sind keine
+Bauteilparameterbank.
+
+## 13. Erregerstrom und Vergleich einfacher/detaillierter Kernmodelle
+
+Die sechs Seiten des HiFiHaven-Threads (110 Beiträge), StackExchange-Frage
+606060 mit drei Antworten und vier zusätzliche Papers wurden am 2026-10-05
+ausgewertet. Details:
+[`transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md`](transformer/ERREGERSTROM_UND_MODELLVERGLEICH.md).
+
+- Leerlaufmessung liefert zunächst **Erregerstrom** inklusive Kernverlust-
+  und gegebenenfalls kapazitiver Anteile. Phasen-/Wirkleistungsinformation
+  ist für einen separaten Magnetisierungs-/Verlustfit wichtig. Ein
+  Hysteresemodell kann Verluste bereits enthalten; nicht doppelt addieren.
+- `05_e.pdf` ist Macak/Schimmel DAFx-11, S. 59–62. Es vergleicht einen
+  **dynamischen Fröhlich-Kern ohne Hysterese** mit Jiles–Atherton in einer
+  vollständigen Röhrenendstufe. Ähnliche Resultate in diesem Aufbau
+  rechtfertigen eine einfache Baseline; sie qualifizieren keinen Jensen-
+  Kleinpegelkern. Eigene Umformung in `L0` und `lambda_sat` erlaubt eine
+  geometriefreie Fitparametrisierung; Polstelle und numerische Lösung prüfen.
+- Bal/Öncü 2014: lineares 40-kHz-Stromwandlermodell und Zenerlast,
+  brauchbare Strom-/Lastinteraktion, keine Audio-Sättigungsbank.
+- Shadid et al. 2022: mehrere Impuls-/Anschlussbedingungen zur
+  Wicklungsdiagnose, methodisch nützlich. Gedrucktes `h(t)=Vout/Vin`
+  nicht übernehmen: `H=FFT(out)/FFT(in)` bzw. regularisierte Entfaltung.
+  Eine LTI-Impulsantwort ersetzt keine nichtlineare Identifikation.
+- Wu et al. 2019: NN schätzt statische Stromkennwerte aus bereits
+  vorhandenen 500-kV-PSCAD-Simulationen; keine Audio-Wellenform und
+  kein Ersatz fehlender Trainings-/Messdaten.
+- HiFiHaven enthält Hörberichte, Filtervorschläge und Scope-Deutungen.
+  Die Zusatzfilterwerte sind keine gemessenen Übertragerparameter;
+  Rekonstruktionsbilder, Aliasing, lineares Ringing und nichtlineare
+  Harmonische müssen sauber unterschieden werden.
+
+Empfehlung: Jensen-Referenz beibehalten, einfache lastgekoppelte
+Flux-/Sättigungsbaseline gegen schwaches GC-Gedächtnis vergleichen,
+J-A erst bei zusätzlichem Bedarf. H2/H3/H5, phasenrichtiger Leerlaufstrom
+und Einschalt-/Vorbelastungsbursts bleiben die wichtigsten neuen Messdaten.
+
+## 14. Tatsächlich ausgeführter Jensen-Offlinefit
+
+Auftrag und Benutzerwahl **„warm → ausgewogen → clean“** sind am 2026-10-05
+als Offlinearbeit umgesetzt. Ergebnisse:
+[`transformer/offline_fit/BERICHT.md`](transformer/offline_fit/BERICHT.md).
+
+Ein reduziertes lastgekoppeltes Flux-Netz, 14 positive Stop-Zweige,
+ein RL-Relaxationszweig und effektives HF-`f0/Q` wurden gegen die historischen
+Jensen-JT-11P-1-Ziele untersucht. 36 Basisfits (18 Varianten × 2 Starts),
+acht lineare Starts und Verfeinerungen; keine Produkt-DSP-Änderung.
+Ausgewählt wurde ein Fröhlich-artiger Kern mit schwachem Gedächtnis.
+Ein zusätzlicher dynamischer Sättigungszweig verbesserte den Fit nicht
+und wurde nicht als weitere freie Parameterquelle übernommen.
+
+53 Zielbedingungen, 20 davon zurückgehalten: **18/20** innerhalb der
+Intervalle. **24/33** Trainingstreffer; der Fit bleibt partiell. Typischer
+1-%-THD-Punkt des Modells bei +20,49 dBu / 20 Hz statt +20 dBu.
+Kleinpegel- und steile Hochpegelkurven bleiben teilweise abweichend;
+Gedächtnis-/Materialidentität folgt nicht aus dem stationären Fit.
+Subaudio-Amplitude mit unbekanntem Herstellerpegel wird nur als linearer
+Hintergrund fitten, nicht als bestätigte vollständige Großsignalantwort.
+
+Daraus sind eigene Profile abgeleitet: 60s warm (p=3, 26-kHz-HF),
+80s ausgewogen (p=5, 48-kHz-HF), 00s clean (Jensen-artig,
+108-kHz-HF). 1-%-THD-Anker bei 20 Hz auf −14/−8/−2 dBFS Peak;
+gemeinsame Volt-Skalierung und feste explizite Mittelbandnormalisierung.
+Sieben WAV-Proben und 168 Messpunkte liegen vor. Numerische
+Konvergenz, unabhängige ODE-Gegenprobe, Lastkopplung, positive
+Kern-Zyklusverluste und kausale Bursts sind überprüft. Hörabgleich,
+RT-Ratekonzept und C++/EEL2-Port bleiben nächste Schritte.

@@ -1,0 +1,56 @@
+{
+  "models": {
+    "GCOT-SE-01": {
+      "row_count": 65,
+      "refinement_max_abs_errors": {
+        "gain_source_db": 1.540150744716584e-07,
+        "phase_source_deg": 1.677464235365444e-05,
+        "h3_dbc": 0.00021175380933868837,
+        "h5_dbc": 0.000701910652523452
+      },
+      "load_max_gain_change_db": 0.0,
+      "gear_max_gain_change_db": 5.3209161521294845e-08,
+      "growth_rate_relative_error": 5.628274535218747e-05,
+      "arithmetic_vs_ac_max_abs_gain_db": 5.329070518200751e-15
+    },
+    "GCOT-PP-03": {
+      "row_count": 65,
+      "refinement_max_abs_errors": {
+        "gain_source_db": 8.951005270319001e-09,
+        "phase_source_deg": 1.5634055471394886e-09,
+        "h3_dbc": 1.0461670072459128e-06,
+        "h5_dbc": 1.2529976899600115e-05
+      },
+      "load_max_gain_change_db": 0.0,
+      "gear_max_gain_change_db": 5.363478550179934e-10,
+      "growth_rate_relative_error": 6.0084178554853374e-05,
+      "arithmetic_vs_ac_max_abs_gain_db": 3.552713678800501e-15
+    },
+    "GCOT-PP-04": {
+      "row_count": 65,
+      "refinement_max_abs_errors": {
+        "gain_source_db": 1.2401770810299695e-07,
+        "phase_source_deg": 3.4456314138042963e-06,
+        "h3_dbc": 0.00011512409327707473,
+        "h5_dbc": 0.0003866404403964907
+      },
+      "load_max_gain_change_db": 0.0,
+      "gear_max_gain_change_db": 5.8701997929233585e-08,
+      "growth_rate_relative_error": 5.628310894634225e-05,
+      "arithmetic_vs_ac_max_abs_gain_db": 5.329070518200751e-15
+    },
+    "GCSYMETRICAL": {
+      "row_count": 65,
+      "refinement_max_abs_errors": {
+        "gain_source_db": 3.933913284015489e-08,
+        "phase_source_deg": 2.855858189431044e-06,
+        "h3_dbc": 0.00042436478183560666,
+        "h5_dbc": 0.0003371169941459584
+      },
+      "load_max_gain_change_db": 2.6645352591003757e-15,
+      "gear_max_gain_change_db": 2.40161242004433e-08,
+      "growth_rate_relative_error": 5.628140012758909e-05,
+      "arithmetic_vs_ac_max_abs_gain_db": 2.6645352591003757e-15
+    }
+  }
+}

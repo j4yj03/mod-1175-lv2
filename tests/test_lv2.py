@@ -20,7 +20,8 @@ Descriptor._fields_ = [('uri', C.c_char_p), ('instantiate', Instantiate), ('conn
                       ('cleanup', Cleanup), ('extension', C.c_void_p)]
 
 
-def render(library, descriptor_index, rate, block, invalid=False, inplace=False, os_value=0, switch_at=None):
+def render(library, descriptor_index, rate, block, invalid=False, inplace=False, os_value=0, switch_at=None,
+           transformer_value=None, transformer_switch=False):
     pointer = library.lv2_descriptor(descriptor_index)
     d = pointer.contents
     stereo = descriptor_index == 1
@@ -39,6 +40,9 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False,
     latency_port = len(audio)+len(controls)
     d.connect(handle,latency_port,C.byref(latency))
     d.connect(handle,latency_port+1,C.byref(oversampling))
+    transformer=C.c_float(transformer_value or 0)
+    if transformer_value is not None:
+        d.connect(handle,latency_port+2,C.byref(transformer))
     if invalid:
         controls[0].value = float('nan')
         controls[2].value = float('inf')
@@ -51,6 +55,8 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False,
         frames=min(block,total-offset)
         if switch_at is not None and offset>=switch_at and oversampling.value==0:
             oversampling.value=os_value
+        if transformer_switch:
+            transformer.value=(offset//512)%5
         for i in range(frames):
             audio[0][i]=0.2*math.sin(2*math.pi*1000*(i+offset)/rate)
             if stereo: audio[1][i]=0.08*math.sin(2*math.pi*777*(i+offset)/rate)
@@ -72,6 +78,17 @@ def main():
     library.lv2_descriptor.restype=C.POINTER(Descriptor)
     assert not library.lv2_descriptor(2)
     for index in (0,1):
+        for os_value in (0,1,2):
+            for transformer_value in (1,2,3,4):
+                baseline=render(library,index,48000,1,os_value=os_value,transformer_value=transformer_value)
+                assert baseline!=render(library,index,48000,128,os_value=os_value), 'Transformer has no sound effect'
+                for block in (64,128,511):
+                    assert render(library,index,48000,block,os_value=os_value,transformer_value=transformer_value)==baseline
+                assert render(library,index,48000,128,os_value=os_value,transformer_value=transformer_value,inplace=True)==baseline
+            switched=render(library,index,48000,1,os_value=os_value,transformer_value=1,transformer_switch=True)
+            for block in (64,128,256,512):
+                assert render(library,index,48000,block,os_value=os_value,transformer_value=1,transformer_switch=True)==switched
+            render(library,index,48000,128,invalid=True,os_value=os_value,transformer_value=3)
         for rate in (44100,48000,96000):
             baseline=render(library,index,rate,1)
             for block in (64,128,256,511):
@@ -88,7 +105,7 @@ def main():
                 for block in (64,128,256,512):
                     assert render(library,index,rate,block,os_value=os_value,switch_at=2048)==switched, \
                         'Oversampling transition is block-size dependent'
-    print('LV2 ABI / zero block / in-place / finite / block invariance / oversampling latency + transitions: PASS')
+    print('LV2 ABI / zero block / in-place / finite / block invariance / OS latency + model transitions: PASS')
 
 
 if __name__=='__main__':

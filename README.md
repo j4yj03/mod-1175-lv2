@@ -4,20 +4,18 @@
 Die Gestaltung ist bewusst **Green Stripe**. Das Projekt greift Funktionsprinzipien
 der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 
-Aktuell **0.3.0**: Die Bedienoberfläche ist als querformatiges Edelstahl-Paneel
-mit **drei senkrechten Bereichen** neu aufgebaut — eine breite GAIN/TIME-Platte, der grüne
-ENGINE-Bereich (Verhältnis, Comp-Kippschalter, Oversampling, Link) und COLOUR (Mix, Colour,
-Transformator). Das grüne Feld trägt den **weißen Produktnamen auf einem dunkelgrünen
-Namensschild**, jeder Poti
-seine **Endanschlag-Markierung** (`Min.`/`Max.`, bei Attack/Release `Slow`/`Fast`)
-neben dem Regler, Mix ist wieder Stahl, **Colour** die einzige orange Fläche und
-eine **bernsteinfarbene Betriebslampe** steht vor dem Bypass. Der Transformator ist als **Auswahl mit fünf Stufen** vorhanden,
-wirkt aber **noch nicht auf den Klang**; die Echtzeit-Umsetzung des
-Gyrator-Kapazität-Modells ist dokumentiert, aber nicht gebaut. Er ist eine
-Klangwahl und wandert daher mit dem Preset: 6 der 36 Presets bringen ihre
-Stufe mit, alle anderen starten auf `None`. Die Presets sind nach
-Instrument/Anwendung gruppiert. Oversampling bleibt davon unberührt und
-startet nach jedem Preset auf Off.
+Aktuell **0.4.0**: hörbare Eingangstransformatorprofile **60s warm → 80s
+ausgewogen → 00s clean**, dazu `None` und eine lineare `Symmetric`-Prüfreferenz.
+C++ und JSFX nutzen dieselbe validierte, nachträglich neu fitbare Modellbank.
+Details und Importweg: [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md).
+
+Die drei LV2-Paneelbereiche schließen **spaltfrei** aneinander an. Der weiße
+Produktname steht direkt auf dem grünen Feld. Aluminium-Filmstrip-Potis,
+Bitmap-Bypass und auf 28 px verkleinerte SVG-Betriebslampe nutzen die
+bereitgestellten Assets. `Mode` verwendet das MOD-Schalterwidget; verschieben
+lässt sich das Paneel am oberen Rand, ohne die Reglerbedienung mitzuziehen.
+36 nach Instrument gruppierte Presets; sechs wählen ein Transformatorprofil.
+Alle Factory-Recall-Wege setzen Oversampling auf Off.
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
 Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen
@@ -28,7 +26,7 @@ gegenüber 0.1.0.
 
 - LV2 **Mono** und **Stereo** in einem Bundle; Stereo Link ein/aus.
 - JSFX **Mono** und **Stereo** mit GR-, Peak-/RMS- und Hold-Anzeigen.
-- 26 Instrument-Presets: eingebauter JSFX-Selektor, importierbare `.rpl`-Bänke
+- 36 Instrument-Presets: eingebauter JSFX-Selektor, importierbare `.rpl`-Bänke
   und zusätzliche LV2-Factory-Presets.
 - Frameworkfreier C++11-DSP und gleichwertiger EEL2-Kern, Off/2x/4x-Oversampling
   mit einblendungsgepufferter Umschaltung und Latenzmeldung (0/3/4 Frames).
@@ -71,6 +69,7 @@ Für Dwarf-Build und Installation: [BUILD](docs/BUILD.md),
 | [REQUIREMENTS](docs/REQUIREMENTS.md) | Verbindlicher Umfang und Zielumgebung |
 | [PARAMETERS](docs/PARAMETERS.md) | Parameter, Portindizes, Einheiten und Hostverhalten |
 | [DSP_ARCHITECTURE](docs/DSP_ARCHITECTURE.md) | Signalfluss, Numerik, Färbung, Grenzen |
+| [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md) | Laufzeitmodelle, Refit-Vertrag, Gain-/Rate-/Übergangspolitik |
 | [CPU_ANALYSIS](docs/CPU_ANALYSIS.md) | Gemessene CPU-Hotspots, Optimierungen und Dissertation-Bezug |
 | [BUILD](docs/BUILD.md) | Native/MPB-Builds, Cross-ABI, Paketierung |
 | [INSTALLATION](docs/INSTALLATION.md) | Übergabe auf anderen Rechner, Dwarf und REAPER |
