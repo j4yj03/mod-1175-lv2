@@ -58,8 +58,22 @@ def main():
             for a,b in zip(boxes, boxes[1:]):
                 assert abs(a['x']+a['width']-b['x']) < .01, 'Gap between panels'
             assert page.locator('.gs-brand').evaluate('e => getComputedStyle(e).borderTopWidth') == '0px'
+            ratio = page.locator('select[mod-port-symbol=ratio]').bounding_box()
+            for symbol in ('input', 'attack', 'mix'):
+                value = page.locator(f'.gs-value[mod-port-symbol={symbol}]').bounding_box()
+                assert abs(ratio['y']-value['y']) < .05, 'Ratio is not aligned with pot values'
             mode = page.locator('[mod-port-symbol=compression][mod-role=input-control-port]')
+            os_box = page.locator('select[mod-port-symbol=oversampling]').bounding_box()
+            mode_box = mode.bounding_box()
+            before_os = os_box['y']-mode_box['y']-mode_box['height']
+            assert before_os >= 30, 'Missing separation between COMP and oversampling'
+            if variant == 'stereo':
+                link_box = page.locator('select[mod-port-symbol=stereo_link]').bounding_box()
+                after_os = link_box['y']-os_box['y']-os_box['height']
+                assert 0 <= after_os < before_os/2, 'Large gap belongs before OS, not after it'
+            assert mode.locator('span:visible').inner_text() == 'COMP ON'
             mode.click(); assert 'off' in mode.get_attribute('class')
+            assert mode.locator('span:visible').inner_text() == 'COMP OFF'
             mode.click(); assert 'on' in mode.get_attribute('class')
             assert page.evaluate("changes.filter(x=>x.symbol==='compression').map(x=>x.value)") == [0,1]
             # Host recall does not emit a parameter write; knob should still drag afterwards.

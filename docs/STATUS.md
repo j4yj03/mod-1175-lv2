@@ -1,9 +1,53 @@
 # Entwicklungsstand und Übergabe
 
-Stand **2026-10-05**, Projekt **0.4.0**. Benutzerziel: eigener **Green Stripe**,
+Stand **2026-10-05**, Projekt **0.4.1**. Benutzerziel: eigener **Green Stripe**,
 Hardware-Revision A/D nicht bindend.
 
-## Aktueller Stand 0.4.0
+## Aktueller Stand 0.4.1
+
+- **GUI korrigiert:** Ratio unverändert auf Höhe der Wertefelder Input/Attack/Mix.
+  Der größere Abstand liegt ausschließlich zwischen COMP und Oversampling
+  (**40 px**); Oversampling und Stereo Link folgen mit **7 px** Abstand.
+  Mono/Stereo geometrisch und mit echten MOD-Widgets geprüft, Vorschauen erneuert.
+- **Presetkorrektur auf ausdrücklichen Auftrag:** 21 Kick Weight Attack 5→2,
+  22 Snare Crack 5→3 für mehr Anschlag. Neue Varianten **37 Piano Gentle 2:1**
+  und **38 Stereo Bus Subtle 2:1** angehängt. Insgesamt **38 Presets**;
+  alte Nummern/URIs 01–36 erhalten. Nur erneuter Factory-Recall 21/22 lädt
+  deren neue Werte; gespeicherte Projektparameter bleiben erhalten.
+- Die übrigen Klangwerte der ersten 36 Presets und der DSP-Kern sind unverändert.
+  Modell-/Metadatenversion und JSFX jetzt 0.4.1. Presetprüfung in
+  `PRESET_REVIEW.md`, aktueller Audit in `PRESET_AUDIT.json`.
+- **Scarlett-Werkzeug:** `tools/scarlett_test.py` mit `devices`, `generate`,
+  `run`, `analyze`. Mono-Testton, gestufter Frequenz-/Pegelsatz, gleichzeitige
+  zweikanalige Aufnahme, WAV/JSON-Plan, Synchronisations-/Driftbestimmung,
+  Gain/RMS/Peak/DC/THD/THD+N und Referenzvergleich; Berichte als JSON/CSV/Markdown.
+  Anleitung/Verkabelung/Treiber-/Kalibriergrenzen in `SCARLETT_TEST.md`.
+
+### Tatsächlich geprüft für 0.4.1
+
+| Prüfung | Ergebnis |
+|---|---|
+| `make test` | Native DSP, Übergänge, Transformator, reale LV2-ABI, Refit-/RDF-Prüfung PASS |
+| Generierte Dateien | 17 Artefakte, `make check-generated` PASS |
+| Preset-Audit | 76 LV2/RPL-Wertezustände, 228 Presetfälle + 12 Ratiovergleiche PASS |
+| C++/JSFX | 430 allgemeine + 76 Preset-Signalvergleiche, **max. 0 FS**, Recall/Custom PASS |
+| GUI | Mode/Drag/Bypass/Filmstrip PASS; Ratio-Ausrichtung 0 px Abweichung, Lücken 40/7 px |
+| Scarlett-Skript | **10 Offline-/simulierte Backendtests PASS**: Gain, H2, DC, FIR, Taktabweichung, Delay, Fehler, Routing/Stop, HF-Messbandgrenze |
+| Scarlett-CLI | `generate --kind all` + `analyze` auf identischer WAV, 19 Segmente PASS; kein Gerätebeleg |
+| Paketierung | Source-/JSFX-ZIP 0.4.1, Integrität und Scarlett-Skript/Anleitung/Requirements PASS; Diagnoseaudio/NAM/PDF/NPZ ausgeschlossen |
+
+**Nicht ausgeführt:** echte Scarlett-Liveaufnahme, Dwarf-/REAPER-Abnahme und
+Musik-Hörtest. Nächster Schritt auf dem Audio-Rechner: Dependencies installieren,
+`devices`, direkte Scarlett-Line-Kabelreferenz, danach Teststrecke mit gleichen
+Pegelstellungen; Plan, Aufnahme und Berichte gemeinsam zurückgeben.
+Aktuelles Dwarf-Bundle mit MPB neu bauen, danach 21/22 und die Paare 31/37,
+35/38 hören und CPU/xruns im echten Pedalboard prüfen.
+
+## Archiv: letzter Stand 0.4.0
+
+Die nachfolgenden 36-/72-Presetzahlen, unveränderten Factorywerte und die
+frühere 16-px-GUI-Lücke beschreiben den vorherigen Stand. Maßgeblich ist oben
+0.4.1 mit 38/76 und den ausdrücklich beauftragten Änderungen.
 
 ### Erneute Presetprüfung und 2:1-Vorschläge, 2026-10-05
 

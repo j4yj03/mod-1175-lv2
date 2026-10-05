@@ -4,10 +4,10 @@
 
 **Es liegt implementierter Code vor, kein bloßer Plan.**
 
-Aktuell **0.4.0** mit hörbaren, refit-fähigen Eingangstransformatoren und
+Aktuell **0.4.1** mit hörbaren, refit-fähigen Eingangstransformatoren und
 überarbeiteter MOD-GUI. `TRANSFORMER_RUNTIME.md` beschreibt Bankrevision,
 Modellwechsel, feste Gainnormalisierung und HF-Phasengrenzen. Lokal 430
-allgemeine plus 72 Preset-Signalvergleiche bitgleich, 72 Recall-Zustände
+allgemeine plus 76 Preset-Signalvergleiche bitgleich, 76 Recall-Zustände
 und echter MOD-Widget-Browsertest. Preset 29 deckte einen nun korrigierten
 EEL2-Solver-Rundungsfall auf; mit dem neuen Include-Stand testen.
 Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen.
@@ -24,10 +24,12 @@ Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen.
 ## Vorhandene Artefakte
 
 - `jsfx/GreenStripe76-Mono.jsfx`, `...-Stereo.jsfx` plus sieben Includes.
-- Zwei `.rpl`-Instrumentbänke, 36 Presets je Variante, nach Instrument gruppiert.
+- Zwei `.rpl`-Instrumentbänke, 38 Presets je Variante; 37/38 hinten angehängt.
+- `tools/scarlett_test.py`, `tools/requirements-scarlett.txt` und
+  `SCARLETT_TEST.md` für den Scarlett-Testrechner. Erst direkte Kabelreferenz.
 - Aktuell geprüfter Native Build: `build/wsl/green-stripe-76.lv2` (x86_64).
 - Historische Bundles `build/native/green-stripe-76.lv2` und
-  `build/aarch64-gcc9/green-stripe-76.lv2`: vor Übergabe von 0.4.0 neu bauen.
+  `build/aarch64-gcc9/green-stripe-76.lv2`: vor Übergabe von 0.4.1 neu bauen.
 - `dist/*-jsfx.zip`, `*-source.zip`, `*-moddwarf.tar.gz`, Herkunftsmanifest,
   SHA256SUMS nach finaler Paketierung.
 - C++-/JSFX-Paritätsprogramme, Offscreen-GFX-Test, PCM-Proben-/Rendererwerkzeuge.
@@ -58,8 +60,8 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 - Regler-/Link-/Bypass-/Compressionwechsel, Snapshots/MIDI/Automation.
 - Alle fünf Transformatorstufen, schnelle Modell-/OS-Wechsel, None-Recall und
   sechs farbige Factory-Presets bei pegelgleichem A/B prüfen.
-- `PRESET_REVIEW.md` nutzen: alle 36 Presets auf geeignetem Musikmaterial;
-  31 Piano Gentle und 35 Stereo Bus Subtle separat mit 4:1/2:1 vergleichen.
+- `PRESET_REVIEW.md` nutzen: alle 38 Presets auf geeignetem Musikmaterial;
+  31 gegen 37 und 35 gegen 38 mit 4:1/2:1 vergleichen; Attackkorrektur 21/22 hören.
   Erst gleiche Inputwerte vergleichen, danach Ziel-GR über Input und Lautheit
   über Output anpassen. Mix nicht als GR-Einstellung verwenden.
 - Kurzer/langer Burst, Bass, Schlagzeug, Sänger, Guitar, Piano bei pegelgleichem A/B.
@@ -90,18 +92,20 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 ## Bereits lokal belegt
 
 Details/Versionen in `STATUS.md`: Native Build, CMake/CTest, Signal-/LV2-ABI,
-Blockgrößen/In-place, 430 JSFX-Paritätsfälle, 72 Presetzustände, historische GFX-Kompilation/
+Blockgrößen/In-place, 430 JSFX-Paritätsfälle, 76 Presetzustände, historische GFX-Kompilation/
 Render, Turtle-Parsing, AArch64-Symbolfloor, NAM-Dateiinventar.
 Zusätzlich CPU-Benchmark und 80 Vorher/Nachher-Burstregressionen.
 
 ## Noch nicht belegt
 
-Für 0.4.0 kein echtes Dwarf-Laden, keine Geräte-CPU-/xrun-Messung, keine reale REAPER-
+Für 0.4.1 kein echtes Dwarf-Laden, keine Geräte-CPU-/xrun-Messung, keine reale REAPER-
 Host-GR-/Font-/Automation-/Recall-Abnahme, kein Originalhardware- oder
 NAM-Core-Färbungsfit. Diese Punkte nach tatsächlicher Ausführung aktualisieren.
 Historische Dwarf-Leerlaufmessungen stehen in `CPU_ANALYSIS.md`; sie gelten
 nicht als Abnahme der neuen Transformatorstufe. Vorhandene alte Cross-Binaries
 vor Installation neu bauen, Versionsnummer und Hash prüfen.
+Scarlett-Liveaufnahme ebenfalls extern offen; offline und simulierter Backend
+sind keine Prüfung des realen Focusrite-Treibers oder der analogen Wandler.
 
 ## Änderungshinweise
 

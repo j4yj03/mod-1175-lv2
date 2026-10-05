@@ -389,7 +389,7 @@
     "instrument": "Drums",
     "input": 4,
     "output": -1,
-    "attack": 5,
+    "attack": 2,
     "release": 5,
     "ratio": 1,
     "mix": 80,
@@ -397,7 +397,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "3–6 dB",
-    "note": "Attack 5 ist mit ca. 68 µs schnell und kontrolliert den Klick. Soll mehr Frontkante erhalten bleiben, Attack Richtung 1–2 zurücknehmen; Release an den Abstand der Kicks anpassen. Der 80-%-Mix lässt zusätzlich trockenen Anschlag durch.",
+    "note": "Ab 0.4.1 Attack 2 (ca. 433 µs) statt 5 (ca. 68 µs): mehr Frontkante passend zum Kick-Weight-Ziel. Release an den Abstand der Kicks anpassen; 80 % Mix ergänzen trockenen Anschlag. Auch Attack 2 bleibt FET-schnell. Bestehende Hostprojekte behalten ihre gespeicherten Werte; erneuter Factory-Recall lädt die Korrektur.",
     "sources": [
       "PENNY",
       "UA-TIPS"
@@ -408,7 +408,7 @@
     "instrument": "Drums",
     "input": 5,
     "output": -2,
-    "attack": 5,
+    "attack": 3,
     "release": 6,
     "ratio": 2,
     "mix": 85,
@@ -416,7 +416,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "4–8 dB",
-    "note": "Attack 5 (ca. 68 µs) fängt Spitzen schnell ab; 85 % Mix ergänzen trockene Frontkante. Für weniger gekappten Anschlag Attack Richtung 1–2 oder Preset 23 Snare Slow Attack wählen. Release vor dem nächsten Schlag erholen lassen.",
+    "note": "Ab 0.4.1 Attack 3 (ca. 234 µs) statt 5 (ca. 68 µs): weniger gekappter Anschlag passend zum Crack-Ziel, weiterhin schneller als Preset 23 Snare Slow Attack. 85 % Mix ergänzen trockene Frontkante. Release vor dem nächsten Schlag erholen lassen; erneuter Factory-Recall lädt den neuen Attackwert.",
     "sources": [
       "PENNY",
       "UA-TIPS"
@@ -590,7 +590,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "1–3 dB",
-    "note": "Konservativer eigener Startwert; keine gemessene historische Einstellung. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1, Release 3.5, Mix 60 %, Colour 50 % und Transformer None zunächst beibehalten; Input auf etwa 1–2 dB Wet-GR einstellen und Output neu pegelgleichen. Mehr natürliche Anschlagsdynamik ist das Hörziel, noch kein bestandener Hörtest.",
+    "note": "Konservativer eigener 4:1-Startwert; keine gemessene historische Einstellung. Die weichere zusätzliche Variante steht unter 37 Piano Gentle 2:1. Input auf gewünschte Wet-GR einstellen, Output pegelgleichen; Klangabnahme auf Musik bleibt offen.",
     "sources": [
       "EICHAS"
     ]
@@ -658,7 +658,7 @@
     "compression": 1,
     "link": 1,
     "target_gr": "0–2 dB",
-    "note": "Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1.5, Release 3, Mix 40 %, Colour 40 %, Link On und Transformer None zunächst beibehalten. Für zurückhaltende Verdichtung Input auf 0–2 dB Wet-GR einstellen, Output neu pegelgleichen; geringere Regelung im Testsignal gemessen, Musikbewertung offen.",
+    "note": "Kreativer 4:1-Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. Die weichere zusätzliche Variante steht unter 38 Stereo Bus Subtle 2:1. Input auf 0–2 dB Wet-GR einstellen und Output pegelgleichen; Musikbewertung offen.",
     "sources": [
       "BLACKBIRD",
       "PENNY"
@@ -683,5 +683,39 @@
       "PENNY",
       "BLACKBIRD"
     ]
+  },
+  {
+    "name": "37 Piano Gentle 2:1",
+    "instrument": "Tasten",
+    "input": -3,
+    "output": 1,
+    "attack": 1,
+    "release": 3.5,
+    "ratio": 0,
+    "mix": 60,
+    "colour": 50,
+    "compression": 1,
+    "link": 1,
+    "transformer": 0,
+    "target_gr": "1–2 dB im Wet-Pfad",
+    "note": "Neue eigene 2:1-Variante von Preset 31, ansonsten identische Startwerte. Weniger Verdichtung für natürliche Anschläge; im 1-kHz-Vergleich bei −18 dBFS Peak ca. 1,56 statt 2,62 dB mittlere Wet-GR. Das ist ein Signalbeleg, kein Piano-Hörtest. Input an die Aufnahme anpassen und Output neu pegelgleichen.",
+    "sources": []
+  },
+  {
+    "name": "38 Stereo Bus Subtle 2:1",
+    "instrument": "Bus",
+    "input": -6,
+    "output": 1,
+    "attack": 1.5,
+    "release": 3,
+    "ratio": 0,
+    "mix": 40,
+    "colour": 40,
+    "compression": 1,
+    "link": 1,
+    "transformer": 0,
+    "target_gr": "0–2 dB im Wet-Pfad",
+    "note": "Neue eigene 2:1-Variante von Preset 35, ansonsten identische Startwerte. Sanfte Stereo-Verdichtung; bei −18 dBFS Peak im 1-kHz-Test ca. 0,49 statt 0,96 dB mittlere Wet-GR. Link On erhält gemeinsame Regelung. Mix dosiert den Effekt, nicht die interne GR; Musik-/Geräteabnahme offen.",
+    "sources": []
   }
 ]

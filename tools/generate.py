@@ -270,7 +270,7 @@ def gui_html(stereo, parameters):
 {screws(False, (0, 45, 18, 67))}
 <div class="gs-bays">
 <div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{screws(True, (8, 31, 54, 79))}<div class="gs-body gs-body-knobs">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{screws(True, (13, 38, 61, 84))}<div class="gs-body gs-body-knobs">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
-<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}</div>{link}</div></div>
+<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}{link}</div></div></div>
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>
@@ -398,9 +398,10 @@ def jsfx_files(parameters, presets, model):
             '> Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.', '',
             f'> Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei',
             f'> {transformer_count} von {len(presets)} Presets auf einer Stufe und sonst auf `None`.',
-            '', 'Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:',
-            '[PRESET_REVIEW.md](PRESET_REVIEW.md). Factory-Werte bleiben unverändert; empfohlen zum Ausprobieren sind',
-            '**31 Piano Gentle** und **35 Stereo Bus Subtle**. Zunächst nur Ratio ändern, danach Input auf Ziel-GR einstellen und Output pegelgleichen.',
+            '', 'Prüfung und Änderungsbegründung: [PRESET_REVIEW.md](PRESET_REVIEW.md).',
+            'Ab 0.4.1: Attack in **21 Kick Weight** und **22 Snare Crack** korrigiert;',
+            '**37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** als zusätzliche Varianten.',
+            'Die bisherigen Nummern bleiben erhalten. Input auf Ziel-GR einstellen und Output pegelgleichen.',
             '', '| Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Transformator | Ziel-GR |',
             '|---|---|---|---|---|---|---|---|---|']
     # From the port definition, not a second hardcoded list: a new ratio step

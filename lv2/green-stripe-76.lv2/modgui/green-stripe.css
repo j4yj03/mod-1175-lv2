@@ -50,8 +50,10 @@
 .gs76{{{cns}}} .gs-body-engine > .gs-field { display:flex; flex-direction:column; margin:0; }
 .gs76{{{cns}}} .gs-body-engine > .gs-field:first-child { align-self:end; }
 .gs76{{{cns}}} .gs-body-engine select[mod-port-symbol="ratio"] { height:20px; }
-.gs76{{{cns}}} .gs-engine-controls { width:100%; display:flex; flex-direction:column; gap:16px; align-self:start; }
-.gs76{{{cns}}} .gs-engine-controls > .gs-field { margin:0; }
+.gs76{{{cns}}} .gs-engine-controls { grid-row:2 / 4; width:100%; display:flex; flex-direction:column; gap:7px; align-self:start; }
+.gs76{{{cns}}} .gs-engine-controls > .gs-field { display:flex; flex-direction:column; margin:0; }
+/* Put the breathing space above the quality controls, never between OS and Link. */
+.gs76{{{cns}}} .gs-engine-controls > .gs-field:first-child { margin-bottom:33px; }
 
 .gs76{{{cns}}} .gs-control { width:136px; text-align:center; margin:0 auto 10px; }
 .gs76{{{cns}}} .gs-knob-row { display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:8px; }

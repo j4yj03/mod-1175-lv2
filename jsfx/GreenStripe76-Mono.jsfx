@@ -1,6 +1,6 @@
 desc:Green Stripe 76 Mono
 author:Green Stripe 76 contributors
-version:0.4.0
+version:0.4.1
 tags:dynamics compressor limiter fet
 // SPDX-License-Identifier: MIT
 options:maxmem=8192 prealloc=8192 gfx_hz=30
@@ -19,7 +19,7 @@ slider9:1<0,1,1{Off,On}>Enabled
 slider10:1<0,1,1{Off,On}>-Stereo Link
 slider12:0<0,2,1{Off,2x,4x}>Oversampling
 slider13:0<0,4,1{None,60s,80s,00s,Symmetric}>Transformer
-slider11:0<0,36,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Vocal Squashed,08 Vocal Transformer,09 Guitar Clean Sustain,10 Guitar Rhythm Tight,11 Guitar Colour Only,12 Vintage Blue Grit,13 Guitar Cruncher,14 Acoustic Strum,15 Acoustic Finger,16 Bass Finger Level,17 Bass Pick Punch,18 Bass Fast Grit,19 Bass Mojo Bite,20 Huge Sub Weight,21 Kick Weight,22 Snare Crack,23 Snare Slow Attack,24 Snare Saturated Parallel,25 Toms Body,26 Overheads Gentle,27 Room All Buttons,28 Drum Room Smasher,29 Drum Parallel Crush,30 Percussion Snap,31 Piano Gentle,32 Rhodes Body,33 Synth Bass Control,34 Synth Lead Sustain,35 Stereo Bus Subtle,36 Mix Bus Light Glue}>Instrument preset
+slider11:0<0,38,1{Custom,01 Neutral Start,02 Dr Pepper Inspired,03 Vocal Natural,04 Vocal Peak Catch,05 Vocal Rock Forward,06 Vocal Grit Parallel,07 Vocal Squashed,08 Vocal Transformer,09 Guitar Clean Sustain,10 Guitar Rhythm Tight,11 Guitar Colour Only,12 Vintage Blue Grit,13 Guitar Cruncher,14 Acoustic Strum,15 Acoustic Finger,16 Bass Finger Level,17 Bass Pick Punch,18 Bass Fast Grit,19 Bass Mojo Bite,20 Huge Sub Weight,21 Kick Weight,22 Snare Crack,23 Snare Slow Attack,24 Snare Saturated Parallel,25 Toms Body,26 Overheads Gentle,27 Room All Buttons,28 Drum Room Smasher,29 Drum Parallel Crush,30 Percussion Snap,31 Piano Gentle,32 Rhodes Body,33 Synth Bass Control,34 Synth Lead Sustain,35 Stereo Bus Subtle,36 Mix Bus Light Glue,37 Piano Gentle 2:1,38 Stereo Bus Subtle 2:1}>Instrument preset
 in_pin:Input L
 in_pin:Input R
 out_pin:Output L

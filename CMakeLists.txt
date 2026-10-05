@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(GreenStripe76 VERSION 0.4.0 LANGUAGES CXX)
+project(GreenStripe76 VERSION 0.4.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(GS76_BUILD_TESTS "Build signal acceptance tests" ON)

@@ -4,7 +4,7 @@
 Die Gestaltung ist bewusst **Green Stripe**. Das Projekt greift Funktionsprinzipien
 der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 
-Aktuell **0.4.0**: hörbare Eingangstransformatorprofile **60s warm → 80s
+Aktuell **0.4.1**: hörbare Eingangstransformatorprofile **60s warm → 80s
 ausgewogen → 00s clean**, dazu `None` und eine lineare `Symmetric`-Prüfreferenz.
 C++ und JSFX nutzen dieselbe validierte, nachträglich neu fitbare Modellbank.
 Details und Importweg: [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md).
@@ -21,12 +21,15 @@ keine Gruppentitel; Input/Attack/Mix und Output/Release/Colour bilden jeweils
 eine gemeinsame Potireihe.
 `Mode` verwendet das MOD-Schalterwidget; verschieben
 lässt sich das Paneel am oberen Rand, ohne die Reglerbedienung mitzuziehen.
-36 nach Instrument gruppierte Presets; sechs wählen ein Transformatorprofil.
+38 Presets; 01–36 instrumentweise gruppiert, die zwei 2:1-Varianten angehängt.
+Sechs Presets wählen ein Transformatorprofil.
 Alle Factory-Recall-Wege setzen Oversampling auf Off.
-Alle 36 Presets sind erneut gegen Parameterdaten und Laufzeit geprüft.
-**2:1-Vorschläge:** eigene Varianten von **31 Piano Gentle** und
-**35 Stereo Bus Subtle**; die Factory-Werte bleiben erhalten.
+Alle 38 Presets sind gegen Parameterdaten und Laufzeit geprüft.
+**37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** ergänzen die Bank;
+Kick Weight/Snare Crack erhalten langsamere Attackwerte für mehr Anschlag.
 Einzelbewertung und Messvergleich: [PRESET_REVIEW](docs/PRESET_REVIEW.md).
+Für echte Audiointerface-Messungen: [SCARLETT_TEST](docs/SCARLETT_TEST.md),
+mit Testton-/WAV-Erzeugung, Liveaufnahme und Frequenz-/Klirrauswertung.
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
 Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen
@@ -37,7 +40,7 @@ gegenüber 0.1.0.
 
 - LV2 **Mono** und **Stereo** in einem Bundle; Stereo Link ein/aus.
 - JSFX **Mono** und **Stereo** mit GR-, Peak-/RMS- und Hold-Anzeigen.
-- 36 Instrument-Presets: eingebauter JSFX-Selektor, importierbare `.rpl`-Bänke
+- 38 Instrument-Presets: eingebauter JSFX-Selektor, importierbare `.rpl`-Bänke
   und zusätzliche LV2-Factory-Presets.
 - Frameworkfreier C++11-DSP und gleichwertiger EEL2-Kern, Off/2x/4x-Oversampling
   mit einblendungsgepufferter Umschaltung und Latenzmeldung (0/3/4 Frames).
@@ -77,7 +80,8 @@ Für Dwarf-Build und Installation: [BUILD](docs/BUILD.md),
 |---|---|
 | [USER_MANUAL](docs/USER_MANUAL.md) | Bedienung, Gain-Staging, Stereo, Mix und Instrument-Workflows |
 | [PRESETS](docs/PRESETS.md) | Alle Presetwerte, musikalische Ziele und GR-Richtwerte |
-| [PRESET_REVIEW](docs/PRESET_REVIEW.md) | Prüfung aller 36 Presets, Korrekturen und zwei 2:1-Vorschläge |
+| [PRESET_REVIEW](docs/PRESET_REVIEW.md) | Prüfung aller 38 Presets, Attackkorrekturen und zwei 2:1-Erweiterungen |
+| [SCARLETT_TEST](docs/SCARLETT_TEST.md) | Scarlett-2i2-Testton, Loopback/Host-Aufnahme, Pegel/Frequenzgang/THD |
 | [REQUIREMENTS](docs/REQUIREMENTS.md) | Verbindlicher Umfang und Zielumgebung |
 | [PARAMETERS](docs/PARAMETERS.md) | Parameter, Portindizes, Einheiten und Hostverhalten |
 | [DSP_ARCHITECTURE](docs/DSP_ARCHITECTURE.md) | Signalfluss, Numerik, Färbung, Grenzen |

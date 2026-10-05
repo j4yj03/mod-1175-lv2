@@ -4,7 +4,7 @@ Gesamter Quellenkatalog: `SOURCES.md`. Im Folgenden stehen die fachlichen
 Erkenntnisse und ihre Aussagegrenzen. Letzte Zielkorrektur des Benutzers:
 **eigener Green Stripe, Revision A oder D unerheblich**.
 
-**Produktstand 0.4.0:** Die am Ende dieses Dokuments beschriebenen Offlinefits
+**Produktstand seit 0.4.0:** Die am Ende dieses Dokuments beschriebenen Offlinefits
 sind inzwischen als refit-fähige Eingangsstufe portiert. Der konkrete
 Runtime-Vertrag und die getrennten Amplituden-/Phasengrenzen stehen in
 `TRANSFORMER_RUNTIME.md`. Historische Quellen-/Fitberichte bleiben inhaltlich
@@ -191,8 +191,12 @@ musikalische Startpunkte, nicht aus einem Thread übernommene „beste Settings�
 Die erneute 0.4.0-Prüfung aller 36 Presets steht in `PRESET_REVIEW.md`.
 Die Vorschläge 31 Piano Gentle / 35 Stereo Bus Subtle mit 2:1 stammen aus
 eigener Signal-/Modellbewertung; dafür wird keine zusätzliche externe Quelle
-behauptet. Factory-Werte bleiben erhalten. Mix beeinflusst den Wet-Anteil,
+behauptet. In dieser 0.4.0-Prüfung blieben Factory-Werte erhalten. Mix beeinflusst den Wet-Anteil,
 nicht die vor Mix gemeldete FET-GR.
+Nach anschließendem ausdrücklichem Auftrag setzt **0.4.1** die beiden
+2:1-Varianten als Presets 37/38 um und korrigiert Attack in 21/22.
+Die neue Scarlett-Messschleife (`SCARLETT_TEST.md`) liefert zukünftig eigene
+Referenzdaten, ist hier aber noch nicht an echter Hardware ausgeführt.
 
 ## 7. NAM
 

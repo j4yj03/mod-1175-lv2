@@ -15,7 +15,7 @@
     doap:maintainer [ foaf:name "Green Stripe 76 contributors";
         foaf:homepage <https://github.com/j4yj03/mod-1175-lv2> ];
     mod:brand "GreenStripe"; mod:label "GS76 Stereo";
-    lv2:minorVersion 4; lv2:microVersion 0;
+    lv2:minorVersion 4; lv2:microVersion 1;
     lv2:optionalFeature lv2:hardRTCapable;
     rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons, amplifier colour and refit-able input transformer profiles. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port

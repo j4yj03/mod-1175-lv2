@@ -1,25 +1,29 @@
-# Prüfung aller Instrument-Presets — 0.4.0
+# Prüfung aller Instrument-Presets — 0.4.1
 
 Stand **2026-10-05**. Basis: `data/presets.json`, `data/parameters.json`,
 `data/model.json`, aktuelle Transformatorbank und bestehende Quellenzuordnung.
-**Alle 36 Presets sind als anpassbare Startpunkte technisch konsistent.**
-Mehrere Beschreibungen waren missverständlich und wurden korrigiert.
-Gespeicherte Klangwerte, Namen, Nummern und Bankreihenfolge bleiben unverändert.
-Die beiden 2:1-Einstellungen unten sind Vorschläge für eigene Varianten.
+**38 Presets** nach ausdrücklichem Korrektur-/Erweiterungsauftrag:
+21 Kick Weight erhält Attack **2 statt 5**, 22 Snare Crack **3 statt 5**,
+damit beide weniger Frontkante abregeln. Die vorherigen 2:1-Vorschläge sind
+als **37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** angehängt.
+Nummern/Namen 01–36 bleiben erhalten; neue Varianten haben eigene URIs und
+Selektorplätze. Bestehende Hostprojekte behalten gespeicherte Parameter;
+erneuter Factory-Recall von 21/22 lädt die neuen Attackwerte.
+Diese beabsichtigte Klangänderung ist als **0.4.1** versioniert.
 
 ## 1. Tatsächliche Prüfung und Befund
 
-- **72 Zustände:** alle Mono-/Stereo-LV2-Factory-Presets und RPL-Zustände
+- **76 Zustände:** alle Mono-/Stereo-LV2-Factory-Presets und RPL-Zustände
   gegen sämtliche Werte aus `data/presets.json` abgeglichen, inklusive
   Enabled, Link, Oversampling, Transformer und Custom-Selektorzustand.
-- **216 Renderfälle:** jedes Preset in Mono und Stereo bei Off/2x/4x,
+- **228 Renderfälle:** jedes Preset in Mono und Stereo bei Off/2x/4x,
   48 kHz, deterministisches Signal, pro Fall frischer Processor.
   Endliche Audio-/GR-Werte; beide Compression-Off-Presets exakt 0 dB GR.
 - **12 Zusatzfälle:** Piano Gentle und Stereo Bus Subtle jeweils 4:1/2:1
   bei −18/−12/−6 dBFS Peak. Signalwerte unten.
-- Ratioverteilung bei aktiver Compression: **22 × 4:1, 9 × 8:1,
+- Ratioverteilung bei aktiver Compression: **2 × 2:1, 22 × 4:1, 9 × 8:1,
   3 × All Buttons**. Zwei weitere Presets sind Compression Off und speichern
-  inaktiv 4:1. Kein Factory-Preset nutzt 2:1, 12:1 oder 20:1.
+  inaktiv 4:1. Kein Factory-Preset nutzt 12:1 oder 20:1.
 - Die sechs Transformatorzuordnungen sind stimmig mit den eigenen Profilen:
   **11/12 → 60s, 13/19/24 → 80s, 20 → 00s**. Alle anderen `None`.
 - **25 Toms Body und 30 Percussion Snap** rufen in Stereo Dual Mono auf;
@@ -34,6 +38,9 @@ Dies ist eine **Parameter-/Signalprüfung**, kein Hörurteil über Instrumentauf
 keine Geräteabnahme und keine Bestätigung universeller Ziel-GR-Werte.
 
 ### Zusätzlich gefundener Paritätsfehler
+
+Historischer Befund der vorangegangenen 0.4.0-Prüfung; 0.4.1 enthält diese
+Korrektur weiterhin. Aktuell 430 allgemeine + **76** Preset-Signalvergleiche.
 
 Der bisherige Test verglich die 72 Bankzustände nur als Sliderwerte mit dem
 Selektor und renderte dabei Stille. Der neue Signalvergleich aller Bankwerte
@@ -69,7 +76,7 @@ tiefer Detektorschwelle. Erst Input auf die Ziel-GR einstellen, dann Output
 pegelgleichen und zuletzt Mix dosieren. Eine kleine Mixzahl reduziert nicht
 die interne GR oder die Transformatoraussteuerung.
 
-## 2. Einzelbewertung aller 36 Presets
+## 2. Einzelbewertung aller 38 Presets
 
 „Stimmig“ bedeutet konsistente Absicht/Parameter, mit erforderlichem Input-
 und Hörabgleich. Alle genannten GR-Ziele beziehen sich auf den Wet-Pfad.
@@ -96,8 +103,8 @@ und Hörabgleich. Alle genannten GR-Ziele beziehen sich auf den Wet-Pfad.
 | 18 Bass Fast Grit | 8:1/7/7, +8 Input, 70 % Mix passen bewusst zu schneller rauer Regelung. |
 | 19 Bass Mojo Bite | 8:1/7/7 plus 80s ergänzt den Grit-Pfad; moderate Profilbezeichnung bedeutet bei +9 Input nicht automatisch wenig Klirr. |
 | 20 Huge Sub Weight | 8:1/4/4 plus 00s plausibel für relativ mehr Headroom; keine Bassanhebung. Bei +8 Input kann auch 00s kräftig angeregt werden. |
-| 21 Kick Weight | Attack 5 ist **schnell**, ca. 68 µs, nicht langsam. Notiz korrigiert; für mehr Klick Richtung 1–2 oder Dryanteil, Zahlen erhalten. |
-| 22 Snare Crack | Attack 5 ebenfalls schnell; Beschreibung unterscheidet nun Peak-Kontrolle und trockene Frontkante. Für offenere Snare Preset 23. |
+| 21 Kick Weight | Korrigiert auf Attack 2, ca. 433 µs statt 68 µs. Für das Weight-/Klick-Ziel mehr Frontkante; im Testsignal Spitzen-GR 11,19 statt 11,71 dB. |
+| 22 Snare Crack | Korrigiert auf Attack 3, ca. 234 µs statt 68 µs. Weiterhin schneller als Preset 23; im Testsignal Spitzen-GR 11,65 statt 11,94 dB. |
 | 23 Snare Slow Attack | Attack 2 (ca. 433 µs) relativ langsam und zur Absicht passend. Unbelegte pauschale Verzerrungsbegründung gegen Attack 1 entfernt; externer HP bleibt optionaler Quellentipp. |
 | 24 Snare Saturated Parallel | 80s, Colour 100, 30 % Mix konsistent. 10–18 dB ist eigene aggressive Parallel-Abstimmung, nicht GR-Vorgabe von MTM-SNARE. |
 | 25 Toms Body | 4:1/4/6 und Dual Mono für getrennte Toms stimmig; Stereosumme gegebenenfalls linken. |
@@ -106,18 +113,20 @@ und Hörabgleich. Alle genannten GR-Ziele beziehen sich auf den Wet-Pfad.
 | 28 Drum Room Smasher | 4:1/7/7 und 75 % Mix passend; Ratio bleibt ausdrücklich eigene Wahl zur Quelle. |
 | 29 Drum Parallel Crush | All, +14 Input, Release 7 und 25 % Mix stimmige starke Parallelstufe. |
 | 30 Percussion Snap | Langsamerer Attack 1,3, schneller Release und 75 % Mix plausibel; Dual Mono nur für unabhängige Kanäle. |
-| 31 Piano Gentle | 4:1 mit 60 % Mix/Colour 50 plausibel, Input sensibel. **Erster 2:1-Vorschlag**, siehe unten. |
+| 31 Piano Gentle | 4:1 mit 60 % Mix/Colour 50 bleibt erhalten; zusätzliche 2:1-Variante unter 37. |
 | 32 Rhodes Body | 4:1/2,5/5 und Colour 90 schlüssig für Körper/Sustain; Chorus-/Stereoeffekte mithören. |
 | 33 Synth Bass Control | 8:1/3,5/4, geringere Colour und hoher Wet-Anteil schlüssig; tiefe Dauertöne/Release prüfen. |
 | 34 Synth Lead Sustain | 4:1/3/5,5 und 85 % Mix passen zu Sustain; Delay/Reverb-Routing beeinflusst Pumpen. |
-| 35 Stereo Bus Subtle | Niedrige Anregung, 40 % Mix/Colour, Link und None stimmig; **zweiter 2:1-Vorschlag**. |
+| 35 Stereo Bus Subtle | Niedrige Anregung, 40 % Mix/Colour, Link und None bleiben erhalten; zusätzliche 2:1-Variante unter 38. |
 | 36 Mix Bus Light Glue | 4:1 bleibt wegen des ausdrücklichen Quellenbezugs. 1–2 dB Wet-GR wird über Input eingestellt, nicht über Mix; Notiz korrigiert. |
+| 37 Piano Gentle 2:1 | Neu: bis auf Ratio identisch mit 31; Ziel 1–2 dB Wet-GR. Bei derselben Probe ca. 3,96 statt 6,04 dB Spitzen-GR, Input weiterhin abstimmen. |
+| 38 Stereo Bus Subtle 2:1 | Neu: bis auf Ratio identisch mit 35; Ziel 0–2 dB Wet-GR. Bei derselben Probe ca. 2,62 statt 4,11 dB Spitzen-GR. |
 
-## 3. Zwei konkrete 2:1-Vorschläge
+## 3. Zwei umgesetzte 2:1-Erweiterungen
 
-### 31 Piano Gentle → eigene Variante „Piano Gentle 2:1“
+### 37 Piano Gentle 2:1 — Variante von 31
 
-- Zunächst nur **Ratio 4:1 → 2:1** ändern, übrige Werte beibehalten:
+- Factory-Variante mit **Ratio 2:1**, übrige Werte wie 31:
   Input −3 dB, Output +1 dB, Attack 1, Release 3,5, Mix 60 %, Colour 50 %,
   Link On, Transformer None, OS Off.
 - Hörziel: weniger Verdichtung langer Anschläge, mehr Anschlagsdynamik.
@@ -125,9 +134,9 @@ und Hörabgleich. Alle genannten GR-Ziele beziehen sich auf den Wet-Pfad.
 - Nominal Attack **800 µs**, Release **303 ms**. Auch die langsamste
   Attack bleibt FET-schnell; 2:1 macht aus dem Modell keinen langsamen Leveler.
 
-### 35 Stereo Bus Subtle → eigene Variante „Stereo Bus Subtle 2:1“
+### 38 Stereo Bus Subtle 2:1 — Variante von 35
 
-- Zunächst nur **Ratio 4:1 → 2:1** ändern: Input −6 dB, Output +1 dB,
+- Factory-Variante mit **Ratio 2:1**: Input −6 dB, Output +1 dB,
   Attack 1,5, Release 3, Mix 40 %, Colour 40 %, Link On, None, OS Off.
 - Hörziel: kleine Verdichtung bei höherer interner Durchlässigkeit;
   Ziel **0–2 dB Wet-GR**, anschließend pegelgleicher Bypass-/Ratiovergleich.
@@ -152,9 +161,10 @@ dem Preset-Input-Gain. Kein Nachregeln von Input/Output in dieser Messung.
 2:1 regelt in diesen Fällen weniger, aber weder allgemein halb so stark noch
 allgemein ein Drittel so stark. Die frühere Drittel-Aussage verwechselte
 festen Feedback-Tap-Pegel mit festem Eingang. Herleitung in `PARAMETERS.md`.
-Quelle für die beiden Empfehlungen ist **eigene Modell-/Signalbewertung**,
-kein historischer 1176-Tipp. Die Factory-Bank bleibt bei 4:1; Variante unter
-einem eigenen Host-Presetnamen speichern. Keine zusätzlichen Presetnummern.
+Quelle für die beiden Varianten ist **eigene Modell-/Signalbewertung**,
+kein historischer 1176-Tipp. 31/35 bleiben bei 4:1, 37/38 ergänzen die Bank
+am Ende. Die ersten 36 Plätze bleiben dadurch abrufkompatibel; nur 21/22
+haben die oben begründete Attackkorrektur. Eigene Feinabstimmungen separat speichern.
 
 ## 4. Wiederholung und Dokumentationsstand
 

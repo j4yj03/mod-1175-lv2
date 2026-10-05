@@ -242,6 +242,8 @@ python3 tools/package.py \
 - JSFX-ZIP: alle `.jsfx`, sieben Includes, `.rpl`, Anleitung, Lizenz und
   Transformatorbank/Runtime-Vertrag zur Herkunfts- und Refit-Dokumentation,
   außerdem Presetprüfung/2:1-Vorschläge (`PRESET_REVIEW.md`, `PRESET_AUDIT.json`).
+  Scarlett-Anleitung und separates Skript/Requirements unter `tools/` sind
+  ebenfalls enthalten; dessen Pythonpakete werden nicht mitgeliefert.
 - Source-ZIP: DSP, Metadaten, Werkzeuge, Tests, Doku und AGENTS.
 - LV2-tar.gz: Bundle direkt im Archivroot, ideal für SDK-Upload.
 - Herkunftsmanifest: Architektur, DT_NEEDED, Symbolversionen, Binärhash,
@@ -251,7 +253,11 @@ python3 tools/package.py \
 NAM-/WAV-Dateien, gepackte Offline-Hördateien, Hersteller-PDFs, NPZ-Rohdaten,
 `.git`, temporäre Toolchains und Buildartefakte werden nicht im Source-/JSFX-
 Paket verteilt. `--dwarf` verweigert x86_64 oder glibc >2.27.
-Aktuelle Projektversion **0.4.0**; ältere Pakete enthalten die hörbaren
-Transformatorprofile nicht. Für Übertragung Version und Bankrevision prüfen.
-Vorhandene alte Cross-Binaries sind kein 0.4.0-Build. Die lokale 0.4.0-Prüfung
+Aktuelle Projektversion **0.4.1** mit 38 Presets und korrigierter Attack in 21/22.
+Transformatorprofile sind seit 0.4.0 hörbar. Version und Bankrevision prüfen.
+Vorhandene alte Cross-Binaries sind kein 0.4.1-Build. Die lokale Prüfung
 verwendet GCC 15.2 auf x86_64; der aktuelle MPB-/Dwarf-Build ist extern offen.
+
+Audiointerface-Messwerkzeug separat: `python -m pip install -r tools/requirements-scarlett.txt`.
+NumPy/SoundFile für Offlineanalyse, sounddevice/PortAudio für Live-I/O;
+keine neue Plugin-Laufzeitabhängigkeit. Workflow in `SCARLETT_TEST.md`.

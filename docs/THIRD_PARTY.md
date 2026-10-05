@@ -32,6 +32,10 @@ Architekturdokumentation nachvollziehbar. Kein vollständiger Fremdbibliotheksba
   enthaltenes jQuery/jQuery UI für den externen Browsertest; nicht ins Plugin kopiert.
 - **NumPy** für den unabhängigen Runtime-/Offlinevergleich, SciPy für den
   Offlinefit; beide nicht Teil des Laufzeitplugins.
+- **sounddevice/PortAudio, SoundFile/libsndfile und NumPy** für das optionale
+  Scarlett-Testwerkzeug. Separat über pip/OS installiert, keine Aufnahme oder
+  Bibliothek im DSP. Lokale Offlineprüfung mit SoundFile 0.14.0 und
+  sounddevice 0.5.6 (Live-Backend in Tests simuliert).
 - Die neue Presetprüfung (`audit_presets.py`/`preset_probe.cpp`) benötigt nur
   Python-Standardbibliothek und den eigenen C++11-Kern; keine Musikdateien
   oder fremden Presetbanken. ysfx prüft zusätzlich alle Bankzustände mit Signal.

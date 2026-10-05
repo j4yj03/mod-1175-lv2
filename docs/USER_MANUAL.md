@@ -69,7 +69,8 @@ Zustand `COMP ON` / `COMP OFF` direkt auf seinem beweglichen Griff; eine
 separate Überschrift entfällt. Auch Oversampling und Link benötigen keine
 Überschrift: Die Auswahltexte lauten `No Oversampling`, `2x Oversampling`,
 `4x Oversampling` beziehungsweise `STEREO LINK` / `DUAL MONO`.
-Zwischen COMP-Schieber und Oversampling liegen 16 px Abstand. Das Ratio-
+Zwischen COMP-Schieber und Oversampling liegen 40 px Abstand, zwischen
+Oversampling und Link nur 7 px. Das Ratio-
 Auswahlfeld ist auf derselben Höhe wie die Wertefelder von Input, Attack und Mix.
 
 ### Input — −36 bis +24 dB
@@ -118,10 +119,9 @@ werden, weil die Regelung Teile einzelner Schwingungen mitverfolgt.
 ### Ratio
 
 - **2:1:** sanfte eigene Erweiterung für geringe Regelung.
-  Für eigene Varianten von **31 Piano Gentle** und **35 Stereo Bus Subtle**
-  besonders plausibel. Zuerst nur Ratio ändern, danach Input auf etwa 1–2 dB
-  bzw. 0–2 dB Wet-GR einstellen und Output pegelgleichen. Die Factory-Bank
-  speichert weiterhin 4:1; gemessener Vergleich in `PRESET_REVIEW.md`.
+  Factory-Presets **37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1**
+  bereitgestellt. Input auf etwa 1–2 dB bzw. 0–2 dB Wet-GR einstellen und
+  Output pegelgleichen; 31/35 sind die erhaltenen 4:1-Vergleiche.
 - **4:1:** offener Ausgangspunkt, breiteres Knie.
 - **8:1:** kräftigere Kontrolle für dynamische Quellen.
 - **12:1 / 20:1:** hohe nominale Kompression für Peaks und Effektpfade.
@@ -190,7 +190,7 @@ Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
   Oversampling auf Off.
 - Anders ist der **Transformator**: er ist eine Klangwahl und wandert mit dem
   Preset. Beim Recall startet er also auf dem Wert des Presets und sonst auf
-  `None`. Belegt in 6 von 36 Presets — *Guitar Colour Only* (`60s`), *Vintage Blue Grit* (`60s`), *Guitar Cruncher* (`80s`), *Bass Mojo Bite* (`80s`), *Huge Sub Weight* (`00s`), *Snare Saturated Parallel* (`80s`).
+  `None`. Belegt in 6 von 38 Presets — *Guitar Colour Only* (`60s`), *Vintage Blue Grit* (`60s`), *Guitar Cruncher* (`80s`), *Bass Mojo Bite* (`80s`), *Huge Sub Weight* (`00s`), *Snare Saturated Parallel* (`80s`).
 
 ### Transformator — None / 60s / 80s / 00s / Symmetric
 
@@ -330,8 +330,12 @@ Start. Rhodes und Synth-Leads können mehr Körper bekommen. Synthbass braucht
 auf langen tieffrequenten Noten ruhige Release. Subtile Stereo-Bus-Einstellungen
 sind kreative Startpunkte, keine Mastering-Empfehlung.
 
-Die verbindlichen aktuellen Namen, Gruppen und Nummern aller 36 Presets
+Die verbindlichen aktuellen Namen, Gruppen und Nummern aller 38 Presets
 stehen in der generierten Tabelle `PRESETS.md`.
+Ab 0.4.1 verwenden **21 Kick Weight** und **22 Snare Crack** langsamere
+Attackwerte 2 bzw. 3 statt 5. Erneuter Factory-Recall lädt diese Korrektur;
+gespeicherte eigene Projekte behalten ihre Parameterwerte. 37/38 sind
+angehängt, damit sich die ersten 36 Selektorpositionen nicht verschieben.
 Die erneute Einzelprüfung steht in `PRESET_REVIEW.md`: Ziel-GR gilt immer
 vor Mix und erst nach Input-Abgleich. Auch „Gentle“ kann bei heißer Quelle
 kräftig regeln. Preset **08 Vocal Transformer** bezeichnet den quelleninspirierten
@@ -375,3 +379,6 @@ Ausgangspunkte, keine automatischen Instrument-Erkenner.
 
 Für reproduzierbare Tests siehe `TESTING.md`. Färbungs-/Hörabgleich mit einem
 Originalgerät oder NAM-Core ist noch kein bestandener Teil dieser Anleitung.
+Ein ausführbarer Loopback-/Testtonworkflow für die **Scarlett 2i2 1st Gen**
+steht in `SCARLETT_TEST.md`: Mess-WAV erzeugen, aufnehmen und Pegel,
+Frequenzgang sowie THD/THD+N mit direkter Kabelreferenz auswerten.

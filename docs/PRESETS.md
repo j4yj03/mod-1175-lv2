@@ -8,11 +8,12 @@
 > Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.
 
 > Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei
-> 6 von 36 Presets auf einer Stufe und sonst auf `None`.
+> 6 von 38 Presets auf einer Stufe und sonst auf `None`.
 
-Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:
-[PRESET_REVIEW.md](PRESET_REVIEW.md). Factory-Werte bleiben unverändert; empfohlen zum Ausprobieren sind
-**31 Piano Gentle** und **35 Stereo Bus Subtle**. Zunächst nur Ratio ändern, danach Input auf Ziel-GR einstellen und Output pegelgleichen.
+Prüfung und Änderungsbegründung: [PRESET_REVIEW.md](PRESET_REVIEW.md).
+Ab 0.4.1: Attack in **21 Kick Weight** und **22 Snare Crack** korrigiert;
+**37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** als zusätzliche Varianten.
+Die bisherigen Nummern bleiben erhalten. Input auf Ziel-GR einstellen und Output pegelgleichen.
 
 | Preset | Instrument | Input / Output dB | Attack / Release | Ratio | Mix / Colour % | Link | Transformator | Ziel-GR |
 |---|---|---|---|---|---|---|---|---|
@@ -36,8 +37,8 @@ Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:
 | 18 Bass Fast Grit | Bass | 8 / -4 | 7 / 7 | 8:1 | 70 / 100 | On | None | 6–12 dB |
 | 19 Bass Mojo Bite | Bass | 9 / -5 | 7 / 7 | 8:1 | 75 / 100 | On | 80s | 7–10 dB im Wet-Pfad |
 | 20 Huge Sub Weight | Bass | 8 / -4 | 4 / 4 | 8:1 | 85 / 100 | On | 00s | 6–10 dB |
-| 21 Kick Weight | Drums | 4 / -1 | 5 / 5 | 4:1 | 80 / 85 | On | None | 3–6 dB |
-| 22 Snare Crack | Drums | 5 / -2 | 5 / 6 | 8:1 | 85 / 100 | On | None | 4–8 dB |
+| 21 Kick Weight | Drums | 4 / -1 | 2 / 5 | 4:1 | 80 / 85 | On | None | 3–6 dB |
+| 22 Snare Crack | Drums | 5 / -2 | 3 / 6 | 8:1 | 85 / 100 | On | None | 4–8 dB |
 | 23 Snare Slow Attack | Drums | 3 / -1 | 2 / 5 | 4:1 | 90 / 90 | On | None | 2–6 dB |
 | 24 Snare Saturated Parallel | Drums | 6 / -6 | 3 / 6 | 4:1 | 30 / 100 | On | 80s | 10–18 dB im Wet-Pfad |
 | 25 Toms Body | Drums | 4 / -1 | 4 / 6 | 4:1 | 85 / 80 | Off | None | 3–7 dB |
@@ -52,6 +53,8 @@ Vollständige Prüfung aller Presets und zwei begründete **2:1-Vorschläge**:
 | 34 Synth Lead Sustain | Synth | 3 / 0 | 3 / 5.5 | 4:1 | 85 / 80 | On | None | 3–6 dB |
 | 35 Stereo Bus Subtle | Bus | -6 / 1 | 1.5 / 3 | 4:1 | 40 / 40 | On | None | 0–2 dB |
 | 36 Mix Bus Light Glue | Bus | -4 / 0 | 1.5 / 3 | 4:1 | 45 / 45 | On | None | 1–2 dB |
+| 37 Piano Gentle 2:1 | Tasten | -3 / 1 | 1 / 3.5 | 2:1 | 60 / 50 | On | None | 1–2 dB im Wet-Pfad |
+| 38 Stereo Bus Subtle 2:1 | Bus | -6 / 1 | 1.5 / 3 | 2:1 | 40 / 40 | On | None | 0–2 dB im Wet-Pfad |
 
 ## 01 Neutral Start
 
@@ -195,14 +198,14 @@ Anregungen: MOORE, PENNY.
 
 ## 21 Kick Weight
 
-Attack 5 ist mit ca. 68 µs schnell und kontrolliert den Klick. Soll mehr Frontkante erhalten bleiben, Attack Richtung 1–2 zurücknehmen; Release an den Abstand der Kicks anpassen. Der 80-%-Mix lässt zusätzlich trockenen Anschlag durch.
+Ab 0.4.1 Attack 2 (ca. 433 µs) statt 5 (ca. 68 µs): mehr Frontkante passend zum Kick-Weight-Ziel. Release an den Abstand der Kicks anpassen; 80 % Mix ergänzen trockenen Anschlag. Auch Attack 2 bleibt FET-schnell. Bestehende Hostprojekte behalten ihre gespeicherten Werte; erneuter Factory-Recall lädt die Korrektur.
 
 Transformator: None.
 Anregungen: PENNY, UA-TIPS.
 
 ## 22 Snare Crack
 
-Attack 5 (ca. 68 µs) fängt Spitzen schnell ab; 85 % Mix ergänzen trockene Frontkante. Für weniger gekappten Anschlag Attack Richtung 1–2 oder Preset 23 Snare Slow Attack wählen. Release vor dem nächsten Schlag erholen lassen.
+Ab 0.4.1 Attack 3 (ca. 234 µs) statt 5 (ca. 68 µs): weniger gekappter Anschlag passend zum Crack-Ziel, weiterhin schneller als Preset 23 Snare Slow Attack. 85 % Mix ergänzen trockene Frontkante. Release vor dem nächsten Schlag erholen lassen; erneuter Factory-Recall lädt den neuen Attackwert.
 
 Transformator: None.
 Anregungen: PENNY, UA-TIPS.
@@ -265,7 +268,7 @@ Anregungen: UA-TIPS.
 
 ## 31 Piano Gentle
 
-Konservativer eigener Startwert; keine gemessene historische Einstellung. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1, Release 3.5, Mix 60 %, Colour 50 % und Transformer None zunächst beibehalten; Input auf etwa 1–2 dB Wet-GR einstellen und Output neu pegelgleichen. Mehr natürliche Anschlagsdynamik ist das Hörziel, noch kein bestandener Hörtest.
+Konservativer eigener 4:1-Startwert; keine gemessene historische Einstellung. Die weichere zusätzliche Variante steht unter 37 Piano Gentle 2:1. Input auf gewünschte Wet-GR einstellen, Output pegelgleichen; Klangabnahme auf Musik bleibt offen.
 
 Transformator: None.
 Anregungen: EICHAS.
@@ -293,7 +296,7 @@ Anregungen: Eigener musikalischer Startpunkt.
 
 ## 35 Stereo Bus Subtle
 
-Kreativer Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. 2:1-Vorschlag: nur Ratio auf 2:1 wechseln, Attack 1.5, Release 3, Mix 40 %, Colour 40 %, Link On und Transformer None zunächst beibehalten. Für zurückhaltende Verdichtung Input auf 0–2 dB Wet-GR einstellen, Output neu pegelgleichen; geringere Regelung im Testsignal gemessen, Musikbewertung offen.
+Kreativer 4:1-Bus-Startwert; diese Adaption ersetzt keinen transparenten Mastering-Limiter. Die weichere zusätzliche Variante steht unter 38 Stereo Bus Subtle 2:1. Input auf 0–2 dB Wet-GR einstellen und Output pegelgleichen; Musikbewertung offen.
 
 Transformator: None.
 Anregungen: BLACKBIRD, PENNY.
@@ -304,3 +307,17 @@ PENNY-Quicksheet Mixbus motiviert Attack 1–2, Release 2–4, 4:1 und 1–2 dB 
 
 Transformator: None.
 Anregungen: PENNY, BLACKBIRD.
+
+## 37 Piano Gentle 2:1
+
+Neue eigene 2:1-Variante von Preset 31, ansonsten identische Startwerte. Weniger Verdichtung für natürliche Anschläge; im 1-kHz-Vergleich bei −18 dBFS Peak ca. 1,56 statt 2,62 dB mittlere Wet-GR. Das ist ein Signalbeleg, kein Piano-Hörtest. Input an die Aufnahme anpassen und Output neu pegelgleichen.
+
+Transformator: None.
+Anregungen: Eigener musikalischer Startpunkt.
+
+## 38 Stereo Bus Subtle 2:1
+
+Neue eigene 2:1-Variante von Preset 35, ansonsten identische Startwerte. Sanfte Stereo-Verdichtung; bei −18 dBFS Peak im 1-kHz-Test ca. 0,49 statt 0,96 dB mittlere Wet-GR. Link On erhält gemeinsame Regelung. Mix dosiert den Effekt, nicht die interne GR; Musik-/Geräteabnahme offen.
+
+Transformator: None.
+Anregungen: Eigener musikalischer Startpunkt.

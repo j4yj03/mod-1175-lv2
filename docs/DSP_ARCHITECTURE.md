@@ -1,4 +1,4 @@
-# DSP-Architektur — Green Stripe 76, 0.4.0
+# DSP-Architektur — Green Stripe 76, 0.4.1
 
 ## 1. Status und normative Dateien
 
@@ -229,8 +229,9 @@ exaktes Schalter-Netzwerk. Im Status als Näherung beibehalten.
 Die Taste ist der letzte Modus, Index 5. Vor der 2:1-Erweiterung im
 0.3.0-Entwicklungsstand stand sie auf Index 4. Mit `2:1` an erster Stelle
 verschoben sich die Ratio-Werte, nicht die Instrument-Presetnummern.
-Die aktuelle Factory-Bank enthält korrekt 4:1/8:1/All bzw. Compression Off;
-2:1-Empfehlungen und Signalprüfung in `PRESET_REVIEW.md`.
+Die aktuelle Factory-Bank enthält 2:1/4:1/8:1/All bzw. Compression Off;
+2:1-Erweiterungen und Signalprüfung in `PRESET_REVIEW.md`. 0.4.1 ändert
+Presetwerte, nicht das DSP-Modell oder die Transformatorbank.
 
 ## 8. Verstärker- und tieffrequente Färbung
 

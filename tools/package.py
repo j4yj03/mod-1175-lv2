@@ -38,6 +38,9 @@ def main():
              (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md'),
              (ROOT/'docs/PRESET_REVIEW.md','GreenStripe76/PRESET_REVIEW.md'),
              (ROOT/'docs/PRESET_AUDIT.json','GreenStripe76/PRESET_AUDIT.json'),
+             (ROOT/'docs/SCARLETT_TEST.md','GreenStripe76/SCARLETT_TEST.md'),
+             (ROOT/'tools/scarlett_test.py','GreenStripe76/tools/scarlett_test.py'),
+             (ROOT/'tools/requirements-scarlett.txt','GreenStripe76/tools/requirements-scarlett.txt'),
              (ROOT/'docs/TRANSFORMER_RUNTIME.md','GreenStripe76/TRANSFORMER_RUNTIME.md'),
              (ROOT/'data/transformers.json','GreenStripe76/transformers.json')]
     zip_package(args.output/f'green-stripe-76-{version}-jsfx.zip',jsfx)

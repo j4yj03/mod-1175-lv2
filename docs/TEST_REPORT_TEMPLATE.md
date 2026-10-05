@@ -32,8 +32,9 @@ Datum / Agent / Rechner:
 | Link / Dual Mono / Gegenphase | | | |
 | Compression Off / Enabled / Mix | | | |
 | Presets und Projekt-Recall | | | |
-| Alle 36 Presets: Input-Abgleich / Wet-GR / pegelgleiche Musik | | | |
-| 31 Piano Gentle und 35 Stereo Bus Subtle: 4:1 gegen 2:1 | | | |
+| Alle 38 Presets: Input-Abgleich / Wet-GR / pegelgleiche Musik | | | |
+| Attackkorrektur 21/22 und 2:1-Paare 31/37 sowie 35/38 | | | |
+| Scarlett 2i2: direkte Referenz / Teststrecke / Streamstatus / Pegelkalibrierung | | | |
 | Meter / Host-GR | | | |
 | GUI offen/geschlossen | | | |
 | Regler-/Automationswechsel | | | |

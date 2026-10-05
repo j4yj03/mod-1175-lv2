@@ -1,5 +1,24 @@
 # Entscheidungen und Entwicklungshistorie
 
+## D15 — GUI, Preseterweiterung und Scarlett-Testwerkzeug, 0.4.1
+
+Ausdrücklicher Benutzerauftrag erlaubt jetzt Klangwertkorrekturen: Kick Weight
+Attack 5→2 und Snare Crack 5→3, weil ihre Namen/Absichten mehr Frontkante
+nahelegen. Neue 2:1-Presets 37/38 werden angehängt, 31/35 bleiben 4:1.
+Die erste 36er-Reihenfolge bleibt erhalten, Factory-Recall 21/22 ändert den
+Klang bewusst. Version deshalb 0.4.1. Alle übrigen Klangwerte erhalten.
+
+Die größere GUI-Lücke liegt vollständig zwischen COMP und Oversampling
+(40 px), OS und Link folgen mit 7 px. Ratio bleibt bündig zu den oberen Potiwerten.
+
+Scarlett 2i2 1st Gen: explizite Gerätewahl, Stereoaufnahme bei einseitiger
+Wiedergabe, neuer Messordner je Lauf. PCM24-Stimulus plus JSON-Plan,
+Float-Aufnahme und separate WAV-Analyse. Zwei unterschiedliche Chirps
+identifizieren Zeitversatz und Taktabweichung. Frequenzangepasster Sinusfit
+statt unkontrollierter FFT-Bin-Ablesung; direkte Kabelreferenz für relativen
+Gain, keine Subtraktion von Verzerrung. dBu nur mit eigener ADC-Kalibrierung.
+Keine Hardwarebedienung durch das Skript, keine reale Scarlett-Abnahme lokal.
+
 ## D13 — Refit-fähige Eingangstransformatoren, 0.4.0
 
 Die instabile frühere xformer.lib ist als Laufzeitgrundlage verworfen.
@@ -45,7 +64,8 @@ dasselbe Zeilenraster einschließlich reservierter unterer Dropdown-Zeile:
 Input/Attack/Mix und Output/Release/Colour sind dadurch exakt höhengleich.
 Auch ENGINE nutzt das gemeinsame Zeilenraster: Ratio-Auswahl und obere
 Potiwerte sind bündig, unabhängig von Mono/Stereo. COMP und Oversampling
-bilden eine Gruppe mit 16 px Innenabstand; die Schiebertexte enthalten
+bildeten zunächst eine Gruppe mit 16 px Innenabstand, ab 0.4.1 40 px vor
+Oversampling und 7 px danach; die Schiebertexte enthalten
 Leerzeichen statt Unterstrichen.
 
 ## D01 — Eigener Green Stripe

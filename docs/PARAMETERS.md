@@ -1,7 +1,7 @@
 # Parameter, Ports und Persistenz
 
 Normative Quelle: `data/parameters.json`. TTL und JSFX-Wrappers werden mit
-`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.4.0.
+`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.4.1.
 Gegenüber 0.1.1 kamen `oversampling` und `transformer` hinzu; die Indizes der
 bestehenden Ports und die Plugin-URIs sind unverändert.
 
@@ -17,7 +17,7 @@ bestehenden Ports und die Plugin-URIs sind unverändert.
 | compression | 8 | 0/1, Enum | 1 | dynamische Abschwächung aktiv (`COMP ON`/`COMP OFF`) |
 | enabled | 9 | 0/1 | 1 | interner Bypass; LV2 designation enabled |
 | stereo_link | 10 | 0/1 | 1 | Stereo: gemeinsamer Gain / Dual Mono |
-| Instrument preset | 11 | 0…36 | 0 | JSFX-only: Custom oder Instrumentstartwert |
+| Instrument preset | 11 | 0…38 | 0 | JSFX-only: Custom oder Instrumentstartwert |
 | oversampling | 12 | 0…2, Enum | 0 | Off / 2x / 4x; Qualitäts-/CPU-Wahl, **nicht** im Preset |
 | transformer | 13 | 0…4, Enum | 0 | None / 60s / 80s / 00s / Symmetric; hörbare Eingangsmodelle, Symmetric linear |
 
@@ -58,8 +58,10 @@ Gemessene Sekantenratios sind
 1,99974 und 3,99948. Der Default ist `4:1` (Index 1); `All Buttons` verhält sich
 unverändert und ist nur von Index 4 auf Index 5 gewandert.
 
-Aktuell nutzt kein Factory-Preset 2:1. Vorschläge mit isoliertem Ratiovergleich:
-**31 Piano Gentle** und **35 Stereo Bus Subtle**, siehe `PRESET_REVIEW.md`.
+Factory-Presets **37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** nutzen
+Index 0. 31/35 behalten 4:1. In 0.4.1 wechseln 21/22 auf Attack 2/3 statt 5;
+Nummern 01–36 und bestehende URIs bleiben erhalten, Recall lädt neue Werte.
+Begründung und Vergleich: `PRESET_REVIEW.md`.
 
 ### Unterschiedliche Preset-Semantik der angehängten Ports
 
@@ -69,7 +71,7 @@ Aktuell nutzt kein Factory-Preset 2:1. Vorschläge mit isoliertem Ratiovergleich
 | Port | Verhalten beim Recall | Begründung |
 |---|---|---|
 | `oversampling` | startet immer auf **Off** | Qualitäts-/CPU-Wahl, nicht Teil des Klangs; ein Recall darf nicht ungefragt 4x-Rechenzeit aktivieren |
-| `transformer` | übernimmt den **Wert des Presets**, sonst `None` | Klangwahl; 6 von 36 Presets tragen eine Stufe |
+| `transformer` | übernimmt den **Wert des Presets**, sonst `None` | Klangwahl; 6 von 38 Presets tragen eine Stufe |
 
 Beide Pfade laufen in `tools/generate.py` durch `appended_value()`, deshalb
 können LV2-TTL, JSFX-Selektor und RPL-Bänke nicht auseinanderlaufen.

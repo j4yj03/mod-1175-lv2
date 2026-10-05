@@ -37,6 +37,8 @@ und keine neue Zeitmessung: 430 allgemeine + 72 Presetfälle sind bitgleich;
 144 C++-Vorher-/Nachherfälle gegen `c3153bf` ebenfalls bitgleich.
 Die obigen Benchmarks werden dadurch nicht als neu gemessen ausgegeben.
 Signalbefund und 2:1-Empfehlungen: `PRESET_REVIEW.md`.
+0.4.1 ergänzt diese Varianten als Factory-Presets 37/38 und korrigiert 21/22.
+Keine neue CPU-Optimierung oder Scarlett-/Dwarf-Lastmessung damit verbunden.
 
 ## Ergebnis
 

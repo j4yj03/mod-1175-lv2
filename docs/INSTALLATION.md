@@ -5,7 +5,7 @@
 Den vollständigen Projektordner oder `dist/*-source.zip` übertragen. Zum direkten
 JSFX-Test `*-jsfx.zip`; für Dwarf das explizite `*-moddwarf.tar.gz` verwenden.
 Dateien und `SHA256SUMS` gemeinsam mitnehmen.
-Für diesen Stand **0.4.0** verwenden. Alte 0.1.x/0.2.x/0.3.x-Binaries enthalten
+Für diesen Stand **0.4.1** verwenden. Alte 0.1.x/0.2.x/0.3.x-Binaries enthalten
 die neue Transformatorstufe nicht. Bei Refits zusätzlich Bankrevision aus
 `data/transformers.json` festhalten; sie verändert den Klang gespeicherter Profilnummern.
 
@@ -33,8 +33,9 @@ ihn nicht und verarbeitet nur linken Input.
 
 Erst Routing, 0/100-%-Mix und GR-/Level-Funktion testen. Danach Projekt speichern,
 schließen, wieder öffnen; Klangregler und Presetwerte müssen erhalten bleiben.
-2:1-Vorschläge aus `PRESET_REVIEW.md` unter eigenen Host-Presetnamen speichern;
-die 36 Factory-Presets behalten ihre Werte. Die Prüfung enthält auch den
+Die 2:1-Varianten aus `PRESET_REVIEW.md` stehen jetzt als Factory-Presets 37/38
+bereit. 21/22 haben neue Attackwerte beim Recall; alte Projektwerte bleiben
+gespeichert. Die Prüfung enthält auch den
 absichtlichen Transformer-None-Zustand von „08 Vocal Transformer“.
 
 ## 3. MOD Dwarf
@@ -57,7 +58,7 @@ USB-/Netzverbindung zur Web-GUI herstellen. Standardadresse
 der MOD-SDK-Schnittstelle: **Base64 des gzip-Tarballs als Multipart package**.
 
 ```bash
-base64 < "green-stripe-76-0.4.0-moddwarf.tar.gz" | \
+base64 < "green-stripe-76-0.4.1-moddwarf.tar.gz" | \
   curl --fail --show-error -F 'package=@-' http://192.168.51.1/sdk/install
 ```
 
@@ -94,6 +95,10 @@ Gegebenenfalls `LV2_PATH` ergänzen. Alternativ Bundle nach `~/.lv2/` kopieren.
 Nicht mit dem Dwarf-Binary auf x86 testen.
 
 ## 5. Ergebnisübergabe an die nächste Session
+
+Für die Scarlett-Messung auf dem Audio-Rechner die Entwicklungsabhängigkeiten
+aus `tools/requirements-scarlett.txt` installieren, `devices` aufrufen und
+`SCARLETT_TEST.md` abarbeiten. Das Plugin selbst benötigt diese Pakete nicht.
 
 `docs/TEST_REPORT_TEMPLATE.md` ausfüllen, in beispielsweise
 `test-results/2026-10-03-dwarf-reaper.md` speichern und dem Agenten übergeben.

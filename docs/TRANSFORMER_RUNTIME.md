@@ -1,4 +1,4 @@
-# Transformatorstufe und spätere Refits — 0.4.0
+# Transformatorstufe und spätere Refits — seit 0.4.0, Produkt 0.4.1
 
 ## Produktstatus
 
@@ -143,8 +143,8 @@ in beiden Engines und eigene Signalprüfungen.
   96/192 kHz ebenfalls innerhalb der definierten 0,85…1,15-%-Abnahmegrenze.
 - Unabhängiger Offlinekern, Bass/DC-/Burstverläufe: maximale rohe
   Ausgangsabweichung **5,42×10⁻¹⁵ FS**, 44,1/48/96/192 kHz.
-- **430** allgemeine C++/EEL2-Fälle plus **72 Preset-Signalvergleiche**,
-  maximale Float-Port-Abweichung **0 FS**; **72** RPL-/Selector-Presetzustände.
+- **430** allgemeine C++/EEL2-Fälle plus aktuell **76 Preset-Signalvergleiche**,
+  maximale Float-Port-Abweichung **0 FS**; **76** RPL-/Selector-Presetzustände.
 - `None` gegen den unabhängig aus Commit `77a25fd` exportierten Kern:
   **144 Fälle bitgleich**, einschließlich Audio/GR/Latenz und Umschaltungen.
 - Tatsächlich geladene LV2-Binary: optionale Portverbindung, hörwirksame

@@ -272,7 +272,7 @@
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "21 Kick Weight"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
     [ lv2:symbol "output"; pset:value -1 ],
-    [ lv2:symbol "attack"; pset:value 5 ],
+    [ lv2:symbol "attack"; pset:value 2 ],
     [ lv2:symbol "release"; pset:value 5 ],
     [ lv2:symbol "ratio"; pset:value 1 ],
     [ lv2:symbol "mix"; pset:value 80 ],
@@ -285,7 +285,7 @@
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "22 Snare Crack"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
     [ lv2:symbol "output"; pset:value -2 ],
-    [ lv2:symbol "attack"; pset:value 5 ],
+    [ lv2:symbol "attack"; pset:value 3 ],
     [ lv2:symbol "release"; pset:value 6 ],
     [ lv2:symbol "ratio"; pset:value 2 ],
     [ lv2:symbol "mix"; pset:value 85 ],
@@ -472,6 +472,32 @@
     [ lv2:symbol "ratio"; pset:value 1 ],
     [ lv2:symbol "mix"; pset:value 45 ],
     [ lv2:symbol "colour"; pset:value 45 ],
+    [ lv2:symbol "compression"; pset:value 1 ],
+    [ lv2:symbol "enabled"; pset:value 1 ],
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
+
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-37> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "37 Piano Gentle 2:1"; lv2:port
+    [ lv2:symbol "input"; pset:value -3 ],
+    [ lv2:symbol "output"; pset:value 1 ],
+    [ lv2:symbol "attack"; pset:value 1 ],
+    [ lv2:symbol "release"; pset:value 3.5 ],
+    [ lv2:symbol "ratio"; pset:value 0 ],
+    [ lv2:symbol "mix"; pset:value 60 ],
+    [ lv2:symbol "colour"; pset:value 50 ],
+    [ lv2:symbol "compression"; pset:value 1 ],
+    [ lv2:symbol "enabled"; pset:value 1 ],
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
+
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-mono-38> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono>; rdfs:label "38 Stereo Bus Subtle 2:1"; lv2:port
+    [ lv2:symbol "input"; pset:value -6 ],
+    [ lv2:symbol "output"; pset:value 1 ],
+    [ lv2:symbol "attack"; pset:value 1.5 ],
+    [ lv2:symbol "release"; pset:value 3 ],
+    [ lv2:symbol "ratio"; pset:value 0 ],
+    [ lv2:symbol "mix"; pset:value 40 ],
+    [ lv2:symbol "colour"; pset:value 40 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "oversampling"; pset:value 0 ],
@@ -760,7 +786,7 @@
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-21> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "21 Kick Weight"; lv2:port
     [ lv2:symbol "input"; pset:value 4 ],
     [ lv2:symbol "output"; pset:value -1 ],
-    [ lv2:symbol "attack"; pset:value 5 ],
+    [ lv2:symbol "attack"; pset:value 2 ],
     [ lv2:symbol "release"; pset:value 5 ],
     [ lv2:symbol "ratio"; pset:value 1 ],
     [ lv2:symbol "mix"; pset:value 80 ],
@@ -774,7 +800,7 @@
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-22> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "22 Snare Crack"; lv2:port
     [ lv2:symbol "input"; pset:value 5 ],
     [ lv2:symbol "output"; pset:value -2 ],
-    [ lv2:symbol "attack"; pset:value 5 ],
+    [ lv2:symbol "attack"; pset:value 3 ],
     [ lv2:symbol "release"; pset:value 6 ],
     [ lv2:symbol "ratio"; pset:value 2 ],
     [ lv2:symbol "mix"; pset:value 85 ],
@@ -975,6 +1001,34 @@
     [ lv2:symbol "ratio"; pset:value 1 ],
     [ lv2:symbol "mix"; pset:value 45 ],
     [ lv2:symbol "colour"; pset:value 45 ],
+    [ lv2:symbol "compression"; pset:value 1 ],
+    [ lv2:symbol "enabled"; pset:value 1 ],
+    [ lv2:symbol "stereo_link"; pset:value 1 ],
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
+
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-37> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "37 Piano Gentle 2:1"; lv2:port
+    [ lv2:symbol "input"; pset:value -3 ],
+    [ lv2:symbol "output"; pset:value 1 ],
+    [ lv2:symbol "attack"; pset:value 1 ],
+    [ lv2:symbol "release"; pset:value 3.5 ],
+    [ lv2:symbol "ratio"; pset:value 0 ],
+    [ lv2:symbol "mix"; pset:value 60 ],
+    [ lv2:symbol "colour"; pset:value 50 ],
+    [ lv2:symbol "compression"; pset:value 1 ],
+    [ lv2:symbol "enabled"; pset:value 1 ],
+    [ lv2:symbol "stereo_link"; pset:value 1 ],
+    [ lv2:symbol "oversampling"; pset:value 0 ],
+    [ lv2:symbol "transformer"; pset:value 0 ] .
+
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-preset-stereo-38> a pset:Preset; lv2:appliesTo <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo>; rdfs:label "38 Stereo Bus Subtle 2:1"; lv2:port
+    [ lv2:symbol "input"; pset:value -6 ],
+    [ lv2:symbol "output"; pset:value 1 ],
+    [ lv2:symbol "attack"; pset:value 1.5 ],
+    [ lv2:symbol "release"; pset:value 3 ],
+    [ lv2:symbol "ratio"; pset:value 0 ],
+    [ lv2:symbol "mix"; pset:value 40 ],
+    [ lv2:symbol "colour"; pset:value 40 ],
     [ lv2:symbol "compression"; pset:value 1 ],
     [ lv2:symbol "enabled"; pset:value 1 ],
     [ lv2:symbol "stereo_link"; pset:value 1 ],

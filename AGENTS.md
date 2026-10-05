@@ -48,6 +48,9 @@
 - Presetprüfung/2:1-Vorschläge in `docs/PRESET_REVIEW.md`; Ziel-GR ist Wet-GR
   vor Mix. Factory-Werte nur bei ausdrücklich begründetem Klangänderungsauftrag
   umstellen; Empfehlungen allein sind keine Freigabe zur Bank-Neuabstimmung.
+- 0.4.1: 38 Presets, 37/38 als 2:1-Varianten angehängt; 21/22 Attack 2/3.
+  Scarlett-Messworkflow in `docs/SCARLETT_TEST.md`, optionale Python-Abhängigkeiten
+  in `tools/requirements-scarlett.txt`. Offline-/Mocktests sind keine Geräteabnahme.
 - Portindizes/-symbole/URIs nicht ohne begründete Versionierung ändern.
 - Kein `-ffast-math`; anfänglich `-ffp-contract=off` für Parität.
 - EEL2 `==` vergleicht mit Toleranz; für gleichartige DSP-Zweige `===` nutzen.

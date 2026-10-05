@@ -656,6 +656,10 @@ Attackzeiten, eigene aggressive GR-Ziele und Input/Output/Mix-Funktionen.
 Die eigene Signalprüfung fand außerdem den EEL2-Rundungsfall im Newton-Nenner
 bei Preset 29; Diagnose und Korrektur sind Entwicklungsbefunde, keine neue
 Literaturquelle oder Hardwaremessung.
+**Folgeauftrag 0.4.1:** 21/22 erhalten langsamere Attackwerte; die eigenen
+2:1-Vorschläge werden als 37/38 ergänzt. Der neue Scarlett-Testworkflow
+bezieht sich auf digitale Pegel und eine direkte Kabelreferenz, nicht auf
+übernommene nominale Volt-/dBu-Maximalwerte der Hardware.
 
 ### Umrechnung der Quellen-Angaben auf unsere Regler
 

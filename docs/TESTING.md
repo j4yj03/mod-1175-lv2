@@ -8,8 +8,8 @@ Aufnahmepegel, Rate, Blocksize, Pluginhash und Parameter immer zusammen notieren
 
 ## 2. Automatisierte lokale Prüfungen
 
-Aktueller Stand **0.4.0**. Historische Fallzahlen unten bleiben der
-Entwicklung zugeordnet; maßgeblich sind jetzt **430 Paritätsfälle / 72
+Aktueller Stand **0.4.1**. Historische Fallzahlen unten bleiben der
+Entwicklung zugeordnet; maßgeblich sind jetzt **430 Paritätsfälle / 76
 Presetzustände**, ergänzt um Transformator- und MOD-Widget-Prüfungen.
 
 ```bash
@@ -98,13 +98,26 @@ python3 tools/audit_presets.py --probe build/native/preset_probe \
   --output docs/PRESET_AUDIT.json
 ```
 
-72 LV2-/RPL-Zustände gegen normative Parameterwerte; 216 native Fälle
-(36 Presets × Mono/Stereo × Off/2x/4x) mit definiertem Multiton-Burst.
+76 LV2-/RPL-Zustände gegen normative Parameterwerte; 228 native Fälle
+(38 Presets × Mono/Stereo × Off/2x/4x) mit definiertem Multiton-Burst.
 Weitere 12 Fälle vergleichen die 2:1-Vorschläge für Piano Gentle und Stereo
 Bus Subtle bei drei Sinuspegeln mit 4:1. Endliche Signale und GR-Off geprüft;
 Ziel-GR und musikalische Eignung werden nicht aus beliebigem Testpegel bestätigt.
 Jeder Fall startet frisch. Bedingungen, Quellenhashes und Kennwerte im JSON,
 Bewertung aller Presets in `PRESET_REVIEW.md`.
+
+### Scarlett-Testtonwerkzeug
+
+```bash
+python -m pip install -r tools/requirements-scarlett.txt
+python tests/test_scarlett_test.py
+```
+
+Offlineprüfungen: definierter Gain/Delay, Polarität, 1-%-H2, DC, Taktabweichung,
+analytischer FIR-Frequenzgang, Clipping, fehlende/falsche/verkürzte Aufnahme,
+Referenzvalidierung; simulierter Backend für Routing und Streamfehler/Stop.
+Geräteliste, Liveaufnahme und Kalibrierung gemäß `SCARLETT_TEST.md` extern.
+Hardware-GR oder Pluginlatenz nicht aus Gesamtpfad-Pegel/Verzögerung behaupten.
 
 ## 3. JSFX-Parität
 
@@ -120,18 +133,18 @@ Siehe Buildbefehle in `BUILD.md`. Pinned ysfx-Fork mit echter EEL2-JIT-Ausführu
 - Double-Kern, float Ports, initial kein Fast-Math/FMA.
 - Peak-Abweichung höchstens **2×10⁻⁶ FS** pro Kanal; ab 0.2.0 wird **max=0 FS**
   (bitgleiche Float-Ausgabe) über alle 232 Fälle erreicht.
-- Historisch 52, aktuell 72 RPL-Presetzustände gegen die eingebauten Selektorwerte abgleichen.
+- Historisch 52/72, aktuell 76 RPL-Presetzustände gegen die eingebauten Selektorwerte abgleichen.
 - Ab 0.4.0: sechs Ratios im Basissatz, 144 zusätzliche statische
   Transformatorfälle (vier Profile × drei OS × drei Raten × zwei Varianten ×
   zwei Betriebspunkte) und 30 Transformator-/OS-/Bypass-/NaN-/Modellwechsel-Fälle.
-  Insgesamt **430** Audiofälle; **72** Presetzustände aus 36 Presets je Variante.
+  Insgesamt **430** allgemeine Audiofälle; ab 0.4.1 **76** Presetzustände aus 38 Presets je Variante.
 - Manuelle Änderung setzt den Selector auf Custom.
 - Zusätzlich zu den 430 allgemeinen Fällen rendert der reale ysfx-Banklader
-  alle **72 Presetzustände mit Signal** gegen einen frischen C++-Prozessor;
+  alle **76 Presetzustände mit Signal** gegen einen frischen C++-Prozessor;
   der Recall-Abgleich mit Selector/Custom bleibt erhalten.
   Hierdurch wurde der All-Buttons-Randfall von Preset 29 erkannt und die
   EEL2-Auswertungsreihenfolge des Newton-Nenners korrigiert. Die Abnahmegrenze
-  wurde nicht gelockert; alle 502 Signalvergleiche erreichen max. 0 FS.
+  wurde nicht gelockert; aktuell alle 506 Signalvergleiche erreichen max. 0 FS.
 
 **Bindende Implementierungsregel (0.2.0):** Alle transzendentalen Ausdrücke,
 die in beide Engines gehören, sind als `seriesLog`/`seriesExp` bzw.
