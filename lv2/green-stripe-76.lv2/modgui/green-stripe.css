@@ -100,10 +100,14 @@
 .gs76{{{cns}}} .gs-bypass.on ~ .gs-lamp { background-image:url(/resources/assets/pilot_off.svg{{{ns}}}); }
 /* Override MOD's full-panel overlay explicitly: controls are never descendants
    of the handle, so mouse/touch knob gestures cannot start panel dragging.
-   The bottom rail mirrors the top rail; the plate makes the footer label draggable
-   without covering the bypass/lamp controls in the power column. */
-.gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; top:0; left:26px; right:26px; bottom:auto; width:auto; height:24px; z-index:1; cursor:move; }
-.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; height:9px; }
+   The four rails tile the visible frame ring exactly (panel padding: 26px top,
+   30px sides, 8px bottom) without covering bays, footer or the power column;
+   the plate makes the footer label draggable as well. */
+.gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; z-index:1; cursor:move; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-top { top:0; left:0; right:0; height:26px; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-left { top:26px; bottom:9px; left:0; width:30px; height:auto; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-right { top:26px; bottom:9px; right:0; width:30px; height:auto; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; left:0; right:0; height:9px; }
 .gs76{{{cns}}} .gs-plate.gs-drag-foot { cursor:move; touch-action:none; }
 .gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
 .gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
