@@ -9,13 +9,18 @@ GUI = ROOT/'lv2/green-stripe-76.lv2/modgui'
 
 def page_html(variant):
     css = (GUI/'green-stripe.css').read_text(encoding='utf-8').replace('{{{cns}}}', '').replace('{{{ns}}}', '')
+    uris = {}
     for path in (GUI/'assets').iterdir():
         if path.suffix not in ('.png', '.svg'):
             continue
         mime = 'image/svg+xml' if path.suffix == '.svg' else 'image/png'
-        css = css.replace('/resources/assets/'+path.name,
-                          f'data:{mime};base64,'+base64.b64encode(path.read_bytes()).decode('ascii'))
+        uri = 'data:'+mime+';base64,'+base64.b64encode(path.read_bytes()).decode('ascii')
+        css = css.replace('/resources/assets/'+path.name, uri)
+        uris['assets/'+path.name] = uri
     html = (GUI/f'icon-{variant}.html').read_text(encoding='utf-8').replace('{{{cns}}}', '')
+    # Inline img srcs too: the preview has no serving base URL, unlike the MOD host.
+    for name, uri in uris.items():
+        html = html.replace(f'src="{name}"', f'src="{uri}"')
     return '<!doctype html><meta charset="utf-8"><style>body{margin:40px 100px;background:#eee}'+css+'</style>'+html
 
 

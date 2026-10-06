@@ -10,7 +10,7 @@
 > Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei
 > 6 von 38 Presets auf einer Stufe und sonst auf `None`.
 
-Prüfung und Änderungsbegründung: [PRESET_REVIEW.md](PRESET_REVIEW.md).
+Prüfung und Änderungsbegründung: [EXTERN.md (Abschnitt Presetbewertung)](EXTERN.md).
 Ab 0.4.1: Attack in **21 Kick Weight** und **22 Snare Crack** korrigiert;
 **37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** als zusätzliche Varianten.
 Die bisherigen Nummern bleiben erhalten. Input auf Ziel-GR einstellen und Output pegelgleichen.

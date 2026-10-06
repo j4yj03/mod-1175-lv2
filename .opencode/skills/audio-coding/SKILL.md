@@ -29,7 +29,7 @@ zusammenpassen. Aus dieser Doppelstruktur kommen die meisten Fehlerquellen.
 | DSP rechnet intern in double, Audioports in float | siehe oben |
 | Keine implizite Auto-Makeup-Funktion, kein versteckter Limiter | Verdeckte Effekte sind nicht debugbar und nicht dokumentierbar |
 | Portindizes, Symbole und URIs nicht ohne begründete Versionierung ändern | Presets und Host-Sessionen hängen daran |
-| Keine Produktnamen aus Fremdquellen in die GUI übernehmen | Neutral benennen, Herkunft in `docs/SOURCES.md` belegen |
+| Keine Produktnamen aus Fremdquellen in die GUI übernehmen | Neutral benennen, Herkunft in `docs/QUELLEN.md` belegen |
 | Nicht ausgeführte Geräte-/Hörtests nie als bestanden melden | Einstellungsfehler werden sonst zu falschen Tatsachen |
 
 ## Zwei-Sprachen-Parität: die harten Stellen
@@ -245,10 +245,21 @@ Zielsystem nicht.
 
 ### GUI-Assets
 
-`tools/make_assets.py` rendert die Paneel-PNGs statisch mit PIL aus demselben
-Layout wie das HTML. PIL hat **keine** Browser-Engine: Textmaße, Zeilenumbrüche
-und Bounding-Boxen weichen ab. Für Unicode (Umlaute, `–`, `·`) wird ein Font
-mit voller Latin-1-/CP437-Abdeckung gebraucht, sonst erscheinen Ersatzkästen.
+`tools/make_assets.py` rendert die Paneel-PNGs **echt aus dem HTML/CSS in
+Chromium** (Playwright; Vorversion mit statischem PIL-Nachzeichnen wurde
+abgelöst, weil Textmaße und Bounding-Boxen abweichen). Voraussetzungen:
+
+- `pip install playwright pillow`, dann `python3 -m playwright install chromium`.
+- Ohne Root fehlen Systembibliotheken (`libnspr4`, `libnss3`, `libatk*`,
+  `libgbm1`, `libXrender1`, …): Ubuntu-.debs laden, per `dpkg-deb -x` nach
+  `/tmp/opencode/chromium-debs/root` entpacken und
+  `LD_LIBRARY_PATH=/tmp/opencode/chromium-debs/root/usr/lib/x86_64-linux-gnu`
+  setzen; `ldd`-Check bis „not found“ leer.
+- `page.set_content()` hat **keine Basis-URL**: `<img src="assets/logo.png">`
+  bleibt kaputt (Alt-Text gerendert). `gui_preview.page_html()` inlines
+  deshalb neben den CSS-Assets auch die HTML-`src`-Attribute als Data-URI.
+  Beide Wege (CSS-`/resources/assets/`-Form und HTML-`src`-Form) abdecken,
+  sonst erscheint ein gebrochenes Bild im Screenshot.
 
 Die LV2-Oberfläche ist hell, aber die Prüfungen bleiben dieselben:
 
@@ -294,7 +305,8 @@ Messwerte. Deshalb:
 | `ImageFont.load_default(size=…)` | wirft vor Pillow 10.1 `TypeError`; ein `except TypeError` auf `load_default()` rendert **jede** Größe als ~11px-Bitmap. Ein 17px-Titel wird 9px hoch und 61px breit statt 116px | Skalierbare TTF laden, `getlength()` zum Zentrieren benutzen, Ergebnis am PNG messen |
 | `Path.read_text()` ohne `encoding` | nutzt die **Locale**: unter Windows cp1252, das UTF-8-Dachs in `data/*.json` wird zu `â€“`. `make check-generated` meldet dann je nach Rechner eine andere Datei als veraltet | immer `encoding='utf-8'`, Generatortest unter **beiden** Interpretern laufen lassen und Ausgaben byteweise vergleichen |
 | `Path.write_text(..., newline=…)` | wirft vor Python 3.10 `TypeError`; der Generator läuft auf der Testmaschine mit 3.9 und kann dort gar nicht schreiben | `open('w', encoding='utf-8', newline='')` und den Text selbst schreiben |
-| Ein-/Ausgabe-Puffer mit `newline=""` schreiben | Mixed Line Endings, diff über ganze Datei | Auf `
+| Ein-/Ausgabe-Puffer mit `newline=""` schreiben | Mixed Line Endings, diff über ganze Datei | Auf `
+
 ` oder `
 ` normalisieren, Zeilenzahl vergleichen |
 | Beschriftung **unter** den Regler | Zweiter Text macht einen Bay höher als einen Select-Bay; bei vertikal zentrierten Inhalten liegen die Bays nicht mehr auf einer Linie | Legende seitlich setzen |
@@ -353,3 +365,65 @@ geführt, wo sie wirklich stattgefunden haben.
 
 ### Praktische Empfehlung
 - LV2-Gesamtlastmessungen sauber per last.json+Restart (statt HTTP). Für isolierte Transformator-/Solver-Kosten bevorzugt standalone `transformer_bench` (AArch64, MPB/moddwarf-new Toolchain) direkt auf A35, um Host/JACK-Overhead zu trennen.
+
+## Scarlett-Messplatz — automatisierte Transformator-Matrix (2026-10-06)
+
+### Werkzeuge
+- `tools/scarlett_matrix.py` + `tools\scarlett_matrix.bat` (Windows-CMD):
+  Treiber über `scarlett_test.py`; Subcommands `devices`, `gainmatch`,
+  `baseline`, `matrix`, `full`, `summary`. Geräte-Autoerkennung (Host-API
+  wählbar, Standard MME, Name enthält „Focusrite“) — Portnummern können sich
+  zwischen Sitzungen ändern, deshalb nie hardkodieren.
+- **Resume:** `--root` mit `index.json` macht die Reihe fortsetzbar: fertige
+  Läufe werden übersprungen, unvollständige Verzeichnisse gelöscht, fertige
+  mit Fehler verweigert. Gainmatch-Proben überschreiben sich selbst (sie sind
+  Wegwerfproben); `loop_gain_for`/`current_loop_gains` nehmen bevorzugt die
+  **aktuellen** Gainmatch-Werte, nicht den Median alter Proben.
+- **Anker-Semantik:** Stimulus-Pegel = Anker − Loop-Gewinn; die Pegelreihe
+  (−24/−18/−12/−6/0 dB relativ zum Stimulus) trifft dann alle Anker
+  −14/−8/−2 dBFS, weil Anker- und Serienabstand beide 6 dB sind — Alignment
+  ist alles-oder-nichts. Bedingung: **Loop-Gewinn ≥ +1 dB** (Stimulus-
+  Obergrenze −3 dBFS); sonst bricht der Lauf mit Anweisung ab.
+  `--relax-anchors` misst mit abweichenden Pegeln und weist die erreichten
+  Pegel mit Abweichung aus. Rückkanalpegel im Bypass ist Proxy für den
+  Plugin-Eingang (Doku MESSTECHNIK Abschnitte 3/21).
+- Tests: `tests/test_scarlett_matrix.py` (19 Fälle, simuliertes Backend),
+  Windows-Python 3.9 und WSL-Python. CLI-Fehlerpfaden mit `SystemExit` +
+  `redirect_stderr` testen — `parser.exit` legt den Fehlertext in stderr,
+  nicht in die Exception.
+
+### Feldbefunde (2026-10-06, erste Proben)
+- **Gainmatch bestätigt den PluginDoctor-Abgleich:** Kanaldifferenz −0,20 dB.
+  Die Probe überschreibt sich — mehrfach laufen lassen, während der Benutzer
+  Regler dreht, und die Zahlen als Rückmeldung geben. Das ist der Ersatz für
+  PD, wenn PD keine Einstellungen annimmt.
+- **Loop-Gewinn ist das harte Tor:** −54,3 → −46,8 → −30,6/−35,5 dB nach zwei
+  Umstellrunden; Ziel ≥ +1 dB (Anker) bzw. ≥ −20 dB (THD). Der große
+  Resthebel liegt auf der **Return-Seite** (Scarlett-INPUT-Gains bis ~+50 dB,
+  Dwarf-OUTPUT-Knopf). Der **Dwarf-INPUT-Knopf** setzt den Plugin-Eingangspegel
+  (Anker) — einmal matchen, danach nicht mehr anfassen, sonst verschieben sich
+  die Anker.
+- **Scarlett-Panel ≠ Windows-Geräteformat:** Die Panel-Einstellung (48 kHz,
+  SYNCED) ändert `default_samplerate` nicht; das folgt dem Windows-Geräteformat
+  (`mmsys.cpl`, Wiedergabe **und** Aufnahme getrennt). Solange dort 44100
+  steht, resampelt der Mixer; beobachtet: Sync-Marker-Korrelation 0,319 <
+  Schwelle 0,35. Kontrolle über `recording.json` (`rate_mismatch`).
+- **Signal auf beiden Eingängen im Ein-Kanal-Probe + Clipping auf dem stillen
+  Kanal (bis 139k Samples bei 0,0 dBFS):** Verdacht MONO-Board (Mono verarbeitet
+  Input L auf beide Outputs) oder abweichende Verkabelung — als Befund melden,
+  nicht als Fakt; Board/Routing über den Benutzer klären, bevor die Matrix
+  läuft. Clip-Zähler je Segment stehen in `results.json`.
+- SSH auf den Dwarf (root/mod) scheitert in dieser Umgebung ohne sshpass/expect
+  (kein askpass) — Board-Status also über den Benutzer erfragen, nicht
+  annehmen.
+
+### Ablaufmuster mit dem Benutzer am Gerät
+1. Probe starten (`gainmatch`), Zahlen berichten, konkrete Regleranweisung
+   geben, zwischen den Phasen mit dem `question`-Tool synchronisieren.
+2. Phasen einzeln ausführen (`gainmatch`/`baseline`/`matrix --yes`) statt
+   interaktivem `full`, weil die Prompts im Agentenkontext nicht beantwortet
+   werden können. `--yes` nur für Skript-/Agentenläufe; der interaktive
+   Benutzer hat die Prompts als Bedienhinweise.
+3. **Nie** Regler nur in einem Kanal ändern — die Probe zeigt Kanaldrift sofort
+   (beobachtet −4,93 dB nach asymmetrischer Umstellung) und Clipping auf der
+   Aufnahme erkennt Übersteuerung ohne Hören.

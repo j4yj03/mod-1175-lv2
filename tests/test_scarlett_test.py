@@ -161,6 +161,27 @@ class MeasurementTests(unittest.TestCase):
         self.assertIsNone(metrics['thd_percent'])
         self.assertLess(metrics['thdn_percent'], .01)
 
+    def test_low_loop_gain_flags_level_check(self):
+        report = measurement.analyze(self.session, self.capture(self.x * .0025))
+        self.assertTrue(report['valid'])
+        self.assertFalse(report['level_check']['adequate'])
+        self.assertLess(report['level_check']['tone_loop_gain_db'], -50)
+        text = (self.session / 'REPORT.md').read_text(encoding='utf-8')
+        self.assertIn('ÜBERSCHRIETTEN', text)
+
+    def test_device_rate_mismatch_recorded(self):
+        backend = Mock()
+        backend.PortAudioError = RuntimeError
+        backend.query_devices.side_effect = lambda index: dict(
+            name=f'Device {index}', hostapi=0, default_samplerate=44100)
+        backend.query_hostapis.return_value = [{'name':'Fake'}]
+        backend.get_status.return_value = ''
+        backend.playrec.side_effect = lambda playback, **kw: playback.copy()
+        with patch.object(measurement, 'sounddevice', return_value=backend):
+            wav = measurement.record(self.session, 1, 2, label='rate-mismatch')
+        metadata = json.loads(wav.with_suffix('.json').read_text(encoding='utf-8'))
+        self.assertTrue(metadata['rate_mismatch'])
+
 
 if __name__ == '__main__':
     unittest.main()

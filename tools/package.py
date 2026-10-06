@@ -34,14 +34,16 @@ def main():
 #     is cp1252 and mangles the UTF-8 dashes in data/*.json.
     version=json.loads((ROOT/'data/model.json').read_text(encoding='utf-8'))['version']
     jsfx=[(p,'GreenStripe76/'+p.name) for p in (ROOT/'jsfx').iterdir() if p.is_file()]
-    jsfx += [(ROOT/'LICENSE','GreenStripe76/LICENSE'),(ROOT/'docs/USER_MANUAL.md','GreenStripe76/USER_MANUAL.md'),
+    jsfx += [(ROOT/'LICENSE','GreenStripe76/LICENSE'),(ROOT/'docs/BETRIEB.md','GreenStripe76/BETRIEB.md'),
              (ROOT/'docs/PRESETS.md','GreenStripe76/PRESETS.md'),
-             (ROOT/'docs/PRESET_REVIEW.md','GreenStripe76/PRESET_REVIEW.md'),
+             (ROOT/'docs/EXTERN.md','GreenStripe76/EXTERN.md'),
              (ROOT/'docs/PRESET_AUDIT.json','GreenStripe76/PRESET_AUDIT.json'),
-             (ROOT/'docs/SCARLETT_TEST.md','GreenStripe76/SCARLETT_TEST.md'),
+             (ROOT/'docs/MESSTECHNIK.md','GreenStripe76/MESSTECHNIK.md'),
              (ROOT/'tools/scarlett_test.py','GreenStripe76/tools/scarlett_test.py'),
+             (ROOT/'tools/scarlett_matrix.py','GreenStripe76/tools/scarlett_matrix.py'),
+             (ROOT/'tools/scarlett_matrix.bat','GreenStripe76/tools/scarlett_matrix.bat'),
              (ROOT/'tools/requirements-scarlett.txt','GreenStripe76/tools/requirements-scarlett.txt'),
-             (ROOT/'docs/TRANSFORMER_RUNTIME.md','GreenStripe76/TRANSFORMER_RUNTIME.md'),
+             (ROOT/'docs/DSP.md','GreenStripe76/DSP.md'),
              (ROOT/'data/transformers.json','GreenStripe76/transformers.json')]
     zip_package(args.output/f'green-stripe-76-{version}-jsfx.zip',jsfx)
     source=[]

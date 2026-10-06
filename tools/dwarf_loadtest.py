@@ -8,7 +8,7 @@ read from /proc plus optional log sources; nothing is written to the device.
 Per condition: one measurement window, jackd process and thread CPU sampled
 periodically, plugin binary identity and instance count verified from
 /proc/<pid>/maps, and xrun indications counted before and after the window.
-See docs/DWARF_LOADTEST.md for the run order and its limits.
+See docs/MESSTECHNIK.md for the run order and its limits.
 """
 import argparse
 from datetime import datetime, timezone

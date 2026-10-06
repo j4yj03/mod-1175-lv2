@@ -264,7 +264,7 @@ def gui_html(stereo, parameters):
      and inset value fields. Unframed product title on green; knob modules untitled.
      Input/Attack/Mix and Output/Release/Colour share two horizontal rows.
      Unlabelled bypass beside the amber pilot. Light from upper left.
-     Top rail is the only drag handle. No GR/level meters. -->
+     Drag handles: top rail, footer plate, bottom rail. No GR/level meters. -->
 <div class="gs76{{{{{{cns}}}}}}">
 <div class="mod-drag-handle gs-drag" mod-role="drag-handle" title="Paneel verschieben"></div>
 {screws(False, (0, 45, 18, 67))}
@@ -274,12 +274,13 @@ def gui_html(stereo, parameters):
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>
-<div class="gs-plate"><b>FET COMPRESSOR/LIMITER EMULATION</b><span>{'STEREO' if stereo else 'MONO'}</span></div>
+<div class="gs-plate gs-drag-foot" mod-role="drag-handle"><b>FET COMPRESSOR/LIMITER EMULATION</b><span>{'STEREO' if stereo else 'MONO'}</span></div>
 <div class="gs-power">
 <div class="gs-bypass" mod-role="bypass" mod-widget="bypass" title="Bypass" aria-label="Bypass"></div>
 <div class="gs-lamp" title="Betriebsanzeige"></div>
 </div>
 </footer>
+<div class="mod-drag-handle gs-drag gs-drag-bottom" mod-role="drag-handle" title="Paneel verschieben"></div>
 <div class="gs-inputs">{inputs}</div><div class="gs-outputs">{outputs}</div>
 </div>
 '''
@@ -398,7 +399,7 @@ def jsfx_files(parameters, presets, model):
             '> Ab 0.4.0 sind 60s/80s/00s hörbar: warm/früh, ausgewogen, clean. Die Zuordnung ist eigene Klangabstimmung; keine historische Revision.', '',
             f'> Der Transformator ist eine Klangwahl und wandert daher mit dem Preset. Er steht bei',
             f'> {transformer_count} von {len(presets)} Presets auf einer Stufe und sonst auf `None`.',
-            '', 'Prüfung und Änderungsbegründung: [PRESET_REVIEW.md](PRESET_REVIEW.md).',
+            '', 'Prüfung und Änderungsbegründung: [EXTERN.md (Abschnitt Presetbewertung)](EXTERN.md).',
             'Ab 0.4.1: Attack in **21 Kick Weight** und **22 Snare Crack** korrigiert;',
             '**37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** als zusätzliche Varianten.',
             'Die bisherigen Nummern bleiben erhalten. Input auf Ziel-GR einstellen und Output pegelgleichen.',

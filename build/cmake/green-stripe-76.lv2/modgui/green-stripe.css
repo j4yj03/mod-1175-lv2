@@ -1,20 +1,118 @@
-/* SPDX-License-Identifier: MIT — Green Stripe 76, original CSS-only controls. */
-.gs76{{{cns}}} { width:620px; height:270px; color:#e8f1eb; background:linear-gradient(#282d2a,#141a16); border:2px solid #688573; border-radius:12px; font:13px Arial,sans-serif; box-sizing:border-box; position:relative; }
-.gs76{{{cns}}} header { height:47px; padding:10px 22px; box-sizing:border-box; background:#15834e; border-radius:9px 9px 0 0; cursor:move; }
-.gs76{{{cns}}} header strong { font-size:20px; letter-spacing:2px; }
-.gs76{{{cns}}} header small { float:right; padding-top:6px; font-size:10px; }
-.gs76{{{cns}}} .gs-controls { display:flex; margin:23px 26px 12px; justify-content:space-around; }
-.gs76{{{cns}}} .gs-control { text-align:center; width:84px; }
-.gs76{{{cns}}} label { display:block; margin-bottom:10px; letter-spacing:1px; font-size:11px; }
-.gs76{{{cns}}} .gs-knob { width:54px; height:54px; border-radius:50%; border:2px solid #6d8073; margin:auto; box-shadow:0 3px 7px #000; background:radial-gradient(circle,#464d47 0,#191e1b 72%); position:relative; cursor:ns-resize; }
-.gs76{{{cns}}} .gs-knob:after { content:""; position:absolute; top:4px; left:25px; width:4px; height:19px; background:#66d494; border-radius:2px; }
-.gs76{{{cns}}} .gs-control span { display:block; margin-top:9px; color:#9ee2b8; font-size:12px; }
-.gs76{{{cns}}} footer { display:flex; gap:10px; margin:19px 27px; align-items:center; }
-.gs76{{{cns}}} select { color:#e0f3e5; background:#1a2b20; border:1px solid #668471; border-radius:4px; height:27px; }
-.gs76{{{cns}}} .gs-bypass { margin-left:auto; padding:6px 11px; background:#263e2f; border:1px solid #658970; border-radius:5px; cursor:pointer; }
-.gs76{{{cns}}} .gs-light { display:block; width:10px; height:10px; border-radius:50%; background:#72e098; }
-.gs76{{{cns}}} .gs-light.off { background:#233329; box-shadow:none; }
-.gs76{{{cns}}} .gs-light.on { background:#72e098; box-shadow:0 0 7px #4aa569; }
-.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:78px; display:flex; flex-direction:column; gap:27px; }
-.gs76{{{cns}}} .gs-inputs { left:-11px; } .gs76{{{cns}}} .gs-outputs { right:-11px; }
-.gs76{{{cns}}} .gs-jack { width:20px; height:20px; border:2px solid #8eaaa0; background:#080d09; border-radius:50%; }
+/* SPDX-License-Identifier: MIT — Green Stripe 76.
+   Joined rack plates; upper-left lighting and independently rotated screw slots.
+   Supplied aluminium/toggle filmstrips and scaled pilot SVGs.
+   Draggable: top rail, footer plate and bottom rail. MOD owns control interaction/state. */
+.gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#10161a; font:13px Arial,Helvetica,sans-serif; padding:26px 30px 8px; border:1px solid #6f7679; border-radius:7px;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.07)),repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(180deg,#ced4d7 0%,#bcc3c6 46%,#b0b7ba 54%,#c5cbcd 100%);
+  box-shadow:5px 7px 14px rgba(0,0,0,.20),1px 2px 3px rgba(0,0,0,.16),inset 1px 1px 1px rgba(255,255,255,.75),inset -2px -2px 5px rgba(0,0,0,.18); }
+.gs76{{{cns}}} .gs-screw,.gs76{{{cns}}} .gs-screw-i { position:absolute; width:15px; height:15px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle at 36% 30%,#7c8386 0,#5c6367 42%,#3d4346 78%,#2b3033 100%);
+  box-shadow:1px 2px 2px rgba(0,0,0,.4),inset 1px 1px 1px rgba(255,255,255,.3); }
+.gs76{{{cns}}} .gs-slot { position:absolute; top:0; left:0; width:100%; height:100%; }
+.gs76{{{cns}}} .gs-slot::before,.gs76{{{cns}}} .gs-slot::after { content:""; position:absolute; background:#181c1f; }
+.gs76{{{cns}}} .gs-slot::before { top:4px; bottom:4px; left:50%; width:2px; transform:translateX(-50%); }
+.gs76{{{cns}}} .gs-slot::after { left:4px; right:4px; top:50%; height:2px; transform:translateY(-50%); }
+.gs76{{{cns}}} .gs-screw-tl { top:7px; left:7px; }
+.gs76{{{cns}}} .gs-screw-tr { top:7px; right:7px; }
+.gs76{{{cns}}} .gs-screw-bl { bottom:7px; left:7px; }
+.gs76{{{cns}}} .gs-screw-br { bottom:7px; right:7px; }
+.gs76{{{cns}}} .gs-screw-i { width:11px; height:11px; }
+.gs76{{{cns}}} .gs-screw-i .gs-slot::before { top:2px; bottom:2px; width:1px; }
+.gs76{{{cns}}} .gs-screw-i .gs-slot::after { left:2px; right:2px; height:1px; }
+.gs76{{{cns}}} .gs-screw-i-tl { top:5px; left:5px; }
+.gs76{{{cns}}} .gs-screw-i-tr { top:5px; right:5px; }
+.gs76{{{cns}}} .gs-screw-i-bl { bottom:5px; left:5px; }
+.gs76{{{cns}}} .gs-screw-i-br { bottom:5px; right:5px; }
+
+/* Shared column geometry keeps the footer group on the right module's axis. */
+.gs76{{{cns}}} .gs-bays,.gs76{{{cns}}} footer { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr); gap:0; }
+.gs76{{{cns}}} .gs-bays { align-items:stretch; height:268px; }
+.gs76{{{cns}}} .gs-bay { flex:1; min-width:0; box-sizing:border-box; position:relative; display:flex; flex-direction:column;
+  padding:14px 9px 9px; border:1px solid #8b9296; border-radius:0; background:#bcc3c6;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
+.gs76{{{cns}}} .gs-bay + .gs-bay { border-left:0; }
+.gs76{{{cns}}} .gs-bay-wide { flex:2; padding:0; box-shadow:none; }
+.gs76{{{cns}}} .gs-pair { display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%; }
+.gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; box-sizing:border-box; padding:14px 9px 9px;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
+.gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
+.gs76{{{cns}}} .gs-brand { position:absolute; top:19px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
+.gs76{{{cns}}} .gs-bay-engine { border-color:#14432a; background:#1c5a39;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.18),inset -1px -1px 2px rgba(0,0,0,.25); }
+.gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
+.gs76{{{cns}}} .gs-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.gs76{{{cns}}} .gs-body > :last-child { margin-bottom:0; }
+/* Reserve the dropdown row in all knob modules, keeping both pot rows level. */
+.gs76{{{cns}}} .gs-body-knobs,.gs76{{{cns}}} .gs-body-engine { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
+.gs76{{{cns}}} .gs-body-knobs > .gs-control,.gs76{{{cns}}} .gs-body-knobs > .gs-field { margin:0; }
+.gs76{{{cns}}} .gs-body-knobs > .gs-field { display:flex; }
+/* Ratio ends on the first pot's value row; title is outside this shared grid. */
+.gs76{{{cns}}} .gs-body-engine > .gs-field { display:flex; flex-direction:column; margin:0; }
+.gs76{{{cns}}} .gs-body-engine > .gs-field:first-child { align-self:end; }
+.gs76{{{cns}}} .gs-body-engine select[mod-port-symbol="ratio"] { height:20px; }
+.gs76{{{cns}}} .gs-engine-controls { grid-row:2 / 4; width:100%; display:flex; flex-direction:column; gap:7px; align-self:start; }
+.gs76{{{cns}}} .gs-engine-controls > .gs-field { display:flex; flex-direction:column; margin:0; }
+/* Put the breathing space above the quality controls, never between OS and Link. */
+.gs76{{{cns}}} .gs-engine-controls > .gs-field:first-child { margin-bottom:33px; }
+
+.gs76{{{cns}}} .gs-control { width:136px; text-align:center; margin:0 auto 10px; }
+.gs76{{{cns}}} .gs-knob-row { display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:8px; }
+.gs76{{{cns}}} .gs-scale:first-child { text-align:right; }
+.gs76{{{cns}}} .gs-scale:last-child { text-align:left; }
+.gs76{{{cns}}} .gs-scale { font-style:normal; font-size:7.5px; letter-spacing:.4px; color:#1d2427; }
+/* 65 horizontal frames, each 128x128, displayed at 50x50. MOD film measures
+   background-size to derive 64 steps; do not rotate the complete bitmap. */
+.gs76{{{cns}}} .gs-knob { width:50px; height:50px; flex:none; cursor:ns-resize; touch-action:none;
+  background-image:url(/resources/assets/aluminium.png{{{ns}}}); background-repeat:no-repeat; background-size:3250px 50px;
+  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.23)); }
+.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; line-height:10px; letter-spacing:1.2px; }
+.gs76{{{cns}}} .gs-control .gs-value { display:block; box-sizing:border-box; width:76px; min-height:20px; margin:3px auto 0; padding:2px 6px; font-size:10px; line-height:14px; white-space:nowrap; }
+.gs76{{{cns}}} .gs-field { width:100%; margin:0 0 7px; }
+.gs76{{{cns}}} .gs-field > label { display:block; margin:0 0 3px; font-size:8.5px; font-weight:bold; letter-spacing:1.4px; }
+.gs76{{{cns}}} select,.gs76{{{cns}}} .gs-value { color:#10161a; border:1px solid #6f777b; border-radius:3px; background:#e0e5e7;
+  box-shadow:inset 1px 1px 2px rgba(0,0,0,.14),1px 1px 0 rgba(255,255,255,.4); }
+.gs76{{{cns}}} select { width:100%; height:23px; font-size:10px; }
+.gs76{{{cns}}} .gs-bay-engine select { background:#d8e7dd; border-color:#3f7a58; }
+.gs76{{{cns}}} .gs-switch { position:relative; height:23px; border-radius:3px; cursor:pointer; touch-action:none;
+  border:1px solid #4a1512; background:linear-gradient(180deg,#a8342f,#7d201d); box-shadow:inset 0 2px 4px rgba(0,0,0,.45); }
+.gs76{{{cns}}} .gs-switch i { position:absolute; top:2px; left:2px; width:calc(50% - 4px); height:calc(100% - 4px); border-radius:2px; pointer-events:none;
+  display:flex; align-items:center; justify-content:center; color:#10161a; font-style:normal; font-size:9px; font-weight:bold; letter-spacing:.4px; white-space:nowrap;
+  background:linear-gradient(135deg,#f0f3f4,#bcc3c6); box-shadow:1px 2px 3px rgba(0,0,0,.4); }
+.gs76{{{cns}}} .gs-switch.on { border-color:#2c3235; background:#383f42; }
+.gs76{{{cns}}} .gs-switch.on i { left:calc(50% + 2px); }
+.gs76{{{cns}}} .gs-switch .gs-switch-on { display:none; }
+.gs76{{{cns}}} .gs-switch.on .gs-switch-on { display:inline; }
+.gs76{{{cns}}} .gs-switch.on .gs-switch-off { display:none; }
+
+.gs76{{{cns}}} footer { align-items:center; margin:6px 0 1px; min-height:64px; }
+.gs76{{{cns}}} .gs-plate { grid-column:1 / 3; padding-left:2px; }
+/* Equal slots centre the two controls' axes, despite their different widths. */
+.gs76{{{cns}}} .gs-power { grid-column:3; display:grid; grid-template-columns:44px 44px; gap:12px; align-items:center; justify-content:center; justify-items:center; margin-right:1px; }
+.gs76{{{cns}}} .gs-plate b { display:block; font-size:10px; font-weight:bold; letter-spacing:2px; }
+.gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8px; font-weight:bold; letter-spacing:1.6px; }
+/* Two vertical 88x128 frames. Bypass value 1 is OFF audio, value 0 ON audio. */
+.gs76{{{cns}}} .gs-bypass { order:2; position:relative; width:44px; height:64px; flex:none; cursor:pointer; touch-action:none;
+  background-image:url(/resources/assets/toggle.png{{{ns}}}); background-size:44px 128px; background-repeat:no-repeat; background-position:0 0;
+  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.23)); }
+.gs76{{{cns}}} .gs-bypass.on { background-position:0 -64px; }
+.gs76{{{cns}}} .gs-lamp { order:1; width:44px; height:44px; flex:none; background:url(/resources/assets/pilot_on.svg{{{ns}}}) center/44px 44px no-repeat;
+  filter:drop-shadow(1px 2px 1px rgba(0,0,0,.2)); }
+.gs76{{{cns}}} .gs-bypass.on ~ .gs-lamp { background-image:url(/resources/assets/pilot_off.svg{{{ns}}}); }
+/* Override MOD's full-panel overlay explicitly: controls are never descendants
+   of the handle, so mouse/touch knob gestures cannot start panel dragging.
+   The bottom rail mirrors the top rail; the plate makes the footer label draggable
+   without covering the bypass/lamp controls in the power column. */
+.gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; top:0; left:26px; right:26px; bottom:auto; width:auto; height:24px; z-index:1; cursor:move; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; height:9px; }
+.gs76{{{cns}}} .gs-plate.gs-drag-foot { cursor:move; touch-action:none; }
+.gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
+.gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
+.gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }
+
+/* Logo in brand bar */
+.gs76{{{cns}}} .gs-logo {
+  display: inline-block;
+  height: 28px;
+  max-width: 100%;
+  vertical-align: middle;
+}

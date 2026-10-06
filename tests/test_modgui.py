@@ -92,11 +92,22 @@ def main():
             assert on_image != off_image, 'Lamp did not follow bypass'
             bypass.click()
             assert page.locator('.gs-lamp').evaluate('e=>getComputedStyle(e).backgroundImage') == on_image
-            rail = page.locator('[mod-role=drag-handle]').bounding_box()
-            page.mouse.move(rail['x']+80,rail['y']+12); page.mouse.down()
-            page.mouse.move(rail['x']+110,rail['y']+32,steps=5); page.mouse.up()
-            moved = page.locator('.gs76').bounding_box()
-            assert moved['x'] != after['x'], 'Dedicated rail cannot drag panel'
+            # All three handles must move the panel; none may emit a parameter change.
+            def drag_panel(handle, ox, oy):
+                box = handle.bounding_box()
+                page.mouse.move(box['x']+ox, box['y']+oy); page.mouse.down()
+                page.mouse.move(box['x']+ox+30, box['y']+oy+20, steps=5); page.mouse.up()
+                return page.locator('.gs76').bounding_box()
+            n_before = page.evaluate('changes.length')
+            last_x = after['x']
+            for name, (handle, ox, oy) in {
+                    'top rail': (page.locator('[mod-role=drag-handle]').first, 80, 12),
+                    'bottom rail': (page.locator('.gs-drag-bottom'), 80, 4),
+                    'footer plate': (page.locator('.gs-plate'), 60, 24)}.items():
+                moved = drag_panel(handle, ox, oy)
+                assert moved['x'] != last_x, name+' cannot drag panel'
+                last_x = moved['x']
+            assert page.evaluate('changes.length') == n_before, 'Panel drag emitted a parameter change'
             assert page.evaluate('changes.every(x=>Number.isFinite(x.value))')
             assert not errors, errors
             page.close()

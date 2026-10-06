@@ -7,7 +7,7 @@ der 1176-Familie auf, bildet aber keine bestimmte Revision verbindlich nach.
 Aktuell **0.4.1**: hörbare Eingangstransformatorprofile **60s warm → 80s
 ausgewogen → 00s clean**, dazu `None` und eine lineare `Symmetric`-Prüfreferenz.
 C++ und JSFX nutzen dieselbe validierte, nachträglich neu fitbare Modellbank.
-Details und Importweg: [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md).
+Details und Importweg: [DSP — Transformator-Laufzeit](docs/DSP.md).
 
 Die drei LV2-Paneelbereiche schließen **spaltfrei** aneinander an. Der weiße
 Produktname steht direkt auf dem grünen Feld. Aluminium-Filmstrip-Potis,
@@ -27,8 +27,8 @@ Alle Factory-Recall-Wege setzen Oversampling auf Off.
 Alle 38 Presets sind gegen Parameterdaten und Laufzeit geprüft.
 **37 Piano Gentle 2:1** und **38 Stereo Bus Subtle 2:1** ergänzen die Bank;
 Kick Weight/Snare Crack erhalten langsamere Attackwerte für mehr Anschlag.
-Einzelbewertung und Messvergleich: [PRESET_REVIEW](docs/PRESET_REVIEW.md).
-Für echte Audiointerface-Messungen: [SCARLETT_TEST](docs/SCARLETT_TEST.md),
+Einzelbewertung und Messvergleich: [EXTERN — Presetbewertung](docs/EXTERN.md).
+Für echte Audiointerface-Messungen: [MESSTECHNIK — Scarlett](docs/MESSTECHNIK.md),
 mit Testton-/WAV-Erzeugung, Liveaufnahme und Frequenz-/Klirrauswertung.
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
@@ -71,34 +71,21 @@ make install PREFIX="$HOME/.local"
 ```
 
 Der native Build ist für den **Buildrechner**, nicht automatisch für den Dwarf.
-Für Dwarf-Build und Installation: [BUILD](docs/BUILD.md),
-[INSTALLATION](docs/INSTALLATION.md).
+Für Dwarf-Build und Installation: [BETRIEB — Build/Installation](docs/BETRIEB.md).
 
 ## Dokumentation
 
 | Dokument | Inhalt |
 |---|---|
-| [USER_MANUAL](docs/USER_MANUAL.md) | Bedienung, Gain-Staging, Stereo, Mix und Instrument-Workflows |
-| [PRESETS](docs/PRESETS.md) | Alle Presetwerte, musikalische Ziele und GR-Richtwerte |
-| [PRESET_REVIEW](docs/PRESET_REVIEW.md) | Prüfung aller 38 Presets, Attackkorrekturen und zwei 2:1-Erweiterungen |
-| [SCARLETT_TEST](docs/SCARLETT_TEST.md) | Scarlett-2i2-Testton, Loopback/Host-Aufnahme, Pegel/Frequenzgang/THD |
-| [REQUIREMENTS](docs/REQUIREMENTS.md) | Verbindlicher Umfang und Zielumgebung |
-| [PARAMETERS](docs/PARAMETERS.md) | Parameter, Portindizes, Einheiten und Hostverhalten |
-| [DSP_ARCHITECTURE](docs/DSP_ARCHITECTURE.md) | Signalfluss, Numerik, Färbung, Grenzen |
-| [TRANSFORMER_RUNTIME](docs/TRANSFORMER_RUNTIME.md) | Laufzeitmodelle, Refit-Vertrag, Gain-/Rate-/Übergangspolitik |
-| [CPU_ANALYSIS](docs/CPU_ANALYSIS.md) | Gemessene CPU-Hotspots, Optimierungen und Dissertation-Bezug |
-| [BUILD](docs/BUILD.md) | Native/MPB-Builds, Cross-ABI, Paketierung |
-| [INSTALLATION](docs/INSTALLATION.md) | Übergabe auf anderen Rechner, Dwarf und REAPER |
-| [TESTING](docs/TESTING.md) | Offline-, Paritäts- und Praxistests |
-| [PLUGIN_DOCTOR_EVALUATION](docs/PLUGIN_DOCTOR_EVALUATION.md) | Auswertung der sieben externen JSFX-/ReaJS-Versuche, Färbung und Alias-Prüfpunkte |
-| [TEST_REPORT_TEMPLATE](docs/TEST_REPORT_TEMPLATE.md) | Ausfüllbares Protokoll für den anderen Agenten |
-| [RESEARCH](docs/RESEARCH.md) | Auswertung der wissenschaftlichen und technischen Quellen |
-| [NAM_PROFILES](docs/NAM_PROFILES.md) | Identität, Metadaten und Grenzen der lokalen Capture-Modelle |
-| [SOURCES](docs/SOURCES.md) | Vollständiger Quellenkatalog mit Zugriffsstatus |
-| [THIRD_PARTY](docs/THIRD_PARTY.md) | Codeherkunft, Lizenzen, Testhost-Versionen |
-| [DECISIONS](docs/DECISIONS.md) | Technische Entscheidungen und Entwicklungshistorie |
-| [STATUS](docs/STATUS.md) | Tatsächlicher Prüfstand, offene Punkte, nächste Arbeit |
-| [HANDOFF](docs/HANDOFF.md) | Priorisierter Auftrag an den Agenten auf dem Testrechner |
+| [PROJEKT](docs/PROJEKT.md) | Verbindlicher Umfang, aktueller Stand, Prüfstand, Übergabeauftrag, Historie und Entscheidungen |
+| [DSP](docs/DSP.md) | Signalfluss, Numerik, Färbung, Parameter/Ports, Transformator-Laufzeit, LUT-Grenzen |
+| [BETRIEB](docs/BETRIEB.md) | Bedienung, Gain-Staging, Stereo/Mix, Build, Paketierung, Installation |
+| [MESSTECHNIK](docs/MESSTECHNIK.md) | Tests und Prüfungen, Protokollvorlage, Dwarf-Lastmessung, Scarlett-Workflow und Archive |
+| [PERFORMANCE](docs/PERFORMANCE.md) | Gemessene CPU-Hotspots, Optimierungen und Dissertation-Bezug |
+| [EXTERN](docs/EXTERN.md) | PluginDoctor-/ReaJS-Auswertungen, GR-Analysen, Presetbewertung |
+| [QUELLEN](docs/QUELLEN.md) | Quellenkatalog, Lizenzen, NAM-Profile, Literatur- und Simulationsforschung |
+| [TODO](docs/TODO.md) | Offene Punkte und nächste Arbeit |
+| [PRESETS](docs/PRESETS.md) | Generierte Presetwerte, musikalische Ziele und GR-Richtwerte |
 | [AGENTS.md](AGENTS.md) | Anweisungen für die Weiterarbeit |
 
 ## Modellstatus
@@ -120,6 +107,6 @@ Praxistests finden auf dem anderen Rechner statt: MOD Dwarf **1.13.5.3315**,
 ## Lizenz und Originalmaterial
 
 Eigener Code: [MIT](LICENSE). Der schmale LV2-ABI-Header enthält ISC-Hinweise.
-Fremde Quellen und die Testhost-Lizenzen sind in `docs/THIRD_PARTY.md` aufgeführt.
+Fremde Quellen und die Testhost-Lizenzen sind in `docs/QUELLEN.md` aufgeführt.
 Die Originaldatei `../1176.js`, Dissertation und `.nam`-Profile werden nicht
 überschrieben. Capture-Profile werden nicht mit ausgeliefert.

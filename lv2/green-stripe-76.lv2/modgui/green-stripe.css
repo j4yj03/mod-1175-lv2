@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MIT — Green Stripe 76.
    Joined rack plates; upper-left lighting and independently rotated screw slots.
    Supplied aluminium/toggle filmstrips and scaled pilot SVGs.
-   Only the empty top rail is draggable. MOD owns control interaction/state. */
+   Draggable: top rail, footer plate and bottom rail. MOD owns control interaction/state. */
 .gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#10161a; font:13px Arial,Helvetica,sans-serif; padding:26px 30px 8px; border:1px solid #6f7679; border-radius:7px;
   background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.07)),repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(180deg,#ced4d7 0%,#bcc3c6 46%,#b0b7ba 54%,#c5cbcd 100%);
   box-shadow:5px 7px 14px rgba(0,0,0,.20),1px 2px 3px rgba(0,0,0,.16),inset 1px 1px 1px rgba(255,255,255,.75),inset -2px -2px 5px rgba(0,0,0,.18); }
@@ -36,7 +36,7 @@
 .gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; box-sizing:border-box; padding:14px 9px 9px;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
 .gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
-.gs76{{{cns}}} .gs-brand { position:absolute; top:14px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
+.gs76{{{cns}}} .gs-brand { position:absolute; top:19px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-bay-engine { border-color:#14432a; background:#1c5a39;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.18),inset -1px -1px 2px rgba(0,0,0,.25); }
 .gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
@@ -99,8 +99,12 @@
   filter:drop-shadow(1px 2px 1px rgba(0,0,0,.2)); }
 .gs76{{{cns}}} .gs-bypass.on ~ .gs-lamp { background-image:url(/resources/assets/pilot_off.svg{{{ns}}}); }
 /* Override MOD's full-panel overlay explicitly: controls are never descendants
-   of the handle, so mouse/touch knob gestures cannot start panel dragging. */
+   of the handle, so mouse/touch knob gestures cannot start panel dragging.
+   The bottom rail mirrors the top rail; the plate makes the footer label draggable
+   without covering the bypass/lamp controls in the power column. */
 .gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; top:0; left:26px; right:26px; bottom:auto; width:auto; height:24px; z-index:1; cursor:move; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; height:9px; }
+.gs76{{{cns}}} .gs-plate.gs-drag-foot { cursor:move; touch-action:none; }
 .gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
 .gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
 .gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }

@@ -2,11 +2,12 @@
 
 ## Einstieg in eine neue Session
 
-1. `README.md`, `docs/STATUS.md`, `docs/HANDOFF.md`, `docs/REQUIREMENTS.md`,
-   `docs/DSP_ARCHITECTURE.md` und bei Performancearbeit `docs/CPU_ANALYSIS.md` lesen.
+1. `README.md`, `docs/TODO.md` und `docs/PROJEKT.md` (Umfang, aktueller Stand, Übergabe)
+   sowie `docs/DSP.md` und bei Performancearbeit `docs/PERFORMANCE.md` lesen.
 2. `git status --short` prüfen; vorhandene Benutzeränderungen erhalten.
-3. `docs/TESTING.md` für die passenden Prüfungen verwenden.
-4. Ergebnisse, offene Fragen und nächste Schritte in `docs/STATUS.md`
+3. `docs/MESSTECHNIK.md` für die passenden Prüfungen und Messplätze verwenden.
+4. Ergebnisse, offene Fragen und nächste Schritte in `docs/PROJEKT.md` (Stand)
+   und `docs/TODO.md`
    aktualisieren. Nicht ausgeführte Geräte-/Hörtests niemals als bestanden melden.
 
 ## Verbindlicher Umfang
@@ -26,7 +27,7 @@
 
 - Normative Konstanten/Parameter: `data/model.json`, `data/parameters.json`,
   referenzierte Modellbank `data/transformers.json`; Refit-Vertrag in
-  `docs/TRANSFORMER_RUNTIME.md`. Generator validiert beide Engines gemeinsam.
+  `docs/DSP.md` (Abschnitt Transformator-Laufzeit). Generator validiert beide Engines gemeinsam.
 - C++11, LV2-C-ABI, keine GUI-/JUCE-/WebView-Abhängigkeit im DSP.
 - `run()`/`@sample`: keine Allokationen, Datei-/Netzzugriffe oder unbeschränkten
   Schleifen. DSP arbeitet intern in double, Audioports in float.
@@ -45,11 +46,11 @@
   Compression/Enabled Off parkt Controller. Numerische Release-Approximation
   und Regler-Einrastschwellen nur mit Vorher-/Nachher- und Übergangstests ändern.
 - Generierte TTL/JSFX-Presetdaten über `tools/generate.py` erneuern.
-- Presetprüfung/2:1-Vorschläge in `docs/PRESET_REVIEW.md`; Ziel-GR ist Wet-GR
+- Presetprüfung/2:1-Vorschläge in `docs/EXTERN.md` (Abschnitt Presetbewertung); Ziel-GR ist Wet-GR
   vor Mix. Factory-Werte nur bei ausdrücklich begründetem Klangänderungsauftrag
   umstellen; Empfehlungen allein sind keine Freigabe zur Bank-Neuabstimmung.
 - 0.4.1: 38 Presets, 37/38 als 2:1-Varianten angehängt; 21/22 Attack 2/3.
-  Scarlett-Messworkflow in `docs/SCARLETT_TEST.md`, optionale Python-Abhängigkeiten
+  Scarlett-Messworkflow in `docs/MESSTECHNIK.md` (Abschnitt Scarlett), optionale Python-Abhängigkeiten
   in `tools/requirements-scarlett.txt`. Offline-/Mocktests sind keine Geräteabnahme.
 - Portindizes/-symbole/URIs nicht ohne begründete Versionierung ändern.
 - Kein `-ffast-math`; anfänglich `-ffp-contract=off` für Parität.
@@ -59,7 +60,7 @@
 
 ## Quellen und NAM
 
-- `docs/SOURCES.md` enthält Belege, Zugriffsgrenzen und Versionszuordnung.
+- `docs/QUELLEN.md` enthält Belege, Zugriffsgrenzen und Versionszuordnung.
 - Revisions- und Nachbaudaten mit ihrer tatsächlichen Herkunft bezeichnen.
 - Der Algorithmus ist ein reduziertes Gray-Box-Modell mit ausdrücklich
   provisorischen Kennlinien/Färbungsparametern. Hardwarekalibrierung bleibt
@@ -78,7 +79,7 @@
 
 - Native Build: `make`; Offline-Prüfung: `make test`.
 - `make check-generated` prüft den Stand generierter Dateien.
-- Dwarf: bevorzugt offizielle MPB-Toolchain `moddwarf-new`, siehe `docs/BUILD.md`.
+- Dwarf: bevorzugt offizielle MPB-Toolchain `moddwarf-new`, siehe `docs/BETRIEB.md` (Abschnitt Build).
 - Andere Cross-Compiler-Artefakte eindeutig als solche dokumentieren;
   Architektur alleine ist kein ABI-/Gerätetest.
 - `tools/package.py` erzeugt getrennte Pakete mit SHA256 und Herkunftsmanifest.

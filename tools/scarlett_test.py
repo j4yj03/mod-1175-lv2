@@ -2,7 +2,7 @@
 """Generate, record and analyse Scarlett 2i2 analog-loop test signals.
 
 Offline: numpy + soundfile. Live recording additionally needs sounddevice.
-See docs/SCARLETT_TEST.md for wiring, calibration and measurement limits.
+See docs/MESSTECHNIK.md for wiring, calibration and measurement limits.
 """
 import argparse
 import csv
@@ -265,6 +265,12 @@ def analyze(directory, recording_path, channel=1, baseline=None, max_delay=2.0,
                 raise ValueError('Baseline segment order differs')
             row['relative_gain_db'] = row['gain_db'] - ref['gain_db'] if row['valid'] and ref['valid'] else None
         baseline_hash = sha(baseline)
+    # Level check: if the recorded tone is far below the stimulus peak, the loop
+    # gain is inadequate and distortion metrics are noise-dominated.
+    tone_rows = [row for row in rows if row['group'] == 'tone' and row.get('valid')]
+    loop_gain_db = min((row['gain_db'] for row in tone_rows), default=None)
+    level_check = dict(min_loop_gain_db=-20.0, tone_loop_gain_db=loop_gain_db,
+                       adequate=None if loop_gain_db is None else loop_gain_db >= -20.0)
     # Noise measured before the first marker, with guard against pre-ringing.
     begin = max(0, round(sync['offset_frames'] + sync['clock_scale'] * .1 * rate))
     end = round(sync['offset_frames'] + sync['clock_scale'] * .35 * rate)
@@ -280,13 +286,14 @@ def analyze(directory, recording_path, channel=1, baseline=None, max_delay=2.0,
                   stimulus_sha256=plan['stimulus_sha256'], recording_sha256=sha(recording_path),
                   plan_sha256=sha(directory / 'plan.json'), script_sha256=sha(__file__),
                   baseline_sha256=baseline_hash, capture=capture,
-                  adc_volts_per_fs=adc_volts_per_fs, idle_noise_rms_dbfs=noise_dbfs,
-                  valid=all(r['valid'] for r in rows) and not (capture and capture.get('stream_status')),
-                  notes=['Gain is ADC digital level / DAC stimulus digital level; not calibrated DUT gain without a baseline.',
-                         'THD uses H2..H10 below 20 kHz and Nyquist; THD+N is unweighted DC-removed full-band residual.',
-                         'Distortion includes DAC, ADC and test path; baseline THD is not subtracted.',
-                         'Roundtrip delay includes converters, host buffers and test path, not just plugin latency.',
-                         'Analog measured attenuation is not the internal wet FET gain-reduction meter.'], segments=rows)
+                   adc_volts_per_fs=adc_volts_per_fs, idle_noise_rms_dbfs=noise_dbfs,
+                   level_check=level_check,
+                   valid=all(r['valid'] for r in rows) and not (capture and capture.get('stream_status')),
+                   notes=['Gain is ADC digital level / DAC stimulus digital level; not calibrated DUT gain without a baseline.',
+                          'THD uses H2..H10 below 20 kHz and Nyquist; THD+N is unweighted DC-removed full-band residual.',
+                          'Distortion includes DAC, ADC and test path; baseline THD is not subtracted.',
+                          'Roundtrip delay includes converters, host buffers and test path, not just plugin latency.',
+                          'Analog measured attenuation is not the internal wet FET gain-reduction meter.'], segments=rows)
     destination = Path(report_dir) if report_dir else directory
     destination.mkdir(parents=True, exist_ok=True)
     write_json(destination / 'results.json', report)
@@ -298,11 +305,21 @@ def analyze(directory, recording_path, channel=1, baseline=None, max_delay=2.0,
         for row in rows:
             record = {key:row.get(key) for key in keys}
             writer.writerow(record)
+    if level_check['adequate'] is None:
+        level_line = '- Loop-Gewinn (Tone): nicht bestimmbar'
+    else:
+        level_line = (f'- Loop-Gewinn (Tone): {loop_gain_db:.2f} dB; Pegelschwelle -20 dB: '
+                      + ('OK' if level_check['adequate']
+                         else '**ÜBERSCHRIETTEN — Aufnahmepegel zu niedrig; THD/SNR-Werte sind nicht Plugin-tauglich**'))
+    mismatch_line = ('- Geräteraten-Mismatch: JA — Wandler/Treiber resampelt vermutlich; Frequenzgang-Spalten betroffen'
+                     if capture and capture.get('rate_mismatch') else '- Geräteraten-Mismatch: nein')
     lines = ['# Scarlett-Messauswertung', '',
              f'- Rate: {rate} Hz; Eingangskanal: {channel}',
              f'- Synchronisation: {sync["roundtrip_ms"]:.3f} ms; Drift: {sync["drift_ppm"]:.2f} ppm',
              f'- Messdaten gültig: {report["valid"]}; Leerlaufrauschen RMS: {noise_dbfs} dBFS',
-             '- Gain relativ zu digitalen Abspielwerten; für die Teststrecke zuerst direkte Kabelreferenz messen.',
+             level_line,
+             mismatch_line,
+             '- Gain relativ zu digitalen Abspielwerten; für die Teststrecke zuerst direkte Kabelreferenz oder Dwarf-Bypass-Referenz messen.',
              '- THD: H2…H10 bis 20 kHz/Nyquist; THD+N: ungewichtetes Vollband-Residual.',
              '- Keine interne FET-GR-, Hardwaregleichheits- oder Hörabnahme.', '',
              '| Teil | Hz | Anregung Peak dBFS | Gain dB | relativ dB | THD % | THD+N % | gültig |',
@@ -322,7 +339,7 @@ def sounddevice():
     try:
         import sounddevice as sd
     except (ImportError, OSError) as error:
-        raise ValueError('Live audio needs sounddevice and PortAudio; see docs/SCARLETT_TEST.md') from error
+        raise ValueError('Live audio needs sounddevice and PortAudio; see docs/MESSTECHNIK.md') from error
     return sd
 
 
@@ -343,6 +360,12 @@ def record(directory, input_device, output_device, output_channel=1, input_chann
         output_info = dict(sd.query_devices(output_device))
         if input_info['hostapi'] != output_info['hostapi']:
             raise ValueError('Input and output must use the same host API')
+        mismatch = [info['name'] for info in (input_info, output_info)
+                    if round(info.get('default_samplerate') or 0) != rate]
+        if mismatch:
+            print(f'WARNING: device default sample rate differs from {rate} Hz: {", ".join(mismatch)};'
+                  f' the host mixer may resample and distort the sweep near Nyquist.'
+                  f' Set the device to {rate} Hz in the system sound settings.')
         sd.check_input_settings(device=input_device, channels=2, dtype='float32', samplerate=rate)
         sd.check_output_settings(device=output_device, channels=2, dtype='float32', samplerate=rate)
     except sd.PortAudioError as error:
@@ -362,7 +385,8 @@ def record(directory, input_device, output_device, output_channel=1, input_chann
     metadata = dict(recording_sha256=sha(recording), input_device=input_info,
                     output_device=output_info, hostapis=sd.query_hostapis(),
                     output_channel=output_channel, analyzed_input_channel=input_channel,
-                    label=label, stream_status=status, note='No hardware gain/monitor/phantom controls were changed')
+                    label=label, stream_status=status, rate_mismatch=bool(mismatch),
+                    note='No hardware gain/monitor/phantom controls were changed')
     write_json(recording.with_suffix('.json'), metadata)
     return recording
 
