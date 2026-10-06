@@ -512,6 +512,14 @@ public:
         return activeOS_ == 0 ? 0 : activeOS_ == 1 ? model::latency_2x_frames : model::nominal_latency_frames;
     }
     unsigned oversamplingFactor() const { return 1u << activeOS_; }
+#ifdef GS76_TRANSFORMER_STATS
+    const TransformerSolverStats& transformerStats(unsigned channel = 0) const {
+        return transformers_[channel > 0 ? 1 : 0].core.stats;
+    }
+    void clearTransformerStats() {
+        for (int i = 0; i < 2; ++i) transformers_[i].core.stats.clear();
+    }
+#endif
 
 private:
     void changeOversampling(unsigned selected) {

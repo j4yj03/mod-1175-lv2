@@ -389,6 +389,98 @@ Notwendigkeit für die Echtzeitfähigkeit auf dem Zielgerät. Sie sollte nur
 verfolgt werden, wenn die Genauigkeit des Feedback-Zweigs oder die
 FärbungscharakteristikPriorität bekommt — nicht als CPU-Rettung.
 
+## 5c. Transformator-Last: Standalone-Bench und Dwarf-Protokoll (2026-10-05)
+
+Anlass: Rückmeldung, die Transformatorstufe sei „sehr kostspielig". Die
+vorige Geräteserie 5b stammt von **vor** dieser Stufe und beantwortet die Frage
+nicht. Für 0.4.1 wurden zwei Werkzeuge gebaut und eines davon offline
+ausgeführt.
+
+### `tools/transformer_bench.cpp`
+
+Der Bench benutzt die **Produktheader unverändert** (`-Isrc`), rechnet also
+genau die ausgelieferte DSP. Ohne `-DGS76_TRANSFORMER_STATS` ist es eine reine
+Zeitmessung; das Makro schaltet zusätzlich den Solver-Iterationszähler frei
+und ändert keinen Audiowert — dafür gibt es jetzt einen eigenen Nachweis
+(siehe unten). Einheit: Prozess-CPU-Sekunden je Audio-Sekunde, 1.0 = ein
+voll belasteter Kern.
+
+**Lokaler Lauf, x86_64, GCC 11.4, 48 kHz, 3 s je Fall, Median aus drei Läufen,
+Sinus 0 dBFS / 997 Hz, Input +6 dB, Ratio-Index 1, Colour/Mix 100:**
+Stereo, Angaben in Prozent eines Kerns, `+` gegen dieselbe OS-Stufe mit None:
+
+| OS | None | 60s | 80s | 00s |
+|---|---:|---:|---:|---:|
+| Off | 1,753 | 3,065 (+75 %) | 2,880 (+64 %) | 2,989 (+71 %) |
+| 2x | 3,445 | 5,787 (+68 %) | 5,642 (+64 %) | 5,771 (+68 %) |
+| 4x | 6,581 | 10,711 (+63 %) | 10,793 (+64 %) | 10,930 (+66 %) |
+
+Mono liegt bei 1,375 (None/OS Off) bis 7,282 (00s/OS 4x), also je nach Fall
+**1,3–1,5×** unter Stereo. Instanzierung ist linear: 60s/OS Off ergab
+3,046 % (1×), 3,091 % (2×) und 2,990 % (4×) je Instanz.
+
+Drei belastbare Aussagen daraus:
+
+1. Die Transformatorstufe **verdoppelt** den Kernaufwand (+42…+75 %), unabhängig
+   vom Profil und von der OS-Stufe. Sie ist damit relativ teuer, absolut aber
+   klein: die schwerste Kombination (Stereo, 00s, 4× OS) kostet 10,9 % eines
+   x86-Kerns.
+2. Das **Oversampling** ist der größere Hebel: 4× allein vervierfacht gegenüber
+   Off. Transformator und OS multiplizieren sich; beide zusammen sind rund
+   sechsmal so teuer wie None/OS Off.
+3. Der teure Kern ist nicht die Iterationszahl. Gemessen wurden **2,0–2,6**
+   Solveriterationen je Probe, mit **0 %** Anteil am 40er-Limit, und der Anteil
+   steigt nur von −20 auf +6 dBFS von 2,04 auf 2,87. Die 14 Stop-Zweige je
+   Auswertung dominieren, nicht die Schleifenzahl. Ein Iterationslimit wäre
+   also keine wirksame Sparmaßnahme.
+
+### Hochrechnung auf den A35 — ausdrücklich keine Gerätemessung
+
+Faktor aus Serie 5b: dort kostete **eine Stereo-Instanz mit None/OS Off ohne
+Signal rund 13 % eines A35-Kerns**, hier sind es 1,753 % eines x86-Kerns, also
+etwa Faktor 7,4. Überträgt man diesen Faktor auf die relativen Kosten, folgt
+als grobe Orientierung je Stereo-Instanz:
+
+| Zustand | x86 | hochgerechnet A35 |
+|---|---:|---:|
+| None / OS Off | 1,75 % | ~13 % (gemessen, 5b) |
+| 60s / OS Off | 3,07 % | ~23 % |
+| 00s / OS 4x | 10,93 % | ~81 % |
+
+Diese Hochrechnung ist **keine Abnahme**: andere Microarchitektur, anderer
+Compiler, keine Vektorisierung, und Serie 5b lief ohne Eingangssignal. Sie ist
+nur als Planungsgröße brauchbar. Fachlich wichtig ist die Richtung: **vier
+Instanzen mit Transformator und 4× Oversampling wären danach nicht mehr
+unterzubringen**, während vier Instanzen None/OS Off klar unkritisch bleiben.
+
+### Nachweis: der Diagnosezähler ist audioneutral
+
+`tests/diag_macro_parity.cpp` fährt 60 Fälle (5 Transformatoren × 3 OS-Stufen ×
+2 Ratio-Stufen × Mono/Stereo) mit Mid-Stream-Wechseln von OS, Modell und Link
+über je 1500 Samples und hasht **jeden** Ausgabewert bitweise. Dieselbe Quelle
+wird zweimal gebaut, einmal mit und einmal ohne `-DGS76_TRANSFORMER_STATS`, und
+`make test` vergleicht die Ausgaben mit `cmp`. Ausgeführt:
+
+```text
+macro_parity 4319916718298548553 60 90000   (beide Builds identisch)
+diagnostic macro audio neutral: PASS
+```
+
+Der Zählerpfad prüft zusätzlich, dass `None` den Solver nie betritt, dass die
+Probenzahl bei 4× OS dem Vierfachen der Eingangssamples entspricht und dass
+`clearTransformerStats()` sowie `reset()` auf null zurücksetzen.
+
+### Dwarf-Protokoll
+
+Ausführbar mit `tools/dwarf_loadtest.py` (Pedalboard `GS76x0…GS76x4`, jackd-
+Threadlast, Instanz- und Binärverifikation, xrun-Differenz) und
+`tools/transformer_bench.cpp` (Profilkosten ohne Bedienung). Anleitung,
+Bedingungen und Grenzen: [`DWARF_LOADTEST.md`](DWARF_LOADTEST.md).
+
+**Noch nicht ausgeführt:** kein Lauf auf dem Dwarf, keine A35-Zahl aus diesem
+Abschnitt, keine xruns, kein Hörtest. Die x86-Tabelle oben ist als
+Offline-Vorhersage ausgeführt und lokal reproduzierbar.
+
 ## 6. Reproduktion
 
 ```bash

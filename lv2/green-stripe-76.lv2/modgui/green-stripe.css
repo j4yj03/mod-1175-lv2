@@ -104,3 +104,11 @@
 .gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
 .gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
 .gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }
+
+/* Logo in brand bar */
+.gs76{{{cns}}} .gs-logo {
+  display: inline-block;
+  height: 28px;
+  max-width: 100%;
+  vertical-align: middle;
+}

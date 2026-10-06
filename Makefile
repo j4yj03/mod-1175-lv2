@@ -12,7 +12,7 @@ LDFLAGS += -Wl,--no-undefined
 LIBRARY = $(BUILD_DIR)/green-stripe-76.lv2/green-stripe-76.so
 HEADERS = $(wildcard src/dsp/*.hpp) src/lv2_abi.h
 
-.PHONY: all generate check-generated test benchmark measurement-probe install clean package
+.PHONY: all generate check-generated test benchmark transformer-bench measurement-probe install clean package
 all: $(LIBRARY)
 
 generate:
@@ -38,12 +38,25 @@ $(BUILD_DIR)/transformer_tests: tests/transformer_tests.cpp $(HEADERS)
 	mkdir -p "$(BUILD_DIR)"
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tests/transformer_tests.cpp $(LDFLAGS) -o "$@"
 
-test: all check-generated $(BUILD_DIR)/dsp_tests $(BUILD_DIR)/transitions $(BUILD_DIR)/transformer_tests
+$(BUILD_DIR)/diag_parity: tests/diag_macro_parity.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) tests/diag_macro_parity.cpp $(LDFLAGS) -o "$@"
+
+$(BUILD_DIR)/diag_parity_stats: tests/diag_macro_parity.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PROJECT_CXXFLAGS) -DGS76_TRANSFORMER_STATS tests/diag_macro_parity.cpp $(LDFLAGS) -o "$@"
+
+test: all check-generated $(BUILD_DIR)/dsp_tests $(BUILD_DIR)/transitions $(BUILD_DIR)/transformer_tests $(BUILD_DIR)/diag_parity $(BUILD_DIR)/diag_parity_stats
 	"$(BUILD_DIR)/dsp_tests"
 	"$(BUILD_DIR)/transitions"
 	"$(BUILD_DIR)/transformer_tests"
+	"$(BUILD_DIR)/diag_parity" > "$(BUILD_DIR)/diag_parity.txt"
+	"$(BUILD_DIR)/diag_parity_stats" > "$(BUILD_DIR)/diag_parity_stats.txt"
+	cmp "$(BUILD_DIR)/diag_parity.txt" "$(BUILD_DIR)/diag_parity_stats.txt"
+	@echo "diagnostic macro audio neutral: PASS"
 	$(PYTHON) tests/test_lv2.py "$(LIBRARY)"
 	$(PYTHON) tests/test_transformer_model.py
+	$(PYTHON) tests/test_dwarf_loadtest.py
 	$(PYTHON) tools/validate.py
 
 $(BUILD_DIR)/transformer_probe.so: tests/transformer_probe.cpp $(HEADERS)
@@ -56,6 +69,14 @@ $(BUILD_DIR)/benchmark: tests/benchmark.cpp $(HEADERS)
 
 benchmark: $(BUILD_DIR)/benchmark
 	"$(BUILD_DIR)/benchmark"
+
+# Standalone core bench for the MOD Dwarf. GS76_TRANSFORMER_STATS adds the
+# opt-in solver iteration counter; it changes no audio value.
+$(BUILD_DIR)/transformer_bench: tools/transformer_bench.cpp $(HEADERS)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CPPFLAGS) -DGS76_TRANSFORMER_STATS $(CXXFLAGS) $(PROJECT_CXXFLAGS) tools/transformer_bench.cpp $(LDFLAGS) -o "$@"
+
+transformer-bench: $(BUILD_DIR)/transformer_bench
 
 $(BUILD_DIR)/measurement_probe: tools/measurement_probe.cpp $(HEADERS)
 	mkdir -p "$(BUILD_DIR)"

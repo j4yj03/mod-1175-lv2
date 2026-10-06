@@ -315,3 +315,41 @@ Messwerte. Deshalb:
 Kein Push und keine Veröffentlichung ohne ausdrücklichen Auftrag. Geräte- und
 Hörtests laufen auf einem anderen Rechner und werden erst dort als bestanden
 geführt, wo sie wirklich stattgefunden haben.
+## MOD Dwarf — Feldpraktische Erkenntnisse (2026-10-05)
+
+### Zugriff & Umgebung
+- SSH: `root@192.168.51.1:22`, Passwort `mod` (laut MOD Wiki). Buildroot 2016.02, Kernel `6.1.15-rt7-moddwarf` (PREEMPT_RT), AArch64 Cortex-A35, 4 Kerne, Python 3.4.3.
+- Dateisystem standardmäßig read-only; Remount nur gezielt `mount / -o remount,rw`.
+- jackd läuft typ. als: `jackd -R -P 80 -t 200 -C /etc/jack-internal-session.conf -c system -d alsa -d hw:DWARF -r 48000 -p 128 -n 2 -X seq` (PID via `pgrep -x jackd`).
+- Pedalboards unter `/root/.pedalboards/*.pedalboard`, aktiver Zustand in `/root/data/last.json` (z. B. `{"supportsDividers": true, "pedalboard": "/root/.pedalboards/GS76Measure.pedalboard", "bank": -1}`).
+
+### Web-API (MOD OS 1.13.5.3315)
+- UI unter `http://192.168.51.1/`, Version `?v=1.13.5.3315`.
+- Effekt-/Pedalboard-Routen teils instabil: `effect/parameter/set` und `pedalboard/load_web`/`pedalboard/load_bundle` liefern bei POST/Form/JSON häufig **500 Internal Server Error** (kein reproduzierbarer, robuster Pfad). GET/Trailing-Slash-Verhalten inkonsistent.
+- WebSocket/REST zum Live-Laden von Boards/Parametern auf dieser Firmware nicht zuverlässig für automatisierte Messreihen. Keine Annahme treffen, erst verifizieren.
+
+### Boardwechsel & Neustart (robuster Weg)
+- **Empfohlen**: Boardwechsel via `last.json` + Neustart des Audio-Stacks (`mod-host` + `jackd`), nicht über HTTP-REST `load_web/load_bundle`.
+- Ablauf: `last.json` auf Ziel-`.pedalboard` schreiben, `pkill -9 mod-host && pkill -9 jackd`, 1–2 s warten, bis `jackd` wieder läuft (pollen, max ~15 s), 0.5–1 s Settling für Graph/LV2.
+- Dieser Weg ist reproduzierbar auf MOD OS 1.13.x und vermeidet 500er.
+- Originalzustand immer sichern (`/root/data/last.json` kopieren) und nach Messreihe restaurieren + neu starten.
+
+### CPU-Messung (LV2)
+- `tools/dwarf_loadtest.py` (Python 3.4-kompatibel): misst `/proc` CPU-Ticks (utime+stime), Threadlast (Taskliste), Plugin-Mappings (`/proc/<pid>/maps`, r-xp-Segmente mit `green-stripe-76.so`), SHA256/MD5, xrun-Hinweise (`dmesg`, `journalctl -k --no-pager`) über Fenster. Argumente `--frames`, `--seconds`, `--interval`, `--expect-instances`, `--report/--markdown`.
+- Erkenntnisse GS76 Stereo (48 kHz, 128/256 Frames, 1 Instanz): **46–48 %** Median eines A35-Kerns, Spitzen **~66 %**, **0 xruns**, Top-Thread `jackd` ~21 %. Überhead dominiert (JACK+Host), Solverkosten isolierter via standalone Bench.
+- SHA256 installierter Binary gesichert (z. B. `e6b4e55da1…`), immer mit Report mitschreiben.
+
+### Python 3.4 (Buildroot) – Stolperfallen
+- `pathlib.Path.read_text/write_text/read_bytes` fehlen. Ersatz: `io.open(str(path), mode, encoding=..., errors='replace')`.
+- `subprocess.run` fehlt (3.5+). Ersatz: `subprocess.Popen(...); out,err = proc.communicate()` + `proc.returncode`.
+- `datetime.isoformat(timespec=...)` fehlt (3.6+). Ersatz: `strftime('%Y-%m-%dT%H:%M:%SZ')` (UTC).
+- `path.open(...)` vermeiden, immer `io.open(str(path), ...)`. Auch `open(path, ...)` mit `Path`-Objekt kann Typprobleme geben – konsequent `str(path)`.
+- Self-Tests (lokal Python 3.x) und Geräte-Python 3.4 getrennt prüfen; Kompatibilität früh erzwingen.
+
+### Filesystem/Tools
+- LV2-Bundle: `/root/.lv2/green-stripe-76.lv2/green-stripe-76.so`, TTL unter `.lv2/*.ttl` (Portindizes/-symbole nicht ohne Versionierung ändern).
+- Backup vor größeren Messreihen: z. B. `/root/backup-lt-YYYYMMDD-HHMMSS/`, lokal gespiegelt.
+- `pgrep -x jackd`, `pkill -9 jackd/mod-host`, Polling bis jackd läuft. Keine Annahmen über Sofortverfügbarkeit nach Kill.
+
+### Praktische Empfehlung
+- LV2-Gesamtlastmessungen sauber per last.json+Restart (statt HTTP). Für isolierte Transformator-/Solver-Kosten bevorzugt standalone `transformer_bench` (AArch64, MPB/moddwarf-new Toolchain) direkt auf A35, um Host/JACK-Overhead zu trennen.

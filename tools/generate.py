@@ -270,7 +270,7 @@ def gui_html(stereo, parameters):
 {screws(False, (0, 45, 18, 67))}
 <div class="gs-bays">
 <div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{screws(True, (8, 31, 54, 79))}<div class="gs-body gs-body-knobs">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{screws(True, (13, 38, 61, 84))}<div class="gs-body gs-body-knobs">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
-<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand">Green Stripe 76</div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}{link}</div></div></div>
+<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand"><img src="assets/logo.png" alt="Green Stripe 76" class="gs-logo"></div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}{link}</div></div></div>
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>

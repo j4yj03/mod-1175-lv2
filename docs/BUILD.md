@@ -207,6 +207,27 @@ Dieser Build ist **kein offizieller MPB-Build und nicht auf Dwarf geladen**.
 Für die endgültige Übergabe nach Möglichkeit zusätzlich MPB bauen und beide
 Hashes/Verhalten vergleichen. Die ABI-Prüfung alleine ist kein Gerätetest.
 
+## 4a. Standalone-Transformatorbench für den Dwarf
+
+Reines Messprogramm ohne jackd, LV2 und Bedienung; es benutzt mit `-Isrc` die
+unveränderten Produktheader. Gedacht für den Lauf direkt auf dem Gerät, siehe
+`DWARF_LOADTEST.md`. Je nach Toolchain:
+
+```bash
+# Im MPB-Container
+make BUILD_DIR=build/moddwarf transformer-bench
+
+# Oder mit dem Arm-GCC9-Crosscompiler aus Abschnitt 4
+make BUILD_DIR=build/aarch64-gcc9 transformer-bench \
+  CXX=/absolute/arm-toolchain/bin/aarch64-none-linux-gnu-g++ \
+  CPPFLAGS="-Isrc -DGS_GLIBC_217" \
+  CXXFLAGS="-O3 -mcpu=cortex-a35 -mtune=cortex-a35"
+```
+
+Nur für die Diagnose wird zusätzlich `-DGS76_TRANSFORMER_STATS` gesetzt; das
+Makro zählt Solveriterationen, ändert aber keinen Audiowert. Ein x86-Lauf ist
+eine Vorhersage, keine Gerätemessung.
+
 ## 5. JSFX-Paritätsprüfung
 
 Entwicklungsabhängigkeit: JoepVanlier/ysfx, Commit

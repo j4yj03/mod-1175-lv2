@@ -15,9 +15,9 @@
     doap:maintainer [ foaf:name "Green Stripe 76 contributors";
         foaf:homepage <https://github.com/j4yj03/mod-1175-lv2> ];
     mod:brand "GreenStripe"; mod:label "GS76 Stereo";
-    lv2:minorVersion 3; lv2:microVersion 0;
+    lv2:minorVersion 4; lv2:microVersion 1;
     lv2:optionalFeature lv2:hardRTCapable;
-    rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons and amplifier colour. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
+    rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons, amplifier colour and refit-able input transformer profiles. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port
     [ a lv2:InputPort, lv2:AudioPort; lv2:index 0; lv2:symbol "in_l"; lv2:name "Input L" ],
     [ a lv2:InputPort, lv2:AudioPort; lv2:index 1; lv2:symbol "in_r"; lv2:name "Input R" ],
@@ -47,15 +47,16 @@
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 8;
       lv2:symbol "ratio"; lv2:name "Ratio";
-      lv2:shortName "Ratio"; lv2:default 0;
-      lv2:minimum 0; lv2:maximum 4;
+      lv2:shortName "Ratio"; lv2:default 1;
+      lv2:minimum 0; lv2:maximum 5;
       lv2:portProperty lv2:integer, lv2:enumeration;
-      lv2:scalePoint [ rdfs:label "4:1"; rdf:value 0 ];
-      lv2:scalePoint [ rdfs:label "8:1"; rdf:value 1 ];
-      lv2:scalePoint [ rdfs:label "12:1"; rdf:value 2 ];
-      lv2:scalePoint [ rdfs:label "20:1"; rdf:value 3 ];
-      lv2:scalePoint [ rdfs:label "All Buttons"; rdf:value 4 ];
-      pprops:rangeSteps 5 ],
+      lv2:scalePoint [ rdfs:label "2:1"; rdf:value 0 ];
+      lv2:scalePoint [ rdfs:label "4:1"; rdf:value 1 ];
+      lv2:scalePoint [ rdfs:label "8:1"; rdf:value 2 ];
+      lv2:scalePoint [ rdfs:label "12:1"; rdf:value 3 ];
+      lv2:scalePoint [ rdfs:label "20:1"; rdf:value 4 ];
+      lv2:scalePoint [ rdfs:label "All Buttons"; rdf:value 5 ];
+      pprops:rangeSteps 6 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 9;
       lv2:symbol "mix"; lv2:name "Mix";
       lv2:shortName "Mix"; lv2:default 100;

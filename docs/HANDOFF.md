@@ -10,7 +10,12 @@ Modellwechsel, feste Gainnormalisierung und HF-Phasengrenzen. Lokal 430
 allgemeine plus 76 Preset-Signalvergleiche bitgleich, 76 Recall-Zustände
 und echter MOD-Widget-Browsertest. Preset 29 deckte einen nun korrigierten
 EEL2-Solver-Rundungsfall auf; mit dem neuen Include-Stand testen.
-Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen.
+Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen. Dafür liegen
+jetzt `tools/dwarf_loadtest.py` (Pedalboard `GS76x0…GS76x4`, jackd-Threadlast,
+Instanz-/Hashprüfung, xruns) und `tools/transformer_bench.cpp` (Profilkosten
+ohne Bedienung) vor; Ablauf und Grenzen in **`DWARF_LOADTEST.md`**. Beide
+Werkzeuge sind lokal auf x86 gelaufen, das ist eine Vorhersage und **keine
+Gerätemessung**.
 
 1. `AGENTS.md` und `docs/STATUS.md` lesen.
 2. SHA256 der übergebenen Archive/Binaries prüfen.
@@ -32,6 +37,10 @@ Bitte Geräte-CPU mit **None/60s/80s/00s und Off/2x/4x** neu messen.
   `build/aarch64-gcc9/green-stripe-76.lv2`: vor Übergabe von 0.4.1 neu bauen.
 - `dist/*-jsfx.zip`, `*-source.zip`, `*-moddwarf.tar.gz`, Herkunftsmanifest,
   SHA256SUMS nach finaler Paketierung.
+- `tools/dwarf_loadtest.py` mit `tests/test_dwarf_loadtest.py` (läuft in
+  `make test`) und `tools/transformer_bench.cpp` mit Ziel `make transformer-bench`;
+  Protokoll und Auswertungsregeln in `DWARF_LOADTEST.md`, Zahlen in
+  `CPU_ANALYSIS.md` Abschnitt 5c.
 - C++-/JSFX-Paritätsprogramme, Offscreen-GFX-Test, PCM-Proben-/Rendererwerkzeuge.
 - MPB-Rezept und `tools/build_dwarf.sh` für offiziellen Zweitbuild.
 
@@ -57,6 +66,22 @@ Kernel 6.1.15-rt7-moddwarf, REAPER 7. Presets je Instrument als Startwerte.
 
 - Mono, Stereo Link, Dual Mono, Gegenphase, ungleiche Kanäle.
 - 128/256 Frames, reale Kette, Peak CPU und xruns über fünf Minuten.
+- **Transformatorlast nach `DWARF_LOADTEST.md`:** Serie A mit
+  `python3 tools/dwarf_loadtest.py --label GS76x<n> --frames <128|256>
+  --expect-instances <n> --expect-sha256 <hex> --seconds 20`, **je Board ein
+  vollständiger Neustart** (`last.json` wird nur beim Vollstart übernommen) und
+  SHA256 der installierten `so` vor der ersten Messung. Binärhash, Board,
+  Blockgröße und Kanalzahl gehören in jeden Bericht.
+- **Serie B ohne Bedienung:** `transformer_bench` im MPB-/Arm-Build auf dem
+  Gerät ausführen, `--transformer 0,1,2,3 --oversampling 0,1,2
+  --channels 1,2 --level-dbfs <Wert>`. Das ist die einzige Möglichkeit, die
+  Transformatorkosten zu messen, weil die Boards auf None/OS Off stehen und
+  `None` den Solver vollständig überspringt. Hoher Eingangspegel erhöht die
+  Last, deshalb den Pegel immer angeben.
+- Die x86-Vorhersage in `CPU_ANALYSIS.md` 5c sagt: Transformatorstufe rund
+  doppelte Kernlast, 4× OS allein etwa vervierfacht, Solver nur 2,0–2,6
+  Iterationen und 0 % am Limit. Diese Zahlen **widerlegen oder bestätigen**,
+  nicht als Gerätewert zitieren.
 - Regler-/Link-/Bypass-/Compressionwechsel, Snapshots/MIDI/Automation.
 - Alle fünf Transformatorstufen, schnelle Modell-/OS-Wechsel, None-Recall und
   sechs farbige Factory-Presets bei pegelgleichem A/B prüfen.
@@ -98,7 +123,9 @@ Zusätzlich CPU-Benchmark und 80 Vorher/Nachher-Burstregressionen.
 
 ## Noch nicht belegt
 
-Für 0.4.1 kein echtes Dwarf-Laden, keine Geräte-CPU-/xrun-Messung, keine reale REAPER-
+Für 0.4.1 kein echtes Dwarf-Laden, keine Geräte-CPU-/xrun-Messung — auch nicht
+mit den neuen Lastwerkzeugen, die bisher **nur auf x86_64** gelaufen sind —,
+keine reale REAPER-
 Host-GR-/Font-/Automation-/Recall-Abnahme, kein Originalhardware- oder
 NAM-Core-Färbungsfit. Diese Punkte nach tatsächlicher Ausführung aktualisieren.
 Historische Dwarf-Leerlaufmessungen stehen in `CPU_ANALYSIS.md`; sie gelten

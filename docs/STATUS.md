@@ -23,6 +23,49 @@ Hardware-Revision A/D nicht bindend.
   Gain/RMS/Peak/DC/THD/THD+N und Referenzvergleich; Berichte als JSON/CSV/Markdown.
   Anleitung/Verkabelung/Treiber-/Kalibriergrenzen in `SCARLETT_TEST.md`.
 
+### Transformator-Last: Werkzeuge bereit, x86-Vorhersage ausgeführt (2026-10-05)
+
+Anlass war die Rückmeldung, die Transformatorstufe sei sehr kostspielig. Die
+vorige Dwarf-Serie 5b stammt von vor dieser Stufe und beantwortet die Frage
+nicht. Neu sind deshalb zwei Werkzeuge und ein Protokoll:
+
+- `tools/transformer_bench.cpp` rechnet den **Produktkern unverändert** direkt
+  auf dem Gerät, ohne jackd und ohne Bedienung: Profil, OS-Stufe, Kanalzahl,
+  Instanzzahl und Pegel sind frei einstellbar. Ohne `-DGS76_TRANSFORMER_STATS`
+  reine Zeitmessung; das Makro zählt Solveriterationen ohne Audioänderung.
+- `tools/dwarf_loadtest.py` misst auf dem Gerät die jackd-Prozess- und
+  Threadlast, verifiziert Instanzzahl und Binärhash und bildet die
+  xrun-Differenz über das Messfenster aus `dmesg`/Kernel-Journal.
+- `docs/DWARF_LOADTEST.md` beschreibt Serie A (Boards `GS76x0…GS76x4` bei 128
+  und 256 Frames, je ein Vollstart) und Serie B (Profilkosten).
+- `tests/test_dwarf_loadtest.py` läuft mit `make test` mit: **13 Tests PASS**.
+- `tests/diag_macro_parity.cpp` belegt zweimal gebaut (mit/ohne
+  `-DGS76_TRANSFORMER_STATS`) und per `cmp` verglichen **byteidentische**
+  Ausgabe über 60 Fälle und 90 000 Samples: der Diagnosezähler ist
+  audioneutral. `make test` und `make check-generated` PASS.
+
+Ausgeführt wurde ein **x86_64-Lauf** (GCC 11.4, 48 kHz, 0 dBFS, Median aus drei
+Läufen), Prozent eines Kerns, plus Delta gegen None derselben OS-Stufe:
+
+| OS | None | 60s | 80s | 00s |
+|---|---:|---:|---:|---:|
+| Off | 1,75 | 3,07 (+75 %) | 2,88 (+64 %) | 2,99 (+71 %) |
+| 2x | 3,45 | 5,79 (+68 %) | 5,64 (+64 %) | 5,77 (+68 %) |
+| 4x | 6,58 | 10,71 (+63 %) | 10,79 (+64 %) | 10,93 (+66 %) |
+
+Daraus: die Transformatorstufe **verdoppelt** den Kernaufwand, das
+**Oversampling ist der größere Hebel** (4× allein vervierfacht gegenüber Off),
+beide multiplizieren sich. Der Aufwand steckt nicht in der Iterationszahl:
+gemessen 2,0–2,6 Iterationen je Probe und **0 %** am 40er-Limit. Ein
+Iterationslimit wäre keine wirksame Sparmaßnahme.
+
+**Ausdrücklich keine Gerätemessung.** Über den in Serie 5b gemessenen Faktor
+(≈13 % eines A35-Kerns für None/OS Off gegen 1,75 % hier) ergibt sich als
+Orientierung ~23 % je Instanz für 60s/OS Off und ~81 % für 00s/OS 4x. Vier
+solcher Instanzen wären danach nicht unterzubringen. Das ist eine Hochrechnung
+aus zwei x86-/A35-Anteilen, keine Abnahme. Details und Protokoll in
+`CPU_ANALYSIS.md` Abschnitt 5c.
+
 ### Tatsächlich geprüft für 0.4.1
 
 | Prüfung | Ergebnis |
@@ -34,10 +77,13 @@ Hardware-Revision A/D nicht bindend.
 | GUI | Mode/Drag/Bypass/Filmstrip PASS; Ratio-Ausrichtung 0 px Abweichung, Lücken 40/7 px |
 | Scarlett-Skript | **10 Offline-/simulierte Backendtests PASS**: Gain, H2, DC, FIR, Taktabweichung, Delay, Fehler, Routing/Stop, HF-Messbandgrenze |
 | Scarlett-CLI | `generate --kind all` + `analyze` auf identischer WAV, 19 Segmente PASS; kein Gerätebeleg |
+| Lastwerkzeuge | `make transformer-bench` baut; x86-Sweep und Instanzlinearität ausgeführt; `--self-test` PASS; **kein Dwarf-Lauf** |
+| Diagnosemakro | `diag_parity` gegen `diag_parity_stats` byteidentisch, `cmp` PASS |
 | Paketierung | Source-/JSFX-ZIP 0.4.1, Integrität und Scarlett-Skript/Anleitung/Requirements PASS; Diagnoseaudio/NAM/PDF/NPZ ausgeschlossen |
 
-**Nicht ausgeführt:** echte Scarlett-Liveaufnahme, Dwarf-/REAPER-Abnahme und
-Musik-Hörtest. Nächster Schritt auf dem Audio-Rechner: Dependencies installieren,
+**Nicht ausgeführt:** echte Scarlett-Liveaufnahme, Dwarf-/REAPER-Abnahme,
+Dwarf-Lastmessung mit `dwarf_loadtest.py`/`transformer_bench` und Musik-Hörtest.
+Nächster Schritt auf dem Audio-Rechner: Dependencies installieren,
 `devices`, direkte Scarlett-Line-Kabelreferenz, danach Teststrecke mit gleichen
 Pegelstellungen; Plan, Aufnahme und Berichte gemeinsam zurückgeben.
 Aktuelles Dwarf-Bundle mit MPB neu bauen, danach 21/22 und die Paare 31/37,
@@ -791,3 +837,18 @@ kein Commit/Push/PR angelegt. `dist/` und `.so`-Dateien sind ignoriert; das
 aktuelle `.gitignore` ignoriert `build/` nicht pauschal. Neue Diagnose-Binaries
 sollten außerhalb des Versionsbestands bleiben. Elternverzeichnis-Originale und
 externe Messdateien wurden nicht verändert.
+| Label | Frames | p_median % | p_peak % | xrun | top thread (median % of core) |
+|---|---:|---:|---:|---:|---|
+| GS76M128 | 128 | 48.0 | 48.0 | 0 | jackd:20.9 |
+| GS76Measure-f128 | 128 | 48.0 | 64.0 | 0 | jackd:21.266666666666666 |
+| GS76Measure-f256 | 256 | 48.0 | 54.0 | 0 | jackd:21.066666666666666 |
+| GS76x0-f128 | 128 | 48.0 | 50.0 | 0 | jackd:21.05 |
+| GS76x0-f256 | 256 | 46.0 | 50.0 | 0 | jackd:20.9 |
+| GS76x1-f128 | 128 | 47.0 | 52.0 | 0 | jackd:20.85 |
+| GS76x1-f256 | 256 | 48.0 | 50.0 | 0 | jackd:20.95 |
+| GS76x2-f128 | 128 | 47.0 | 50.0 | 0 | jackd:20.85 |
+| GS76x2-f256 | 256 | 48.0 | 62.0 | 0 | jackd:21.05 |
+| GS76x3-f128 | 128 | 46.0 | 50.0 | 0 | jackd:20.85 |
+| GS76x3-f256 | 256 | 50.0 | 64.0 | 0 | jackd:21.4 |
+| GS76x4-f128 | 128 | 48.0 | 50.0 | 0 | jackd:20.95 |
+| GS76x4-f256 | 256 | 48.0 | 66.0 | 0 | jackd:21.35 |

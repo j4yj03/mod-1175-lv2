@@ -1,0 +1,36 @@
+
+.lib xformer.lib
+.lib tube.lib
+
+* Test Symetrical model
+*V1 Vin1 0 SINE(0 150 30)
+*V2 0 Vin2 SINE(0 150 30)
+
+** Primary winding resistances
+*Rp1 Vin1 P1 100 ; Primary winding 1 resistance
+*Rp2 Vin2 P2 100 ; Primary winding 2 resistance
+
+*XGC P1 0 P2 S1 0 GCSYMETRICAL
+
+** Load resistor on secondary side
+*Rload S1 0 1k
+
+** Simulation control
+*.tran 0 57m
+*.end
+
+
+* Test Push-Pul
+XU1 n2 n3 n5 n6 0 GCOT-PP-04
+Rs2 n3 n4 470
+Rs1 n3 n1 470
+R3 n6 0 8
+Vin1 Vin1 0 SINE(0 50 30)
+Vin2 0 Vin2 SINE(0 50 30)
+V3 n3 0 394
+XU2 n2 n1 Vin1 0 6V6GT
+XU3 n5 n4 Vin2 0 6V6GT
+.tran 100m
+
+.backanno
+.end

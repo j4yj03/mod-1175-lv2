@@ -106,6 +106,30 @@ Ziel-GR und musikalische Eignung werden nicht aus beliebigem Testpegel bestätig
 Jeder Fall startet frisch. Bedingungen, Quellenhashes und Kennwerte im JSON,
 Bewertung aller Presets in `PRESET_REVIEW.md`.
 
+### Transformator-Lastwerkzeuge (offline prüfbar)
+
+```bash
+python3 tools/dwarf_loadtest.py --self-test
+python3 tests/test_dwarf_loadtest.py
+make transformer-bench
+```
+
+`tests/diag_macro_parity.cpp` wird zweimal gebaut, mit und ohne
+`-DGS76_TRANSFORMER_STATS`, und `make test` vergleicht beide Ausgaben mit `cmp`:
+60 Fälle über fünf Transformatoren, drei OS-Stufen, Mono/Stereo und
+Mid-Stream-Wechsel müssen **byteidentisch** sein. Damit ist der Diagnosezähler
+nachweislich audioneutral und kein Messfehler in CPU-Läufen.
+
+`tests/test_dwarf_loadtest.py` läuft in `make test` mit und prüft die
+`/proc`-Auswertung ohne Gerät: `comm` mit Leerzeichen und Klammern,
+Prozentstatistik gegen gelesenen `CLK_TCK`, Instanzzählung aus den `r-xp`
+Mappings, unlesbare Binaries, xrun-Differenz zählt nur das Messfenster und
+Anhängen an einen Bericht mit Schemaprüfung. Der Selbsttest von
+`dwarf_loadtest.py` nutzt eine synthetische Fixture ohne echten jackd.
+`transformer_bench` ist ein reines Zeitmesswerkzeug über die Produktheader;
+es prüft keine Klang- oder Echtzeiteigenschaft. Anleitung und Geräteprotokoll
+in `DWARF_LOADTEST.md`.
+
 ### Scarlett-Testtonwerkzeug
 
 ```bash
@@ -228,7 +252,12 @@ Musiksignale als **ungesehene** Testquellen nehmen.
 5. Mono→Mono, Stereo→Stereo, Nullsignal, Gegenphase und ungleiche Pegel prüfen.
 6. Hardwarezuweisung, Preset/Snapshot, MIDI-/Encoderänderungen und Bypass prüfen.
 7. 128/256 Frames, mehrere Instanzen, reales Pedalboard. Peak CPU und xruns
-   über mindestens fünf Minuten je Szenario notieren.
+   über mindestens fünf Minuten je Szenario notieren. Für die Board-Serie
+   `GS76x0…GS76x4` und die isolierten Transformatorkosten das Protokoll in
+   `DWARF_LOADTEST.md` verwenden: `tools/dwarf_loadtest.py` je Bedingung nach
+   **vollständigem** Neustart, `tools/transformer_bench.cpp` ohne Bedienung.
+   Ohne Binärhash und Board/Transformator/OS/Block/Pegelangabe gilt keine Zahl
+   als Gerätemessung.
 8. Bufferwechsel, Plugin-Neuladen, Reboot und Snapshot-Recall.
 9. Externen parallelen Zweig versus internen Mix vergleichen; PDC nicht annehmen.
 10. Gegen REAPER-renderte Referenz hören; Unterschiede nicht durch Pegel kaschieren.

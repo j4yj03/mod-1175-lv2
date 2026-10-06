@@ -62,11 +62,28 @@ struct TransformerBank {
     }
 };
 
+// Opt-in diagnostic counter for the bounded solver. Compiled out unless
+// GS76_TRANSFORMER_STATS is defined, so no released build changes; the counter
+// is a plain integer add and cannot alter the solved value. reset() clears it,
+// so a mid-run model change or bypass restarts the count.
+#ifdef GS76_TRANSFORMER_STATS
+struct TransformerSolverStats {
+    unsigned iterations, samples, capped;
+    void clear() { iterations = samples = capped = 0; }
+};
+#endif
+
 struct TransformerCore {
     double flux, relax, voltage, stops[14], x1, y1, y2;
+#ifdef GS76_TRANSFORMER_STATS
+    TransformerSolverStats stats;
+#endif
     void reset() {
         flux=relax=voltage=x1=y1=y2=0;
         for (unsigned j=0; j<14; ++j) stops[j]=0;
+#ifdef GS76_TRANSFORMER_STATS
+        stats.clear();
+#endif
     }
     static double law(double x, const transformer_model::Profile& p, double& slope) {
         const double u=std::abs(x)/p.flux_scale_vs;
@@ -116,7 +133,13 @@ struct TransformerCore {
         const double bound=std::abs(flux+c.h*voltage)+c.h*
             (std::abs(source)+c.ra*(c.memoryBound+rb))/c.denominator+1e-12;
         double lo=-bound, hi=bound, x=bounded(flux+2.0*c.h*voltage,lo,hi);
+#ifdef GS76_TRANSFORMER_STATS
+        unsigned usedIterations=0;
+#endif
         for (unsigned iteration=0; iteration<40; ++iteration) {
+#ifdef GS76_TRANSFORMER_STATS
+            ++usedIterations;
+#endif
             double derivative;
             const double i=current(x,c,derivative,false);
             const double residual=x-flux-c.h*(voltage+(source-c.ra*i)/c.denominator);
@@ -125,6 +148,10 @@ struct TransformerCore {
             const double next=x-residual/(1.0+c.h*c.ra*derivative/c.denominator);
             x=next>lo && next<hi ? next : 0.5*(lo+hi);
         }
+#ifdef GS76_TRANSFORMER_STATS
+        stats.iterations+=usedIterations; ++stats.samples;
+        if (usedIterations>=40) ++stats.capped;
+#endif
         double derivative;
         const double i=current(x,c,derivative,true);
         flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
