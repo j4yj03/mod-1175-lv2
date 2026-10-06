@@ -60,25 +60,70 @@ Parität zwischen beiden Kernen ist über `tests/jsfx_parity.cpp` belegt.
 
 ## 2. Signalfluss
 
-```text
-Base-rate L/R
-  → Off/2×/4× interpolation (independent states)
-  → Input gain
-  → selected input transformer (independent L/R flux + memory + HF)
-  → input DC/low-frequency colour
-  → nonlinear FET divider ← control charge
-  → preamp colour ─────────────────┐
-  → preamp bandwidth              │ feedback tap BEFORE Output
-  → Output gain                   │
-  → low-frequency output colour   │
-  → asymmetric output amplifier   │
-  → output DC correction          │
-  → high-rate Dry/Wet + Enabled   │
-  → selected-rate decimation      │
-  → float output                  │
-                                 └→ magnitude detector / mode law
-                                    → implicit charge update
-                                    → discharge + history
+```mermaid
+flowchart LR
+    subgraph AUDIO["Audiopfad - je Kanal, interne Rate fs·Faktor"]
+        direction TB
+        IN["Host-Audio L/R<br>float, NaN/Inf zu 0, Begrenzung ±256"] --> UP["Hochsampling<br>Off / 2x / 4x"]
+        UP --> GIN["Input Gain"]
+        GIN --> TRA["Eingangstransformator<br>60s / 80s / 00s / Sym"]
+        TRA --> INCOL["Eingangsfaerbung<br>8 Hz DC + 35 Hz Tiefpass"]
+        INCOL --> FET["FET-Spannungsteiler<br>regularisierte Knotenform"]
+        FET --> PRE["Vorverstaerkerfaerbung<br>asym. Kennlinie + 45 kHz"]
+        PRE --> GOUT["Output Gain"]
+        GOUT --> OUTCOL["Ausgangsfaerbung<br>35 Hz + asym. Amp + 5 Hz DC"]
+        OUTCOL --> MIX["Dry/Wet-Mischung<br>und Enabled"]
+        MIX --> DOWN["Dezimation<br>auf Host-Rate"]
+        DOWN --> AOUT["Float-Ausgang<br>Latenz 0/3/4 Frames"]
+        DRY["Dry-Abgriff<br>vor Input Gain"] --> MIX
+    end
+
+    subgraph CTRL["Regelseite - Abgriff VOR Output Gain"]
+        direction TB
+        TAP["Tap: zustandslose Auswertung<br>von FET- und Preamp-Stufe"] --> MAG["Betragspegel L/R<br>max ABS - Stereo Link"]
+        MAG --> LAW["Mode-Law:<br>Schwelle T, Knie K, Ratio R"]
+        LAW --> KNEE["d = L - T<br>weiches Knie knee(d)"]
+        KNEE --> QT["q_target<br>Charge-Zielwert"]
+        QT --> CHG["Aufladung q<br>implizit, Newton/Bisektion"]
+        CHG --> GQ["Charge q zu Gain g(q)<br>GR-Computer max 60 dB"]
+        GQ --> DIS["Entladung<br>plus Historie m"]
+        DIS -->|"m (GR-Historie)"| CHG
+        GQ -.->|"g(q) in den Regelkreis"| FET
+    end
+
+    FET -.->|"zustandsloser Tap"| TAP
+
+    subgraph REG["Regler"]
+        RIN["input"]
+        ROS["oversampling"]
+        RTR["transformer"]
+        RCO["colour"]
+        ROUT["output"]
+        RMIX["mix"]
+        REN["enabled"]
+        RRT["ratio"]
+        RATT["attack"]
+        RREL["release"]
+        RCMP["compression"]
+        RLK["stereo_link"]
+    end
+
+    RIN -.->|"Pegel"| GIN
+    ROS -.->|"Faktor 1/2/4"| UP
+    ROS -.->|"Faktor 1/2/4"| DOWN
+    RTR -.->|"Profilwahl"| TRA
+    RCO -.->|"Flux-Dichte"| INCOL
+    RCO -.->|"Kruemmung 0.24 + 0.08 All"| FET
+    RCO -.->|"Bias, Sättigung, Bandbreite"| PRE
+    RCO -.->|"LP-Mix, asym. Amp, DC-Ecke"| OUTCOL
+    ROUT -.->|"Pegel"| GOUT
+    RMIX -.->|"Anteil"| MIX
+    REN -.->|"Bypass"| MIX
+    RRT -.->|"T, K, R, All-Ziele"| LAW
+    RATT -.->|"Aufladezeit tA"| CHG
+    RREL -.->|"Entladezeit tR"| DIS
+    RCMP -.->|"Off: parkt"| GQ
+    RLK -.->|"L/R max oder getrennt"| MAG
 ```
 
 Output und der gesamte Ausgangsblock sind **nicht Teil des Detektorabgriffs**.
@@ -92,10 +137,11 @@ Abtastrate ist die von Host/REAPER gelieferte Rate, intern
 `fs_internal=factor·fs`, `factor=1/2/4` für Off/2x/4x.
 Attack und Release werden geometrisch von den Skalen 1–7 abgebildet:
 
-\[
-t_A=0.0008(0.00002/0.0008)^{(A-1)/6},\qquad
-t_R=1.1(0.05/1.1)^{(R-1)/6}.
-\]
+$$
+t_A = 0.0008 \cdot \left(\frac{0.00002}{0.0008}\right)^{(A-1)/6},
+\qquad
+t_R = 1.1 \cdot \left(\frac{0.05}{1.1}\right)^{(R-1)/6}.
+$$
 
 Dies sind nominelle Modellzeiten. Die geschlossene Feedback-Antwort, steigende
 Flanken, durch Sinuszyklen wieder aufgeladene Zustände und All Buttons können
@@ -115,30 +161,30 @@ Der physikalische Bezug ist ein Serienwiderstand plus FET als Shunt. Im
 ohmischen Modell erzeugt derselbe Abschwächer Gain und pegelabhängige Verzerrung.
 Green Stripe verwendet eine **regularisierte** dimensionslose Knotenform:
 
-\[
-u=0.08x,\quad C=B-1+q,\quad B=10^{1/20},\quad
-F(v)=v-k\frac{v^2}{1+|v|},
-\]
+$$
+u = 0.08\,x, \qquad C = B - 1 + q, \qquad B = 10^{1/20},
+\qquad F(v) = v - k\,\frac{v^2}{1+|v|}.
+$$
 
-\[
-v+C F(v)-u=0,\quad k=Colour(0.24+0.08 All).
-\]
+$$
+v + C\,F(v) - u = 0, \qquad k = \mathrm{Colour} \cdot (0.24 + 0.08 \cdot \mathrm{All}).
+$$
 
 Die 0.08-Volt-/Skalierungswahl ist eine eigene Normalisierung, keine ermittelte
 FET-Drainspannung eines Capture-Geräts. Die kleine Ruheabschwächung von nominell
 1 dB ist über `B` kalibriert und am Ausgang wieder normalisiert. Bei Colour=0:
 
-\[
-y=x\,\frac{B}{B+q},\qquad g(q)=\frac{B}{B+q}.
-\]
+$$
+y = x \cdot \frac{B}{B+q}, \qquad g(q) = \frac{B}{B+q}.
+$$
 
 Nach Multiplikation mit `1+|v|` ist die Knotenform auf jeder Polarität ein
 Quadratpolynom. Mit `U=|u|`, `s=sign(u)` lautet die stabile positive Wurzel:
 
-\[
-a=1+C(1-sk),\quad b=1+C-U,\quad
-v=\frac{2u}{b+\sqrt{b^2+4aU}}.
-\]
+$$
+a = 1 + C\,(1 - s\,k), \qquad b = 1 + C - U, \qquad
+v = \frac{2u}{b + \sqrt{b^2 + 4aU}}.
+$$
 
 Die rationalisierte Lösung vermeidet Wurzelsubtraktions-Auslöschung und ersetzt
 drei frühere per-Tap-Newton-Schritte. Steigung bleibt für die Krümmung positiv;
@@ -155,21 +201,30 @@ hier **nicht übernommen**. Green Stripe ist kein Port dieser Bibliothek.
 
 Für das zustandslose FET-/Preamp-Tap-Signal wird
 
-\[
-L=20\log_{10}(\max(|tap(L,q)|,|tap(R,q)|)),\quad d=L-T
-\]
+$$
+L = 20\,\log_{10}\!\left(\max\left(\left|tap_{\mathrm{L}}(q)\right|,
+\left|tap_{\mathrm{R}}(q)\right|\right)\right), \qquad d = L - T
+$$
 
 berechnet. Das weiche Knie nutzt die übliche stetige quadratische Überleitung:
-unter `−K/2` null, über `K/2` `d`, dazwischen `(d+K/2)^2/(2K)`.
 
-Die gewünschte Abschwächung gegen den **Feedback-Pegel** ist `(R-1) knee(d)`.
+$$
+\mathrm{knee}(d) =
+\begin{cases}
+0 & d < -K/2 \\
+d & d > K/2 \\
+\dfrac{(d + K/2)^2}{2K} & \text{sonst}
+\end{cases}
+$$
+
+Die gewünschte Abschwächung gegen den **Feedback-Pegel** ist `(R-1)·knee(d)`.
 `R−1` ist wesentlich: der Feed-forward-Koeffizient `1−1/R` würde in derselben
 Feedback-Struktur nicht die gewünschte statische Ratio ergeben. Überleitung in
 den positiv begrenzten Charge-/Conductance-Zustand:
 
-\[
-q_{target}=B\left(10^{\min(60,(R-1)knee(d))/20}-1\right).
-\]
+$$
+q_{\text{target}} = B \cdot \left(10^{\min\left(60,\ (R-1)\,\mathrm{knee}(d)\right)/20} - 1\right).
+$$
 
 Das ist eine bewusst gewählte **Verhaltenskennlinie**, kein rekonstruierter
 AC-/DC-Widerstands-/Diodenblock. Ratio-abhängige T/K-Werte:
@@ -190,10 +245,11 @@ Dissertationsgrafik digitalisierte oder vom NAM abgeleitete Messdaten.
 
 Aufladung benutzt einen impliziten Backward-Euler-Schritt:
 
-\[
-(1+\alpha)q_{n+1}-q_n-\alpha q_{target}(x_{n+1},q_{n+1})=0,\quad
-\alpha=\frac1{fs_{internal}\,t_A\,R\,(1+0.3All)}.
-\]
+$$
+(1+\alpha)\,q_{n+1} - q_n - \alpha\,q_{\text{target}}(x_{n+1},\,q_{n+1}) = 0,
+\qquad
+\alpha = \frac{1}{fs_{\text{internal}} \cdot t_A \cdot R \cdot (1 + 0.3\,\mathrm{All})}.
+$$
 
 Die zusätzliche Ratio-Skalierung hält die nominale geschlossene Zeit näher am
 Reglerbereich. Sie ist eine Modellentscheidung, keine RC-Bauteilidentifikation.
@@ -213,9 +269,9 @@ Keine neue Iterationszahl oder Toleranz; Signalbeleg in `EXTERN.md`.
 
 Bei geschlossenem Gleichrichter entlädt sich der Zustand exponentiell:
 
-\[
-q_{n+1}=q_n e^{-1/(fs_{internal}t_R(1+0.75m+0.2All))}.
-\]
+$$
+q_{n+1} = q_n \cdot e^{-1/\left(fs_{\text{internal}} \cdot t_R \cdot (1 + 0.75\,m + 0.2\,\mathrm{All})\right)}.
+$$
 
 Ab 0.1.1 wird exp(−s) im kleinen zulässigen Schrittbereich kubisch ausgewertet:
 `1−s+s²/2−s³/6`, Koeffizientenfehler <7×10⁻¹⁵ im schlechtesten unterstützten
@@ -300,18 +356,18 @@ grünen ENGINE-Bay: er ist ein Utilities-Regler, kein Färbungsregler.
 
 Audio und Bias-Korrektur benutzen exakt dieselbe [7/6]-Padé-Formel:
 
-\[
-S(x)=\frac{x(135135+x^2(17325+x^2(378+x^2)))}
- {135135+x^2(62370+x^2(3150+28x^2))}.
-\]
+$$
+S(x) = \frac{x\,\left(135135 + x^2\left(17325 + x^2\left(378 + x^2\right)\right)\right)}
+{135135 + x^2\left(62370 + x^2\left(3150 + 28\,x^2\right)\right)}.
+$$
 
 Für `|x|≥5` wird auf ±1 begrenzt. Die kleine Restdiskontinuität am Rand ist
 numerisch gering, aber das Antialiasing bleibt erforderlich. Analytische
 Ableitung derselben Funktion normiert die Kleinsignalverstärkung bei Bias:
 
-\[
-A(x)=H\frac{S(x/H+b)-S(b)}{S'(b)}.
-\]
+$$
+A(x) = H \cdot \frac{S(x/H + b) - S(b)}{S'(b)}.
+$$
 
 Keine Vermischung von std::tanh und Approximation; das vermeidet DC-Fehler durch
 unterschiedliche Bias-Referenzen. Keine Float-Bit-Hacks, damit double-EEL2 und

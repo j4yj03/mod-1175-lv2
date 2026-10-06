@@ -6,38 +6,41 @@ Geräte-/Hörtests werden nicht als bestanden geführt.
 
 ## Offen — Scarlett (siehe [MESSTECHNIK](MESSTECHNIK.md))
 
-Aktueller Stand 2026-10-06: Matrix-Treiber `tools\scarlett_matrix.bat` bereit
-(19 Offline-/Mocktests PASS, Windows-Python 3.9 und WSL); Gainmatch-Proben am
-Gerät laufen, Messreihe `test-results/matrix-20261006-161927`.
+Aktueller Stand 2026-10-07: Umstieg auf **Dwarf als Signalquelle**
+(`tools/make_dwarf_tones.py`, Testtöne 48 kHz/PCM_24 zum Hochladen;
+`scarlett_test.py --no-playback` und `scarlett_matrix.py --dwarf-source --level -2`
+bereit, 16+21 Mocktests PASS). Die alte Scarlett-Stimulus-Kette (Pegelkette,
+Loop-Gewinn −54…−30 dB) ist damit obsolet; die Punkte darunter betreffen nur
+noch den Fall, dass stattdessen wieder über Scarlett angeregt wird.
 
-- [ ] Windows-Geräteformat abschließen: Sounddialog (`mmsys.cpl`) Wiedergabe
-  „Lautsprecher (Focusrite USB Audio)“ **und** Aufnahme „Analogue 1 + 2
-  (Focusrite USB Audio)“ auf 24 Bit/48000 Hz. Die Scarlett-Panel-Einstellung
-  (48 kHz, SYNCED) ist **nicht** dieselbe Einstellung; `default_samplerate`
-  meldete auch nach der Panel-Änderung weiterhin 44100. Kontrolle:
-  `rate_mismatch`-Warnung weg, Sync-Marker-Korrelation wieder > 0,35
-  (beobachtet: 0,319 bei Resampling).
-- [ ] Routing/Board klären: Im Ch1-Probe (nur Out1 aktiv) kommt das Signal auf
-  **beiden** Scarlett-Eingängen an; Ch2 clippt bei 0,0 dBFS (105–139k Samples).
-  Verdacht: MONO-Board am Dwarf (Mono verarbeitet Input L auf beide Outputs)
-  oder abweichende Verkabelung. GS76-STEREO-Board laden und im nächsten Probe
-  verifizieren (kein Clipping mehr, In2 still). SSH auf `last.json` ist hier
-  ohne sshpass/expect nicht möglich (kein askpass) — über Benutzer klären.
-- [ ] Pegelkette fertig stellen: Loop-Gewinn aktuell −30,6 (Ch1) / −35,5 (Ch2)
-  dB; Kanaldifferenz −4,93 dB → zuerst Rebalance (+≈5 dB auf Ch2-Seite),
-  dann beide Kanäle **gleich** anheben (primär Scarlett-INPUT-Gains bis ~+50 dB
-  und Dwarf-OUTPUT-Knopf). Ziel ≥ +1 dB (Anker), mindestens −20 dB; gainmatch
-  wiederholen, bis „OK“.
-- [ ] Danach `full --repeats 3 --settings-label "…"` ausführen: Baseline
-  (2 Läufe je Kanal, Dwarf-Bypass) und Matrix None/60s/80s/00s/Sym × 3
-  Wiederholungen × 2 Kanäle; der Treiber fragt je Transformator-Bedingung
-  (Dwarf umstellen). Zwischen Baseline und DUT keine Regler mehr verändern.
+- [ ] Testtöne auf den Dwarf hochladen (`test-results/dwarf-tones/`, siehe
+  `MANIFEST.md`) und die Messreihe neu starten: `full --dwarf-source --level -2`
+  — Gainmatch, Baseline (GS76 Bypass) und Matrix None/60s/80s/00s/Sym;
+  Ablauf je Lauf: Enter, dann sofort Wiedergabe auf dem Dwarf.
+- [ ] Windows-Geräteformat abschließen (nur noch Aufnahmeseite relevant):
+  Sounddialog (`mmsys.cpl`) Aufnahme „Analogue 1 + 2 (Focusrite USB Audio)“
+  auf 24 Bit/48000 Hz. Die Scarlett-Panel-Einstellung (48 kHz, SYNCED) ist
+  **nicht** dieselbe Einstellung; `default_samplerate` meldete auch nach der
+  Panel-Änderung weiterhin 44100. Kontrolle: `rate_mismatch`-Warnung weg.
+- [ ] Routing/Board klären: Im Ch1-Probe (nur Out1 aktiv) kam das Signal auf
+  **beiden** Scarlett-Eingängen an; Ch2 clippte bei 0,0 dBFS (105–139k
+  Samples). Verdacht: MONO-Board am Dwarf (Mono verarbeitet Input L auf beide
+  Outputs) oder abweichende Verkabelung. GS76-STEREO-Board laden und im
+  nächsten Probe verifizieren (kein Clipping mehr, In2 still). SSH auf
+  `last.json` ist hier ohne sshpass/expect nicht möglich (kein askpass) —
+  über Benutzer klären. Mit Dwarf-Quelle entfällt der Stimulus-Anteil dieses
+  Problems; der Rückkanal-Routing-Check bleibt.
+- [ ] Alte Pegelkette (Loop-Gewinn ≥ +1 dB über Scarlett-INPUT-Gains) nur
+  noch nötig, falls die Dwarf-Quelle wieder verlassen wird; als obsolet
+  markiert, nicht löschen.
+- [ ] Danach Auswertung `SUMMARY.md`: Anker −14/−8/−2 dBFS sollten jetzt
+  exakt getroffen sein (Dateipegel = Plugin-Eingang); Kanaldifferenz aus dem
+  Gainmatch gegen Toleranz ±1 dB prüfen.
 - [ ] 20 kHz zusätzlich mit `--rates 48000 96000` messen (Geräteraten vorher
   umstellen).
 - [ ] Klären, ob das Dwarf-INPUT-Meter (Web-UI 192.168.51.1) als
-  Plugin-Eingangspegel-Referenz brauchbar ist; der Rückkanal im Bypass ist nur
-  Proxy (MESSTECHNIK Abschnitt 3). Damit lässt sich die Anker-Näherung
-  absichern.
+  Plugin-Eingangspegel-Referenz brauchbar ist; mit Dwarf-Quelle ist der
+  Plugin-Eingang digital exakt bekannt, das Meter ist nur noch cross-check.
 - [ ] PluginDoctor-Sweep-Wiederholung zurückgestellt (PD erlaubt hier keine
   Einstellungssteuerung; Marker-Sync über `scarlett_test.py` ist der
   verlässliche Weg).
@@ -79,6 +82,10 @@ Gerät laufen, Messreihe `test-results/matrix-20261006-161927`.
 
 ## Offen — Projektinfrastruktur
 
+- [ ] Dwarf-GUI: Logo-Renderfix (`/resources/…{{{ns}}}`-Form, siehe PROJEKT)
+  auf dem Gerät prüfen; dazu Fix committen/pushen und
+  `GREEN_STRIPE_76_VERSION` in `packaging/mod-plugin-builder/…/green-stripe-76.mk`
+  auf den neuen Commit setzen, dann MPB-Neubau (Gerät/Cloud) und Web-UI-Sichtprüfung.
 - [ ] README-Verzeichnisse auf ersten beiden Stufen erstellen (Haupt-README
   nur Überblick + Referenzen).
 

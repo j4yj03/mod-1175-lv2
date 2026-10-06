@@ -678,6 +678,53 @@ Regeln:
    nominalen Plugin-Latenz von **4 Frames** entsprechen (gemessen: +3,2…+4,5).
    Bei OS Off/2x entsprechend 0/3.
 
+## 1a. Dwarf als Signalquelle — Testtöne am Gerät abspielen (2026-10-07)
+
+Der Lauf 2026-10-06 scheiterte am Loop-Gewinn (−54…−30 dB über vier
+Umstellrunden). Abhilfe: **der Dwarf spielt die Testtöne selbst**. Der
+Plugin-Eingang liegt dann digital am File-Player, die Pegelanker
+(−14/−8/−2 dBFS) sind dadurch **exakt** die Dateipegel, und die analoge Kette
+schrumpft auf Dwarf-DAC → Scarlett-ADC.
+
+```bash
+python3 tools/make_dwarf_tones.py          # erzeugt test-results/dwarf-tones/
+```
+
+Erzeugt wird (48 kHz, PCM_24, Parameter identisch zur Treibergenerierung,
+`MANIFEST.json` mit SHA256):
+
+| Datei | Inhalt | Dauer |
+|---|---|---|
+| `gs76-matrix-all-m2-stereo.wav` | 19 Segmente: Sync-Marker, 1-kHz-Ton, 13 Sweeps, Pegelstufe −26…−2 dBFS | ~65 s |
+| `gs76-gainmatch-tone-m2-stereo.wav` | Sync-Marker + 1-kHz-Ton | ~7 s |
+| `*-mono.wav` | Mono-Kopien derselben Signale | |
+
+- **Hochladen** über die Dwarf-Web-UI (Dateimanager) oder SCP. Die
+  Stereo-Dateien sind L=R; die Auswertung korreliert je Kanal gegen die
+  Mono-Referenz.
+- **Pedalboard:** File-Player → Green Stripe 76 → Ausgänge. Der
+  Scarlett-Output bleibt stumm; das Skript nimmt nur auf.
+- **Ablauf je Lauf:** Enter im Skript, dann **sofort** die Wiedergabe auf dem
+  Dwarf starten. Die Aufnahme hat 10 s Vorlauf (`--pad`), die Marker-Suche
+  folgt mit demselben Fenster.
+- **Pegel:** Bei `--level -2` liegen alle drei Anker exakt auf den
+  Pegelstufen. Der Loop-Gewinn betrifft nur noch den Aufnahmepegel:
+  Clipping → Dwarf-OUTPUT-Knopf herunterdrehen (Zielbereich grob −6…+3 dB,
+  Adequacy-Grenze −20 dB bleibt).
+- **Befehle** (Windows, Parameter müssen zur Datei passen):
+
+```bat
+python tools\scarlett_matrix.py full --dwarf-source --level -2 --root test-results\matrix-dwarf
+python tools\scarlett_test.py run --output <Verzeichnis> --input-device <ID> --no-playback --level -2 --kind all
+```
+
+Grenzen: Dwarf- und Scarlett-Clock sind jetzt **zwei Taktquellen**; die
+Analyse gleicht linearen Drift bis 2000 ppm aus (Kristalltypikal ≪ 100 ppm),
+ein Resampling-Fehlalarm der alten 44,1-kHz-Art entsteht so nicht. Der
+File-Player des Dwarf ist Teil des Messpfads; sein Gain geht in die
+Baseline ein und hebt sich in `relative_gain_db` heraus. Keine neue Aussage
+über Hardware-GR oder Absolute Kalibrierung.
+
 ## 2. Systemvoraussetzungen (Windows, nativ)
 
 - Python nativ (nicht WSL): `python -m pip install -r tools/requirements-scarlett.txt`.

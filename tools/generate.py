@@ -264,13 +264,16 @@ def gui_html(stereo, parameters):
      and inset value fields. Unframed product title on green; knob modules untitled.
      Input/Attack/Mix and Output/Release/Colour share two horizontal rows.
      Unlabelled bypass beside the amber pilot. Light from upper left.
-     Drag handles: top rail, footer plate, bottom rail. No GR/level meters. -->
+     Drag handles: full frame ring (top/left/right/bottom rails), footer plate.
+     No GR/level meters. -->
 <div class="gs76{{{{{{cns}}}}}}">
-<div class="mod-drag-handle gs-drag" mod-role="drag-handle" title="Paneel verschieben"></div>
+<div class="mod-drag-handle gs-drag gs-drag-top" mod-role="drag-handle" title="Paneel verschieben"></div>
 {screws(False, (0, 45, 18, 67))}
+<div class="mod-drag-handle gs-drag gs-drag-left" mod-role="drag-handle" title="Paneel verschieben"></div>
+<div class="mod-drag-handle gs-drag gs-drag-right" mod-role="drag-handle" title="Paneel verschieben"></div>
 <div class="gs-bays">
 <div class="gs-bay gs-bay-wide"><div class="gs-pair"><section>{screws(True, (8, 31, 54, 79))}<div class="gs-body gs-body-knobs">{knob('input', 'INPUT')}{knob('output', 'OUTPUT')}</div></section><section>{screws(True, (13, 38, 61, 84))}<div class="gs-body gs-body-knobs">{knob('attack', 'ATTACK', ('Slow', 'Fast'))}{knob('release', 'RELEASE', ('Slow', 'Fast'))}</div></section></div></div>
-<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand"><img src="assets/logo.png" alt="Green Stripe 76" class="gs-logo"></div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}{link}</div></div></div>
+<div class="gs-bay gs-bay-engine">{screws(True, (4, 26, 49, 72))}<div class="gs-brand"><img src="/resources/assets/logo.png{{{{{{ns}}}}}}" alt="Green Stripe 76" class="gs-logo"></div><div class="gs-body gs-body-engine">{select('ratio', 'RATIO')}<div class="gs-engine-controls">{switch('compression')}{oversampling}{link}</div></div></div>
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>

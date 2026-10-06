@@ -152,6 +152,49 @@ class MeasurementTests(unittest.TestCase):
         backend.stop.assert_called_once()
         self.assertFalse((self.session / 'recording.wav').exists())
 
+    def test_dwarf_source_records_without_playback_and_syncs(self):
+        # Dwarf file-player mode: no Scarlett playback, longer capture head,
+        # marker correlation against the padded recording.
+        pad = 10.0
+        latency = 3.0
+        backend = Mock()
+        backend.PortAudioError = RuntimeError
+        backend.query_devices.return_value = {'name':'Fake input', 'hostapi':0,
+                                              'default_samplerate': self.rate}
+        backend.query_hostapis.return_value = [{'name':'Fake'}]
+        backend.get_status.return_value = ''
+        def rec(frames, samplerate, channels, dtype, device, blocking):
+            self.assertEqual(device, 4)
+            y = np.zeros(frames, dtype='float32')
+            start = round(latency * samplerate)
+            y[start:start + len(self.x)] = self.x[:frames - start]
+            return np.column_stack((y, y))
+        backend.rec.side_effect = rec
+        with patch.object(measurement, 'sounddevice', return_value=backend):
+            wav = measurement.record(self.session, 4, None, 1, 1, 'dwarf',
+                                     play=False, pad_seconds=pad)
+        self.assertIsNone(backend.playrec.call_args, 'Dwarf mode must not play back')
+        self.assertEqual(backend.rec.call_args.args[0],
+                         len(self.x) + round(pad * self.rate))
+        metadata = json.loads(wav.with_suffix('.json').read_text(encoding='utf-8'))
+        self.assertFalse(metadata['playback'])
+        self.assertIsNone(metadata['output_device'])
+        self.assertEqual(metadata['pad_seconds'], pad)
+        report = measurement.analyze(self.session, wav, max_delay=pad)
+        self.assertTrue(report['valid'], report.get('reason'))
+        self.assertAlmostEqual(
+            report['synchronization']['delay_at_first_marker_frames'] / self.rate,
+            latency, delta=.01)
+        self.assertAlmostEqual(report['segments'][0]['gain_db'], 0.0, delta=.002)
+
+    def test_hot_level_only_with_explicit_max_level(self):
+        with self.assertRaisesRegex(ValueError, 'Peak level'):
+            measurement.generate(self.root / 'hot-refused', level=-2)
+        plan = measurement.generate(self.root / 'hot-allowed', level=-2, max_level=-0.1)
+        self.assertEqual(plan['peak_level_dbfs'], -2)
+        with self.assertRaisesRegex(ValueError, 'max_level'):
+            measurement.generate(self.root / 'bad-cap', max_level=0.0)
+
     def test_high_frequency_has_no_claimed_zero_thd(self):
         t = np.arange(24000) / self.rate
         y = .1*np.sin(2*np.pi*20000.01*t)

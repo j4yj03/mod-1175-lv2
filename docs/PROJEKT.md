@@ -133,6 +133,17 @@ Hardware-Revision A/D nicht bindend.
   clippt (bis 139k Samples) — Hinweis auf MONO-Board oder abweichende
   Verkabelung; Prüfung offen. (3) Ch2 zuletzt 4,9 dB unter Ch1 — Rebalance
   nötig. Details/Regeln: MESSTECHNIK Abschnitt 21.
+- **Umstieg auf Dwarf als Signalquelle (2026-10-07):** Der Dwarf spielt die
+  Testtöne selbst (File-Player → GS76 → DAC → nur noch Scarlett-ADC). Der
+  Plugin-Eingang ist damit digital exakt pegelbekannt — `--level -2` trifft
+  die Anker −14/−8/−2 dBFS ohne Loop-Gewinn-Arithmetik; die gescheiterte
+  Pegelkette (oben) ist obsolet. Neu: `tools/make_dwarf_tones.py`
+  (48-kHz/PCM_24-Uploaddateien + MANIFEST), `scarlett_test.py --no-playback`
+  (Aufnahme mit 10-s-Vorlauf ohne Wiedergabe, `generate()`-Leveldeckel
+  `max_level` nur für diesen Pfad geöffnet) und
+  `scarlett_matrix.py --dwarf-source` (fixer Dateipegel, Prompts je Lauf:
+  Enter → sofort Wiedergabe). Tests: 16 (scarlett_test) + 21 (Matrix) + 2
+  (Tongenerator) PASS. Messreihe am Gerät offen; TODO Scarlett.
 
 ### Scarlett-Liveaufnahme 2026-10-05: Auswertung und Grenzen (2026-10-06)
 
@@ -228,13 +239,41 @@ aus zwei x86-/A35-Anteilen, keine Abnahme. Details und Protokoll in
 - **Unteres Paneel verschiebbar:** zusätzlich zum oberen Rand sind jetzt die
   **Fußzeilenplatte** (FET-COMPRESSOR-Label) und ein **unterer 9-px-Rand**
   Drag-Handles (`mod-role="drag-handle"`). Bypass/Lampe und alle Regler bleiben
-  außerhalb der Handles; lokaler Playwright-Check: Cursor `move` auf allen drei
-  Handles, keine Überlappung mit Bypass/Lampe/Select/Knob.
+  außerhalb der Handles.
+- **Kompletter Rahmen ziehbar (2026-10-06):** vier Leisten kacheln den
+  sichtbaren Rahmenring exakt entlang des Panel-Paddings (26 px oben, 30 px
+  seitlich, 8 px unten): `gs-drag-top` (volle Breite, 26 px), `gs-drag-left`/
+  `gs-drag-right` (30 px breit, zwischen den Leisten), `gs-drag-bottom`
+  (volle Breite, 9 px). Cursor `move` (Pfeilkreuz) auf allen Leisten; die
+  Eckschrauben sind `pointer-events:none` und gehören damit zur Ziehfläche.
+  Kein Leistenstück überlappt Bays, Footer, Bypass/Lampe oder Jacks
+  (hit-test-geprüft).
 - **Gerätebeleg:** `modgui.js` des Dwarf (OS 1.13.5.3315) bindet in Zeile 1250
   `element.find('[mod-role=drag-handle]')` als jQuery-UI-Handle-Sammlung —
   mehrere Handles sind auf dem Gerät wirksam. `tests/test_modgui.py` prüft jetzt
-  alle drei Handles (Drag bewegt Paneel, keine Parameteränderung); der Lauf mit
-  echter MOD-UI-Quelle bleibt am Testrechner offen.
+  alle fünf Handles (vier Rahmenleisten + Platte: Drag bewegt Paneel, keine
+  Parameteränderung, Ring-Kachelung, Regler unbedeckt) und läuft lokal gegen
+  die mod-ui-Quelle von GitHub master (modgui.js SHA256 `49ef2446…`); der Lauf
+  gegen die exakte modgui.js des Dwarf und der Gerätetest bleiben offen.
+- **Testrobustheit:** der Platten-Klickpunkt mit +24 px konnte je nach
+  Schriftmetrik unterhalb der ~21 px hohen Platte liegen; Klickpunkt auf
+  +8 px korrigiert. Pluginverhalten unverändert.
+- **Logo-Fehler auf dem Gerät (2026-10-06):** das `logo.png` erschien im
+  Dwarf-Webinterface nicht. Ursache: der Icon-Template-HTML nutzte relatives
+  `src="assets/logo.png"`. mod-ui injiziert das Mustache-gerenderte Template in
+  das DOM der Pedalboard-Seite (`modgui.js`, `self.icon.html(...)`); relative
+  URLs lösen dann gegen die Seiten-URL (`http://<dwarf>/assets/...` → 404) auf,
+  nicht gegen das Bundle. Die CSS-Hintergründe funktionieren, weil sie die
+  Form `/resources/assets/…{{{ns}}}` nutzen: der Webserver routet
+  `/resources/(.*)` in das `resourcesDirectory` des Plugins (mod-ui
+  `webserver.py`, `EffectResource`), und `{{{ns}}}` wird beim Rendern zur
+  Cache-Query `?uri=…&v=…` aufgelöst (`getTemplateData`). Fix: `img src`
+  im Generator auf dieselbe Form umgestellt
+  (`src="/resources/assets/logo.png{{{ns}}}"`), `gui_preview.py` inlined die
+  neue Form als Data-URI, `validate.py` erzwingt die `/resources/…{{{ns}}}`-Form
+  für alle `img src`. Lokal verifiziert (Playwright): Logo 290×47 px rendert in
+  Mono und Stereo, Regler-/Lampen-Hintergründe unverändert. Geräteprüfung
+  offen (benötigt Commit + `_VERSION`-Bump in der `.mk`, siehe TODO).
 | Scarlett-Skript | **12 Offline-/simulierte Backendtests PASS** (Gain, H2, DC, FIR, Taktabweichung, Delay, Fehler, Routing/Stop, HF-Grenze, Pegel-Gate, Raten-Mismatch) |
 | Scarlett-CLI | `generate --kind all` + `analyze` auf identischer WAV, 19 Segmente PASS |
 | Scarlett-Live | 2026-10-05 ausgeführt (TF60s/80s/00s/Sym, Stereo, MME −12 dBFS); Auswertung oben — Pegel-/SNR- und HF-Grenzen, Wiederholung offen |

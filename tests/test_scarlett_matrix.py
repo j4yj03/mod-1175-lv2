@@ -65,6 +65,10 @@ class FakeBackend:
         self.calls.append(kwargs['device'])
         return np.asarray(playback, dtype=np.float32) * self.scale
 
+    def rec(self, frames, samplerate, channels, dtype, device, blocking):
+        self.calls.append(('rec', device))
+        return np.zeros((frames, channels), dtype=np.float32)
+
     def get_status(self):
         return ''
 
@@ -323,6 +327,69 @@ class GainMatchTests(DriverTestCase):
         # Probe runs are deliberately excluded from the series issue list; the
         # metadata itself must still record the mismatch.
         self.assertTrue(all(run['rate_mismatch'] for run in index['runs']))
+
+
+class DwarfSourceTests(DriverTestCase):
+    """--dwarf-source: the Dwarf file player is the stimulus, script records only."""
+
+    def dwarf_args(self, root):
+        from types import SimpleNamespace
+        return SimpleNamespace(
+            rates=[48000], input_device=None, output_device=None, hostapi='MME',
+            dwarf_source=True, pad=10.0, level=-2, frequency=1000, settle=.25,
+            measure=.5, settings_label='', relax_anchors=False, tolerance=1.0,
+            baseline_repeats=1, repeats=1, transformers='60s', skip_gainmatch=True,
+            yes=True, root=str(root))
+
+    def test_anchor_guard_uses_digital_levels(self):
+        base = Path(self.temp.name)
+        d = driver.Driver(self.dwarf_args(base / 'guard'))
+        level, reachable, missing = d.anchor_guard(48000)
+        self.assertEqual(level, -2)
+        self.assertEqual(missing, [])
+        self.assertEqual(reachable, [-14.0, -8.0, -2.0])
+        args = self.dwarf_args(base / 'guard2')
+        args.level = -12
+        level, reachable, missing = driver.Driver(args).anchor_guard(48000)
+        self.assertEqual(level, -12)
+        self.assertEqual(missing, [-14.0, -8.0, -2.0])
+
+    def test_full_dwarf_flow_records_without_playback(self):
+        root = Path(self.temp.name) / 'dwarf-flow'
+        with patch.object(measurement, 'sounddevice', return_value=self.backend), \
+             patch.object(measurement, 'generate') as gen, \
+             patch.object(measurement, 'record') as rec, \
+             patch.object(measurement, 'analyze') as ana:
+            rec.return_value = Path('recording.wav')
+
+            def fake_analyze(directory, wav, channel=1, baseline=None, max_delay=2.0, **kw):
+                directory = Path(directory)
+                directory.mkdir(parents=True, exist_ok=True)
+                report = dict(valid=True, capture={},
+                              segments=[dict(id=1, group='tone', frequency_hz=1000,
+                                             peak_dbfs=-2, valid=True, gain_db=0.0,
+                                             relative_gain_db=0.0, thd_percent=0.0,
+                                             thdn_percent=0.0)])
+                (directory / 'results.json').write_text(
+                    json.dumps(report), encoding='utf-8')
+                return report
+            ana.side_effect = fake_analyze
+            driver.main(['full', '--root', str(root), '--dwarf-source', '--level', '-2',
+                         '--skip-gainmatch'] + self.common())
+        self.assertEqual(gen.call_count, 6)   # 4 baseline (2ch x 2) + 2 DUT runs
+        self.assertEqual(rec.call_count, 6)
+        for call in rec.call_args_list:
+            self.assertIs(call.kwargs['play'], False)
+            self.assertEqual(call.kwargs['pad_seconds'], 10.0)
+            self.assertIsNone(call.args[2], 'Dwarf mode must not open an output device')
+        for call in gen.call_args_list:
+            self.assertEqual(call.args[2], -2, 'fixed file level, not loop-gain derived')
+            self.assertEqual(call.kwargs['max_level'], -0.1)
+        for call in ana.call_args_list:
+            self.assertEqual(call.kwargs['max_delay'], 10.0)
+        index = json.loads((root / 'index.json').read_text(encoding='utf-8'))
+        self.assertEqual(len([r for r in index['runs'] if r['role'] == 'baseline']), 4)
+        self.assertEqual(len([r for r in index['runs'] if r['role'] == 'dut']), 2)
 
 
 if __name__ == '__main__':

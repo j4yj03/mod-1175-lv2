@@ -258,8 +258,16 @@ abgelöst, weil Textmaße und Bounding-Boxen abweichen). Voraussetzungen:
 - `page.set_content()` hat **keine Basis-URL**: `<img src="assets/logo.png">`
   bleibt kaputt (Alt-Text gerendert). `gui_preview.page_html()` inlines
   deshalb neben den CSS-Assets auch die HTML-`src`-Attribute als Data-URI.
-  Beide Wege (CSS-`/resources/assets/`-Form und HTML-`src`-Form) abdecken,
-  sonst erscheint ein gebrochenes Bild im Screenshot.
+- **Auf dem Gerät gilt dasselbe:** mod-ui injiziert das Mustache-gerenderte
+  Icon-Template in das DOM der Pedalboard-Seite (`modgui.js`,
+  `self.icon.html(...)`); relative `src` lösen gegen die Seiten-URL auf
+  (404, gebrochenes Bild). HTML-Templates brauchen deshalb dieselbe Form wie
+  das CSS: `src="/resources/assets/logo.png{{{ns}}}"`. Der Webserver routet
+  `/resources/(.*)` in das `resourcesDirectory` des Plugins (`webserver.py`,
+  `EffectResource`), `{{{ns}}}` wird beim Rendern zur Cache-Query
+  `?uri=…&v=…` (`getTemplateData`). Die lokale Data-URI-Vorschau kaschiert
+  relative Formen — erst `validate.py` (erzwingt die `/resources/…{{{ns}}}`-Form)
+  und der Gerätetest zeigen den wahren Zustand.
 
 Die LV2-Oberfläche ist hell, aber die Prüfungen bleiben dieselben:
 
@@ -416,6 +424,32 @@ geführt, wo sie wirklich stattgefunden haben.
 - SSH auf den Dwarf (root/mod) scheitert in dieser Umgebung ohne sshpass/expect
   (kein askpass) — Board-Status also über den Benutzer erfragen, nicht
   annehmen.
+
+### Dwarf als Signalquelle (2026-10-07)
+
+- Der Dwarf spielt die Testtöne selbst (File-Player → GS76 → DAC → Scarlett-ADC
+  nur für die Aufnahme). Damit ist der Plugin-Eingang **digital**: die
+  Dateipegel SIND die Ankerpegel. `--level -2` in einer 'all'-Datei legt die
+  Pegelstufen auf −26…−2 dBFS und trifft die Anker −14/−8/−2 exakt — der
+  Loop-Gewinn betrifft nur noch den Aufnahmepegel (Dwarf-OUTPUT-Knopf), die
+  alte ≥+1-dB-Ankerregel ist obsolet.
+- Werkzeuge: `tools/make_dwarf_tones.py` (24-bit-PCM-WAVs + MANIFEST,
+  Parameter identisch zur Treibergenerierung: settle 2, measure 1, 1 kHz),
+  `scarlett_test.py record(..., play=False, pad_seconds=10)` bzw. CLI
+  `run --no-playback --pad 10`, `scarlett_matrix.py --dwarf-source`
+  (fixer Level, kein Anchor-Guard-Abbruch, `analyze` mit `max_delay=pad`).
+- Ablauf je Lauf: Enter → **sofort** Wiedergabe starten; die Aufnahme hat
+  10 s Vorlauf. Achtung: `generate()` kappt den Peak standardmäßig bei −3 dBFS
+  (ADC-Schutz der alten Kette); die Dwarf-Quelle überschreibt das bewusst mit
+  `max_level=-0.1` — nicht als allgemeine Aufweichung des Limits verwenden.
+- Dwarf- und Scarlett-Clock sind jetzt zwei Taktquellen; die Analyse gleicht
+  linearen Drift bis 2000 ppm aus. Das alte 44,1-kHz-Resampling-Problem
+  (Marker-Korrelation 0,319) entfällt, solange beide Seiten nominal 48 kHz
+  fahren.
+- Level-Auswahl der Upload-Datei und Treiberaufruf müssen zusammenpassen
+  (settle/measure/frequency/level) — `make_dwarf_tones.py` schreibt die
+  passenden Befehle in `MANIFEST.md`; Abweichungen verschieben die
+  Marker-/Segmentpositionen und machen die Auswertung unbrauchbar.
 
 ### Ablaufmuster mit dem Benutzer am Gerät
 1. Probe starten (`gainmatch`), Zahlen berichten, konkrete Regleranweisung

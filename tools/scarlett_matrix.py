@@ -120,12 +120,16 @@ def prepare_directory(directory):
 
 def run_measurement(directory, *, input_device, output_device, rate, level, kind,
                     frequency, settle, measure, output_channel, input_channel,
-                    label, baseline=None):
+                    label, baseline=None, play=True, pad_seconds=10.0):
     prepare_directory(directory)
-    measurement.generate(directory, rate, level, kind, frequency, settle, measure)
+    # Dwarf source: the stimulus is the digital plugin input, so the old
+    # -3 dBFS ADC-protection cap does not apply to the file level.
+    measurement.generate(directory, rate, level, kind, frequency, settle, measure,
+                         max_level=-0.1 if play is False else -3)
     wav = measurement.record(directory, input_device, output_device, output_channel,
-                             input_channel, label)
-    report = measurement.analyze(directory, wav, input_channel, baseline)
+                             input_channel, label, play=play, pad_seconds=pad_seconds)
+    report = measurement.analyze(directory, wav, input_channel, baseline,
+                                 max_delay=pad_seconds if not play else 2.0)
     return report
 
 
@@ -202,6 +206,13 @@ class Driver:
         return self.root
 
     def resolve_devices(self):
+        if self.args.dwarf_source:
+            if self.args.input_device is not None:
+                self.devices = (self.args.input_device, None)
+            elif self.devices is None:
+                input_only = find_devices(measurement.sounddevice(), self.args.hostapi)
+                self.devices = (input_only[0], None)
+            return self.devices
         if self.args.input_device is not None and self.args.output_device is not None:
             self.devices = (self.args.input_device, self.args.output_device)
         elif self.devices is None:
@@ -242,11 +253,13 @@ class Driver:
                     shutil.rmtree(directory)  # probe result; a re-probe replaces it
                 label = run_label('Gainmatch', None, channel, None, rate, args.level,
                                   args.settings_label)
+                self.dwarf_play_prompt('Dwarf: Gainmatch-Ton-Datei starten. ')
                 report = run_measurement(
                     directory, input_device=input_device, output_device=output_device,
                     rate=rate, level=args.level, kind='tone', frequency=args.frequency,
                     settle=args.settle, measure=args.measure, output_channel=channel,
-                    input_channel=channel, label=label)
+                    input_channel=channel, label=label,
+                    play=not args.dwarf_source, pad_seconds=args.pad)
                 gain = loop_gain_db(report)
                 results[(rate, channel)] = gain
                 record_run(self.index, role='gainmatch', channel=channel, rate=rate,
@@ -279,6 +292,21 @@ class Driver:
 
     def anchor_guard(self, rate):
         """Abort unless the loop gain can place all anchors on levels steps."""
+        if self.args.dwarf_source:
+            # The uploaded file IS the plugin input: the levels series
+            # (level-24 .. level in 6 dB steps) aligns the digital anchors
+            # exactly when level = -2 dBFS. Loop gain only affects the
+            # recording level, not the plugin input.
+            level = self.args.level
+            series = [level - step for step in (24, 18, 12, 6, 0)]
+            reachable = [a for a in ANCHORS_DBFS
+                         if any(abs(a - s) < 1e-9 for s in series)]
+            missing = [a for a in ANCHORS_DBFS if a not in reachable]
+            if missing:
+                print(f'Rate {rate} Hz: Dwarf-Quelle mit Pegel {level:g} dBFS; '
+                      f'Anker {", ".join(f"{a:g}" for a in missing)} dBFS liegen '
+                      'nicht auf den Pegelstufen (Datei mit -2 dBFS verwenden).')
+            return level, reachable, missing
         loop_gain = self.loop_gain_for(rate)
         if loop_gain is None:
             return None, [], list(ANCHORS_DBFS)
@@ -291,6 +319,13 @@ class Driver:
                 'Dwarf-Input-Gain beider Kanaele gleich hoch anheben und "gainmatch" '
                 'erneut ausfuehren; --relax-anchors misst mit abweichenden Ankerpegeln.')
         return level, reachable, missing
+
+    def dwarf_play_prompt(self, what):
+        """Each Dwarf-source run starts with a silent recording head; the user
+        presses Enter and starts the file playback on the Dwarf right after."""
+        if self.args.dwarf_source:
+            prompt(f'{what} Enter startet die Aufnahme; JETZT SOFORT danach die '
+                   'Testton-Datei auf dem Dwarf starten.', self.args.yes)
 
     def baseline(self):
         args = self.args
@@ -323,11 +358,13 @@ class Driver:
                     directory = self.root / f'baseline-ch{channel}-r{repeat}-{rate}'
                     label = run_label('Baseline-Bypass', None, channel, repeat, rate,
                                       level, args.settings_label)
+                    self.dwarf_play_prompt('Dwarf: Datei mit GS76 BYPASS aktiv starten. ')
                     report = run_measurement(
                         directory, input_device=input_device, output_device=output_device,
                         rate=rate, level=level, kind='all', frequency=args.frequency,
                         settle=args.settle, measure=args.measure, output_channel=channel,
-                        input_channel=channel, label=label)
+                        input_channel=channel, label=label,
+                        play=not args.dwarf_source, pad_seconds=args.pad)
                     record_run(self.index, role='baseline', channel=channel,
                                repeat=repeat, rate=rate, directory=str(directory),
                                label=label, stimulus_level_dbfs=level,
@@ -366,11 +403,14 @@ class Driver:
                     label = run_label('DUT', name, channel, repeat, rate, level,
                                       args.settings_label)
                     baseline = self.baseline_for(channel, rate)
+                    self.dwarf_play_prompt('Dwarf: Matrix-Datei mit dem eingestellten '
+                                           'Transformator starten. ')
                     report = run_measurement(
                         directory, input_device=input_device, output_device=output_device,
                         rate=rate, level=level, kind='all', frequency=args.frequency,
                         settle=args.settle, measure=args.measure, output_channel=channel,
-                        input_channel=channel, label=label, baseline=baseline)
+                        input_channel=channel, label=label, baseline=baseline,
+                        play=not args.dwarf_source, pad_seconds=args.pad)
                     record_run(self.index, role='dut', transformer=name,
                                channel=channel, repeat=repeat, rate=rate,
                                directory=str(directory), label=label,
@@ -388,8 +428,13 @@ class Driver:
         args = self.args
         self.open_root()
         print(f'Messreihe: {self.root.resolve()}')
-        print('Checkliste: Windows Wiedergabe+Aufnahme 48 kHz, Signalverbesserungen '
-              'aus, Direct Monitor OFF, Dwarf-Board geladen.')
+        if args.dwarf_source:
+            print('Checkliste: Windows nur Aufnahme 48 kHz/24 bit, Signalverbesserungen '
+                  'aus; Dwarf-Board mit File-Player + GS76 geladen, Testton-Dateien '
+                  'hochgeladen (siehe tools/make_dwarf_tones.py).')
+        else:
+            print('Checkliste: Windows Wiedergabe+Aufnahme 48 kHz, Signalverbesserungen '
+                  'aus, Direct Monitor OFF, Dwarf-Board geladen.')
         if args.skip_gainmatch:
             print('Gainmatch uebersprungen (--skip-gainmatch).')
         else:
@@ -650,6 +695,14 @@ def add_common(parser):
     parser.add_argument('--input-device', type=int)
     parser.add_argument('--output-device', type=int)
     parser.add_argument('--hostapi', default='MME')
+    parser.add_argument('--dwarf-source', action='store_true',
+                        help='The MOD Dwarf plays the pre-generated 24-bit WAV test '
+                             'tones itself (digital plugin input); the script only '
+                             'records. Use --level -2 so the levels series hits the '
+                             'anchors exactly; see tools/make_dwarf_tones.py')
+    parser.add_argument('--pad', type=float, default=10,
+                        help='Recording padding in --dwarf-source mode to cover the '
+                             'manual playback start')
     parser.add_argument('--rates', nargs='+', type=int, default=[48000],
                         help='Sample rates to measure, e.g. --rates 48000 96000')
     parser.add_argument('--level', type=float, default=-12,

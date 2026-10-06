@@ -42,11 +42,15 @@ def fade(signal, frames):
 
 
 def generate(directory, rate=48000, level=-18, kind='tone', frequency=1000,
-             settle=0.75, measure=1.0):
+             settle=0.75, measure=1.0, max_level=-3):
     if rate not in (44100, 48000, 96000):
         raise ValueError('Supported rates: 44100, 48000, 96000 Hz')
-    if not math.isfinite(level) or not -60 <= level <= -3:
-        raise ValueError('Peak level must be between -60 and -3 dBFS')
+    # max_level exists for the Dwarf file-player source, where the stimulus
+    # enters the plugin digitally and the old ADC-protection cap does not apply.
+    if not math.isfinite(max_level) or not -3 <= max_level <= -0.1:
+        raise ValueError('max_level must be between -3 and -0.1 dBFS')
+    if not math.isfinite(level) or not -60 <= level <= max_level:
+        raise ValueError(f'Peak level must be between -60 and {max_level:g} dBFS')
     if not 0.25 <= settle <= 10 or not 0.25 <= measure <= 10:
         raise ValueError('Settle/measurement duration must be 0.25..10 seconds')
     if not math.isfinite(frequency) or not 20 <= frequency <= min(20000, rate * .45):
@@ -343,7 +347,8 @@ def sounddevice():
     return sd
 
 
-def record(directory, input_device, output_device, output_channel=1, input_channel=1, label=''):
+def record(directory, input_device, output_device, output_channel=1, input_channel=1, label='',
+           play=True, pad_seconds=10.0):
     sd = sounddevice()
     directory = Path(directory)
     recording = directory / 'recording.wav'
@@ -355,27 +360,48 @@ def record(directory, input_device, output_device, output_channel=1, input_chann
         raise ValueError('Stimulus/plan changed before playback')
     if output_channel not in (1, 2) or input_channel not in (1, 2):
         raise ValueError('Scarlett channels must be 1 or 2')
+    if not play and output_device is not None:
+        raise ValueError('--no-playback does not use an output device; pass None')
     try:
         input_info = dict(sd.query_devices(input_device))
-        output_info = dict(sd.query_devices(output_device))
-        if input_info['hostapi'] != output_info['hostapi']:
-            raise ValueError('Input and output must use the same host API')
-        mismatch = [info['name'] for info in (input_info, output_info)
-                    if round(info.get('default_samplerate') or 0) != rate]
-        if mismatch:
-            print(f'WARNING: device default sample rate differs from {rate} Hz: {", ".join(mismatch)};'
-                  f' the host mixer may resample and distort the sweep near Nyquist.'
-                  f' Set the device to {rate} Hz in the system sound settings.')
+        if play:
+            if output_device is None:
+                raise ValueError('Playback mode needs an output device index')
+            output_info = dict(sd.query_devices(output_device))
+            if input_info['hostapi'] != output_info['hostapi']:
+                raise ValueError('Input and output must use the same host API')
+            mismatch = [info['name'] for info in (input_info, output_info)
+                        if round(info.get('default_samplerate') or 0) != rate]
+            if mismatch:
+                print(f'WARNING: device default sample rate differs from {rate} Hz: {", ".join(mismatch)};'
+                      f' the host mixer may resample and distort the sweep near Nyquist.'
+                      f' Set the device to {rate} Hz in the system sound settings.')
+        else:
+            output_info = None
+            mismatch = [info['name'] for info in (input_info,)
+                        if round(info.get('default_samplerate') or 0) != rate]
+            if mismatch:
+                print(f'WARNING: input device default sample rate differs from {rate} Hz: '
+                      f'{", ".join(mismatch)}; the host mixer may resample and distort the '
+                      f'sweep near Nyquist. Set the device to {rate} Hz in the system sound settings.')
         sd.check_input_settings(device=input_device, channels=2, dtype='float32', samplerate=rate)
-        sd.check_output_settings(device=output_device, channels=2, dtype='float32', samplerate=rate)
+        if play:
+            sd.check_output_settings(device=output_device, channels=2, dtype='float32', samplerate=rate)
     except sd.PortAudioError as error:
         raise RuntimeError(str(error)) from error
-    playback = np.zeros((len(stimulus), 2), dtype=np.float32)
-    playback[:, output_channel - 1] = stimulus
-    print(f'Playing {len(stimulus)/rate:.1f} s on output {output_channel}; recording both inputs at {rate} Hz.')
     try:
-        audio = sd.playrec(playback, samplerate=rate, channels=2, dtype='float32',
-                           device=(input_device, output_device), blocking=True)
+        if play:
+            playback = np.zeros((len(stimulus), 2), dtype=np.float32)
+            playback[:, output_channel - 1] = stimulus
+            print(f'Playing {len(stimulus)/rate:.1f} s on output {output_channel}; recording both inputs at {rate} Hz.')
+            audio = sd.playrec(playback, samplerate=rate, channels=2, dtype='float32',
+                               device=(input_device, output_device), blocking=True)
+        else:
+            frames = len(stimulus) + round(pad_seconds * rate)
+            print(f'Dwarf plays the file; recording {frames/rate:.1f} s on both inputs at {rate} Hz '
+                  f'({pad_seconds:.1f} s start padding). Start the Dwarf playback right after Enter.')
+            audio = sd.rec(frames, samplerate=rate, channels=2, dtype='float32',
+                           device=input_device, blocking=True)
         status = str(sd.get_status())
     except sd.PortAudioError as error:
         raise RuntimeError(str(error)) from error
@@ -384,7 +410,9 @@ def record(directory, input_device, output_device, output_channel=1, input_chann
     sf.write(str(recording), audio, rate, subtype='FLOAT')
     metadata = dict(recording_sha256=sha(recording), input_device=input_info,
                     output_device=output_info, hostapis=sd.query_hostapis(),
-                    output_channel=output_channel, analyzed_input_channel=input_channel,
+                    output_channel=output_channel if play else None,
+                    analyzed_input_channel=input_channel, playback=play,
+                    pad_seconds=pad_seconds if not play else None,
                     label=label, stream_status=status, rate_mismatch=bool(mismatch),
                     note='No hardware gain/monitor/phantom controls were changed')
     write_json(recording.with_suffix('.json'), metadata)
@@ -404,13 +432,21 @@ def main(argv=None):
         sub.add_argument('--frequency', type=float, default=1000)
         sub.add_argument('--settle', type=float, default=.75)
         sub.add_argument('--measure', type=float, default=1)
+        sub.add_argument('--max-level', type=float, default=-3,
+                         help='Allow peaks above -3 dBFS (Dwarf file-player source)')
         if name == 'run':
             sub.add_argument('--input-device', type=int, required=True)
-            sub.add_argument('--output-device', type=int, required=True)
+            sub.add_argument('--output-device', type=int)
             sub.add_argument('--output-channel', type=int, choices=(1, 2), default=1)
             sub.add_argument('--input-channel', type=int, choices=(1, 2), default=1)
             sub.add_argument('--label', default='')
             sub.add_argument('--baseline', type=Path)
+            sub.add_argument('--no-playback', action='store_true',
+                             help='Record only; the MOD Dwarf plays the generated '
+                                  'stimulus file through the pedalboard')
+            sub.add_argument('--pad', type=float, default=10,
+                             help='Extra recording seconds in --no-playback mode '
+                                  'to cover the manual playback start')
     sub = commands.add_parser('analyze')
     sub.add_argument('--session', type=Path, required=True)
     sub.add_argument('--recording', type=Path, required=True)
@@ -429,11 +465,16 @@ def main(argv=None):
             except sd.PortAudioError as error:
                 raise RuntimeError(str(error)) from error
         elif args.command in ('generate', 'run'):
-            plan = generate(args.output, args.rate, args.level, args.kind, args.frequency, args.settle, args.measure)
+            plan = generate(args.output, args.rate, args.level, args.kind,
+                            args.frequency, args.settle, args.measure,
+                            max_level=args.max_level)
             print(f'Generated {len(plan["segments"])} segments: {args.output}/stimulus.wav and plan.json')
             if args.command == 'run':
-                wav = record(args.output, args.input_device, args.output_device, args.output_channel,
-                             args.input_channel, args.label)
+                if not args.no_playback and args.output_device is None:
+                    raise ValueError('run needs --output-device unless --no-playback is set')
+                wav = record(args.output, args.input_device, args.output_device,
+                             args.output_channel, args.input_channel, args.label,
+                             play=not args.no_playback, pad_seconds=args.pad)
                 result = analyze(args.output, wav, args.input_channel, args.baseline)
                 print(f'Analysis valid={result["valid"]}: {args.output}/REPORT.md')
                 return 0 if result['valid'] else 1

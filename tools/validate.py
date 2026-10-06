@@ -62,6 +62,14 @@ def main():
     css=(bundle/'modgui/green-stripe.css').read_text(encoding='utf-8')
     for asset in re.findall(r'/resources/(assets/[^{}\)]+)',css):
         assert (bundle/'modgui'/asset).is_file(),f'Missing control asset: {asset}'
+    for variant in ('mono','stereo'):
+        html=(bundle/f'modgui/icon-{variant}.html').read_text(encoding='utf-8')
+        srcs=re.findall(r'src="([^"]+)"',html)
+        for src in srcs:
+            assert src.startswith('/resources/') and src.endswith('{{{ns}}}'),\
+                f'{variant}: img src must use /resources/{{{{ns}}}} form: {src}'
+            asset=src[len('/resources/'):-len('{{{ns}}}')]
+            assert (bundle/'modgui'/asset).is_file(),f'Missing gui asset: {asset}'
     try:
         import rdflib
     except ImportError:

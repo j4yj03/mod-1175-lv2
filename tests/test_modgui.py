@@ -92,7 +92,8 @@ def main():
             assert on_image != off_image, 'Lamp did not follow bypass'
             bypass.click()
             assert page.locator('.gs-lamp').evaluate('e=>getComputedStyle(e).backgroundImage') == on_image
-            # All three handles must move the panel; none may emit a parameter change.
+            # All five frame handles must move the panel; none may emit a
+            # parameter change, and no rail may cover a control.
             def drag_panel(handle, ox, oy):
                 box = handle.bounding_box()
                 page.mouse.move(box['x']+ox, box['y']+oy); page.mouse.down()
@@ -101,12 +102,41 @@ def main():
             n_before = page.evaluate('changes.length')
             last_x = after['x']
             for name, (handle, ox, oy) in {
-                    'top rail': (page.locator('[mod-role=drag-handle]').first, 80, 12),
+                    'top rail': (page.locator('.gs-drag-top'), 80, 12),
+                    'left rail': (page.locator('.gs-drag-left'), 4, 60),
+                    'right rail': (page.locator('.gs-drag-right'), 25, 60),
                     'bottom rail': (page.locator('.gs-drag-bottom'), 80, 4),
-                    'footer plate': (page.locator('.gs-plate'), 60, 24)}.items():
+                    'footer plate': (page.locator('.gs-plate'), 60, 8)}.items():
                 moved = drag_panel(handle, ox, oy)
                 assert moved['x'] != last_x, name+' cannot drag panel'
                 last_x = moved['x']
+            for name in ('.gs-drag-top', '.gs-drag-left', '.gs-drag-right', '.gs-drag-bottom'):
+                assert page.locator(name).evaluate('e => getComputedStyle(e).cursor') == 'move', \
+                    name+' is not a move cursor'
+            # Frame rails tile the padding ring; controls and jacks stay uncovered.
+            assert page.evaluate('''() => {
+              const panel=document.querySelector('.gs76').getBoundingClientRect();
+              const strip=n=>{const b=document.querySelector(n).getBoundingClientRect();
+                let covered=0;
+                for(let x=b.x; x<=b.x+b.width; x+=6)
+                  for(let y=b.y; y<=b.y+b.height; y+=6){
+                    const e=document.elementFromPoint(x,y);
+                    if(e&&e.closest('.gs-drag'))covered++}
+                return {x:b.x,y:b.y,w:b.width,h:b.height,covered}};
+              const t=strip('.gs-drag-top'),l=strip('.gs-drag-left'),
+                    r=strip('.gs-drag-right'),b=strip('.gs-drag-bottom');
+              const tiled=Math.abs(t.w-(panel.width-2))<1
+                && Math.abs(t.h-26)<.5 && Math.abs(l.w-30)<.5 && Math.abs(b.h-9)<.5
+                && Math.abs(l.y-(t.y+t.h))<.5 && Math.abs(l.y+l.h-b.y)<.5
+                && Math.abs(r.x+r.w-(t.x+t.w))<.5
+                && t.covered>0 && l.covered>0 && r.covered>0 && b.covered>0;
+              const controls=[...document.querySelectorAll(
+                '[mod-role=input-control-port],[mod-role=bypass],.gs-jack')]
+                .every(c=>{const q=c.getBoundingClientRect();
+                  const e=document.elementFromPoint(q.x+q.width/2,q.y+q.height/2);
+                  return !e||!e.closest('.gs-drag')});
+              return tiled&&controls;
+            }'''), 'Frame rails must tile the ring and leave controls uncovered'
             assert page.evaluate('changes.length') == n_before, 'Panel drag emitted a parameter change'
             assert page.evaluate('changes.every(x=>Number.isFinite(x.value))')
             assert not errors, errors
