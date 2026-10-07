@@ -568,6 +568,31 @@ Gewichte = ständig klemmend). Der wirksamere Hebel ist der
 **Startwert-Prädikator** (Iterationen 2,0–2,55 gemessen): Ziel 1,3–1,7
 Iterationen je Probe ≈ −5–15 % Gesamt-CPU.
 
+### Startwert-Prädikator + Toleranz (2026-10-07, umgesetzt und gemessen)
+
+Umsetzung (C++ und EEL2 identisch): Startwert
+`x0 = flux + 2h·voltage + (flux − px2)` (Spannungsschritt plus gemessener
+letzter Flux-Inkrement, neuer Zustand `px2` = Lösung von vor zwei Samples)
+und Konvergenztoleranz 1e-14 → 1e-10 (relativ). Gemessen am A35
+(Serie-B-Bedingungen, Iter/Probe und s/s):
+
+| Profil | 997 Hz vor/nach | 20 Hz vor/nach | Iter 997 vor/nach | Iter 20 vor/nach |
+|---|---|---|---|---|
+| 60s | 0,4597 / 0,4521 | 0,4542 / 0,4546 | 2,55 / 2,01 | 2,00 / 2,00 |
+| 80s | 0,4632 / 0,4531 | 0,4569 / 0,4566 | 2,02 / 2,00 | 2,00 / 2,00 |
+| 00s | 0,4713 / 0,4622 | 0,4816 / 0,4819 | 2,02 / 2,00 | 2,00 / 2,07 |
+| Sym | 0,4567 / 0,4523 | 0,4541 / 0,4540 | 2,00 / 2,00 | 2,00 / 2,00 |
+
+CPU −0,5 bis −1,5 %; die harten Fälle (60s/997 Hz, 2,55 Iterationen) fallen
+auf 2,01. **Strukturbefund:** die Iterationszahl ist bei 2 strukturell
+gebunden — die quadratische Konvergenz bringt den Startfehler (≈ 2e-5 bei
+997 Hz durch lineare Extrapolation) erst mit dem zweiten Schritt unter die
+Toleranz; die Quellstufe des neuen Samples ist a-priori unbekannt. Eine
+Iterationszahl von 1 wäre erst bei Toleranz ≈ 1e-6 erreichbar (Lösungsfehler
+≈ −120 dB) — Qualitätsentscheidung, offen. make test und Parität
+(430+76, max 0 FS) PASS; die 1-%-Anker unverändert. Checksummen/Baselines
+verschieben sich (Rundung) — Render- und Gerätevergleiche erneuern.
+
 ### Build-Tuning (2026-10-07, gemessen)
 
 `-mcpu=cortex-a35` am Cross-Bench (997 Hz, sonst wie Serie B, nach der

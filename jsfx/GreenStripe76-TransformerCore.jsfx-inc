@@ -30,8 +30,8 @@ function gs_xf_prepare(rate which c) local(rb j w decay angle frequency co r mag
   c[28]=0.5*(sum+sqrt(max(0,sum*sum-4*product))); c[29]=sum-c[28];
   c[30]=c[12]/rb*c[20]/c[19];
 );
-function gs_xf_core_reset() instance(flux relax voltage stops x1 y1 y2) (
-  flux=relax=voltage=x1=y1=y2=0; memset(stops,0,14);
+function gs_xf_core_reset() instance(flux relax voltage stops x1 y1 y2 px2) (
+  flux=relax=voltage=x1=y1=y2=px2=0; memset(stops,0,14);
 );
 function gs_xf_reset(which) instance(active requested blend) (
   this.gs_xf_core_reset(); active=requested=which; blend=which ? 1 : 0;
@@ -72,16 +72,16 @@ local(value z j trial stop) (
   );
   value;
 );
-function gs_xf_core(input c) instance(flux relax voltage stops deriv x1 y1 y2)
+function gs_xf_core(input c) instance(flux relax voltage stops deriv x1 y1 y2 px2)
 local(source rb bound lo hi x stop i residual next z j trial raw y) (
   source=input*c[19]; rb=abs((1-c[24])*relax+c[24]*flux)/((1+c[24])*c[4]);
   bound=abs(flux+c[21]*voltage)+c[21]*(abs(source)+c[22]*(c[25]+rb))/c[23]+0.000000000001;
-  lo=-bound; hi=bound; x=gs_bound(flux+2*c[21]*voltage,lo,hi); stop=0;
+  lo=-bound; hi=bound; x=gs_bound(flux+2*c[21]*voltage+(flux-px2),lo,hi); stop=0;
   loop(40,
     !stop ? (
       i=this.gs_xf_current(x,c,0);
       residual=x-flux-c[21]*(voltage+(source-c[22]*i)/c[23]);
-      abs(residual)<=0.00000000000001*(1+abs(x)) ? stop=1 : (
+      abs(residual)<=0.0000000001*(1+abs(x)) ? stop=1 : (
         residual>0 ? hi=x : lo=x;
         next=x-residual/(1+c[21]*c[22]*deriv/c[23]);
         x=next>lo && next<hi ? next : 0.5*(lo+hi);
@@ -98,7 +98,7 @@ local(source rb bound lo hi x stop i residual next z j trial raw y) (
   ) : (
     i=this.gs_xf_current(x,c,1);
   );
-  flux=gs_zap(x); voltage=gs_zap((source-c[22]*i)/c[23]);
+  px2=flux; flux=gs_zap(x); voltage=gs_zap((source-c[22]*i)/c[23]);
   raw=voltage*c[30]; y=c[28]*raw+c[29]*x1-c[26]*y1-c[27]*y2;
   x1=raw; y2=y1; y1=gs_zap(y); y;
 );

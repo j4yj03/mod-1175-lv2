@@ -76,12 +76,12 @@ struct TransformerSolverStats {
 #endif
 
 struct TransformerCore {
-    double flux, relax, voltage, stops[14], x1, y1, y2;
+    double flux, relax, voltage, stops[14], x1, y1, y2, px2;
 #ifdef GS76_TRANSFORMER_STATS
     TransformerSolverStats stats;
 #endif
     void reset() {
-        flux=relax=voltage=x1=y1=y2=0;
+        flux=relax=voltage=x1=y1=y2=px2=0;
         for (unsigned j=0; j<14; ++j) stops[j]=0;
 #ifdef GS76_TRANSFORMER_STATS
         stats.clear();
@@ -140,7 +140,8 @@ struct TransformerCore {
             ((1.0+c.relaxation)*c.p->relax_l_h);
         const double bound=std::abs(flux+c.h*voltage)+c.h*
             (std::abs(source)+c.ra*(c.memoryBound+rb))/c.denominator+1e-12;
-        double lo=-bound, hi=bound, x=bounded(flux+2.0*c.h*voltage,lo,hi);
+        double lo=-bound, hi=bound;
+        double x=bounded(flux+2.0*c.h*voltage+(flux-px2),lo,hi);
 #ifdef GS76_TRANSFORMER_STATS
         unsigned usedIterations=0;
 #endif
@@ -152,7 +153,7 @@ struct TransformerCore {
 #endif
             i=current(x,c,derivative,false);
             const double residual=x-flux-c.h*(voltage+(source-c.ra*i)/c.denominator);
-            if (std::abs(residual)<=1e-14*(1.0+std::abs(x))) { converged=true; break; }
+            if (std::abs(residual)<=1e-10*(1.0+std::abs(x))) { converged=true; break; }
             if (residual>0) hi=x; else lo=x;
             const double next=x-residual/(1.0+c.h*c.ra*derivative/c.denominator);
             x=next>lo && next<hi ? next : 0.5*(lo+hi);
@@ -176,7 +177,7 @@ struct TransformerCore {
         } else {
             i=current(x,c,derivative,true);
         }
-        flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
+        px2=flux; flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
         const double raw=voltage*c.outputScale;
         const double y=c.b0*raw+c.b1*x1-c.a1*y1-c.a2*y2;
         x1=raw; y2=y1; y1=zap(y);

@@ -156,10 +156,17 @@ Gerätevergleich):
   zu optimistisch (die kleinen Schwellen haben die großen Gewichte und
   klemmen ständig). Rohdaten: `test-results/serie-b` (bench_stats).
   Umsetzung nur noch gemeinsam mit dem Startwert-Prädikator lohnend.
-- [ ] Startwert-Prädikator 2. Ordnung + Konvergenz-Toleranz 1e-14 → 1e-10:
-  Iterationen 2,0–2,55 je Probe (gemessen); Ziel 1,3–1,7. Erwartung
-  −15–35 % des Solver-Loops ≈ −5–15 % Gesamt-CPU; voller Paritätszyklus
-  (Rundung ändert sich), 1-%-Anker und Cap-Quote vérifizieren.
+- [x] Startwert-Prädikator + Konvergenz-Toleranz 1e-14 → 1e-10: **umgesetzt**
+  (C++ und EEL2; Prädikator = Spannungsschritt + gemessener letzter
+  Flux-Inkrement, px2-Zustand). Gemessen am A35: Iterationen 2,55 → 2,01 in
+  den harten Fällen (60s/997 Hz), sonst 2,00–2,07; CPU −0,5 bis −1,5 %.
+  make test + Parität (430+76, max 0 FS) PASS; 1-%-Anker unverändert.
+  **Strukturbefund:** die Iterationszahl ist durch die quadratische
+  Konvergenz bei 2 strukturell gebunden (der Startfehler müsste ≤ 1e-10
+  liegen, die Quellstufe ist a-priori unbekannt). Option für 1 Iteration:
+  Toleranz 1e-6 (Lösungsfehler ≈ −120 dB, hörbar unsicher) — Qualitäts-
+  entscheidung, nicht umgesetzt. Checksummen/Baselines verschieben sich
+  (Rundung) — Render- und Gerätevergleiche erneuern.
 - [ ] Startwert-/Steigungsverbesserung (Prädiktor zweiter Ordnung) bzw.
   gelockerte Konvergenztoleranz (aktuell 1e-14 relativ) prüfen; Ziel
   Iterationen < 2 je Probe.
