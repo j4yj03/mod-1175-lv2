@@ -473,7 +473,7 @@ unterzubringen**, während vier Instanzen None/OS Off klar unkritisch bleiben.
 
 ### Reduktionshebel (Skizze 2026-10-07, Umsetzung offen)
 
-Aus dieser Messung folgt die Hebelreihenfolge; Details und Reihenfolge liegen
+~~Aus dieser Messung folgt die Hebelreihenfolge; Details und Reihenfolge liegen
 in `TODO.md` (Abschnitt CPU-Reduktion Transformator). Kernpunkte: die
 Iterationszahl ist kein Hebel (2,0–2,6/Sample, 0 % am 40er-Limit), die **14
 Stop-Zweige je Auswertung** dominieren; paritätsneutral sind die Einsparung
@@ -482,7 +482,14 @@ LTO) und NEON 2-Lane für Stereo; Zweig-Spezialisierung und Toleranz kosten
 den vollen Paritätszyklus; OS-Entkopplung und Kennlinien-LUT sind
 Vertragsfragen (LUT nur nach A35-Microbench — die softClip-Messung oben zeigt,
 dass eine LUT auch langsamer sein kann). Serie B auf dem Dwarf ist die
-Entscheidungsbasis.
+Entscheidungsbasis.~~
+
+*Widerlegt/überholt (2026-10-07, siehe Serie B, Stop-Zweig-Reachability und
+Toleranz-Abschnitte):* die Iterationszahl **ist** ein Hebel über die
+Toleranz (1e-6: −10–12 % bei 00s/Sym); die Stop-Zweig-Spezialisierung
+bringt nur 1–2 % (2/14 Zweige klemmen nie); die Doppel-Auswertung war vom
+Compiler bereits eliminiert (~0 %); Build-Tuning bringt −1,2 bis −3,6 %.
+Aktuelle Hebelreihenfolge: `TODO.md`.
 
 ### Nachweis: der Diagnosezähler ist audioneutral
 
@@ -540,11 +547,13 @@ Einheit s/s (Prozess-CPU je Audiosekunde; 1,0 = ein Kern). Kernbefunde:
    x86-Werte aus 5c wurden mit der alten Semantik gemessen — historisch
    belassen.
 
-**Verbleibende Hebel (neu sortiert nach Potenzial/Risiko):** Stop-Zweig-
-Spezialisierung (30–50 % des Transformatorblocks, voller Paritätszyklus),
-NEON 2-Lane (bis ~2× des Blocks, aber datenabhängige Solver-Verzweigung
-braucht Maskierung — hohes Implementierungsrisiko), OS-Entkopplung
-(Vertragsfrage). Die Doppel-Auswertung ist damit verfeuert.
+**Verbleibende Hebel (nach den Messungen neu sortiert):** Stop-Zweig-
+Spezialisierung (~~30–50 %~~ **gemessen 1–2 %** — 12/13 klemmen nie,
+voller Paritätszyklus), Toleranz 1e-6 (**umgesetzt**, −10–12 % bei
+00s/Sym), NEON 2-Lane (bis ~2× des Blocks, aber datenabhängige
+Solver-Verzweigung braucht Maskierung — hohes Implementierungsrisiko),
+OS-Entkopplung (Vertragsfrage, Benutzer will oversamplten Transformator).
+Die Doppel-Auswertung ist damit verfeuert.
 
 ### Stop-Zweig-Reachability (2026-10-07, gemessen)
 
@@ -592,6 +601,38 @@ Iterationszahl von 1 wäre erst bei Toleranz ≈ 1e-6 erreichbar (Lösungsfehler
 ≈ −120 dB) — Qualitätsentscheidung, offen. make test und Parität
 (430+76, max 0 FS) PASS; die 1-%-Anker unverändert. Checksummen/Baselines
 verschieben sich (Rundung) — Render- und Gerätevergleiche erneuern.
+
+### Toleranz 1e-6 (2026-10-07, umgesetzt, gemessen — Rückpfad dokumentiert)
+
+Die Strukturbefund-Folge: Toleranz 1e-10 → **1e-6 relativ** (Lösungsfehler
+≈ −120 dB, unter dem 24-bit-LSB bei Normalpegel; die 1-%-Anker und alle
+Tests bleiben PASS, Parität 430+76 max 0 FS). Gemessen am A35
+(Serie-B-Bedingungen; `test-results/toleranz-1e6/`):
+
+| Profil | 997 Hz s/s (Iter) | 20 Hz s/s (Iter) | CPU gegen 1e-10 |
+|---|---|---|---|
+| 60s | 0,4532 (1,99) | 0,4535 (1,99) | ~−1 % |
+| 80s | 0,4559 (1,99) | 0,4587 (1,99) | −1,6 % |
+| 00s | 0,4159 (**1,57**) | 0,4639 (1,91) | **−10 %** |
+| Sym | 0,3985 (**1,51**) | 0,4078 (**1,56**) | **−10 bis −12 %** |
+
+Die sauberen Profile (00s/Sym) fallen auf ~1,5 Iterationen (−10–12 % CPU);
+die tief saturierenden (60s/80s) bleiben bei ~2 (die starke Nichtlinearität
+braucht den zweiten Newton-Schritt). Selbst am Input-Clamp bleibt alles
+≤ 1,99 Iterationen, 0 xruns.
+
+**Rückpfad (falls die Qualitätsshwellen-Entscheidung zurückgenommen wird):**
+- Toleranz: `src/dsp/Transformer.hpp` (process, residual check)
+  `1e-6*(1.0+std::abs(x))` → `1e-10*(1.0+std::abs(x))`;
+  `jsfx/GreenStripe76-TransformerCore.jsfx-inc` (gs_xf_core)
+  `0.000001*(1+abs(x))` → `0.0000000001*(1+abs(x))`.
+- Optional auch der Prädikator (`px2`-Zustand, Startwert-Term und
+  `px2=flux`-Nachführung in beiden Dateien) — dann auf den Stand
+  `a79fbea` (git) zurücksetzen. Die Toleranz und der Prädikator sind
+  unabhängig revertierbar; die Toleranz allein genügt für den größten Teil
+  des Gewinns.
+- Qualitätsnachweis bei Revert-Richtungswechsel: 1-%-Anker und die
+  Checksummen-A/B erneut fahren.
 
 ### Build-Tuning (2026-10-07, gemessen)
 

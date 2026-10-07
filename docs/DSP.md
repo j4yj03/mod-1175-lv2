@@ -298,7 +298,9 @@ Presetprüfung 0.4.0: Der Newton-Nenner wird in beiden Engines ausdrücklich
 als `denominator=1+alpha; denominator-=alpha*derivative` ausgewertet.
 Der vorherige EEL2-Gesamtausdruck konnte die Rundung verändern und bei
 Preset 29 Mono eine andere Newton-/Bisektionsentscheidung auslösen.
-Keine neue Iterationszahl oder Toleranz; Signalbeleg in `EXTERN.md`.
+~~Keine neue Iterationszahl oder Toleranz; Signalbeleg in `EXTERN.md`.~~
+*(Überholt 2026-10-07: Startwert-Prädikator und Toleranz 1e-6 relativ sind
+umgesetzt — siehe „Numerisches Modell".)*
 
 Bei geschlossenem Gleichrichter entlädt sich der Zustand exponentiell:
 
@@ -927,8 +929,14 @@ Host → Off/2x/4x-Interpolation → Input Gain → Transformator
 `src/dsp/Transformer.hpp` und `jsfx/GreenStripe76-TransformerCore.jsfx-inc`
 implementieren dieselbe implizite Trapez-Zustandsform wie der unabhängige
 Offlinekern. Quelle, Primär-/Sekundärwiderstände und Last sind gekoppelt.
-Der skalare monotone Solver hat maximal **40 Newton-/Bisektionsschritte**.
-Zustände werden erst nach der Lösung fortgeschrieben. Keine Audioallokationen,
+Der skalare monotone Solver hat maximal **40 Newton-/Bisektionsschritte**,
+Startwert `flux + 2h·voltage + (flux − px2)` (Prädikator, `px2` = Lösung von
+vor zwei Samples) und Konvergenztoleranz **1e-6 relativ** — gelöst wird
+dieselbe Gleichung, nur Iterationsstart/-abbruch haben sich geändert.
+~~Toleranz 1e-14 relativ ohne Prädikator~~ *(überholt 2026-10-07; Rückpfad in
+PERFORMANCE „Toleranz 1e-6")*. Iterationen je Probe gemessen: 1,5–2,0
+(00s/Sym ~1,5, 60s/80s ~2,0; vorher 2,0–2,55). Zustände werden erst nach der
+Lösung fortgeschrieben. Keine Audioallokationen,
 Dateizugriffe oder offenen Konvergenzschleifen; Koeffizienten für alle vier
 Profile und drei OS-Stufen werden bei Initialisierung vorbereitet.
 

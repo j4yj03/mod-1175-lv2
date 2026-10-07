@@ -81,7 +81,7 @@ local(source rb bound lo hi x stop i residual next z j trial raw y) (
     !stop ? (
       i=this.gs_xf_current(x,c,0);
       residual=x-flux-c[21]*(voltage+(source-c[22]*i)/c[23]);
-      abs(residual)<=0.0000000001*(1+abs(x)) ? stop=1 : (
+      abs(residual)<=0.000001*(1+abs(x)) ? stop=1 : (
         residual>0 ? hi=x : lo=x;
         next=x-residual/(1+c[21]*c[22]*deriv/c[23]);
         x=next>lo && next<hi ? next : 0.5*(lo+hi);

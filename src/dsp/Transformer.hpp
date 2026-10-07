@@ -153,7 +153,7 @@ struct TransformerCore {
 #endif
             i=current(x,c,derivative,false);
             const double residual=x-flux-c.h*(voltage+(source-c.ra*i)/c.denominator);
-            if (std::abs(residual)<=1e-10*(1.0+std::abs(x))) { converged=true; break; }
+            if (std::abs(residual)<=1e-6*(1.0+std::abs(x))) { converged=true; break; }
             if (residual>0) hi=x; else lo=x;
             const double next=x-residual/(1.0+c.h*c.ra*derivative/c.denominator);
             x=next>lo && next<hi ? next : 0.5*(lo+hi);

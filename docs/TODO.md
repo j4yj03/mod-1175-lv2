@@ -102,13 +102,18 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
 
 ## Offen — CPU-Reduktion Transformator (Skizze, nach Risiko sortiert)
 
-Grundlage: PERFORMANCE 5c (x86) — nicht die Iterationszahl ist der Hebel
+~~Grundlage: PERFORMANCE 5c (x86) — nicht die Iterationszahl ist der Hebel
 (2,0–2,6 je Probe, 0 % am 40er-Limit), sondern die **14 Stop-Zweige je
-Auswertung**; OS multipliziert (4× ≈ ×4). **A35-Bestätigung (2026-10-07,
-CPU-Matrix, MESSTECHNIK 1f):** die Profilreihung am Gerät ist Sym ≈ 00s >
-80s ≈ 60s (66/63/57/57 % Median bei 20 Hz-Volldreher, +20–28 Punkte über
-None) — der „lineare" Sym ist am teuersten, die Stop-Zweig-Struktur dominiert.
-Entscheidungsbasis: Serie B (isolierter Bench) für die Ursache je Profil.
+Auswertung**; OS multipliziert (4× ≈ ×4).~~
+*(Widerlegt 2026-10-07: die Stop-Zweig-Spezialisierung bringt nur 1–2 % —
+die Zweige 12/13 klemmen nie; die Iterationszahl ist über die Toleranz doch
+ein Hebel — 1e-6 umgesetzt, −10–12 % bei 00s/Sym.)*
+**A35-Bestätigung (2026-10-07, CPU-Matrix, MESSTECHNIK 1f):** die
+Profilreihung am Gerät ist Sym ≈ 00s > 80s ≈ 60s (66/63/57/57 % Median bei
+20 Hz-Volldreher, +20–28 Punkte über None) — der „lineare" Sym ist am
+teuersten, die Stop-Zweig-Struktur dominiert die *Kostenverteilung*, nicht
+die *Reduktionshebel*. Entscheidungsbasis: Serie B (gemessen) und die
+Toleranz-Messung (PERFORMANCE).
 
 Paritätsneutral (bit-identisch machbar):
 
@@ -188,10 +193,12 @@ Auto-Deaktivierung bei Compression Off (bewusst nicht vorgesehen).
 
 Vorgeschlagene Reihenfolge (aktualisiert nach Serie B + Build-Tuning):
 Build-Tuning (`-mcpu=cortex-a35` in die MPB-Rezeptur, −1,2 bis −3,6 %,
-jetzt umsetzbar) → **Stop-Zweig-Spezialisierung** (30–50 % des Blocks,
-voller Paritätszyklus, nächste Runde) → NEON (Maskierungsrisiko, erst
-danach bewerten) → OS-Entkopplung (Vertragsfrage). Doppel-Auswertung
-verfeuert (~0 %).
+jetzt umsetzbar) → ~~Stop-Zweig-Spezialisierung (30–50 % des Blocks)~~
+**gemessen 1–2 %** (12/13 Zweige klemmen nie — nur mit dem
+Startwert-Prädikator zusammen sinnvoll) → NEON (Maskierungsrisiko, erst
+danach bewerten) → OS-Entkopplung (Vertragsfrage, zurückgestellt —
+Transformator bleibt oversampled). Doppel-Auswertung verfeuert (~0 %),
+Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).
 
 ## Offen — Projektinfrastruktur
 
