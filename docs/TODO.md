@@ -200,7 +200,40 @@ danach bewerten) → OS-Entkopplung (Vertragsfrage, zurückgestellt —
 Transformator bleibt oversampled). Doppel-Auswertung verfeuert (~0 %),
 Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).
 
+## Offen — Cross-DAW-Variante des LV2-Plugins (2026-10-07 diskutiert)
+
+Ausgangslage: der DSP-Kern ist frameworkfrei (C++11, nur libm, kein UI-/OS-Code);
+der Host-Anteil steckt nur im dünnen LV2-Wrapper `src/lv2_plugin.cpp`. Drei
+Wege, aufsteigend nach Aufwand:
+
+- [ ] **Weg 1 — LV2 direkt in REAPER laden** (nativ seit 6.x, auch Windows):
+  es fehlt nur ein Windows-Build des Bundles (`.dll` statt `.so`, MinGW-w64);
+  kleine Toolchain-Arbeit. Risikopunkt: Windows-libm rundet stellenweise
+  anders als glibc → C++↔EEL2-Bit-Parität auf Windows neu verifizieren
+  (`-ffp-contract=off`, kein fast-math bleiben Pflicht; Paritätssatz komplett
+  laufen lassen, kein neuer Fall nötig). Damit wäre REAPER zusätzlich zum
+  JSFX-Pfad auch mit dem C++-Kern bedient.
+- [ ] **Weg 2 — CLAP-Wrapper** um denselben Kern: C-API ähnlich LV2,
+  überschaubarer Wrapper; Presets als State-Chunk statt TTL einbetten; Ports
+  in `tools/generate.py` als weitere „Ecke" des Parameter-Dreiecks
+  (LV2/JSFX/RPL → +CLAP) erzeugen, keine Handports. GUI zunächst die
+  generische Host-UI. CLAP-Verbreitung prüfen, bevor VST3 angefasst wird.
+- [ ] **Weg 3 — VST3/AU**: deutlich mehr Protokoll (Processor/Controller-Split,
+  IDs, State) plus eigener GUI-Aufwand; nur sinnvoll, wenn CLAP nicht reicht
+  (AU wäre macOS-only).
+- [ ] Vor allen Wegen klären: Ziel-DAWs/Hosts konkret benennen (Benutzer);
+  Portindizes/-symbole/-URIs bleiben unverändert, neue Formate erhalten
+  eigene Descriptoren — keine Versionsbump-Pflicht für bestehende Pfade.
+  Revisionstreue nur mit belegter Parität behaupten; kein Cross-Build als
+  Geräteabnahme ausgeben.
+
 ## Offen — Projektinfrastruktur
+
+- [x] Revisionszähler eingeführt (2026-10-07, AGENTS): `data/model.json`
+  `version` + `revision`; jede Sourcecodeänderung (= alle Änderungen zwischen
+  zwei Nutzereingaben) ⇒ `revision` +1 und `tools/generate.py`; Anzeige in der
+  LV2-GUI unter Mono/Stereo (Fußzeilenplatte) und in der JSFX-GFX unten rechts
+  (`#gs_ver`). Aktueller Stand: **0.4.1 rev 1**.
 
 ## Ausstehende Verifikationen — Solver-Stand 1e-6 (2026-10-07)
 
@@ -210,10 +243,16 @@ und gepusht; Pin zeigt darauf. Offen in dieser Reihenfolge:
 
 - [ ] MPB-Build des 1e-6-Stands installieren, **SHA ≠ `66c835e8`** auf dem
   Gerät verifizieren, Audio-Stack neu starten.
-- [ ] REAPER-Renders (JSFX ist per Symlink aktuell): 28 Zustände
-  (Colour 0 × Typen + 24 Kombinationen) — die Bit-Verifikation läuft gegen
-  die fertigen C++-Referenzen (1e-6, Cross-Build-matching,
-  `/tmp/opencode/ref1e6` bzw. neu erzeugen).
+- [x] REAPER-Renders (JSFX ist per Symlink aktuell): 28 Zustände
+  (Colour 0 × Typen + 24 Kombinationen) — **bestanden (2026-10-07, Batch
+  `19_15_06`)**: alle 28 Zustände gegen die 1e-6-C++-Referenzen
+  (`/tmp/opencode/ref1e6`) bitgleich, Offset +3 Samples (REAPER-PDC der
+  2x-Latenz), schlechtester max|diff| 5,96×10⁻⁸ = 0,5 LSB. Die letzten
+  Transformator-Änderungen (Prädikator + Toleranz 1e-6) sind damit auch in
+  REAPER am vollen 64-s-Matrixprogramm bestätigt. Archiv:
+  `test-results/jsfx-render-1e6-20261007/`; die früheren Batches 16_17_10
+  und 16_57_58 sind Bisektionsläufe zur EEL2-`instance()`-Scope-Falle und
+  nicht Teil der Verifikation.
 - [ ] CPU-Matrix (36 Zustände) mit der 1e-6-Binary neu fahren und gegen die
   94ab2fa-Basis vergleichen; Erwartung: 00s/Sym −10–12 %, 60s/80s ~0.
 - [ ] `tools/render_jsfx.cpp` (ysfx-Offline-Renderer, Alternative zu den

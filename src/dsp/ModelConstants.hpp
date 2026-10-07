@@ -2,6 +2,7 @@
 #ifndef GREEN_STRIPE_MODEL_CONSTANTS_HPP
 #define GREEN_STRIPE_MODEL_CONSTANTS_HPP
 namespace greenstripe { namespace model {
+static const unsigned revision = 1;
 static const unsigned oversampling = 4;
 static const unsigned default_oversampling = 0;
 static const unsigned latency_2x_frames = 3;

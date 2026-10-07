@@ -6,10 +6,14 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 ## Zusammenfassung (Stand 2026-10-07)
 
-- **Produkt 0.4.1:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
+- **Produkt 0.4.1 rev 1:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
   2:1-Varianten), hörbare Eingangstransformatoren 60s/80s/00s plus None und
   die lineare Referenz Symmetric. DSP-Kern doppelpfadig (C++11/EEL2) mit
-  belegter Bit-Parität (506 Signalvergleiche, max 0 FS).
+  belegter Bit-Parität (506 Signalvergleiche, max 0 FS). **Revisionsregel
+  (AGENTS, verbindlich):** jede Sourcecodeänderung — alle Änderungen zwischen
+  zwei Nutzereingaben gelten als eine — erhöht `revision` in
+  `data/model.json` um +1; angezeigt in der LV2-GUI unter Mono/Stereo
+  (Fußzeilenplatte) und in der JSFX-GFX unten rechts.
 - **Am Gerät nachgewiesen (2026-10-07):** erste vollständige
   Transformator-Matrix aus digitaler Dwarf-Quelle — Anker exakt,
   Wiederholungsspreizung ≤ 0,01 dB, Sättigungsreihung 60s/80s/00s am
@@ -26,7 +30,12 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   den C++-Offline-Render verifiziert (max < 1 LSB, Offset −3 Samples =
   REAPER-PDC der 2x-Latenz) — JSFX↔C++-Parität erstmals am vollen
   Matrixprogramm belegt (MESSTECHNIK 1c,
-  `test-results/jsfx-render-ref-20261007`).
+  `test-results/jsfx-render-ref-20261007`). **1e-6-Stand nachgerechnet
+  (2026-10-07, Batch 19_15_06):** alle 28 Matrix-Zustände (Colour 0 × Typen +
+  24 Bank×Colour-Kombinationen) gegen die 1e-6-C++-Referenzen bitgleich
+  (Offset +3, max 0,5 LSB; `test-results/jsfx-render-1e6-20261007`) —
+  die letzte Transformator-Änderung (Prädikator + Toleranz 1e-6) ist damit
+  auch in REAPER am vollen Programm bestätigt.
 - **GUI am Gerät:** Logoquelle auf `/resources/…{{{ns}}}` korrigiert (Grund:
   DOM-Injection löst relative URLs gegen die Seiten-URL auf); Paneel jetzt am
   kompletten Rahmenring ziehbar (vier Leisten + Fußzeilenplatte, Cursor

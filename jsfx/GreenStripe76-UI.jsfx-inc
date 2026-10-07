@@ -91,7 +91,7 @@ local(top bh bw bx gap tick yy centre) (
 
 function gs_draw_ui(stereo)
 local(w h now idle decay groupW groupH top inL inR outL outR inRmsL inRmsR
-  rmsL rmsR inHoldL inHoldR holdL holdR inClipL inClipR clipL clipR grL grR activeOS linkText) (
+  rmsL rmsR inHoldL inHoldR holdL holdR inClipL inClipR clipL clipR grL grR activeOS linkText verW verH) (
   w=gfx_w; h=gfx_h; now=time_precise();
   idle=max(0,now-atomic_get(gs_audio_time)-0.1); decay=exp(-idle/0.35);
   // Fast snapshots feed the bars; the slow ~3 Hz snapshots feed every number.
@@ -147,4 +147,8 @@ local(w h now idle decay groupW groupH top inL inR outL outR inRmsL inRmsR
     gfx_x=14; gfx_y=h-24;
     gfx_printf("Ratio %s   Mix %.0f%%   Colour %.0f%%   %s",slider5==4 ? "ALL" : slider5==3 ? "20:1" : slider5==2 ? "12:1" : slider5==1 ? "8:1" : "4:1",slider6,slider7,slider8>0 ? "COMP ON" : "COLOUR ONLY");
   );
+  // Version+revision stamp in the bottom right corner; #gs_ver is set in @init.
+  gfx_setfont(1,"Arial",10); gfx_set(0.62,0.72,0.65,1);
+  gfx_measurestr(#gs_ver,verW,verH);
+  gfx_x=w-verW-8; gfx_y=h-verH-4; gfx_drawstr(#gs_ver);
 );

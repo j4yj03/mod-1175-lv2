@@ -90,6 +90,8 @@
 .gs76{{{cns}}} .gs-power { grid-column:3; display:grid; grid-template-columns:44px 44px; gap:12px; align-items:center; justify-content:center; justify-items:center; margin-right:1px; }
 .gs76{{{cns}}} .gs-plate b { display:block; font-size:10px; font-weight:bold; letter-spacing:2px; }
 .gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8px; font-weight:bold; letter-spacing:1.6px; }
+/* Version+revision line under the variant label; same ink keeps the contrast. */
+.gs76{{{cns}}} .gs-plate span.gs-plate-version { margin-top:2px; font-weight:normal; letter-spacing:.8px; }
 /* Two vertical 88x128 frames. Bypass value 1 is OFF audio, value 0 ON audio. */
 .gs76{{{cns}}} .gs-bypass { order:2; position:relative; width:44px; height:64px; flex:none; cursor:pointer; touch-action:none;
   background-image:url(/resources/assets/toggle.png{{{ns}}}); background-size:44px 128px; background-repeat:no-repeat; background-position:0 0;
