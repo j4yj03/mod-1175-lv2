@@ -293,6 +293,7 @@ des neuen Stands (Abschnitt 7).
 | `matrix-dwarf-20261007-b2` | 2026-10-07 | Input 0 dB dokumentiert, digitale Ankerprüfung | **gültig**, Referenzdeckung 4. Dezimale |
 | `colour-dwarf-20261007` | 2026-10-07 | wie b2 | **gültig**, Referenzdeckung 4. Dezimale |
 | `cpu-matrix-dwarf` | 2026-10-07 | 36 Zustände, je Neustart, Rücklesung | **gültig**, 0 xruns |
+| `cpu-matrix-051-20261008` | 2026-10-08 | 36 Zustände, je Neustart, Binary 0.5.1 (`c936aca6…`), je Lauf SHA-verifiziert | **gültig**, 0 xruns |
 
 **Zur Binary-Identität:** Die auf dem Gerät installierte Binary (SHA256
 `e6b4e55…`) trägt die aktuelle Bank — alle 87 nichttrivialen double-
@@ -454,6 +455,69 @@ Rohdaten: `test-results/cpu-matrix-1e6-20261007/`.
 ![CPU 1e-6 Vorher/Nachher](plots/mess-cpu-1e6-vergleich.png)
 
 **Ergebnis:** 00s Median **-7.0 Punkte** (jetzt 56—57 % statt 58—66 %), Sym **-5.5 Punkte** (56—60 % statt 64—64 %), 60s/80s **+0.0 Punkte** (unverändert), Bypass/None/Colour-Stufen unverändert; Spitzen unverändert (max 76 %), **0 xruns**. Relativ zum Zustand entspricht das ≈ −9…−11 % und deckt sich mit dem isolierten Bench (Toleranz 1e-6, −10–12 %) inkl. plugin-level Verwässerung durch Host-Overhead (Bypass 22 %). 60s/80s bleiben strukturell bei ~2 Iterationen — wie vorhergesagt.
+
+
+### 6.4 CPU-Matrix 0.5.1 (Sym-Fastpath + -mcpu=cortex-a35)
+
+Wiederholung aller 36 Zustände mit der installierten Binary
+`c936aca6…` (Commit `ce26eac`, 0.5.1; MPB-Pin `bb46e86`,
+Toolchain `moddwarf-new` mit `$(TARGET_CXXFLAGS)` plus
+`-mcpu=cortex-a35`). Erste Klangpfad-Änderung: der Sym-Fastpath
+(wirkungslose Stop-Bank und Null-Sättigung übersprungen, C++ und
+EEL2). Prozedur und Boards identisch zu 6.2/6.3; Basis = die
+1e-6-Matrix (`ed05032b…`). Alle 36 Läufe SHA-verifiziert.
+Rohdaten: `test-results/cpu-matrix-051-20261008/`.
+
+| Zustand | 1e-6 Median % | 0.5.1 Median % | Δ Punkte | 0.5.1 Peak % |
+|---|---:|---:|---:|---:|
+| bypass | 22.0 | 22.0 | +0.0 | 26.0 |
+| c0-tfNone | 28.0 | 29.0 | +1.0 | 32.0 |
+| c0-tf60s | 46.0 | 46.0 | +0.0 | 60.0 |
+| c0-tf80s | 46.0 | 46.0 | +0.0 | 60.0 |
+| c0-tf00s | 46.0 | 46.0 | +0.0 | 60.0 |
+| c0-tfSym | 52.0 | 36.0 | -16.0 | 42.0 |
+| c5-tfNone | 36.0 | 34.0 | -2.0 | 40.0 |
+| c10-tfNone | 36.0 | 36.0 | +0.0 | 40.0 |
+| c20-tfNone | 34.0 | 36.0 | +2.0 | 40.0 |
+| c50-tfNone | 36.0 | 34.0 | -2.0 | 40.0 |
+| c75-tfNone | 34.0 | 36.0 | +2.0 | 40.0 |
+| c100-tfNone | 35.0 | 36.0 | +1.0 | 42.0 |
+| c5-tf60s | 54.0 | 56.0 | +2.0 | 74.0 |
+| c10-tf60s | 54.0 | 56.0 | +2.0 | 66.0 |
+| c20-tf60s | 56.0 | 54.0 | -2.0 | 70.0 |
+| c50-tf60s | 56.0 | 56.0 | +0.0 | 76.0 |
+| c75-tf60s | 56.0 | 54.0 | -2.0 | 68.0 |
+| c100-tf60s | 56.0 | 56.0 | +0.0 | 66.0 |
+| c5-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c10-tf80s | 55.0 | 56.0 | +1.0 | 68.0 |
+| c20-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c50-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c75-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c100-tf80s | 56.0 | 54.0 | -2.0 | 68.0 |
+| c5-tf00s | 56.0 | 56.0 | +0.0 | 72.0 |
+| c10-tf00s | 57.0 | 56.0 | -1.0 | 76.0 |
+| c20-tf00s | 56.0 | 54.0 | -2.0 | 68.0 |
+| c50-tf00s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c75-tf00s | 56.0 | 54.0 | -2.0 | 72.0 |
+| c100-tf00s | 56.0 | 56.0 | +0.0 | 76.0 |
+| c5-tfSym | 59.0 | 46.0 | -13.0 | 50.0 |
+| c10-tfSym | 58.0 | 46.0 | -12.0 | 52.0 |
+| c20-tfSym | 60.0 | 46.0 | -14.0 | 50.0 |
+| c50-tfSym | 60.0 | 46.0 | -14.0 | 50.0 |
+| c75-tfSym | 56.0 | 46.0 | -10.0 | 50.0 |
+| c100-tfSym | 57.0 | 46.0 | -11.0 | 52.0 |
+
+**Ergebnis:** Sym **-12.5 Punkte Median** (jetzt
+46—46 % statt 56—60 %), 60s/80s
+**+0.0**, 00s **-0.5**, None **+1.0** — alle
+innerhalb der 1–2-Punkte-Granularität; Bypass unverändert.
+Spitzen unverändert (max 76 %), **0 xruns**. Die
+x86-Bench-Erwartung (−18,8 % Transformatorblock bei Sym) ist am
+Plugin bestätigt und fällt dort sogar deutlich größer aus; der
+−1…−4-%-Effekt des `-mcpu`-Flags aus dem Cross-Bench ist am
+plugin level nicht von der Granularität trennbar. **Die
+beobachtete CPU-Zunahme wird nicht bestätigt** — kein Zustand
+ist messbar teurer geworden, Sym ist 10–16 Punkte günstiger.
 
 
 ## 7. REAPER-Render-Verifikation nach der Toleranzänderung (1e-6)

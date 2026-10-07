@@ -73,7 +73,7 @@ def main():
             assert page.locator('select[mod-port-symbol=stereo_link]').count() == 0
             assert page.locator('.gs-body-engine label').count() == 0, 'Ratio keeps no caption on the compact bay'
             vu_on = page.locator('.gs-vu-on').bounding_box()
-            for symbol in ('.gs-vu-off', '.gs-vu-needle'):
+            for symbol in ('.gs-vu-off', '.gs-vu-needle', '.gs-vu-hub'):
                 assert page.locator(symbol).bounding_box() == vu_on, 'VU layers must cover the same area'
             brand = page.locator('.gs-brand').bounding_box()
             ratio = page.locator('select[mod-port-symbol=ratio]').bounding_box()

@@ -672,8 +672,16 @@ um etwa **56 %**. 60s/80s/00s blieben innerhalb des Messrauschens.
 
 Die C++-Diagnoseausgabe vor/nach der Änderung ist über alle 60 Fälle und
 90 000 Samples byteidentisch. `make test` sowie C++/EEL2-Parität
-(430 Fälle + 76 Presetzustände, max 0 FS) bestehen. Dies ist eine lokale
-x86-Messung; A35-Pluginwerte und xruns sind noch zu messen.
+(430 Fälle + 76 Presetzustände, max 0 FS) bestehen.
+
+**Plugin-Bestätigung am Gerät (2026-10-08, CPU-Matrix 36 Zustände,
+`test-results/cpu-matrix-051-20261008`, Binary `c936aca6…`, MPB-Pin
+`bb46e86`):** Sym fällt **−10 bis −16 Punkte Median** (c0-tfSym 52 → 36,
+Sym×Colour 56–60 → 46 gleichmäßig), Median-Delta **−12,5 Punkte**.
+Bypass/None/60s/80s/00s unverändert (Δ-Median 0,0/+1,0/−0,5 — innerhalb
+der 1–2-Punkte-Granularität), Spitzen unverändert (max 76 %), 0 xruns.
+Die x86-Erwartung wird am Plugin deutlich übertroffen; Details in
+`MESSERGEBNISSE.md` Abschnitt 6.4.
 
 Die MPB-Rezeptur ergänzt `$(TARGET_CXXFLAGS)` für Build und Installation um
 `-mcpu=cortex-a35`; die projektseitigen Flags werden weiterhin angehängt,

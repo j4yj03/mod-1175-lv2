@@ -102,6 +102,18 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   **Nadelballistik 2026-10-08:** die reine CSS-Anzeige folgt neuen Zielwerten
   mit einer 300-ms-Ease-out-Bewegung. Das ergibt ungefähr VU-artige Trägheit;
   der blockweise `gr_db`-Port und der DSP-/GR-Verlauf bleiben unverändert.
+  **Meter-Nachpflege 2026-10-08:** die Face-Beschriftung GAIN REDUCTION/dB
+  sitzt näher unter dem Skalenbogen; am unteren Ende liegt nun eine
+  Lagerabdeckung. Erster Versuch zeichnete sie in die Nadel-Ebene (voller
+  Kreis „rotationsinvariant“) — durch die Bezel-Kappung entsteht darin ein
+  Halbkreis, und genau der drehte mit der Nadel mit. Korrekturlage: die
+  Abdeckung ist eine **eigene statische Ebene `vumeter-hub.png` oberhalb
+  der Nadel** (Template-Reihenfolge Face/Nadel/Hub), die Nadel-Ebene
+  selbst bleibt zeichnungsfrei. Rotations-Simulation über Face+Nadel+Hub
+  bei 0/45/90° geprüft: Abdeckung steht, Nadel verschwindet hinter ihr;
+  Assets, Icons, Screenshots/Thumbnails neu erzeugt; `validate.py` und
+  `test_modgui` PASS. Relevanz: nur GUI-Assets/`tools/`, keine
+  Revisionserhöhung.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
   (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
   CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel
@@ -113,8 +125,14 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   C++ und EEL2. Gepaarter lokaler x86-Bench: 0,04870 → 0,03956 s/s
   (**−18,8 %** im Gesamtbench), C++-Vorher/Nachher byteidentisch; `make test`
   und Parität 430+76 mit max 0 FS bestanden. Die MPB-Rezeptur aktiviert zudem
-  das bereits am A35 gemessene `-mcpu=cortex-a35` additiv. Offizieller
-  MPB-Neubau, Installhash, A35-Bench und Plugin-CPU/xruns stehen aus.
+  das bereits am A35 gemessene `-mcpu=cortex-a35` additiv.
+  **Gerätebestätigung (2026-10-08, CPU-Matrix 36 Zustände,
+  Binary `c936aca6…`, Pin `bb46e86`):** Sym **−10…−16 Punkte Median**
+  (c0 52→36, ×Colour 56–60 → 46), 60s/80s/00s/None/Bypass unverändert,
+  Spitzen unverändert (max 76 %), 0 xruns. Die Benutzerwahrnehmung „CPU
+  gefühlt größer" wird damit **nicht bestätigt** — kein Zustand messbar
+  teurer. Details: `test-results/cpu-matrix-051-20261008/`,
+  MESSERGEBNISSE 6.4.
 - **Klangziel entschieden (2026-10-07):** stärkerer, **eigenständiger
   Green-Stripe-Charakter** (kein Hardwareidentitätsziel). Produktvariante
   (Drive-Regler / heiße Bank / beides) offen; vor jeder Laufzeitänderung

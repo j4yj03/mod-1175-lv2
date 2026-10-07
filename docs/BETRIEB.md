@@ -166,6 +166,11 @@ Das VU-Meter im grünen ENGINE-Feld zeigt die laufende Gain-Reduction:
   dadurch ruhiger wie eine klassische VU-Anzeige; der GR-Ausgangswert selbst
   bleibt blockweise und ungeglättet.
   Die Anzeige folgt dem stärker geregelten Kanal (Maximum der Reduktion).
+- **Lagerabdeckung:** am Drehpunkt liegt eine dunkle, voll kreisrunde
+  Abdeckung mit konzentrischen Ringen; die Nadel verschwindet hinter ihr.
+  Sie ist eine **eigene statische Ebene oberhalb der Nadel** und wird nie
+  mitrotiert — jede Zeichnung in der Nadel-Ebene selbst (auch ein gekappt
+  voller Kreis) würde mit der Nadel drehen.
 - **Statuslicht:** bei **COMP ON** ist das Face beleuchtet (warmes
   Backlight), bei **COMP OFF** gedimmt — mit ausgeschalteter Regelung steht
   die Nadel auf 0 dB.

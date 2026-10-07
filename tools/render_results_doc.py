@@ -30,6 +30,7 @@ BANK_TYPES = [('60s', 'rep-60s-ch1', 'c0-tf1-ch1'),
               ('Sym', 'rep-Sym-ch1', 'c0-tf4-ch1')]
 COLOURS = ['05', '10', '20', '50', '75', '100']
 CPU_1E6 = ROOT / 'test-results/cpu-matrix-1e6-20261007/cpu_results.json'
+CPU_051 = ROOT / 'test-results/cpu-matrix-051-20261008/cpu_results.json'
 RENDER_1E6 = ROOT / 'test-results/jsfx-render-1e6-20261007/parity-1e6.json'
 RENDER_1E6_BATCH = '19_15_06'
 LSB24 = 2.0 ** -23
@@ -333,6 +334,7 @@ def main():
     A('| `matrix-dwarf-20261007-b2` | 2026-10-07 | Input 0 dB dokumentiert, digitale Ankerprüfung | **gültig**, Referenzdeckung 4. Dezimale |')
     A('| `colour-dwarf-20261007` | 2026-10-07 | wie b2 | **gültig**, Referenzdeckung 4. Dezimale |')
     A('| `cpu-matrix-dwarf` | 2026-10-07 | 36 Zustände, je Neustart, Rücklesung | **gültig**, 0 xruns |')
+    A('| `cpu-matrix-051-20261008` | 2026-10-08 | 36 Zustände, je Neustart, Binary 0.5.1 (`c936aca6…`), je Lauf SHA-verifiziert | **gültig**, 0 xruns |')
     A('')
     A('**Zur Binary-Identität:** Die auf dem Gerät installierte Binary (SHA256')
     A('`e6b4e55…`) trägt die aktuelle Bank — alle 87 nichttrivialen double-')
@@ -512,9 +514,79 @@ def main():
               ' Host-Overhead (Bypass 22 %). 60s/80s bleiben strukturell bei'
               ' ~2 Iterationen — wie vorhergesagt.'.format(
                   d00, min(nv), max(nv), min(bv), max(bv),
-                  dsym, min(sv), max(sv), min(bw), max(bw),
-                  d60, pk))
+                   dsym, min(sv), max(sv), min(bw), max(bw),
+                   d60, pk))
             A('')
+            if CPU_051.exists():
+                cpu_051 = json.loads(CPU_051.read_text(encoding='utf-8'))
+                order051 = (['bypass', 'c0-tfNone', 'c0-tf60s', 'c0-tf80s',
+                             'c0-tf00s', 'c0-tfSym']
+                            + ['c{0}-tfNone'.format(c) for c in (5, 10, 20, 50, 75, 100)]
+                            + ['c{0}-tf{1}'.format(c, t)
+                               for t in ('60s', '80s', '00s', 'Sym')
+                               for c in (5, 10, 20, 50, 75, 100)])
+                rows_051 = []
+                for label in order051:
+                    base_m = cpu_1e6.get(label, {}).get('loadtest', {}).get(
+                        'process_percent_median')
+                    new_m = cpu_051.get(label, {}).get('loadtest', {}).get(
+                        'process_percent_median')
+                    new_p = cpu_051.get(label, {}).get('loadtest', {}).get(
+                        'process_percent_peak')
+                    delta = (new_m - base_m) if (new_m is not None
+                                                 and base_m is not None) else None
+                    rows_051.append((label, base_m, new_m, new_p, delta))
+                med051 = lambda sub: statistics.median(
+                    [r[4] for r in rows_051
+                     if r[4] is not None and not r[0].startswith('c0-')
+                     and any(k in r[0] for k in sub)])
+                d60_051 = med051(('tf60s', 'tf80s'))
+                d00_051 = med051(('tf00s',))
+                dsym_051 = med051(('tfSym',))
+                dnone_051 = statistics.median([r[4] for r in rows_051
+                                               if r[4] is not None
+                                               and r[0].endswith('tfNone')])
+                pk051 = max(r[3] for r in rows_051 if r[3] is not None)
+                sv051 = [r[2] for r in rows_051 if r[0].endswith('tfSym')
+                         and r[0] != 'c0-tfSym' and r[2] is not None]
+                bw051 = [r[1] for r in rows_051 if r[0].endswith('tfSym')
+                         and r[0] != 'c0-tfSym' and r[1] is not None]
+                A('')
+                A('### 6.4 CPU-Matrix 0.5.1 (Sym-Fastpath + -mcpu=cortex-a35)')
+                A('')
+                A('Wiederholung aller 36 Zustände mit der installierten Binary')
+                A('`c936aca6…` (Commit `ce26eac`, 0.5.1; MPB-Pin `bb46e86`,')
+                A('Toolchain `moddwarf-new` mit `$(TARGET_CXXFLAGS)` plus')
+                A('`-mcpu=cortex-a35`). Erste Klangpfad-Änderung: der Sym-Fastpath')
+                A('(wirkungslose Stop-Bank und Null-Sättigung übersprungen, C++ und')
+                A('EEL2). Prozedur und Boards identisch zu 6.2/6.3; Basis = die')
+                A('1e-6-Matrix (`ed05032b…`). Alle 36 Läufe SHA-verifiziert.')
+                A('Rohdaten: `test-results/cpu-matrix-051-20261008/`.')
+                A('')
+                A('| Zustand | 1e-6 Median % | 0.5.1 Median % | Δ Punkte | 0.5.1 Peak % |')
+                A('|---|---:|---:|---:|---:|')
+                for label, base_m, new_m, new_p, delta in rows_051:
+                    A('| {0} | {1} | {2} | {3:+.1f} | {4} |'.format(
+                        label,
+                        '—' if base_m is None else '{0:.1f}'.format(base_m),
+                        '—' if new_m is None else '{0:.1f}'.format(new_m),
+                        0.0 if delta is None else delta,
+                        '—' if new_p is None else '{0:.1f}'.format(new_p)))
+                A('')
+                A('**Ergebnis:** Sym **{0:+.1f} Punkte Median** (jetzt'.format(dsym_051))
+                A('{0:.0f}—{1:.0f} % statt {2:.0f}—{3:.0f} %), 60s/80s'.format(
+                    min(sv051), max(sv051), min(bw051), max(bw051)))
+                A('**{0:+.1f}**, 00s **{1:+.1f}**, None **{2:+.1f}** — alle'.format(
+                    d60_051, d00_051, dnone_051))
+                A('innerhalb der 1–2-Punkte-Granularität; Bypass unverändert.')
+                A('Spitzen unverändert (max {0:.0f} %), **0 xruns**. Die'.format(pk051))
+                A('x86-Bench-Erwartung (−18,8 % Transformatorblock bei Sym) ist am')
+                A('Plugin bestätigt und fällt dort sogar deutlich größer aus; der')
+                A('−1…−4-%-Effekt des `-mcpu`-Flags aus dem Cross-Bench ist am')
+                A('plugin level nicht von der Granularität trennbar. **Die')
+                A('beobachtete CPU-Zunahme wird nicht bestätigt** — kein Zustand')
+                A('ist messbar teurer geworden, Sym ist 10–16 Punkte günstiger.')
+                A('')
         A('')
     else:
         A('## 6. CPU-Matrix (Geplant)')

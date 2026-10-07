@@ -82,7 +82,9 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
   der vier Leisten und der Platte explizit zurück; lokaler Test mit den echten
   MOD-Basisregeln PASS. Gerätelauf offen (Cursor, Panel-Move, keine
   Reglerberührung). Dabei auch ENGINE-Ausrichtung (Ratio zu OUTPUT/RELEASE,
-  COMP zu Transformer) und helles VU-Face bei COMP ON visuell bestätigen.
+  COMP zu Transformer), helles VU-Face bei COMP ON sowie die neue
+  VU-Nachpflege (Beschriftung näher am Bogen, Lagerabdeckung am Drehpunkt)
+  visuell bestätigen.
 
 ## Offen — Klangmodell und Analyse
 
@@ -317,8 +319,11 @@ umbauen). Alles ride-along mit dem nächsten MPB-Build, der ohnehin die
   Bench-Checksummen nachgewiesen (`-ffp-contract=off`, kein Fast-Math; frühere
   Build-Tuning-Serie). Offizieller MPB-Neubau/Installhash bleibt Teil der
   Geräte-Stichprobe.
-- [ ] Stichprobe am Gerät statt sofort 36 Zustände: None/60s/80s/00s/Sym ×
-  Colour 0/100, OS 2x; Erwartung −1…−4 %.
+- [x] Stichprobe am Gerät: **volle 36-Zustände-Matrix statt Stichprobe**
+  (2026-10-08, `test-results/cpu-matrix-051-20261008`): −mcpu-Effekt am
+  plugin level nicht von der 1–2-Punkte-Granularität trennbar
+  (60s/80s Δ 0,0, 00s −0,5, None +1,0, Bypass 0) — konsistent mit der
+  Cross-Bench-Erwartung −1…−4 % s/s.
 
 **2. `Symmetric`-/No-Hysteresis-Fastpath** (größter bitidentischer Hebel):
 Sym hat `hysteresis_enabled=0` und `saturation_strength=0`, zahlt aber
@@ -337,9 +342,12 @@ kollabiert.
   ±0/Extremreizen bis ±256 FS ab. Der 40-Iterations-Cap wurde nicht erreicht
   (0 % in den Messläufen). A35-Checksummen folgen mit dem MPB-Lauf.
 - [x] EEL2 `gs_xf_core` spiegelt beide Zweige; Paritätssatz komplett.
-- [ ] A35-Isolationsbench + Plugin-Stichprobe fahren. Lokaler x86-Bench:
+- [x] Gerätebestätigung: **volle CPU-Matrix (36 Zustände) mit 0.5.1**
+  (2026-10-08, `test-results/cpu-matrix-051-20261008`): Sym **−10…−16
+  Punkte** (c0 52→36, ×Colour 56–60 → 46), 60s/80s/00s/None/Bypass
+  unverändert, Spitzen unverändert, 0 xruns. Lokaler x86-Bench:
   Symmetric 0,04870 → 0,03956 s/s (−18,8 % gesamt; Mehrkosten gegen None
-  etwa −56 %); Erwartung mehrere Plugin-Punkte bei zuvor 52–60 % Median.
+  etwa −56 %). Isolierte A35-Bench-Wiederholung für den Fastpath entbehrlich.
 
 **3. Profil-spezialisierte Kennlinien** (klein bis mittel, 60s/80s):
 

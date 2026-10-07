@@ -13,14 +13,18 @@ Zwei Zustands-Varianten (später auch das COMP-Statuslicht):
 - `--state off` — unbeleuchtet: gedimmtes, entsättigtes Face
 
 Beispiel:
-    python3 tools/make_vumeter.py                  # vumeter-on.png
-    python3 tools/make_vumeter.py --state off      # vumeter-off.png
+    python3 tools/make_vumeter.py                  # vumeter-on.png + vumeter-hub.png
+    python3 tools/make_vumeter.py --state off      # vumeter-off.png + vumeter-hub.png
     python3 tools/make_vumeter.py --needle-output /tmp/nadel.png
 
-Hinweis: das Asset ist vorbereitend und in keinem Template eingebunden;
-die Verankerung in der LV2-GUI wäre eine ausdrückliche Änderung des
-„LV2 ohne Meter"-Vertrags (PROJEKT/REQUIREMENTS, D07) und erfordert
-eine eigene Entscheidung.
+Ebenenstapel im Template (von unten nach oben): Face on/off (statisch),
+Nadel (rotiert per CSS um den Drehpunkt) und Lagerabdeckung (statisch,
+oberste Ebene). Die Abdeckung liegt als eigene Ebene ÜBER der Nadel —
+jede Abdeckung in der Nadel-Ebene selbst würde mitrotieren, selbst ein
+voller Kreis, sobald er für den Bezel gekappt ist (flache Kante). Die
+Nadel-Ebene bleibt deshalb frei von ihr; ihre Basis endet unterhalb der
+Abdeckung. Die Assets sind über die icon-Templates im ENGINE-Feld der
+MOD-GUI eingebunden.
 """
 import argparse
 import math
@@ -34,6 +38,8 @@ DEFAULT_OUTPUT = ROOT / 'lv2/green-stripe-76.lv2/modgui/assets/vumeter.png'
 SCALE_MAX_DB = 30.0
 SWEEP_DEG = 45.0          # Halb-Öffnungswinkel der Skala
 SS = 4                    # Supersampling-Faktor
+LABEL_LIFT = 0.52         # Beschriftungshöhe über dem Drehpunkt (Bruchteil des Radius)
+HUB_R = 30.0              # Radius der Lagerabdeckung (s-Einheiten)
 
 BEZEL = (32, 38, 41)
 BEZEL_EDGE = (111, 118, 121)
@@ -159,11 +165,11 @@ def render(scale_max, lit=True):
                     fill=(pal['red'] if db >= 20 else pal['ink']) + (255,))
         db += 1.0
 
-    # Beschriftung unterhalb des Bogens (klassische VU-Anordnung)
+    # Beschriftung unterhalb des Bogens (klassische VU-Anordnung, nah am Bogen)
     f_small = font(9 * s, bold=True)
     label = 'GAIN REDUCTION'
     lw = d.textlength(label, font=f_small)
-    label_y = py - radius * 0.42
+    label_y = py - radius * LABEL_LIFT
     d.text((w * s / 2 - lw / 2, label_y), label, font=f_small,
            fill=pal['ink'] + (255,))
     f_unit = font(8 * s)
@@ -191,6 +197,10 @@ def main():
     parser.add_argument('--needle-output', type=Path,
                         help='optional: zusätzliche transparente Nadel-Ebene '
                              '(gleiche Geometrie, für spätere CSS-Rotation)')
+    parser.add_argument('--hub-output', type=Path,
+                        default=DEFAULT_OUTPUT.parent / 'vumeter-hub.png',
+                        help='Ausgabepfad der statischen Lagerabdeckung '
+                             '(Default: assets/vumeter-hub.png)')
     args = parser.parse_args()
 
     lit = args.state == 'on'
@@ -200,6 +210,11 @@ def main():
     image.save(output)
     print('geschrieben:', output, '(state=%s)' % args.state)
 
+    args.hub_output.parent.mkdir(parents=True, exist_ok=True)
+    hub = render_hub(image.size)
+    hub.save(args.hub_output)
+    print('geschrieben:', args.hub_output)
+
     if args.needle_output:
         needle = render_needle_only(args.needle_db, args.scale_max, image.size)
         args.needle_output.parent.mkdir(parents=True, exist_ok=True)
@@ -208,7 +223,12 @@ def main():
 
 
 def render_needle_only(needle_db, scale_max, size):
-    """Nadel + Lager auf transparenter Ebene in Endauflösung."""
+    """Nadel auf transparenter Ebene in Endauflösung, ohne Abdeckung.
+
+    Die Basis liegt bei Radius 14 unter der (statischen) Lagerabdeckung
+    und verschwindet dort; die Nadel selbst erreicht selbst bei vollem
+    Ausschlag nie die Bezelzone unterhalb der Face-Innenkante.
+    """
     w, h = size
     img = Image.new('RGBA', (w * SS, h * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(img, 'RGBA')
@@ -227,6 +247,42 @@ def render_needle_only(needle_db, scale_max, size):
                tip_x - ox * half_tip, tip_y - oy * half_tip,
                base_x - ox * half_base, base_y - oy * half_base),
               fill=NEEDLE + (255,))
+    return img.resize((w, h), Image.LANCZOS)
+
+
+def render_hub(size):
+    """Lagerabdeckung als eigene, statische Ebene in Endauflösung.
+
+    Dunkler Vollkreis mit konzentrischen Ringen, Hubkappe, Lichtkante
+    oben und weicher Randabschattung; unterhalb der Face-Innenkante
+    transparent, damit der Bezel sichtbar bleibt. Die Ebene wird im
+    Template oberhalb der Nadel gestapelt und nie rotiert.
+    """
+    w, h = size
+    img = Image.new('RGBA', (w * SS, h * SS), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img, 'RGBA')
+    s = SS
+    px, py = w * s / 2.0, (h - 6) * s
+    hub = HUB_R * s
+    shadow = hub + 2.5 * s
+    d.ellipse((px - shadow, py - shadow, px + shadow, py + shadow),
+              fill=(10, 12, 14, 70))
+    d.ellipse((px - hub, py - hub, px + hub, py + hub), fill=(17, 19, 21, 255))
+    rings = 6
+    for step in range(rings, 0, -1):
+        rr = hub * step / rings
+        tone = 24 + (rings - step) * 4
+        d.ellipse((px - rr, py - rr, px + rr, py + rr),
+                  fill=(tone, tone + 2, tone + 4, 255))
+    cap = 5.5 * s
+    d.ellipse((px - cap, py - cap, px + cap, py + cap), fill=(48, 51, 54, 255))
+    d.arc((px - hub, py - hub, px + hub, py + hub), start=247, end=293,
+          fill=(126, 132, 136, 150), width=s)
+
+    # Bezel unterhalb der Face-Innenkante freihalten (Pixel ersetzen, nicht
+    # blenden — deshalb ein Draw ohne 'RGBA'-Modus). Statisch erlaubt.
+    eraser = ImageDraw.Draw(img)
+    eraser.rectangle((0, (h - 9) * s, w * s - 1, h * s - 1), fill=(0, 0, 0, 0))
     return img.resize((w, h), Image.LANCZOS)
 
 

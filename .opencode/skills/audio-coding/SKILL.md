@@ -358,10 +358,14 @@ Portvertrag — kein CSS-Trick. Der komplette, am Gerät verifizierte Pfad:
 6. **Gerätecheck vorher:** die OS-Version des Geräts kann älteres mod-ui
    haben — `grep setOutputPortValue /usr/share/mod/html/js/modgui.js` per
    SSH bestätigt JS-Support und Output-Pfad, bevor man 0.x.y daran aufbaut.
-7. **Darstellung:** Layer-Images (Face on/off + Nadel) mit dem
-   `padding-bottom`-Aspekt-Hack stapeln (aspect-ratio ist auf dem
-   Geräte-WebKit unsicher); Nadel-Ebene ohne Lagerabdeckung (die würde
-   mitrotieren), `transform-origin` am Pivot in Prozent des Canvas; CSS-
+7. **Darstellung:** Layer-Images mit dem `padding-bottom`-Aspekt-Hack
+   stapeln (aspect-ratio ist auf dem Geräte-WebKit unsicher); Reihenfolge
+   Face on/off (statisch) → Nadel (rotiert) → Lagerabdeckung (statisch,
+   eigene Ebene ÜBER der Nadel). **Niemals in der Nadel-Ebene zeichnen**:
+   selbst ein „rotationsinvarianter" voller Kreis rotiert mit, sobald eine
+   Kappung (Bezel-Freihaltung) eine flache Kante erzeugt — Fehlversuch
+   2026-10-08, der Halbkreis drehte sichtbar mit. `transform-origin` am
+   Pivot in Prozent des Canvas; CSS-
    Transition für die Glättung — und im Browsertest **Wartezeit nach dem
    Klassentoggle**, sonst misst man mitten in der 60-ms-Opacity-Transition.
    Dasselbe gilt für erzeugte Screenshots: Varianten nacheinander ohne feste

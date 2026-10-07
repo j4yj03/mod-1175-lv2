@@ -55,7 +55,10 @@
 .gs76{{{cns}}}.gs-comp-on .gs-vu-on { opacity:1; }
 .gs76{{{cns}}}.gs-comp-on .gs-vu-off { opacity:0; }
 /* Needle asset points to 0 dB GR (left scale end); grmeter.js rotates it
-   relative to rest around the pivot (50% / 96.5% of the 260x172 canvas). */
+   relative to rest around the pivot (50% / 96.5% of the 260x172 canvas).
+   The hub cover is its own static layer stacked above the needle (never
+   transformed); anything inside the rotating needle layer would turn
+   with it, even a clipped circle. */
 .gs76{{{cns}}} .gs-vu-needle { position:absolute; inset:0; width:100%; height:100%;
   transform-origin:50% 96.5%; transition:transform 300ms ease-out; will-change:transform; }
 .gs76{{{cns}}} .gs-engine-controls { width:100%; max-width:172px; display:flex; flex-direction:column; gap:7px; }
