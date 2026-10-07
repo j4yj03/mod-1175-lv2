@@ -14,3 +14,6 @@ __pycache__/
 *.nam
 test-results/
 !tests/fixtures/
+docs/sauce/
+reaper/
+docs/sauce/

@@ -60,6 +60,14 @@ Parität zwischen beiden Kernen ist über `tests/jsfx_parity.cpp` belegt.
 
 ## 2. Signalfluss
 
+Zwei Diagramme: zuerst der **reine Signalpfad** inklusive Feedback-Regelkreis,
+danach eine **kompakte Übersicht** mit den Reglerzuordnungen. Gerenderte
+Fassungen (192 DPI, `tools/md_to_png.py`):
+[`dsp-signalfluss.png`](dsp-signalfluss.png) und
+[`dsp-regler-uebersicht.png`](dsp-regler-uebersicht.png).
+
+### Reiner Signalfluss (ohne Regler)
+
 ```mermaid
 flowchart LR
     subgraph AUDIO["Audiopfad - je Kanal, interne Rate fs·Faktor"]
@@ -92,8 +100,19 @@ flowchart LR
     end
 
     FET -.->|"zustandsloser Tap"| TAP
+```
+
+### Kompakte Übersicht mit Reglern
+
+```mermaid
+flowchart LR
+    UP["Hochsampling"] --> GIN["Input Gain"] --> TRA["Trafo"] --> EIN["Eingangsfaerbung"] --> FET["FET-Teiler"] --> PRE["Vorverstaerker"] --> GOUT["Output Gain"] --> AUS["Ausgangsfaerbung"] --> MIX["Dry/Wet + Enabled"] --> DEZ["Dezimation"] --> OUT["Ausgang"]
+    DRY["Dry"] --> MIX
+    FET --> MAG["L/R max"] --> LAW["Mode-Law"] --> CHG["Charge q, g(q)"]
+    CHG -.->|"Regelkreis"| FET
 
     subgraph REG["Regler"]
+        direction TB
         RIN["input"]
         ROS["oversampling"]
         RTR["transformer"]
@@ -108,21 +127,21 @@ flowchart LR
         RLK["stereo_link"]
     end
 
-    RIN -.->|"Pegel"| GIN
-    ROS -.->|"Faktor 1/2/4"| UP
-    ROS -.->|"Faktor 1/2/4"| DOWN
-    RTR -.->|"Profilwahl"| TRA
-    RCO -.->|"Flux-Dichte"| INCOL
-    RCO -.->|"Kruemmung 0.24 + 0.08 All"| FET
-    RCO -.->|"Bias, Sättigung, Bandbreite"| PRE
-    RCO -.->|"LP-Mix, asym. Amp, DC-Ecke"| OUTCOL
-    ROUT -.->|"Pegel"| GOUT
-    RMIX -.->|"Anteil"| MIX
-    REN -.->|"Bypass"| MIX
-    RRT -.->|"T, K, R, All-Ziele"| LAW
-    RATT -.->|"Aufladezeit tA"| CHG
-    RREL -.->|"Entladezeit tR"| DIS
-    RCMP -.->|"Off: parkt"| GQ
+    RIN -.-> GIN
+    ROS -.-> UP
+    ROS -.-> DEZ
+    RTR -.-> TRA
+    RCO -.->|"Flux"| EIN
+    RCO -.->|"Kruemmung"| FET
+    RCO -.->|"Bias"| PRE
+    RCO -.->|"LP-Mix"| AUS
+    ROUT -.-> GOUT
+    RMIX -.-> MIX
+    REN -.-> MIX
+    RRT -.->|"T, K, R, All"| LAW
+    RATT -.->|"tA"| CHG
+    RREL -.->|"tR"| CHG
+    RCMP -.->|"Off: parkt"| CHG
     RLK -.->|"L/R max oder getrennt"| MAG
 ```
 
@@ -985,6 +1004,12 @@ in beiden Engines und eigene Signalprüfungen.
   **144 Fälle bitgleich**, einschließlich Audio/GR/Latenz und Umschaltungen.
 - Tatsächlich geladene LV2-Binary: optionale Portverbindung, hörwirksame
   Modellauswahl, In-place, nichtendliche Eingaben und blockinvariante Wechsel.
+- **Am Gerät (2026-10-07, Dwarf-Quelle, OS 2x):** alle vier Profile plus
+  Symmetric gegen Bypass gemessen — 20-Hz-Klirr-Reihung 60s 5,53 % /
+  80s 2,15 % / 00s 0,11 % / Sym 0,01 %, Wiederholungsspreizung ≤ 0,01 dB;
+  Details/Grenzen in `EXTERN.md` und `MESSTECHNIK.md` 1a/1b. Die 1-%-Anker
+  sind dort noch nicht direkt vergleichbar (Kompression/Colour/Input-Gain
+  in der Messung enthalten).
 
 Aktuelle Dwarf-/REAPER-Geräteprüfung und Hörabnahme bleiben auf dem anderen
 Rechner auszuführen. Frühere Geräte-CPU-Werte gelten nicht für die neue Stufe.

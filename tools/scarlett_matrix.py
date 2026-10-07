@@ -203,6 +203,8 @@ class Driver:
             self.index['settings_label'] = self.args.settings_label
         if self.args.relax_anchors:
             self.index['relax_anchors'] = True
+        if self.args.dwarf_source:
+            self.index['dwarf_source'] = True
         return self.root
 
     def resolve_devices(self):
@@ -533,6 +535,10 @@ def build_summary(root, index):
                           for rate, gain in sorted(gains.items())) or 'nicht bestimmt'),
              '']
     for rate, gain in sorted(gains.items()):
+        if index.get('dwarf_source'):
+            # Dwarf file-player source: the file level IS the plugin input,
+            # the loop gain only scales the recording, not the anchors.
+            continue
         level, reachable, missing = choose_stimulus_level(gain)
         if missing:
             summary['issues'].append(
@@ -615,11 +621,20 @@ def build_summary(root, index):
     # Anchor table (levels segments). With an exact level choice each anchor
     # lands on one series step; --relax-anchors runs report the achieved level
     # of the nearest step and its deviation from the requested anchor.
+    # Dwarf source: the file level is the digital plugin input, so the anchor
+    # maps directly onto the segment peak and the recording level is reported
+    # separately in the same column pair.
+    dwarf_source = bool(index.get('dwarf_source'))
     lines += ['', '## Pegelanker am Plugin-Eingang (1-kHz-Pegelreihe)', '',
-              'Anker = Pegel am Plugin-Eingang im Bypass; Stimulus = Anker minus '
-              'Loop-Gewinn. "erreicht" = realer Pegel des naechsten Segments.', '',
-              '| Transformer | Ch | Rate | Anker dBFS | Stimulus dBFS | erreicht dBFS | '
-              'rel. dB Median (Spreizung) | THD % | THD+N % |',
+              ('In der Dwarf-Quelle ist die Dateipegel gleich dem Plugin-Eingang; '
+               '"Aufnahme" ist der Pegel im Ruckkanal (nur SNR-Diagnose).'
+               if dwarf_source else
+               'Anker = Pegel am Plugin-Eingang im Bypass; Stimulus = Anker minus '
+               'Loop-Gewinn. "erreicht" = realer Pegel des naechsten Segments.'), '',
+              '| Transformer | Ch | Rate | Anker dBFS | '
+              + ('Datei/Plugin-Eingang dBFS | Aufnahme dBFS | ' if dwarf_source
+                 else 'Stimulus dBFS | erreicht dBFS | ')
+              + 'rel. dB Median (Spreizung) | THD % | THD+N % |',
               '|---|---:|---:|---:|---:|---:|---:|---:|---:|']
     anchor_rows = {}
     for rate, transformer, channel in order:
@@ -628,26 +643,36 @@ def build_summary(root, index):
             continue
         buckets = aggregate_dut(dut_groups[(rate, transformer, channel)])
         for anchor in ANCHORS_DBFS:
-            stimulus = anchor - gain
-            bucket = min((bucket for bucket in buckets.values()
-                          if bucket['group'] == 'levels'),
-                         key=lambda bucket: abs(bucket['peak_dbfs'] - stimulus),
-                         default=None)
-            if bucket is None or abs(bucket['peak_dbfs'] - stimulus) > 3.0:
-                continue
-            deviation = bucket['peak_dbfs'] + gain - anchor
-            if abs(deviation) > 0.01:
-                summary['issues'].append(
-                    f'{rate}/{transformer}/ch{channel}: Anker {anchor:g} dBFS erreicht '
-                    f'nur {bucket["peak_dbfs"] + gain:+.2f} dBFS (Abweichung '
-                    f'{deviation:+.2f} dB)')
+            if dwarf_source:
+                bucket = min((bucket for bucket in buckets.values()
+                              if bucket['group'] == 'levels'),
+                             key=lambda bucket: abs(bucket['peak_dbfs'] - anchor),
+                             default=None)
+                if bucket is None or abs(bucket['peak_dbfs'] - anchor) > 0.01:
+                    continue
+                stimulus = bucket['peak_dbfs']
+                achieved = bucket['peak_dbfs']
+            else:
+                stimulus = anchor - gain
+                bucket = min((bucket for bucket in buckets.values()
+                              if bucket['group'] == 'levels'),
+                             key=lambda bucket: abs(bucket['peak_dbfs'] - stimulus),
+                             default=None)
+                if bucket is None or abs(bucket['peak_dbfs'] - stimulus) > 3.0:
+                    continue
+                achieved = bucket['peak_dbfs'] + gain
+                deviation = achieved - anchor
+                if abs(deviation) > 0.01:
+                    summary['issues'].append(
+                        f'{rate}/{transformer}/ch{channel}: Anker {anchor:g} dBFS erreicht '
+                        f'nur {achieved:+.2f} dBFS (Abweichung {deviation:+.2f} dB)')
             relative = stat_row(bucket['relative'])
             thd = stat_row(bucket['thd'])
             thdn = stat_row(bucket['thdn'])
             anchor_rows.setdefault(f'{rate}/{transformer}/ch{channel}', []).append(anchor)
             lines.append(
                 f'| {transformer} | {channel} | {rate} | {anchor:g} | {stimulus:g} | '
-                f'{bucket["peak_dbfs"] + gain:+.2f} | '
+                f'{achieved:+.2f} | '
                 + (f'{relative["median"]:+.3f} ({relative["spread"]:.3f})'
                    if relative else '-')
                 + ' | ' + (f'{thd["median"]:.3f}' if thd else '-')

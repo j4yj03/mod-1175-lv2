@@ -725,6 +725,49 @@ File-Player des Dwarf ist Teil des Messpfads; sein Gain geht in die
 Baseline ein und hebt sich in `relative_gain_db` heraus. Keine neue Aussage
 über Hardware-GR oder Absolute Kalibrierung.
 
+## 1b. Praxisvariante: REAPER-Aufnahme + Import (2026-10-07, erprobt)
+
+Die erste vollständige Matrix lief nicht über den PortAudio-Pfad des Treibers,
+sondern über **REAPER als Recorder** und nachträglichen Import. Ablauf, so
+ausgeführt und gültig (`test-results/matrix-dwarf-20261007`, 18 Läufe):
+
+1. **Eine lange Take statt vieler Einzelaufnahmen:** REAPER nimmt kontinuierlich
+   auf (48 kHz, 24 bit, beide Kanäle); auf dem Dwarf läuft die Matrix-Datei
+   mehrfach — zwischen den Wiedergaben wird das Board umgestellt (Bypass ↔
+   Transformatorprofil). Pausen sind egal; **Aufnahme zuerst starten, dann
+   Wiedergabe** (Erstanlauf sonst unbrauchbar, siehe `playback1`).
+2. **Schnitt statt Render:** Die Wiedergabe-Startpunkte werden über die
+   Sync-Marker-Chirps in der Take lokalisiert (normierte FFT-Korrelation,
+   Schwellwert 0,35; Zweikanalmittelung hebt die Korrelation von ~0,52 auf
+   ~0,99). Jede Wiedergabe wird mit 1 s Vorlauf als 48-kHz-Stereo-Slice
+   geschnitten. **Nicht über den REAPER-Render gehen:** der Renderdialog hat
+   eine eigene Sample-Rate unabhängig von der Projekt-Rate — zwei Renderläufe
+   fielen auf 44,1 kHz zurück; die Original-Take ist immer 48 kHz.
+3. **Bedingungs-Zuordnung verifizieren, nicht raten:** Bypass ist am flachen
+   Sweep identifizierbar; die Profile über die 20-Hz-Klirr-Reihung
+   (60s 5,53 % > 80s 2,15 % > 00s 0,11 % ≫ Bypass 0,005 %). Beides stimmte
+   mit der Benutzerreihenfolge überein.
+4. **Import je Wiedergabe:** `tools/dwarf_reaper_series.py import --root …
+   --recording <slice.wav> --spec gainmatch|baseline:rN|60s:rN|…` — eine
+   Stereo-Wiedergabe deckt **beide Kanäle** ab (je Kanal ein Lauf in der
+   Treiber-Struktur); DUT-Läufe ziehen die passende Kanal-Baseline automatisch.
+   `summary --root …` erzeugt dieselbe `SUMMARY.md`; in der Dwarf-Quelle
+   werden die Anker digital aus den Dateipegeln geprüft (Loop-Gain-Warnungen
+   entfallen, Aufnahmepegel als SNR-Diagnose ausgewiesen).
+5. **Querreferenz:** das Dwarf-Recorder-Plugin (parallel im Board) liefert
+   digitale Captures (`mod_session*.wav`) — gegen dieselben Pläne analysierbar.
+   Der Recorder-Zweig hat einen eigenen Offset (gemessen −4,3…−5,4 dB); der
+   File-Player selbst ist laut Benutzer Unity. Damit ist die digitale Referenz
+   ohne Analogkette auswertbar (Sym: flach ≤ 0,05 dB, THD 0,005 %).
+6. **Pegel:** Loop-Gewinn ≈ −1,8/−2,2 dB (Ch1/Ch2), Aufnahmepeaks ≈ −4 dBFS.
+   Eine um +4,8 dB heißere Sym-Aufnahme clippte lautlos (Peak 0,0 dBFS in
+   allen Segmenten → Lauf ungültig) — nach Regleränderung immer erst eine
+   kurze Probe, dann die Serie.
+
+Befunde der Runde (OS 2x laut Benutzer): siehe PROJEKT; OS-Provenienz muss
+pro Runde dokumentiert werden — der DUT−Baseline-Latenzcheck ist bei manuellem
+Wiedergabestart nicht ableitbar (Startjitter ≫ Latenz).
+
 ## 2. Systemvoraussetzungen (Windows, nativ)
 
 - Python nativ (nicht WSL): `python -m pip install -r tools/requirements-scarlett.txt`.

@@ -876,3 +876,40 @@ GR- und GUI-Aussagen; aktuelle Anleitungen, Quellenzuordnung und Übergabe sind
 abgeglichen. Historische Mess-/Fitberichte und ihre Hashmanifeste behalten
 ihre damaligen Bedingungen und Fallzahlen. Der aktuelle Bericht ersetzt
 keine dort noch offene Geräte-, NAM- oder Hörprüfung.
+
+# Transformator-Matrix am Gerät — 2026-10-07 (Dwarf-Quelle)
+
+Erste vollständige Gerätemessung aller fünf Profile; Reihe
+`test-results/matrix-dwarf-20261007`, Protokoll `MESSTECHNIK.md` 1a/1b.
+18 gültige Läufe (Baseline/60s/80s/00s × r1+r2, Sym × r1, je zwei Kanäle),
+Anker −14/−8/−2 dBFS exakt, Spreizung r1/r2 ≤ 0,01 dB, OS 2x.
+
+| Profil | 20 Hz | 1 kHz | 12 kHz | 16 kHz | 20 kHz | 20-Hz-THD | 40-Hz-THD |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 60s | −0,21 dB | ±0,00 | −0,20 dB | −0,59 dB | −1,30 dB | 5,53 % | 0,73 % |
+| 80s | −0,04 dB | ±0,00 | −0,02 dB | −0,06 dB | −0,13 dB | 2,15 % | 0,08 % |
+| 00s | −0,02 dB | ±0,00 | −0,02 dB | −0,03 dB | −0,05 dB | 0,11 % | 0,02 % |
+| Sym | ±0,00 | ±0,00 | −0,01 dB | −0,03 dB | −0,04 dB | 0,01 % | 0,01 % |
+
+Frequenzgang relativ zur Bypass-Baseline (Bypass-Sweep selbst flach ±0,2 dB,
+20-Hz-THD 0,005 %); Klirr absolut am DUT-Ausgang. Digitale Querreferenz
+(Dwarf-Recorder) bestätigt Sym als linear flach (≤ 0,05 dB, THD 0,005 %).
+
+**Noch nicht mit den 1-%-Modellankern vergleichbar.** Die offline gefitteten
+20-Hz-1-%-Anker gelten am Transformator-Eingang nach Input-Gain und für die
+Transformatorstufe allein; die Gerätemessung enthält (a) die aktive
+Kompression mit deren GR-Verlauf, (b) die Colour-Stufe, (c) eine nicht
+dokumentierte Input-Gain-Stellung. Der Reihenbefund (60s > 80s > 00s ≫ Sym)
+ist dennoch belastbar, weil alle Profile unter **denselben** Bedingungen
+gemessen wurden und die Bypass-Referenz die Messkette heraushebt.
+
+Vergleichsprotokoll für die Ankerinterpretation (nächste Runde):
+1. Board-Zustand dokumentieren (`--settings-label`): Input-Gain 0 dB,
+   Compression OFF, Colour 0, Mix 100, OS-Stellung.
+2. Nur die 20-Hz-/Pegelstufen-Segmente vergleichen; als Referenz einmal
+   `transformer_probe` (offline, identischer Kern) mit denselben
+   Effektpegeln rendern.
+3. Abweichung gegenüber den offline erwarteten 1,00/1,00/1,00 % berichten —
+   nicht als Fehler der Bank ausgeben, bevor Input-Gain/GR-Anteil
+   herausgerechnet ist; Änderungen an der Bank selbst folgen dem
+   Refit-Vertrag (DSP.md).

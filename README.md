@@ -19,8 +19,9 @@ ist neutral beschriftet. Alle sechs Potiwerte stehen in kleinen hellgrauen
 Rechtecken, der Bypass hat keinen aufgedruckten Text. Auch GAIN/TIME tragen
 keine Gruppentitel; Input/Attack/Mix und Output/Release/Colour bilden jeweils
 eine gemeinsame Potireihe.
-`Mode` verwendet das MOD-Schalterwidget; verschieben
-lässt sich das Paneel am oberen Rand, ohne die Reglerbedienung mitzuziehen.
+`Mode` verwendet das MOD-Schalterwidget; das Paneel lässt sich am gesamten
+sichtbaren Rahmenring (oben, seitlich, unten) sowie an der Fußzeilenplatte
+verschieben, ohne die Reglerbedienung mitzuziehen.
 38 Presets; 01–36 instrumentweise gruppiert, die zwei 2:1-Varianten angehängt.
 Sechs Presets wählen ein Transformatorprofil.
 Alle Factory-Recall-Wege setzen Oversampling auf Off.
@@ -30,6 +31,10 @@ Kick Weight/Snare Crack erhalten langsamere Attackwerte für mehr Anschlag.
 Einzelbewertung und Messvergleich: [EXTERN — Presetbewertung](docs/EXTERN.md).
 Für echte Audiointerface-Messungen: [MESSTECHNIK — Scarlett](docs/MESSTECHNIK.md),
 mit Testton-/WAV-Erzeugung, Liveaufnahme und Frequenz-/Klirrauswertung.
+Erste vollständige Transformator-Matrix am Gerät (Dwarf als digitale
+Signalquelle, 2026-10-07): Sättigungsreihung 60s 5,53 % / 80s 2,15 % /
+00s 0,11 % 20-Hz-Klirr gegen Bypass 0,005 %; Wiederholungsspreizung ≤ 0,01 dB.
+Details: [PROJEKT](docs/PROJEKT.md), [MESSTECHNIK 1a/1b](docs/MESSTECHNIK.md).
 
 Aus 0.2.0: auswählbares Oversampling (Off/2x/4x, Default Off) als separate
 Qualitäts-/CPU-Auswahl; Off ist der CPU-günstige Referenzpfad. Im lokalen

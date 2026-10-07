@@ -468,6 +468,19 @@ nur als Planungsgröße brauchbar. Fachlich wichtig ist die Richtung: **vier
 Instanzen mit Transformator und 4× Oversampling wären danach nicht mehr
 unterzubringen**, während vier Instanzen None/OS Off klar unkritisch bleiben.
 
+### Reduktionshebel (Skizze 2026-10-07, Umsetzung offen)
+
+Aus dieser Messung folgt die Hebelreihenfolge; Details und Reihenfolge liegen
+in `TODO.md` (Abschnitt CPU-Reduktion Transformator). Kernpunkte: die
+Iterationszahl ist kein Hebel (2,0–2,6/Sample, 0 % am 40er-Limit), die **14
+Stop-Zweige je Auswertung** dominieren; paritätsneutral sind die Einsparung
+der finalen Doppel-Auswertung von `current()`, Build-Tuning (`-mcpu=cortex-a35`,
+LTO) und NEON 2-Lane für Stereo; Zweig-Spezialisierung und Toleranz kosten
+den vollen Paritätszyklus; OS-Entkopplung und Kennlinien-LUT sind
+Vertragsfragen (LUT nur nach A35-Microbench — die softClip-Messung oben zeigt,
+dass eine LUT auch langsamer sein kann). Serie B auf dem Dwarf ist die
+Entscheidungsbasis.
+
 ### Nachweis: der Diagnosezähler ist audioneutral
 
 `tests/diag_macro_parity.cpp` fährt 60 Fälle (5 Transformatoren × 3 OS-Stufen ×

@@ -4,6 +4,31 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 **Konsolidiert am 2026-10-06** aus den bisherigen Einzeldokumenten; Inhalt inhaltlich unverändert, Pfadangaben auf die neue Struktur angepasst.
 
+## Zusammenfassung (Stand 2026-10-07)
+
+- **Produkt 0.4.1:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
+  2:1-Varianten), hörbare Eingangstransformatoren 60s/80s/00s plus None und
+  die lineare Referenz Symmetric. DSP-Kern doppelpfadig (C++11/EEL2) mit
+  belegter Bit-Parität (506 Signalvergleiche, max 0 FS).
+- **Am Gerät nachgewiesen (2026-10-07):** erste vollständige
+  Transformator-Matrix aus digitaler Dwarf-Quelle — Anker exakt,
+  Wiederholungsspreizung ≤ 0,01 dB, Sättigungsreihung 60s/80s/00s am
+  20-Hz-Klirr (5,53/2,15/0,11 %) gegen Bypass 0,005 %; Symmetric als linear
+  flach bestätigt. Messweg: Testton-Dateien auf dem Dwarf
+  (`tools/make_dwarf_tones.py`), Aufnahme via REAPER, Import/Aggregation über
+  `tools/dwarf_reaper_series.py` (MESSTECHNIK 1a/1b).
+- **GUI am Gerät:** Logoquelle auf `/resources/…{{{ns}}}` korrigiert (Grund:
+  DOM-Injection löst relative URLs gegen die Seiten-URL auf); Paneel jetzt am
+  kompletten Rahmenring ziehbar (vier Leisten + Fußzeilenplatte, Cursor
+  `move`); beide Fixes im Build-Stand `7ceaed7`, `.mk` zeigt dorthin,
+  Geräte-Sichtprüfung offen.
+- **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
+  (PROJEKT Übergabe), `EXTERN.md`-Ankerinterpretation der Geräteserie,
+  Serie-B-CPU-Messung und danach Entscheidung über die CPU-Reduktionshebel
+  (TODO, Abschnitt CPU-Reduktion Transformator).
+- **Verbindlich:** keine Hardwaregleichheits-Claims; Portindizes/URIs stabil;
+  Bank-Refits ändern bestehende Projektklänge (Revision dokumentieren).
+
 ## Inhalt
 
 1. REQUIREMENTS.md — *(Quelle: REQUIREMENTS.md)*
@@ -136,14 +161,38 @@ Hardware-Revision A/D nicht bindend.
 - **Umstieg auf Dwarf als Signalquelle (2026-10-07):** Der Dwarf spielt die
   Testtöne selbst (File-Player → GS76 → DAC → nur noch Scarlett-ADC). Der
   Plugin-Eingang ist damit digital exakt pegelbekannt — `--level -2` trifft
-  die Anker −14/−8/−2 dBFS ohne Loop-Gewinn-Arithmetik; die gescheiterte
+  die Anker −14/−8/−2 dBFS ohne Loop-Gain-Arithmetik; die gescheiterte
   Pegelkette (oben) ist obsolet. Neu: `tools/make_dwarf_tones.py`
   (48-kHz/PCM_24-Uploaddateien + MANIFEST), `scarlett_test.py --no-playback`
   (Aufnahme mit 10-s-Vorlauf ohne Wiedergabe, `generate()`-Leveldeckel
   `max_level` nur für diesen Pfad geöffnet) und
-  `scarlett_matrix.py --dwarf-source` (fixer Dateipegel, Prompts je Lauf:
-  Enter → sofort Wiedergabe). Tests: 16 (scarlett_test) + 21 (Matrix) + 2
-  (Tongenerator) PASS. Messreihe am Gerät offen; TODO Scarlett.
+  `scarlett_matrix.py --dwarf-source` (fixer Dateipegel, Prompts je Lauf).
+  Da die Aufnahme in der Praxis über REAPER läuft, zusätzlich
+  `tools/dwarf_reaper_series.py` (Import je Stereo-Aufnahme in die
+  Treiber-Index-/Summary-Struktur, beide Kanäle aus einer Wiedergabe;
+  `build_summary` ist dwarf-bewusst, Anker werden digital geprüft). Tests:
+  17 (scarlett_test) + 21 (Matrix) + 2 (Tongenerator) + 3 (REAPER-Import) PASS.
+- **Erste vollständige Transformator-Matrix aus Dwarf-Quelle (2026-10-07,
+  `test-results/matrix-dwarf-20261007`):** Aufnahme via REAPER (48 kHz/24 bit,
+  lange Takes, Schnitt aus den Sync-Markern), Import je Kanal über
+  `tools/dwarf_reaper_series.py`. 18 gültige Läufe: Baseline/60s/80s/00s × r1+r2,
+  Sym × r1, je zwei Kanäle. Anker −14/−8/−2 dBFS exakt (Dateipegel =
+  Plugin-Eingang), Aufnahmepeaks ≈ −4 dBFS ohne Clipping, Kanaldifferenz
+  stabil −0,39 dB, Spreizung der Wiederholungen ≤ 0,01 dB. Befunde relativ zur
+  Bypass-Baseline: 60s −1,30 dB @ 20 kHz (−0,59 @ 16k), 80s −0,13 dB,
+  00s −0,05 dB, Sym −0,04 dB; 20-Hz-Klirr 60s **5,53 %**, 80s 2,15 %,
+  00s 0,11 %, Sym 0,01 % (Bypass 0,005 %) — Sättigungshärte-Reihung der
+  Profile am Gerät bestätigt. Digitale Dwarf-Recorder-Querreferenz (48 kHz)
+  bestätigt Sym als linear flach (≤ 0,05 dB, THD 0,005 %); der
+  Recorder-Zweig hat einen eigenen Offset (−4,3 bis −5,4 dB), der Player
+  selbst ist laut Benutzer Unity. Ein erster Sym-Analoglauf war um +4,8 dB
+  übersteuert (ungültig, verworfen); `playback1` der ersten Take war ein
+  abgebrochener Versuch (ignoriert). OS-Stellung der Runde laut Benutzer
+  **2x** (im Index/Label nachgetragen); die Plugin-Latenz (nominal 3 Frames
+  bei 2x) ist aus den Takes nicht ableitbar, weil der Wiedergabestart manuell
+  erfolgte (der DUT−Baseline-Latenzcheck gilt nur bei Skript-gesteuerter
+  Wiedergabe). 96-kHz-Messung ist über den Dwarf-Player nicht möglich (feste
+  48 kHz); Auswertung/Interpretation in `EXTERN.md` folgt.
 
 ### Scarlett-Liveaufnahme 2026-10-05: Auswertung und Grenzen (2026-10-06)
 

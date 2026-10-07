@@ -542,6 +542,7 @@ Nicht vollständig zugänglich:
 - [MOD Releases](https://wiki.mod.audio/wiki/Releases#Release_1.13)
 - [MOD Host effects.c](https://raw.githubusercontent.com/mod-audio/mod-host/master/src/effects.c)
 - [MOD UI modgui.js](https://raw.githubusercontent.com/mod-audio/mod-ui/master/html/js/modgui.js)
+- [MOD UI webserver.py](https://raw.githubusercontent.com/mod-audio/mod-ui/master/mod/webserver.py)
 - [Dwarf audio-settings manual](https://raw.githubusercontent.com/mod-audio/mod-dwarf-manual/main/docs/settings/audio-io.md)
 - [Dwarf web-access manual](https://raw.githubusercontent.com/mod-audio/mod-dwarf-manual/main/docs/first-pedalboard/web-ui-access.md)
 
@@ -550,6 +551,18 @@ und Code geprüft. Hersteller-DD-Kernel/Codecfähigkeit nicht mit Hostrate
 verwechseln. MPB-Defaults enthalten Fast-Math; Projekt override dokumentiert.
 Historisch wurde das GUI-Rotationswidget untersucht. Aktuell Aluminium-Filmstrip
 und echte Switch-/Bypass-Widgets; lokaler Browsertest bestanden, Gerätetest offen.
+
+**mod-ui-Codebelege für die modgui-Asset-Auflösung (2026-10-06/07, GitHub
+master):** `html/js/modgui.js` rendert das Icon-Template mit Mustache
+(`self.icon.html(Mustache.render(...))`); `getTemplateData` setzt `ns` auf die
+Cache-Query `?uri=<escaped>&v=<version>` und `cns` auf eine instanzspezifische
+Klassensuffix — relative URLs im Template lösen danach gegen die
+Pedalboard-Seiten-URL auf (Grund des Logo-Fehlers). `mod/webserver.py` routet
+`/resources/(.*)` über `EffectResource` in das `resourcesDirectory` des
+Plugins (Fallback: `HTML_DIR/resources`) — deshalb ist die Form
+`/resources/assets/…{{{ns}}}` die gerätetaugliche Referenz für CSS **und**
+HTML-`img src`. SHA256 der für den Widgettest verwendeten modgui.js:
+`49ef2446…` (siehe Lauf `tests/test_modgui.py`).
 
 ### LV2 / JSFX / YSFX
 

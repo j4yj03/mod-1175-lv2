@@ -425,6 +425,42 @@ geführt, wo sie wirklich stattgefunden haben.
   (kein askpass) — Board-Status also über den Benutzer erfragen, nicht
   annehmen.
 
+### Erste Matrix am Gerät — Praxiserkenntnisse (2026-10-07)
+
+- **REAPER statt PortAudio-Treiber:** die Serie lief als lange kontinuierliche
+  Take (48 kHz/24 bit, beide Kanäle) mit mehreren Wiedergaben dazwischen;
+  `tools/dwarf_reaper_series.py` importiert je Wiedergabe beide Kanäle in die
+  Treiber-Struktur. Import-Specs: `gainmatch | baseline:rN | 60s:rN`.
+- **Schnitt statt Render:** Wiedergabe-Startpunkte über die Marker-Chirps in
+  der Take finden (normierte FFT-Korrelation über gleitende Fenster;
+  Zweikanal-**Mittelung** hebt die Korrelation von ~0,52 auf ~0,99 —
+  Einzelkanalanalysen grenzen knapp an die 0,35-Grenze). REAPER-Renderdialog
+  hat eine **eigene Sample-Rate** unabhängig von der Projekt-Rate — zwei
+  Renderläufe fielen auf 44,1 kHz zurück; immer aus der Original-Take
+  schneiden.
+- **Bedingungen fingerabdrücken statt raten:** Bypass = flacher Sweep; Profile
+  über die 20-Hz-Klirr-Reihung (60s > 80s > 00s ≫ Bypass/Sym). Deckte sich
+  mit der Benutzerreihenfolge; bei Unstimmigkeit Fingerabdruck vor Label
+  trauen.
+- **Dwarf-Recorder als digitale Querreferenz:** parallel im Board mitlaufen
+  lassen; gegen dieselben Pläne analysierbar. Der Recorder-Zweig hat einen
+  eigenen Offset (gemessen −4,3…−5,4 dB), der File-Player ist laut Benutzer
+  Unity — Offset nie als Player-Gain interpretieren.
+- **Stille Übersteuerung:** eine um +4,8 dB heißere Aufnahme clippte komplett
+  (recorded_peak 0,0 dBFS in allen Segmenten → alle Läufe ungültig, Sync
+  sah normal aus). Nach jeder Regleränderung kurze Probe vor der Serie.
+- **OS-Provenienz:** der DUT−Baseline-Latenzcheck gilt nur bei
+  Skript-gesteuerter Wiedergabe; bei manuellem Start überlagert der Start-
+  jitter (±Sekunden) die 0/3/4-Frame-Latenz. OS-Stellung pro Runde vom
+  Benutzer erfragen und ins `--settings-label` schreiben.
+- **Anker in der Dwarf-Quelle:** Dateipegel = Plugin-Eingang; `build_summary`
+  prüft Anker jetzt digital (Index-Flag `dwarf_source`), Aufnahmepegel nur
+  noch als SNR-Diagnose.
+- **CPU-Bild des Transformators (x86-Bench 5c):** Iterationszahl kein Hebel
+  (2,0–2,6/Sample, 0 % am 40er-Limit); die 14 Stop-Zweige je Auswertung
+  dominieren; OS multipliziert. Hebel-Skizze (paritätsneutral →
+  Paritätspreis → Vertragsfragen) in TODO, Abschnitt CPU-Reduktion.
+
 ### Dwarf als Signalquelle (2026-10-07)
 
 - Der Dwarf spielt die Testtöne selbst (File-Player → GS76 → DAC → Scarlett-ADC
@@ -437,7 +473,9 @@ geführt, wo sie wirklich stattgefunden haben.
   Parameter identisch zur Treibergenerierung: settle 2, measure 1, 1 kHz),
   `scarlett_test.py record(..., play=False, pad_seconds=10)` bzw. CLI
   `run --no-playback --pad 10`, `scarlett_matrix.py --dwarf-source`
-  (fixer Level, kein Anchor-Guard-Abbruch, `analyze` mit `max_delay=pad`).
+  (fixer Level, kein Anchor-Guard-Abbruch, `analyze` mit `max_delay=pad`),
+  und für REAPER-Aufnahmen `tools/dwarf_reaper_series.py` (Import beider
+  Kanäle je Stereo-Wiedergabe in die Treiberstruktur, siehe oben).
 - Ablauf je Lauf: Enter → **sofort** Wiedergabe starten; die Aufnahme hat
   10 s Vorlauf. Achtung: `generate()` kappt den Peak standardmäßig bei −3 dBFS
   (ADC-Schutz der alten Kette); die Dwarf-Quelle überschreibt das bewusst mit
