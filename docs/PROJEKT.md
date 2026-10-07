@@ -72,6 +72,23 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   (`b`/`span`) sind `pointer-events:none`, damit auch Textklicks zoomen.
   Knopf-Drag löst bewusst kein Zoom aus (Negativkontrolle im Probe-Check
   PASS; Wiki „Creating the GUI" als Rollenreferenz konsultiert).
+  **Gerätebefund und Fix 2026-10-07:** MODs globale Regel
+  `.mod-pedal .mod-drag-handle { position:absolute; inset:0; z-index:20 }`
+  zog die Fußzeilenplatte über das komplette Paneel; beim rechten Rand blieb
+  außerdem das geerbte `left:0` aktiv. Dadurch war das ganze Rechteck
+  verschiebbar und die Fußzeile saß oben. Alle vier Leisten und die Platte
+  setzen nun Position/Kanten explizit zurück. Das Meter-JavaScript suchte
+  zugleich fälschlich `.gs76`, obwohl MOD die Klasse per `cns` suffixiert;
+  ein zusätzlicher statischer Hook `.gs76-root` stellt die COMP-ON/OFF-
+  Faceumschaltung wieder her. Der Browsertest reproduziert jetzt die echten
+  MOD-Basisregeln und führt das reale `grmeter.js` aus: PASS; erneute
+  Geräte-Sichtprüfung offen.
+  **Layoutnachpflege 2026-10-07:** der komplette ENGINE-Inhalt ist 6 px nach
+  oben gerückt. Ratio fluchtet damit mit den OUTPUT-/RELEASE-Wertefeldern
+  (gemessene Abweichung 0,078 px), COMP mit dem Transformer-Dropdown
+  (0,078 px). `vumeter-on.png` besitzt nun ein helleres warmes Face und einen
+  stärkeren radialen Glühlampen-Glow; der echte JS-Start-/Change-Pfad schaltet
+  bei COMP ON auf dieses Face und bei COMP OFF auf `vumeter-off.png`.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
   (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
   CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel

@@ -148,7 +148,7 @@ function (event, funcs) {
     var REST_DEG = -0.0, MAX_DB = 20.0, SWEEP = 90.0;
     function clamp(x, lo, hi) { return x < lo ? lo : (x > hi ? hi : x); }
     function setState(on) {
-        var root = event.icon.find('.gs76');
+        var root = event.icon.find('.gs76-root');
         root.addClass(on ? 'gs-comp-on' : 'gs-comp-off');
         root.removeClass(on ? 'gs-comp-off' : 'gs-comp-on');
     }
@@ -324,8 +324,8 @@ def gui_html(stereo, parameters, version):
      Unlabelled bypass beside the amber pilot. Light from upper left.
      Drag handles: full frame ring (top/left/right/bottom rails), footer plate.
      Footer plate carries the variant and the version+revision line.
-     No GR/level meters. -->
-<div class="gs76{{{{{{cns}}}}}}">
+     The ENGINE bay carries the GR VU meter; there are no input meters. -->
+<div class="gs76{{{{{{cns}}}}}} gs76-root">
 <div class="mod-drag-handle gs-drag gs-drag-top" mod-role="drag-handle" title="Paneel verschieben"></div>
 {screws(False, (0, 45, 18, 67))}
 <div class="mod-drag-handle gs-drag gs-drag-left" mod-role="drag-handle" title="Paneel verschieben"></div>

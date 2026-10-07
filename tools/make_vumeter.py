@@ -40,9 +40,9 @@ BEZEL_EDGE = (111, 118, 121)
 
 # Paletten je Zustand: on = warmes Backlight, off = gedimmt/entsättigt
 PALETTES = {
-    True: dict(face_top=(255, 241, 205), face_bottom=(238, 213, 156),
+    True: dict(face_top=(255, 248, 222), face_bottom=(246, 220, 160),
                ink=(28, 26, 22), tick=(48, 42, 36), red=(176, 54, 48),
-               glow=(255, 214, 130)),
+               glow=(255, 224, 142)),
     False: dict(face_top=(203, 200, 189), face_bottom=(173, 170, 159),
                 ink=(58, 60, 63), tick=(82, 84, 87), red=(148, 96, 91),
                 glow=None),
@@ -115,7 +115,9 @@ def render(scale_max, lit=True):
         gd = ImageDraw.Draw(glow)
         for step in range(rings, 0, -1):
             rr = (step / rings) * radius * 1.25
-            alpha = int(88 * (1.0 - step / rings) ** 2) + 6
+            # Deutliches, aber weiches Glühlampenlicht hinter der Skala:
+            # warmer heller Kern, der zum Rand hin breit ausläuft.
+            alpha = int(150 * (1.0 - step / rings) ** 2) + 8
             gd.ellipse((gx - rr * 1.25, gy - rr, gx + rr * 1.25, gy + rr),
                        fill=pal['glow'] + (alpha,))
         img = Image.alpha_composite(img, glow)

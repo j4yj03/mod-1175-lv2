@@ -18,6 +18,7 @@ def main():
     args = parser.parse_args()
     scripts = args.mod_ui/'html/js'
     source = (scripts/'modgui.js').read_text(encoding='utf-8')
+    grmeter = (ROOT/'lv2/green-stripe-76.lv2/modgui/grmeter.js').read_text(encoding='utf-8')
     # The upstream widget section is self-contained. Use it unchanged, not a
     # reimplementation of its switch/film/bypass state machine.
     widgets = source[source.index('function JqueryClass()'):]
@@ -29,6 +30,13 @@ def main():
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.set_content(page_html(variant), wait_until='load')
+            # Reproduce MOD's global full-panel default for this class. Every
+            # custom handle must override it explicitly; otherwise a footer
+            # handle becomes an invisible overlay across the complete GUI.
+            page.add_style_tag(content='''.mod-pedal .mod-drag-handle {
+              position:absolute; inset:0; z-index:20;
+            }''')
+            page.locator('.gs76-root').evaluate("e => { const wrapper=document.createElement('div'); wrapper.className='mod-pedal'; e.parentNode.insertBefore(wrapper,e); wrapper.appendChild(e); }")
             for name in ('jquery-1.9.1.min.js', 'jquery-ui-1.10.1.custom.min.js', 'jquery.mousewheel.min.js'):
                 page.add_script_tag(path=str(scripts/'lib'/name))
             page.evaluate('window.isSDK=false; window.desktop={pedalboard:{pedalboard:function(){}}};')
@@ -58,6 +66,7 @@ def main():
             for a,b in zip(boxes, boxes[1:]):
                 assert abs(a['x']+a['width']-b['x']) < .01, 'Gap between panels'
             assert page.locator('.gs-brand').evaluate('e => getComputedStyle(e).borderTopWidth') == '0px'
+            assert page.locator('.gs76-root').count() == 1, 'Static JS root hook missing'
             # Engine bay: VU meter between the logo and the ratio/COMP stack;
             # oversampling and stereo link are host-settings-only now.
             assert page.locator('select[mod-port-symbol=oversampling]').count() == 0
@@ -69,20 +78,37 @@ def main():
             brand = page.locator('.gs-brand').bounding_box()
             ratio = page.locator('select[mod-port-symbol=ratio]').bounding_box()
             mode = page.locator('[mod-port-symbol=compression][mod-role=input-control-port]')
+            output_value = page.locator('[mod-role=input-control-value][mod-port-symbol=output]').bounding_box()
+            release_value = page.locator('[mod-role=input-control-value][mod-port-symbol=release]').bounding_box()
+            transformer = page.locator('select[mod-port-symbol=transformer]').bounding_box()
             assert vu_on['y'] >= brand['y'] + brand['height'] - 1, 'VU must sit below the logo'
             assert ratio['y'] > vu_on['y'] + vu_on['height'], 'Ratio belongs below the VU'
             assert mode.bounding_box()['y'] > ratio['y'], 'COMP belongs below the ratio select'
+            assert abs(ratio['y'] - output_value['y']) < .1
+            assert abs(ratio['y'] - release_value['y']) < .1
+            assert abs(mode.bounding_box()['y'] - transformer['y']) < .1
             assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '0'
             assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '1'
             assert page.locator('.gs-vu-needle').evaluate("e => getComputedStyle(e).transform") == 'none'
-            page.evaluate("$('.gs76').addClass('gs-comp-on')")
+            page.evaluate('''source => {
+              const callback=eval('('+source+')');
+              callback({type:'start',icon:$('body'),ports:[
+                {symbol:'compression',value:1},{symbol:'gr_db',value:-10}
+              ]}, {});
+            }''', grmeter)
             page.wait_for_timeout(150)  # opacity transition is 60 ms
             assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '1'
             assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '0'
-            page.evaluate("$('.gs76').removeClass('gs-comp-on').addClass('gs-comp-off')")
+            assert page.locator('.gs-vu-needle').evaluate("e => getComputedStyle(e).transform") != 'none'
+            page.evaluate('''source => {
+              const callback=eval('('+source+')');
+              callback({type:'change',icon:$('body'),symbol:'compression',value:0}, {});
+            }''', grmeter)
             page.wait_for_timeout(150)
+            assert page.locator('.gs76-root').evaluate("e => e.classList.contains('gs-comp-off')")
             assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '0'
-            page.evaluate("$('.gs76').removeClass('gs-comp-off')")
+            assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '1'
+            page.evaluate("$('.gs76-root').removeClass('gs-comp-off')")
             assert mode.locator('span:visible').inner_text() == 'COMP ON'
             mode.click(); assert 'off' in mode.get_attribute('class')
             assert mode.locator('span:visible').inner_text() == 'COMP OFF'
@@ -90,11 +116,11 @@ def main():
             assert page.evaluate("changes.filter(x=>x.symbol==='compression').map(x=>x.value)") == [0,1]
             # Host recall does not emit a parameter write; knob should still drag afterwards.
             page.evaluate("$('[mod-role=input-control-port][mod-port-symbol=input]').controlWidget('setValue',0,true)")
-            before = page.locator('.gs76').bounding_box()
+            before = page.locator('.gs76-root').bounding_box()
             knob = page.locator('[mod-role=input-control-port][mod-port-symbol=input]')
             box = knob.bounding_box(); x=box['x']+25; y=box['y']+25
             page.mouse.move(x,y); page.mouse.down(); page.mouse.move(x,y-35,steps=10); page.mouse.up()
-            after = page.locator('.gs76').bounding_box()
+            after = page.locator('.gs76-root').bounding_box()
             assert before == after, 'Knob drag moved the panel'
             assert page.evaluate("changes.some(x=>x.symbol==='input' && x.value!==0 && Number.isFinite(x.value))")
             bypass = page.locator('.gs-bypass')
@@ -110,7 +136,7 @@ def main():
                 box = handle.bounding_box()
                 page.mouse.move(box['x']+ox, box['y']+oy); page.mouse.down()
                 page.mouse.move(box['x']+ox+30, box['y']+oy+20, steps=5); page.mouse.up()
-                return page.locator('.gs76').bounding_box()
+                return page.locator('.gs76-root').bounding_box()
             n_before = page.evaluate('changes.length')
             last_x = after['x']
             for name, (handle, ox, oy) in {
@@ -125,9 +151,15 @@ def main():
             for name in ('.gs-drag-top', '.gs-drag-left', '.gs-drag-right', '.gs-drag-bottom'):
                 assert page.locator(name).evaluate('e => getComputedStyle(e).cursor') == 'move', \
                     name+' is not a move cursor'
+            panel_box = page.locator('.gs76-root').bounding_box()
+            plate_box = page.locator('.gs-plate').bounding_box()
+            assert plate_box['height'] < panel_box['height'] / 2, \
+                'Footer drag handle expanded over the complete panel'
+            assert plate_box['y'] > boxes[0]['y'] + boxes[0]['height'], \
+                'Footer drag handle escaped the footer layout'
             # Frame rails tile the padding ring; controls and jacks stay uncovered.
-            assert page.evaluate('''() => {
-              const panel=document.querySelector('.gs76').getBoundingClientRect();
+            frame_check = page.evaluate('''() => {
+              const panel=document.querySelector('.gs76-root').getBoundingClientRect();
               const strip=n=>{const b=document.querySelector(n).getBoundingClientRect();
                 let covered=0;
                 for(let x=b.x; x<=b.x+b.width; x+=6)
@@ -147,8 +179,9 @@ def main():
                 .every(c=>{const q=c.getBoundingClientRect();
                   const e=document.elementFromPoint(q.x+q.width/2,q.y+q.height/2);
                   return !e||!e.closest('.gs-drag')});
-              return tiled&&controls;
-            }'''), 'Frame rails must tile the ring and leave controls uncovered'
+              return {ok:tiled&&controls,t,l,r,b,controls,panel:{x:panel.x,y:panel.y,w:panel.width,h:panel.height}};
+            }''')
+            assert frame_check['ok'], 'Frame rails must tile the ring and leave controls uncovered: '+str(frame_check)
             assert page.evaluate('changes.length') == n_before, 'Panel drag emitted a parameter change'
             assert page.evaluate('changes.every(x=>Number.isFinite(x.value))')
             assert not errors, errors

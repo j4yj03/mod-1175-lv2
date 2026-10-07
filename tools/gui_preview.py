@@ -40,4 +40,9 @@ def default_controls(page):
         if (value) value.textContent = p.labels ? p.labels[p.default] : p.default + (p.unit === 'db' ? ' dB' : p.unit === 'pc' ? '%' : '');
       });
       document.querySelector('[mod-role="bypass"]').classList.add('off');
+      const compression = parameters.find(p => p.symbol === 'compression');
+      document.querySelector('.gs76-root').classList.toggle(
+        'gs-comp-on', Boolean(compression && compression.default > 0.5));
+      document.querySelector('.gs76-root').classList.toggle(
+        'gs-comp-off', Boolean(!compression || compression.default <= 0.5));
     }''', parameters)

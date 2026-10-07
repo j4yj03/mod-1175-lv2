@@ -76,9 +76,13 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
   danach 21/22 sowie 31/37 und 35/38 im Pedalboard hören, CPU/xruns prüfen.
 - [ ] Reale REAPER-7-Abnahme (Recall/Automation/Host-GR/Fonts) und
   Dwarf-Bedienprüfung (PROJEKT, Abschnitt Übergabe P0/P1).
-- [ ] Neue Drag-Handles am Gerät ziehen: unterer 9-px-Rand und Fußzeilenplatte
-  (Cursor, Panel-Move, keine Reglerberührung). Toolkit-Bindung ist belegt
-  (MESSTECHNIK, Abschnitt MOD-GUI-Browsertest); Lauf mit echter MOD-UI-Quelle offen.
+- [ ] Korrigierte Drag-Handles am Gerät prüfen: MODs globale
+  `.mod-drag-handle`-Regel hatte die Fußzeilenplatte auf das gesamte Paneel
+  aufgezogen und beim rechten Rand `left:0` vererbt. CSS setzt nun alle Kanten
+  der vier Leisten und der Platte explizit zurück; lokaler Test mit den echten
+  MOD-Basisregeln PASS. Gerätelauf offen (Cursor, Panel-Move, keine
+  Reglerberührung). Dabei auch ENGINE-Ausrichtung (Ratio zu OUTPUT/RELEASE,
+  COMP zu Transformer) und helles VU-Face bei COMP ON visuell bestätigen.
 
 ## Offen — Klangmodell und Analyse
 

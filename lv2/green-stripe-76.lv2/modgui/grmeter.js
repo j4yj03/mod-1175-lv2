@@ -7,7 +7,7 @@ function (event, funcs) {
     var REST_DEG = -0.0, MAX_DB = 20.0, SWEEP = 90.0;
     function clamp(x, lo, hi) { return x < lo ? lo : (x > hi ? hi : x); }
     function setState(on) {
-        var root = event.icon.find('.gs76');
+        var root = event.icon.find('.gs76-root');
         root.addClass(on ? 'gs-comp-on' : 'gs-comp-off');
         root.removeClass(on ? 'gs-comp-off' : 'gs-comp-on');
     }
