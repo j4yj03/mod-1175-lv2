@@ -13,8 +13,10 @@
     modgui:resourcesDirectory <modgui>;
     modgui:iconTemplate <modgui/icon-mono.html>;
     modgui:stylesheet <modgui/green-stripe.css>;
+    modgui:javascript <modgui/grmeter.js>;
     modgui:screenshot <modgui/screenshot-mono.png>;
     modgui:thumbnail <modgui/thumbnail-mono.png>;
+    modgui:monitoredOutputs     [ lv2:symbol "gr_db" ] ;
     modgui:port
     [ lv2:index 0; lv2:symbol "input"; lv2:name "Input" ],
     [ lv2:index 1; lv2:symbol "output"; lv2:name "Output" ],
@@ -25,14 +27,17 @@
     [ lv2:index 6; lv2:symbol "colour"; lv2:name "Colour" ],
     [ lv2:index 7; lv2:symbol "compression"; lv2:name "Compression" ],
     [ lv2:index 8; lv2:symbol "oversampling"; lv2:name "Oversampling" ],
-    [ lv2:index 9; lv2:symbol "transformer"; lv2:name "Transformer" ] ] .
+    [ lv2:index 9; lv2:symbol "transformer"; lv2:name "Transformer" ],
+    [ lv2:index 10; lv2:symbol "gr_db"; lv2:name "Gain Reduction" ] ] .
 
 <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-stereo> modgui:gui [
     modgui:resourcesDirectory <modgui>;
     modgui:iconTemplate <modgui/icon-stereo.html>;
     modgui:stylesheet <modgui/green-stripe.css>;
+    modgui:javascript <modgui/grmeter.js>;
     modgui:screenshot <modgui/screenshot-stereo.png>;
     modgui:thumbnail <modgui/thumbnail-stereo.png>;
+    modgui:monitoredOutputs     [ lv2:symbol "gr_db" ] ;
     modgui:port
     [ lv2:index 0; lv2:symbol "input"; lv2:name "Input" ],
     [ lv2:index 1; lv2:symbol "output"; lv2:name "Output" ],
@@ -44,5 +49,6 @@
     [ lv2:index 7; lv2:symbol "compression"; lv2:name "Compression" ],
     [ lv2:index 8; lv2:symbol "stereo_link"; lv2:name "Stereo Link" ],
     [ lv2:index 9; lv2:symbol "oversampling"; lv2:name "Oversampling" ],
-    [ lv2:index 10; lv2:symbol "transformer"; lv2:name "Transformer" ] ] .
+    [ lv2:index 10; lv2:symbol "transformer"; lv2:name "Transformer" ],
+    [ lv2:index 11; lv2:symbol "gr_db"; lv2:name "Gain Reduction" ] ] .
 

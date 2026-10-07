@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MIT — Green Stripe 76.
    Joined rack plates; upper-left lighting and independently rotated screw slots.
    Supplied aluminium/toggle filmstrips and scaled pilot SVGs.
-   Draggable: top rail, footer plate and bottom rail. MOD owns control interaction/state. */
+   Draggable: full frame ring and footer plate. MOD owns control interaction/state. */
 .gs76{{{cns}}} { width:780px; box-sizing:border-box; position:relative; color:#10161a; font:13px Arial,Helvetica,sans-serif; padding:26px 30px 8px; border:1px solid #6f7679; border-radius:7px;
   background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(0,0,0,.07)),repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 1px,rgba(0,0,0,.05) 1px 3px),linear-gradient(180deg,#ced4d7 0%,#bcc3c6 46%,#b0b7ba 54%,#c5cbcd 100%);
   box-shadow:5px 7px 14px rgba(0,0,0,.20),1px 2px 3px rgba(0,0,0,.16),inset 1px 1px 1px rgba(255,255,255,.75),inset -2px -2px 5px rgba(0,0,0,.18); }
@@ -36,24 +36,30 @@
 .gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; box-sizing:border-box; padding:14px 9px 9px;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
 .gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
-.gs76{{{cns}}} .gs-brand { position:absolute; top:19px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
+.gs76{{{cns}}} .gs-brand { position:absolute; top:22px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-bay-engine { border-color:#14432a; background:#1c5a39;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.18),inset -1px -1px 2px rgba(0,0,0,.25); }
 .gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
 .gs76{{{cns}}} .gs-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .gs76{{{cns}}} .gs-body > :last-child { margin-bottom:0; }
-/* Reserve the dropdown row in all knob modules, keeping both pot rows level. */
-.gs76{{{cns}}} .gs-body-knobs,.gs76{{{cns}}} .gs-body-engine { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
+/* Reserve the dropdown row in knob modules, keeping both pot rows level. */
+.gs76{{{cns}}} .gs-body-knobs { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-control,.gs76{{{cns}}} .gs-body-knobs > .gs-field { margin:0; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-field { display:flex; }
-/* Ratio ends on the first pot's value row; title is outside this shared grid. */
-.gs76{{{cns}}} .gs-body-engine > .gs-field { display:flex; flex-direction:column; margin:0; }
-.gs76{{{cns}}} .gs-body-engine > .gs-field:first-child { align-self:end; }
-.gs76{{{cns}}} .gs-body-engine select[mod-port-symbol="ratio"] { height:20px; }
-.gs76{{{cns}}} .gs-engine-controls { grid-row:2 / 4; width:100%; display:flex; flex-direction:column; gap:7px; align-self:start; }
+/* Engine bay: VU meter on top, ratio and COMP beneath; light from upper left. */
+.gs76{{{cns}}} .gs-body-engine { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding-top:64px; transform:translateY(-6px); }
+.gs76{{{cns}}} .gs-vuwrap { position:relative; width:100%; max-width:172px; height:0; padding-bottom:66.1538%; }
+.gs76{{{cns}}} .gs-vu { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.gs76{{{cns}}} .gs-vu-on { opacity:0; transition:opacity 60ms linear; }
+.gs76{{{cns}}} .gs-vu-off { transition:opacity 60ms linear; }
+.gs76{{{cns}}}.gs-comp-on .gs-vu-on { opacity:1; }
+.gs76{{{cns}}}.gs-comp-on .gs-vu-off { opacity:0; }
+/* Needle asset points to 0 dB GR (left scale end); grmeter.js rotates it
+   relative to rest around the pivot (50% / 96.5% of the 260x172 canvas). */
+.gs76{{{cns}}} .gs-vu-needle { position:absolute; inset:0; width:100%; height:100%;
+  transform-origin:50% 96.5%; transition:transform 90ms linear; will-change:transform; }
+.gs76{{{cns}}} .gs-engine-controls { width:100%; max-width:172px; display:flex; flex-direction:column; gap:7px; }
 .gs76{{{cns}}} .gs-engine-controls > .gs-field { display:flex; flex-direction:column; margin:0; }
-/* Put the breathing space above the quality controls, never between OS and Link. */
-.gs76{{{cns}}} .gs-engine-controls > .gs-field:first-child { margin-bottom:33px; }
 
 .gs76{{{cns}}} .gs-control { width:136px; text-align:center; margin:0 auto 10px; }
 .gs76{{{cns}}} .gs-knob-row { display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:8px; }
@@ -65,13 +71,13 @@
 .gs76{{{cns}}} .gs-knob { width:50px; height:50px; flex:none; cursor:ns-resize; touch-action:none;
   background-image:url(/resources/assets/aluminium.png{{{ns}}}); background-repeat:no-repeat; background-size:3250px 50px;
   filter:drop-shadow(2px 3px 2px rgba(0,0,0,.23)); }
-.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; line-height:10px; letter-spacing:1.2px; }
-.gs76{{{cns}}} .gs-control .gs-value { display:block; box-sizing:border-box; width:76px; min-height:20px; margin:3px auto 0; padding:2px 6px; font-size:10px; line-height:14px; white-space:nowrap; }
+.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; line-height:10px; font-weight:bold; letter-spacing:1.2px; }
+.gs76{{{cns}}} .gs-control .gs-value { display:block; box-sizing:border-box; width:76px; min-height:20px; margin:3px auto 0; padding:2px 6px; font-size:10px; line-height:14px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-field { width:100%; margin:0 0 7px; }
 .gs76{{{cns}}} .gs-field > label { display:block; margin:0 0 3px; font-size:8.5px; font-weight:bold; letter-spacing:1.4px; }
 .gs76{{{cns}}} select,.gs76{{{cns}}} .gs-value { color:#10161a; border:1px solid #6f777b; border-radius:3px; background:#e0e5e7;
   box-shadow:inset 1px 1px 2px rgba(0,0,0,.14),1px 1px 0 rgba(255,255,255,.4); }
-.gs76{{{cns}}} select { width:100%; height:23px; font-size:10px; }
+.gs76{{{cns}}} select { width:100%; height:23px; font-size:10px; font-weight:bold; }
 .gs76{{{cns}}} .gs-bay-engine select { background:#d8e7dd; border-color:#3f7a58; }
 .gs76{{{cns}}} .gs-switch { position:relative; height:23px; border-radius:3px; cursor:pointer; touch-action:none;
   border:1px solid #4a1512; background:linear-gradient(180deg,#a8342f,#7d201d); box-shadow:inset 0 2px 4px rgba(0,0,0,.45); }
@@ -90,6 +96,8 @@
 .gs76{{{cns}}} .gs-power { grid-column:3; display:grid; grid-template-columns:44px 44px; gap:12px; align-items:center; justify-content:center; justify-items:center; margin-right:1px; }
 .gs76{{{cns}}} .gs-plate b { display:block; font-size:10px; font-weight:bold; letter-spacing:2px; }
 .gs76{{{cns}}} .gs-plate span { display:block; margin-top:1px; font-size:8px; font-weight:bold; letter-spacing:1.6px; }
+/* Version+revision line under the variant label; same ink keeps the contrast. */
+.gs76{{{cns}}} .gs-plate span.gs-plate-version { margin-top:2px; font-weight:normal; letter-spacing:.8px; }
 /* Two vertical 88x128 frames. Bypass value 1 is OFF audio, value 0 ON audio. */
 .gs76{{{cns}}} .gs-bypass { order:2; position:relative; width:44px; height:64px; flex:none; cursor:pointer; touch-action:none;
   background-image:url(/resources/assets/toggle.png{{{ns}}}); background-size:44px 128px; background-repeat:no-repeat; background-position:0 0;
@@ -100,11 +108,18 @@
 .gs76{{{cns}}} .gs-bypass.on ~ .gs-lamp { background-image:url(/resources/assets/pilot_off.svg{{{ns}}}); }
 /* Override MOD's full-panel overlay explicitly: controls are never descendants
    of the handle, so mouse/touch knob gestures cannot start panel dragging.
-   The bottom rail mirrors the top rail; the plate makes the footer label draggable
-   without covering the bypass/lamp controls in the power column. */
-.gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; top:0; left:26px; right:26px; bottom:auto; width:auto; height:24px; z-index:1; cursor:move; }
-.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; height:9px; }
-.gs76{{{cns}}} .gs-plate.gs-drag-foot { cursor:move; touch-action:none; }
+   The four rails tile the visible frame ring exactly (panel padding: 26px top,
+   30px sides, 8px bottom) without covering bays, footer or the power column;
+   the plate makes the footer label draggable as well. */
+.gs76{{{cns}}} .mod-drag-handle.gs-drag { position:absolute; z-index:1; cursor:move; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-top { top:0; right:0; bottom:auto; left:0; height:26px; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-left { top:26px; right:auto; bottom:9px; left:0; width:30px; height:auto; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-right { top:26px; right:0; bottom:9px; left:auto; width:30px; height:auto; }
+.gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; left:0; right:0; height:9px; }
+.gs76{{{cns}}} .gs-plate.gs-drag-foot { position:relative; top:auto; right:auto; bottom:auto; left:auto; z-index:auto; cursor:move; touch-action:none; }
+/* Pedalboard zooms on drag-handle clicks (event.target must carry
+   mod-drag-handle); children pass clicks through to the plate itself. */
+.gs76{{{cns}}} .gs-plate b, .gs76{{{cns}}} .gs-plate span { pointer-events:none; }
 .gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
 .gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
 .gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }
