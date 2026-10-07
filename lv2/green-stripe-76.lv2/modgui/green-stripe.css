@@ -57,7 +57,7 @@
 /* Needle asset points to 0 dB GR (left scale end); grmeter.js rotates it
    relative to rest around the pivot (50% / 96.5% of the 260x172 canvas). */
 .gs76{{{cns}}} .gs-vu-needle { position:absolute; inset:0; width:100%; height:100%;
-  transform-origin:50% 96.5%; transition:transform 90ms linear; will-change:transform; }
+  transform-origin:50% 96.5%; transition:transform 300ms ease-out; will-change:transform; }
 .gs76{{{cns}}} .gs-engine-controls { width:100%; max-width:172px; display:flex; flex-direction:column; gap:7px; }
 .gs76{{{cns}}} .gs-engine-controls > .gs-field { display:flex; flex-direction:column; margin:0; }
 

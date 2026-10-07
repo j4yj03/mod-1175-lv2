@@ -99,6 +99,9 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   60-ms-Face-Überblendung. Zuvor wurde das zuerst gerenderte Mono-Bild mitten
   im Übergang aufgenommen und wirkte deshalb fälschlich wie COMP OFF; der
   Laufzeitzustand war in Mono und Stereo bereits identisch ON.
+  **Nadelballistik 2026-10-08:** die reine CSS-Anzeige folgt neuen Zielwerten
+  mit einer 300-ms-Ease-out-Bewegung. Das ergibt ungefähr VU-artige Trägheit;
+  der blockweise `gr_db`-Port und der DSP-/GR-Verlauf bleiben unverändert.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
   (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
   CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel
