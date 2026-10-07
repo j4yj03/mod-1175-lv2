@@ -153,7 +153,21 @@ struct TransformerCore {
         stats.iterations+=usedIterations; ++stats.samples;
         if (usedIterations>=40) ++stats.capped;
 #endif
-        i=current(x,c,derivative,true);
+        if (converged) {
+            // Konvergiertes x: Wert/Ableitung sind identisch reproduzierbar;
+            // nur die Zustands-Aktualisierung fehlt noch — ohne erneute
+            // Auswertung von law()/Stops (bitidentische Formeln/Reihenfolge).
+            const double z=((1.0-c.relaxation)*relax+c.relaxation*(x+flux))/
+                (1.0+c.relaxation);
+            relax=zap(z);
+            for (unsigned j=0; j<14; ++j) {
+                const double trial=stops[j]+x-flux;
+                stops[j]=zap(bounded(trial,-transformer_model::thresholds[j],
+                                     transformer_model::thresholds[j]));
+            }
+        } else {
+            i=current(x,c,derivative,true);
+        }
         flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
         const double raw=voltage*c.outputScale;
         const double y=c.b0*raw+c.b1*x1-c.a1*y1-c.a2*y2;
