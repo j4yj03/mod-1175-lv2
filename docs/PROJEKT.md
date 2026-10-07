@@ -16,16 +16,28 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   20-Hz-Klirr (5,53/2,15/0,11 %) gegen Bypass 0,005 %; Symmetric als linear
   flach bestätigt. Messweg: Testton-Dateien auf dem Dwarf
   (`tools/make_dwarf_tones.py`), Aufnahme via REAPER, Import/Aggregation über
-  `tools/dwarf_reaper_series.py` (MESSTECHNIK 1a/1b).
+  `tools/dwarf_reaper_series.py` (MESSTECHNIK 1a/1b). **Provenanz-Korrektur
+  (2026-10-07):** die Zahlen beschreiben dieselbe Bank bei je Lauf
+  unbekannter Eingangsdämpfung (INPUT-Knopf aus der Gainmatch-Phase;
+  H3/H5-Drive-Verhältnisse belegen 60s −3,5 dB, 00s −9,2 dB) — als Anker
+  unbrauchbar, als Trendreihe konsistent (MESSTECHNIK 1c).
+- **JSFX-Render-Referenz (2026-10-07):** die vier Typen der aktuellen Bank als
+  48-kHz-Render (`reaper/testbench/matrix-*_jsfx_…10_54_15.wav`), bitnah gegen
+  den C++-Offline-Render verifiziert (max < 1 LSB, Offset −3 Samples =
+  REAPER-PDC der 2x-Latenz) — JSFX↔C++-Parität erstmals am vollen
+  Matrixprogramm belegt (MESSTECHNIK 1c,
+  `test-results/jsfx-render-ref-20261007`).
 - **GUI am Gerät:** Logoquelle auf `/resources/…{{{ns}}}` korrigiert (Grund:
   DOM-Injection löst relative URLs gegen die Seiten-URL auf); Paneel jetzt am
   kompletten Rahmenring ziehbar (vier Leisten + Fußzeilenplatte, Cursor
   `move`); beide Fixes im Build-Stand `7ceaed7`, `.mk` zeigt dorthin,
   Geräte-Sichtprüfung offen.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
-  (PROJEKT Übergabe), `EXTERN.md`-Ankerinterpretation der Geräteserie,
-  Serie-B-CPU-Messung und danach Entscheidung über die CPU-Reduktionshebel
-  (TODO, Abschnitt CPU-Reduktion Transformator).
+  (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
+  CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel
+  (TODO, Abschnitt CPU-Reduktion Transformator); optional direkte
+  20-Hz-Ankermessung von 60s/80s bei −14/−8 dBFS (Stimuluserweiterung).
+  Die Ankerinterpretation der Geräteserie ist abgeschlossen (EXTERN).
 - **Verbindlich:** keine Hardwaregleichheits-Claims; Portindizes/URIs stabil;
   Bank-Refits ändern bestehende Projektklänge (Revision dokumentieren).
 
@@ -193,6 +205,42 @@ Hardware-Revision A/D nicht bindend.
   erfolgte (der DUT−Baseline-Latenzcheck gilt nur bei Skript-gesteuerter
   Wiedergabe). 96-kHz-Messung ist über den Dwarf-Player nicht möglich (feste
   48 kHz); Auswertung/Interpretation in `EXTERN.md` folgt.
+
+  **Provenanz-Korrektur (2026-10-07, nachgehend):** Vergleich gegen die
+  aktuelle Modellbank zeigt Unvereinbarkeit. Digitale JSFX-Render-Referenz
+  (MESSTECHNIK 1c, `test-results/jsfx-render-ref-20261007`): 1-kHz-Transparenz
+  der Geräteserie ⇒ Colour ≈ 0; der 20-Hz-Klirr der aktuellen Bank ist
+  colour-invariant (60s 12,4 %, Grundwelle und Klirr skalieren gemeinsam),
+  die Serie maß 5,53 %; Gains matchen Bank-only (80 Hz −0,05 dB, 00s −0,016 dB),
+  Klirrmagnituden 2,25×/9× zu hoch, Harmonischenstruktur identisch (H3 ≫ H5 ≫
+  H2). **Aufgelöst (2026-10-07 nachmittags):** Bundle `48ab885` (HEAD) via MPB
+  neu gebaut und installiert; erste Wiederholung ungültig (Parameterwechsel
+  ohne Wirkung — Sitzungszustand), zweite Serie gültig
+  (`matrix-dwarf-20261007-b2`): 20-Hz-Klirr 60s **12,42 %** / 80s 12,28 % /
+  00s 1,00 % / Sym 0,00 %, relative Gains −0,817/−0,441/−0,016/−0,002 dB —
+  deckt sich mit der digitalen Referenz bis in die 4. Dezimale. **Die aktuelle
+  Bank ist am Gerät messtechnisch bestätigt** (A35, aarch64, −O3,
+  `-ffp-contract=off`). Die Nachtwerte (5,53/2,15/0,11 %) erklären sich als
+  **dieselbe Bank bei eingangsgedämpfter Messung** (INPUT-Knopf aus der
+  Gainmatch-Phase; H3/H5-Drive-Verhältnisse 60s −3,5 dB, 00s −9,2 dB); die
+  Gerät-Binary (`e6b4e55…`) trägt die aktuellen Bankkonstanten bitweise
+  (87/87 double-Konstanten) — die frühere „Refit-Zwischenstand"-Deutung ist
+  widerlegt. Interpretation gegen `EXTERN.md` durchgeführt (Anker von 00s
+  exakt getroffen; 60s/80s by design).
+  **Colour-Stufen ebenfalls validiert (2026-10-07):** Transformer None,
+  Colour 5–100 %, deckungsgleich mit der Referenz bis in die 4. Dezimale
+  (`colour-dwarf-20261007`); 1-kHz-Klirr/Gain linear in Colour. JSFX-Render
+  der Colour-Punkte und der Typen (Colour 0) bit-exakt gegen C++ verifiziert
+  (max < 1 LSB, PDC-Offset −3). Vollständige Messwerte, Grafiken und
+  Provenanz: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
+  **Bank×Colour-Interaktion** als JSFX-Render-Matrix (24 Zustände,
+  Colour 5–100 % × alle Typen) bitverifiziert; direkte Gerätemessung
+  bewusst nicht ausgeführt — Abdeckung über die einzeln am Gerät validierten
+  Pfade plus Bit-Parität (MESSERGEBNISSE 2.5). **CPU-Matrix am Gerät
+  (36 Zustände, je voller Neustart):** Bypass 22 %, None+Colour 28–36 %,
+  Typen 48–56 %, Interaktionen 56–68 % Median (20-Hz-Sinus, OS 2x,
+  COMP OFF, 128 Frames, 0 xruns); Sym/00s am teuersten — Profilreihung für
+  die CPU-Reduktion belegt (MESSERGEBNISSE 6, MESSTECHNIK 1f).
 
 ### Scarlett-Liveaufnahme 2026-10-05: Auswertung und Grenzen (2026-10-06)
 

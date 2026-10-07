@@ -763,6 +763,16 @@ Zusätzlich den JSON-Rückgabewert `ok` prüfen. Normaler erfolgreicher Upload
 rescannt die Plugins; bereits aktive Instanzen bei Binary-Austausch neu anlegen.
 In der Pluginliste sollten **Green Stripe 76 Mono** und **Stereo** erscheinen.
 
+**Pflicht nach jedem Binary-Austausch (Fehlversuch vom 2026-10-07):** Der
+Audio-Stack hält die alte Binary im Speicher — `mod-host`/`jackd` neu starten
+(oder Gerät neu booten), bevor gemessen wird. Danach den 20-Hz-Fingerabdruck
+gegen die digitale Referenz prüfen (60s ≈ 12,42 % THD bei Colour 0, −2 dBFS):
+flaches Ergebnis ⇒ veralteter Zustand, Serie abbrechen statt messen.
+Installierte SHA256 protokollieren. Der aktuelle Stand (`48ab885`) ist
+gerätevalidiert — sowohl die Geräteaufnahmen (Deckung mit der digitalen
+Referenz bis in die 4. Dezimale) als auch die JSFX-Render (bitgleich gegen
+C++, 34 Betriebszustände) sind verifiziert; Details: `MESSERGEBNISSE.md`.
+
 `tools/package.py` legt im tar.gz nur das Bundle im Root an, nicht Dokumentation
 oder Herkunftsmanifest. Letzteres liegt neben dem Archiv.
 

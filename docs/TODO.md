@@ -11,32 +11,65 @@ Aktueller Stand 2026-10-07: **Transformator-Matrix am Gerät ausgeführt**
 Baseline/60s/80s/00s × r1+r2, Sym × r1, je 2 Kanäle, alle gültig; Anker exakt,
 Wiederholungs-Spreizung ≤ 0,01 dB, 20-Hz-Klirr-Reihung 60s 5,53 % / 80s 2,15 % /
 00s 0,11 % / Sym 0,01 %. OS-Stellung laut Benutzer **2x** (in Index/Label
-nachgetragen). Ergebnisse in PROJEKT.md; Auswertung/Interpretation
-gegen die Modellanker in `EXTERN.md` folgt.
+nachgetragen). Ergebnisse in PROJEKT.md.
 
-- [ ] Sym als r2 Wiederholung (der r1-Analoglauf war ein erster Clip-Versuch,
-  die digitale Querreferenz bestätigt Sym als linear flach).
-- [ ] ggf. r3 für engere Mediane; die r1/r2-Spreizung ≤ 0,01 dB macht das
-  optional.
+**Aktualisierung 2026-10-07 (nachmittags):** Bundle `48ab885` (HEAD) mit MPB
+`moddwarf-new` gebaut und installiert. Die **erste** Wiederholung war ungültig
+(alle Läufe transparent — Binary-Austausch ohne Audio-Stack-Neustart, alter
+Instanzzustand); die **zweite** Serie (`test-results/matrix-dwarf-20261007-b2`,
+Digital-Capture + Analog-Loop) ist gültig und deckt sich mit der digitalen
+Referenz bis in die 4. Dezimale: 20-Hz-Klirr 60s 12,42 % / 80s 12,28 % /
+00s 1,00 % / Sym 0,00 %, relative Gains −0,817/−0,441/−0,016/−0,002 dB.
+**Die aktuelle Bank ist am Gerät messtechnisch bestätigt**; die Nachtwerte
+(5,53/2,15/0,11 %) sind dieselbe Bank bei je Lauf unbekannter
+Eingangsdämpfung (H3/H5-Beleg; die Gerät-Binary trägt die aktuellen
+Bankkonstanten bitweise). Auswertung/Interpretation gegen die Modellanker
+in `EXTERN.md` ist durchgeführt: 1-%-Anker von 00s (−2 dBFS) exakt
+getroffen, 60s/80s by design (Anker −14/−8 dBFS). Vollständige Messwerte
+und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
+
+- [x] Aktuelles Bundle installieren, Matrix wiederholen und gegen die
+  digitalen Referenzen prüfen (b2, gültig).
+- [x] Colour-Serie am Gerät (Transformer None, Colour 5/10/20/50/75/100):
+  deckt sich mit der digitalen Referenz bis in die 4. Dezimale
+  (`test-results/colour-dwarf-20261007`); 1-kHz-Klirr/Gain skalieren linear
+  mit Colour. JSFX-Render-Referenzen (Colour-Punkte + Typen bei Colour 0)
+  bit-exakt gegen C++ verifiziert.
+- [x] Bank×Colour-Interaktion: vollständige Matrix (Colour 5–100 % ×
+  60s/80s/00s/Sym, 24 Zustände) als JSFX-Render erzeugt und bitgleich gegen
+  C++-Referenzen verifiziert (MESSERGEBNISSE 2.5). Direkte Gerätemessung
+  **bewusst nicht ausgeführt**: beide Pfade einzeln am Gerät exakt validiert
+  (Abschnitte 1/2), JSFX ≡ C++ bitweise, keine zusätzlichen Codepfade in der
+  Interaktion — residual dokumentiert als Schlussfolgerung, nicht als
+  Gerätemessung.
+
+- [x] Sym-Wiederholung und engere Mediane: durch die b2-Serie (Digital-
+  Capture, deterministisch, Sym als eigener Lauf) obsolet — die digitalen
+  Captures haben keinen Laufzeit-Spread; die alte Analog-r1/r2-Spreizung
+  (≤ 0,01 dB) bleibt als Archivnotiz in Serie 1.
+- [x] Dwarf-INPUT-Meter als Referenz: obsolet — mit Dwarf-Quelle ist der
+  Plugin-Eingang digital exakt bekannt; entscheidend ist die INPUT-Knopf-
+  Stellung (Unity), die je Lauf dokumentiert werden muss (siehe Serie 1).
 - [ ] 96-kHz-Messung entfällt für die Dwarf-Quelle (Player läuft mit der
   fester Geräterate 48 kHz); 20 kHz bleibt damit nah an Nyquist gemessen.
 - [ ] Windows-Geräteformat abschließen (nur noch relevant, falls der
   Mess-Treiber statt REAPER aufnimmt): mmsys.cpl Aufnahme auf 24 bit/48000 Hz.
-- [ ] Klären, ob das Dwarf-INPUT-Meter (Web-UI 192.168.51.1) als
-  Plugin-Eingangspegel-Referenz brauchbar ist; mit Dwarf-Quelle ist der
-  Plugin-Eingang digital exakt bekannt, das Meter ist nur noch cross-check.
 - [ ] PluginDoctor-Sweep-Wiederholung zurückgestellt (PD erlaubt hier keine
   Einstellungssteuerung; Marker-Sync über `scarlett_test.py` ist der
   verlässliche Weg).
 
 ## Offen — Dwarf/Gerät (siehe [PROJEKT](PROJEKT.md), Abschnitt Übergabe)
 
-- [ ] `transformer_bench` (Serie B) AArch64/MPB auf dem Dwarf ausführen zur
-  isolierten Transformator-/Solver-Kostenmessung (PERFORMANCE, Abschnitt 5c).
-  Serie A ist gemessen (MESSTECHNIK, Abschnitt Dwarf-Lastmessung). Ergebnis
-  ist die Entscheidungsbasis für die CPU-Reduktions-Vorschläge (Abschnitt
-  CPU-Reduktion Transformator): Iterationen/Stop-Zweig-Verteilung je
-  Profil/OS lesen.
+- [x] Plugin-level CPU-Matrix am Dwarf (36 Zustände, je voller Neustart):
+  Bypass 22 %, None+Colour 28–36 %, Typen 48–56 %, Interaktionen 56–68 %
+  (20-Hz-Sinus, OS 2x, COMP OFF, 128 Frames, 0 xruns). **Sym und 00s sind
+  die teuersten Profile** — Profilreihung für die Stop-Zweig-Spezialisierung
+  belegt (`test-results/cpu-matrix-dwarf`, MESSTECHNIK 1f).
+- [x] `transformer_bench` Serie B auf dem Dwarf ausgeführt (2026-10-07,
+  Cross-Build GCC 11 statisch, per SSH; Provenanz und Zahlen:
+  `test-results/serie-b`, PERFORMANCE Serie B). Vorher/Nachher der
+  Doppel-Auswertung bitgleich (Checksummen), Gewinn ~0 %. Offen: Wiederholung
+  mit der MPB-Toolchain, falls absolute MPB-komparable Zahlen gebraucht werden.
 - [ ] Dwarf-Lasttabelle: Provenienz nachtragen (Messdatum, Tool-Version,
   installierte SHA256 je Serie, Settle/Messfenster).
 - [ ] 0.4.1-Bundle mit MPB `moddwarf-new` neu bauen; ABI/Hash dokumentieren;
@@ -71,25 +104,34 @@ gegen die Modellanker in `EXTERN.md` folgt.
 
 Grundlage: PERFORMANCE 5c (x86) — nicht die Iterationszahl ist der Hebel
 (2,0–2,6 je Probe, 0 % am 40er-Limit), sondern die **14 Stop-Zweige je
-Auswertung**; OS multipliziert (4× ≈ ×4). Entscheidungsbasis ist Serie B auf
-dem Dwarf (siehe Abschnitt Dwarf/Gerät) — die x86-Verteilung muss auf dem A35
-nicht gelten.
+Auswertung**; OS multipliziert (4× ≈ ×4). **A35-Bestätigung (2026-10-07,
+CPU-Matrix, MESSTECHNIK 1f):** die Profilreihung am Gerät ist Sym ≈ 00s >
+80s ≈ 60s (66/63/57/57 % Median bei 20 Hz-Volldreher, +20–28 Punkte über
+None) — der „lineare" Sym ist am teuersten, die Stop-Zweig-Struktur dominiert.
+Entscheidungsbasis: Serie B (isolierter Bench) für die Ursache je Profil.
 
 Paritätsneutral (bit-identisch machbar):
 
-- [ ] Finale Doppel-Auswertung in `Transformer.hpp`/`current()` einsparen:
-  nach Konvergenz wird am selben `x` nochmals mit `advance=true` ausgewertet;
-  Wert/Ableitung sind dort identisch reproduzierbar — Zustands-Aktualisierung
-  an die letzte Schleifenauswertung hängen. Erwartung ~25–30 % des dominanten
-  Terms; Bit-Vorher/Nachher als Nachweis beilegen.
-- [ ] Build-Tuning für den MPB-Build prüfen: `-mcpu=cortex-a35`, LTO —
-  semantikgleich (kein Fast-Math, `-ffp-contract=off` bleibt), reine
-  Scheduling-Gewinne; Serie B als Messrahmen nutzen.
+- [x] Finale Doppel-Auswertung in `Transformer.hpp`/`current()` einsparen:
+  **umgesetzt** (C++ und EEL2 gemeinsam); Bit-Identität über
+  Checksummen-A/B mit identischem Compiler auf x86 und A35 belegt
+  (`test-results/serie-b/`). **Ergebnis: ~0 % auf dem A35** — der Compiler
+  hatte die Redundanz bei −O3 vermutlich bereits eliminiert; die
+  TODO-Erwartung „25–30 %“ war zu optimistisch. Änderung bleibt (Code
+  explizit, Nachweis beigelegt).
+- [x] Build-Tuning für den MPB-Build prüfen: **gemessen** (Cross-Bench,
+  997 Hz): `-mcpu=cortex-a35` bringt −1,2 bis −3,6 % je Profil, LTO keinen
+  messbaren Zusatznutzen. Empfehlung: `-mcpu=cortex-a35` in die
+  MPB-Rezeptur aufnehmen (CXXFLAGS-Append im `.mk`); Bit-Identität über
+  die Bench-Checksummen je Variante prüfen.
 - [ ] NEON 2-Lane für Stereo in `src/dsp/Transformer.hpp`: L/R-Zustände sind
   vertragsgemäß getrennt; 2×double mit identischer Operationsreihenfolge je
   Lane und ohne horizontale Ops bleibt bit-identisch (max 0 FS hält), EEL2
   bleibt skalar. Erwartung ~2× auf den Transformerblock für Stereo-Instanzen,
   Mono ohne Gewinn; Paritätssatz trotzdem komplett laufen lassen.
+  **Risiko (Serie B):** der Solver verzweigt datenabhängig (Konvergenz je
+  Kanal) — Lockstep braucht Maskierung von x/hi/lo und den Zustands-Commit;
+  deshalb erst nach der Stop-Zweig-Frage entscheiden.
 
 Mit vollem Paritätspreis (C++/EEL2 gemeinsam, `generate.py`, 430+76 Fälle
 gegen neue Bit-Basis, `cpu_regression` Vorher/Nachher, Übergangstests,
@@ -118,9 +160,12 @@ Nicht wirkksam (dokumentiert, nicht verfolgen): Iterationslimit senken
 (0 % am Cap); kanalübergreifende Zustandsnutzung (Vertrag);
 Auto-Deaktivierung bei Compression Off (bewusst nicht vorgesehen).
 
-Vorgeschlagene Reihenfolge: Doppel-Auswertung einsparen + Serie B zuerst,
-dann NEON, dann mit Gerätedaten zwischen Zweig-Spezialisierung und
-OS-Entkopplung entscheiden.
+Vorgeschlagene Reihenfolge (aktualisiert nach Serie B + Build-Tuning):
+Build-Tuning (`-mcpu=cortex-a35` in die MPB-Rezeptur, −1,2 bis −3,6 %,
+jetzt umsetzbar) → **Stop-Zweig-Spezialisierung** (30–50 % des Blocks,
+voller Paritätszyklus, nächste Runde) → NEON (Maskierungsrisiko, erst
+danach bewerten) → OS-Entkopplung (Vertragsfrage). Doppel-Auswertung
+verfeuert (~0 %).
 
 ## Offen — Projektinfrastruktur
 

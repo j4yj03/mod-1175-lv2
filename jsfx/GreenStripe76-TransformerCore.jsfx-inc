@@ -73,7 +73,7 @@ local(value z j trial stop) (
   value;
 );
 function gs_xf_core(input c) instance(flux relax voltage deriv x1 y1 y2)
-local(source rb bound lo hi x stop i residual next raw y) (
+local(source rb bound lo hi x stop i residual next z j raw y) (
   source=input*c[19]; rb=abs((1-c[24])*relax+c[24]*flux)/((1+c[24])*c[4]);
   bound=abs(flux+c[21]*voltage)+c[21]*(abs(source)+c[22]*(c[25]+rb))/c[23]+0.000000000001;
   lo=-bound; hi=bound; x=gs_bound(flux+2*c[21]*voltage,lo,hi); stop=0;
@@ -88,7 +88,17 @@ local(source rb bound lo hi x stop i residual next raw y) (
       );
     );
   );
-  i=this.gs_xf_current(x,c,1); flux=gs_zap(x); voltage=gs_zap((source-c[22]*i)/c[23]);
+  stop ? (
+    z=((1-c[24])*relax+c[24]*(x+flux))/(1+c[24]); relax=gs_zap(z);
+    j=0; loop(14,
+      trial=stops[j]+x-flux;
+      next=gs_bound(trial,-gs_xf_stops[j],gs_xf_stops[j]);
+      stops[j]=gs_zap(next); j+=1;
+    );
+  ) : (
+    i=this.gs_xf_current(x,c,1);
+  );
+  flux=gs_zap(x); voltage=gs_zap((source-c[22]*i)/c[23]);
   raw=voltage*c[30]; y=c[28]*raw+c[29]*x1-c[26]*y1-c[27]*y2;
   x1=raw; y2=y1; y1=gs_zap(y); y;
 );

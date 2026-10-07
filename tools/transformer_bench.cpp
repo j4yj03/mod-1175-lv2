@@ -153,7 +153,7 @@ greenstripe::Parameters parameters(const Options& o, int transformer, int oversa
 // One case: `instances` processors stepped frame by frame with an internally
 // generated signal, so the measurement needs neither pedalboard nor host.
 Measurement runCase(const Options& o, int transformer, int oversampling, int channels, int instances) {
-    const bool stereo = channels == 1;
+    const bool stereo = channels == 2;
     std::vector<greenstripe::Processor> processors;
     processors.reserve(static_cast<std::size_t>(instances));
     for (int n = 0; n < instances; ++n) {
@@ -286,7 +286,7 @@ void writeJson(const Options& o, const std::vector<Case>& cases) {
              << ", \"transformer_name\": \"" << kTransformerNames[c.transformer]
              << "\", \"oversampling\": " << c.oversampling
              << ", \"oversampling_name\": \"" << kOversamplingNames[c.oversampling]
-             << "\", \"channels\": \"" << (c.channels == 1 ? "stereo" : "mono")
+             << "\", \"channels\": \"" << (c.channels == 2 ? "stereo" : "mono")
              << "\", \"instances\": " << c.instances
              << ", \"cpu_seconds_per_audio_second\": " << jsonNumber(m.cpuSeconds)
              << ", \"cpu_seconds_per_audio_second_per_instance\": "
@@ -325,7 +325,7 @@ void writeMarkdown(const Options& o, const std::vector<Case>& cases) {
         const Case& c = cases[i];
         const Measurement& m = c.measurement;
         file << "| " << kTransformerNames[c.transformer] << " | " << kOversamplingNames[c.oversampling]
-             << " | " << (c.channels == 1 ? "Stereo" : "Mono") << " | " << c.instances << " | "
+             << " | " << (c.channels == 2 ? "Stereo" : "Mono") << " | " << c.instances << " | "
              << std::fixed << std::setprecision(5) << m.cpuSeconds << " | "
              << m.cpuSeconds / c.instances << " | " << 100.0 * m.cpuSeconds / c.instances << " | "
              << std::setprecision(2) << m.iterationsPerSample << " | "
@@ -374,7 +374,7 @@ int main(int argc, char** argv) {
                     if (!o.quiet) {
                         std::cout << kTransformerNames[kase.transformer] << " OS="
                                   << kOversamplingNames[kase.oversampling] << " "
-                                  << (kase.channels == 1 ? "stereo" : "mono  ") << " x"
+                                  << (kase.channels == 2 ? "stereo" : "mono  ") << " x"
                                   << kase.instances << "  cpu=" << std::fixed
                                   << std::setprecision(5) << kase.measurement.cpuSeconds
                                   << " s/s  je Instanz=" << kase.measurement.cpuSeconds / kase.instances

@@ -86,6 +86,7 @@ Für Dwarf-Build und Installation: [BETRIEB — Build/Installation](docs/BETRIEB
 | [DSP](docs/DSP.md) | Signalfluss, Numerik, Färbung, Parameter/Ports, Transformator-Laufzeit, LUT-Grenzen |
 | [BETRIEB](docs/BETRIEB.md) | Bedienung, Gain-Staging, Stereo/Mix, Build, Paketierung, Installation |
 | [MESSTECHNIK](docs/MESSTECHNIK.md) | Tests und Prüfungen, Protokollvorlage, Dwarf-Lastmessung, Scarlett-Workflow und Archive |
+| [MESSERGEBNISSE](docs/MESSERGEBNISSE.md) | Vollständige Messwerte der Gerätesserien (Transformator-Matrix, Colour-Sweep), Grafiken, Referenzvalidierung und Provenanz — generiert |
 | [PERFORMANCE](docs/PERFORMANCE.md) | Gemessene CPU-Hotspots, Optimierungen und Dissertation-Bezug |
 | [EXTERN](docs/EXTERN.md) | PluginDoctor-/ReaJS-Auswertungen, GR-Analysen, Presetbewertung |
 | [QUELLEN](docs/QUELLEN.md) | Quellenkatalog, Lizenzen, NAM-Profile, Literatur- und Simulationsforschung |
@@ -100,6 +101,13 @@ aus belegten Funktionsprinzipien, teils aus eigenen Abstimmungsentscheidungen
 stammen. Thresholds, Knie, Transformerfärbung und Reglerinteraktionen sind **nicht
 an einem konkreten Originalgerät kalibriert**. Die NAM-Profile sind zusätzliche
 Offline-Referenzen und nicht Teil des Laufzeitplugins.
+
+**Verifikationsstand (2026-10-07):** Das DSP-Verhalten ist am MOD Dwarf gegen
+digitale Referenzrender validiert — Transformatorbank und Colour-Stufen decken
+sich mit dem Modell bis in die 4. Dezimale, und die JSFX-Render aller 34
+Betriebszustände (inklusive der vollständigen Bank×Colour-Matrix) sind bitgleich
+gegen den C++-Pfad verifiziert. Details, Messwerte und Grafiken:
+[MESSERGEBNISSE](docs/MESSERGEBNISSE.md).
 
 4×-Polyphasen-IIR-Filter halten die Verzögerung klein, sind aber nicht linearphasig.
 Die gemeldeten vier Samples sind eine **nominale** Latenz; sie kompensieren keine

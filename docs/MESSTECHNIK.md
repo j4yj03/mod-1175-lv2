@@ -768,6 +768,136 @@ Befunde der Runde (OS 2x laut Benutzer): siehe PROJEKT; OS-Provenienz muss
 pro Runde dokumentiert werden — der DUT−Baseline-Latenzcheck ist bei manuellem
 Wiedergabestart nicht ableitbar (Startjitter ≫ Latenz).
 
+## 1c. Digitale JSFX-Render-Referenz + Provenanzprüfung (2026-10-07, erprobt)
+
+REAPER kann die Matrix **digital rendern** (JSFX auf dem Stimulus-Item,
+Region je Transformator-Typ): keine Wandler, kein Loop-Gewinn, keine Drift.
+So die Referenz der aktuellen Modellbank erzeugen und gegen Geräteserien
+stellen. Ergebnisse: `test-results/jsfx-render-ref-20261007` (Analyse-JSONs +
+Reproduktion), Renderdateien `reaper/testbench/matrix-*_jsfx_*.wav`.
+
+1. **Projektrate vor dem Rendern prüfen:** der Renderdialog hat eine eigene
+   Sample-Rate, und „Mix/process FX at project or hardware sample rate"
+   (angehakt) verarbeitet bei Projekt-44,1 kHz **intern weiter mit 44,1 kHz**
+   und resampelt nur die Ausgabe. Erst Projektrate = 48 kHz liefert echte
+   48-kHz-Verarbeitung. Nachweis: bitnaher Vergleich gegen den C++-Offline-
+   Render (`tools/render_lv2.py`, 48 kHz, identische Parameter) — max < 1 LSB
+   (24 bit) bei Offset −3 Samples (= REAPER-PDC-Kompensation der 2x-Latenz).
+   Damit ist zugleich die JSFX↔C++-Parität am vollen 64-s-Programm belegt.
+2. **Panel-State aus der RPP lesen, nicht raten:** die JS-Zeile in
+   `testbench.rpp` enthält die Sliderwerte (slider13 = Transformer
+   1/2/3/4 = 60s/80s/00s/Sym, slider12 = OS). Renderrunde 10_54_15:
+   Input/Output 0 dB, Attack/Release 7, Ratio 4:1, Mix 100, **Colour 100**,
+   COMP OFF, OS 2x.
+3. **Isolationsmessungen** (C++-Referenzrender, gleicher Stimulus):
+   - Colour 0 + COMP OFF = **nur die WDF-Bank**: None exakt transparent
+     (0,0000 %, +0,0000 dB); 60s 20 Hz 12,42 %/−0,82 dB; 80s 12,28 %/−0,44 dB;
+     00s 1,00 %/−0,016 dB; Sym 0,0000 % (linear, fingerprint bestätigt).
+     Der Bank-Klirr ist OS-invariant (Off/2x/4x identisch bis 4 Dezimalen).
+   - Colour 100 blendet die Alt-Stufen ein (Input-Iron, Output-Drive):
+     1 kHz 2,44 %/−0,59 dB **für alle Typen** — transformator-unabhängig;
+   - Compression ON (Ratio 4:1, −2 dBFS): −16,5 dB GR — mit der Dwarf-Serie
+     (≈ 0 dB relativ) unvereinbar.
+4. **Provenanz der Dwarf-Matrix `matrix-dwarf-20261007` (korrigiert):** die
+   Serienzahlen (20 Hz: 60s 5,53 %, 80s 2,15 %, 00s 0,11 %, Sym 0,007 %;
+   1 kHz 0,006 %, Gain 0,000) stammen von **derselben Bank bei gedämpftem
+   Eingang**: der INPUT-Knopf stand nicht auf 0 (Restellung aus der
+   Gainmatch-Phase, je Lauf anders). Beleg: die H3/H5-Drive-Verhältnisse
+   gegen die Referenz sind pegelskalierungskonsistent (60s −3,5 dB aus
+   H3 **und** H5; 00s −9,2 dB aus H3 und H5; 80s weicht wegen tiefer
+   Sättigung von der Störrechnung ab). Die installierte Binary
+   (SHA `e6b4e55…`) trägt die aktuelle Bank — 87/87 der nichttrivialen
+   double-Konstanten aus `data/transformers.json` sind in der `.so`
+   bitgenau nachgewiesen; die frühere „Refit-Zwischenstand"-Deutung ist
+   damit widerlegt. **Die Matrixzahlen gelten als Trendreihe bei
+   unbekannter Dämpfung, nicht als Anker.**
+5. **Verfahrensregel:** je Messlauf die installierte Binary-SHA256 sichern
+   (MESSTECHNIK Abschnitt Gerätetest) und den Panel-State (Colour, Mix, Comp,
+   **Input**, Output, OS) ins `--settings-label` schreiben; nach jedem Bundle-
+   Wechsel die Matrix neu aufsetzen. Die 1-kH-Transparenz (0,006 %, Gain 0)
+   ist ein schneller Colour-0-Indikator; 2,44 % bei 1 kHz zeigen Colour 100.
+
+## 1d. Gerätevalidierung der aktuellen Bank (2026-10-07, `…-b2`, gültig)
+
+**Verifikationsstand:** Sowohl die Gerät-captures (Dwarf-Recorder) als auch die
+JSFX-Render sind gegen die digitalen C++-Referenzen verifiziert — die Aufnahmen
+mit Deckung bis in die 4. Dezimale, die Render bitgleich (max 0,5 LSB). Nach
+MPB-Neubau (`48ab885` = HEAD) und Installation wurde die Matrix
+wiederholt. Die **erste** Wiederholung wurde verworfen: alle Läufe transparent,
+3-Frame-OS-Latenz, keine Transformatorwirkung — der Audio-Stack lief mit
+veraltetem Instanzzustand nach dem Binary-Austausch weiter. Die **zweite**
+Serie (`test-results/matrix-dwarf-20261007-b2`, Digital-Capture + Analog-Loop,
+gleiche Prozedur wie 1b) ist gültig:
+
+1. **Wiedergabe-Startpunkte** über Vollsignal-Korrelation (Stimulus 64,47 s
+   gegen das zusammenhängende Capture; normierte Korrelation, Mindestabstand
+   50 s): Digital 0,0/68,4/136,4/206,8/274,2 s; Analog 1,1/69,5/137,5/207,9/
+   274,7 s. Clock-Drift ≈ −17 ppm (Digital scale 1,000000).
+2. **Ergebnis Digital** (Colour 0, COMP OFF, OS 2x): 20-Hz-Klirr 60s
+   **12,4242 %** / 80s 12,2758 % / 00s 0,9995 % / Sym 0,0000 %; relative
+   Gains −0,8175/−0,4412/−0,0156/−0,0019 dB. Deckt sich mit der digitalen
+   Referenz (1c) bis in die 4. Dezimale — die aktuelle Bank ist am Gerät
+   (A35) messtechnisch bestätigt.
+3. **Analog-Kreuzprüfung:** relative Gains −0,8198/−0,4422/−0,0119/−0,0007 dB;
+   20-Hz-Klirr 12,59/12,44/1,01/0,006 % bei Kettengrund 0,0076 % — innerhalb
+   der Präzision konsistent (Loop-Klirr addiert sich vektoriell, deshalb
+   leicht über dem Digitalwert).
+4. **Fehlversuch als Verfahrensregel:** nach jedem `.so`-Austausch auf dem
+   Gerät **Audio-Stack neu starten** (mod-host hält die alte Binary im Speicher),
+   und vor der Serie den 20-Hz-Fingerabdruck eines Typs gegen die digitale
+   Referenz prüfen (60s ≈ 12,42 % bei Colour 0). Flaches Ergebnis ⇒ Zustand
+   veraltet — Serie abbrechen statt messen. Die Parameteränderungen selbst
+   (Dropdown/Regler im Web-UI) funktionieren; der erste Fehlversuch war kein
+   GUI-Binding-Problem.
+
+## 1e. Colour-Stufen-Validierung am Gerät (2026-10-07, gültig)
+
+Ergänzend zu 1d: **Transformer None, COMP OFF, OS 2x**, Colour
+5/10/20/50/75/100 %, Digital-Capture + Analog-Loop, Referenz = JSFX-Render
+(`matrix-*_col_jsfx-…12_33_03`, bit-exakt gegen C++ verifiziert) bzw. der
+C++-Offline-Render. Ergebnis (`test-results/colour-dwarf-20261007`):
+1-kHz-Klirr 0,1228→2,4352 %, 1-kHz-Gain −0,0299→−0,5869 dB, 20-Hz-Klirr
+0,1457→2,3107 %, 8-kHz-Klirr 0,0533→1,0417 % — **alles bis in die 4. Dezimale
+deckungsgleich** mit der Referenz. 1-kHz-Klirr/Gain skalieren linear mit
+Colour; 20→50 % läuft leicht unter Linearität (Sättigungskurve). Beide
+Farbpfade (Bank-only, Colour-Stufen) sind damit am Gerät einzeln bestätigt;
+die Bank×Colour-Interaktion ist optional (Blendlage deckungsgleich).
+
+Praxis-Hinweise aus der Serie: JSFX-Render-Zustände vor dem Vergleich aus der
+RPP-Sliderzeile lesen (siebter Wert = Colour, letzter = Transformer) und
+bitnah gegen die C++-Referenz verifizieren — die erste Colour-Render-Version
+trug versehentlich Transformer 80s/00s/Sym/Sym und wurde ersetzt. Beim
+Vergleich JSFX-Render ↔ C++-Referenz die PDC-Offsetsuche (−3 Samples bei
+OS 2x) nicht vergessen, sonst scheinen identische Inhalte „verschieden“.
+
+Vollständige Messwerte beider Serien (Transformator-Matrix und Colour-Sweep,
+inklusive Grafiken und Provenanz): [MESSERGEBNISSE](MESSERGEBNISSE.md),
+erzeugt mit `tools/render_results_doc.py` aus den Analyse-JSONs. Die
+Bank×Colour-Interaktion ist als JSFX-Render-Matrix (24 Zustände) bitverifiziert
+und durch Zerlegung + Parität am Gerät abgedeckt; die direkte Gerätemessung
+der Interaktion wurde bewusst nicht ausgeführt (Begründung: MESSERGEBNISSE 2.5).
+
+## 1f. CPU-Matrix (2026-10-07, gültig)
+
+Alle 36 Colour×Transformer-Zustände (Bypass, None×Colour 0–100 %, Typen×
+Colour 0 %, 24 Interaktionszustände) mit `tools/run_cpu_matrix.py` gemessen:
+Boardkopien mit eingeschriebenen Werten (`tools/cpu_board_builder.py`,
+Template GS76x2 mit Transformer-Port, SWH-Oszillator 20 Hz als Signalquelle),
+je Zustand **voller Neustart** (last.json → Controlchain lädt beim Vollstart),
+Warten auf das Plugin-Mapping, `dwarf_loadtest.py` 20 s/128 Frames mit
+`--expect-instances 1`. Die Werte stehen in der Board-TTL, nicht live gesetzt —
+der gemessene Zustand ist das eingeschriebene Board.
+
+- **Ergebnis:** Bypass 22 %, None+Colour 28→36 %, Typen bei Colour 0
+  48/49/52/56 % (60s/80s/00s/Sym), Interaktionen 56–68 %. **Sym und 00s sind
+  die teuersten Profile**; das Colour-Level ist fast wirkungslos (+6–8 Punkte
+  diskret bei Colour > 0). **0 xruns in allen 36 Zuständen.**
+- **Interpretation:** Transformator +20–28 %-Punkte = dominanter Term
+  (Bestätigung der x86-Analyse auf dem A35); die Profilreihung priorisiert
+  die Stop-Zweig-Spezialisierung (TODO, CPU-Reduktion). Der 20-Hz-Sinus ist
+  das schwere Regime — Worstcase-Marge, nicht Programm-Mittel.
+- Details/Rohdaten: `test-results/cpu-matrix-dwarf/MANIFEST.md`.
+
 ## 2. Systemvoraussetzungen (Windows, nativ)
 
 - Python nativ (nicht WSL): `python -m pip install -r tools/requirements-scarlett.txt`.

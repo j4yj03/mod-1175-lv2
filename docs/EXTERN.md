@@ -2,6 +2,21 @@
 
 PluginDoctor-/ReaJS-Auswertungen, GR-Analysen und Einzelbewertung der Presetbank.
 
+**Gerätedaten 2026-10-07 — Ausgangslage für die Ankerinterpretation:** Die
+aktuelle Transformatorbank und die Colour-Stufen sind am Dwarf gegen die
+digitalen Referenzen **verifiziert** (Geräteaufnahmen mit Deckung bis in die
+4. Dezimale; die JSFX-Render aller 34 Betriebszustände bitgleich gegen C++).
+Gemessene Anker der aktuellen
+Bank: 20-Hz-Klirr 60s **12,42 %** / 80s **12,28 %** / 00s **1,00 %** /
+Sym 0,00 %; Kopplungsverluste (rel. Gain 20 Hz) −0,82/−0,44/−0,02/0,00 dB;
+60s zusätzlich −1,30 dB bei 20 kHz; Colour-Pfad linear in Colour
+(1 kHz 0,123 %→2,44 %, −0,03→−0,59 dB über 5→100 %). Vollständige Messwerte:
+`MESSERGEBNISSE.md`. Die frühere Reihung 5,53/2,15/0,11 % stammt von
+**derselben Bank bei je Lauf unbekannter Eingangsdämpfung** (INPUT-Knopf aus
+der Gainmatch-Phase; H3/H5-Drive-Verhältnisse: 60s −3,5 dB, 00s −9,2 dB) —
+nicht von einer anderen Binary; die installierte `.so` (`e6b4e55…`) trägt die
+aktuellen Bankkonstanten bitweise (87/87 double-Konstanten nachgewiesen).
+
 **Konsolidiert am 2026-10-06** aus den bisherigen Einzeldokumenten; Inhalt inhaltlich unverändert, Pfadangaben auf die neue Struktur angepasst.
 
 ## Inhalt
@@ -336,7 +351,14 @@ Diese Doppelkurven sind deshalb **kein Test der Stereo-Link-Version**.
 
 ## 9. Priorisierte Folgemessungen
 
-### P0 — Audiopfad und Messpegel isolieren
+**Stand 2026-10-07:** P0 ist durch die Dwarf-Quellen-Serien abgelöst —
+Identität (Bypass flach), Colour only und die Transformatorprofile sind am
+Gerät mit digitalem Eingang gemessen (`MESSERGEBNISSE.md`); die
+Delta-FFT-Fragen von Versuch 1–3 sind durch die Geräteanalyse beantwortet
+(Hochtonabfall real deutlich kleiner, siehe Abschnitt 5). P1/P2 bleiben in
+den unten genannten Punkten offen.
+
+### P0 — Audiopfad und Messpegel isolieren *(erledigt durch 1b–1e, archiviert)*
 
 1. **Identität:** Input/Output 0, Colour 0, Compression Off, Mix 100.
    Delta zunächst −30 oder −60 dB. Erwartet: betragsmäßig flach bis 20 kHz
@@ -879,37 +901,64 @@ keine dort noch offene Geräte-, NAM- oder Hörprüfung.
 
 # Transformator-Matrix am Gerät — 2026-10-07 (Dwarf-Quelle)
 
-Erste vollständige Gerätemessung aller fünf Profile; Reihe
-`test-results/matrix-dwarf-20261007`, Protokoll `MESSTECHNIK.md` 1a/1b.
-18 gültige Läufe (Baseline/60s/80s/00s × r1+r2, Sym × r1, je zwei Kanäle),
-Anker −14/−8/−2 dBFS exakt, Spreizung r1/r2 ≤ 0,01 dB, OS 2x.
+**Stand nach den Wiederholungsserien (b2/Colour, siehe unten).** Die erste
+Serie (Nacht, Reihung 5,53/2,15/0,11 %) ist als Trendreihe der Profile lesbar,
+als Anker aber veraltet: der INPUT-Knopf stand nicht auf 0 (Restellung aus der
+Gainmatch-Phase, je Lauf anders), was die H3/H5-Drive-Verhältnisse der Rohdaten
+belegen (60s: −3,5 dB, 00s: −9,2 dB gegenüber der Referenz). Die Nachfolge-
+serien mit dokumentiertem Input 0 dB gelten als maßgeblich.
+
+## Gültige Serie b2 + Colour + Interaktion + CPU (2026-10-07)
+
+18/36 gültige Läufe bzw. Zustände, Protokoll `MESSTECHNIK.md` 1b–1e;
+Digital-Capture (Dwarf-Recorder), Input/Output 0 dB, Compression OFF,
+Colour 0, OS 2x — exakt das Vergleichsprotokoll, das die nächste Runde
+forderte. Alle vier Profile und Symmetric gegen Bypass; JSFX-Render-Matrix
+(34 Betriebszustände) bitgleich gegen C++ verifiziert; CPU-Matrix 36 Zustände
+(je voller Neustart, Rücklesung der Werte, 0 xruns).
 
 | Profil | 20 Hz | 1 kHz | 12 kHz | 16 kHz | 20 kHz | 20-Hz-THD | 40-Hz-THD |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| 60s | −0,21 dB | ±0,00 | −0,20 dB | −0,59 dB | −1,30 dB | 5,53 % | 0,73 % |
-| 80s | −0,04 dB | ±0,00 | −0,02 dB | −0,06 dB | −0,13 dB | 2,15 % | 0,08 % |
-| 00s | −0,02 dB | ±0,00 | −0,02 dB | −0,03 dB | −0,05 dB | 0,11 % | 0,02 % |
-| Sym | ±0,00 | ±0,00 | −0,01 dB | −0,03 dB | −0,04 dB | 0,01 % | 0,01 % |
+| 60s | −0,82 dB | −0,0001 | −0,20 dB | −0,59 dB | −1,30 dB | **12,42 %** | 1,94 % |
+| 80s | −0,44 dB | −0,0001 | −0,02 dB | −0,06 dB | −0,13 dB | **12,28 %** | 0,50 % |
+| 00s | −0,02 dB | −0,0000 | −0,02 dB | −0,03 dB | −0,05 dB | **1,00 %** | 0,04 % |
+| Sym | −0,002 dB | ±0,00 | −0,02 dB | −0,03 dB | −0,05 dB | 0,00 % | 0,00 % |
 
-Frequenzgang relativ zur Bypass-Baseline (Bypass-Sweep selbst flach ±0,2 dB,
-20-Hz-THD 0,005 %); Klirr absolut am DUT-Ausgang. Digitale Querreferenz
-(Dwarf-Recorder) bestätigt Sym als linear flach (≤ 0,05 dB, THD 0,005 %).
+Frequenzgang relativ zur Bypass-Baseline; Klirr absolut am DUT-Ausgang
+(Digital-Capture, Kettengrund 0,0000 %). 40-Hz-THD jetzt auf dem Gerät
+gemessen (1,94/0,50 % — oben nur offline referenziert).
 
-**Noch nicht mit den 1-%-Modellankern vergleichbar.** Die offline gefitteten
-20-Hz-1-%-Anker gelten am Transformator-Eingang nach Input-Gain und für die
-Transformatorstufe allein; die Gerätemessung enthält (a) die aktive
-Kompression mit deren GR-Verlauf, (b) die Colour-Stufe, (c) eine nicht
-dokumentierte Input-Gain-Stellung. Der Reihenbefund (60s > 80s > 00s ≫ Sym)
-ist dennoch belastbar, weil alle Profile unter **denselben** Bedingungen
-gemessen wurden und die Bypass-Referenz die Messkette heraushebt.
+## Interpretation gegen die Modellanker
 
-Vergleichsprotokoll für die Ankerinterpretation (nächste Runde):
-1. Board-Zustand dokumentieren (`--settings-label`): Input-Gain 0 dB,
-   Compression OFF, Colour 0, Mix 100, OS-Stellung.
-2. Nur die 20-Hz-/Pegelstufen-Segmente vergleichen; als Referenz einmal
-   `transformer_probe` (offline, identischer Kern) mit denselben
-   Effektpegeln rendern.
-3. Abweichung gegenüber den offline erwarteten 1,00/1,00/1,00 % berichten —
-   nicht als Fehler der Bank ausgeben, bevor Input-Gain/GR-Anteil
-   herausgerechnet ist; Änderungen an der Bank selbst folgen dem
-   Refit-Vertrag (DSP.md).
+- **Der 1-%-Anker von 00s trifft exakt:** `target_one_percent_dbfs = −2`
+  (`transformer/offline_fit/profiles.json`), gemessen **1,00 %** bei
+  20 Hz/−2 dBFS. Das ist die direkte Gerätebestätigung des Fits.
+- **60s und 80s liegen by design höher:** ihre 1-%-Punkte sind auf
+  −14 bzw. −8 dBFS gefittet (60s sättigt am frühesten, 80s ausgewogen).
+  Bei −2 dBFS — 12 bzw. 6 dB über dem eigenen Anker — sind 12,4 % die
+  erwartete Steilheit der Sättigungskurve, kein Fehler der Bank. Die
+  Reihung „60s ≈ 80s bei −2 dBFS" ist eine Pegelauflösung des
+  Profilunterschieds; bei den eigenen Ankern sind die Profile klar
+  getrennt (je 1 %).
+- **Hochtonabfall deutlich kleiner als die PluginDoctor-Delta-FFT
+  nahelegte:** Geräteanalyse 60s −0,59 dB @16 kHz / −1,30 dB @20 kHz
+  (relativ zum Bypass). Die PD-Werte (−5 bis −12 dB) waren Messartefakte
+  der Delta-Methode mit zeitvariablem Gain — die Abschnitt-5-Vorsicht war
+  begründet.
+- **Kopplungsverluste:** 60s −0,82 dB / 80s −0,44 dB / 00s −0,02 dB bei
+  20 Hz — die Bassabsenkung ist Profileigenschaft und deckungsgleich mit
+  dem Modell (Referenzrender bitnah).
+- **Colour:** linear in Colour (Klirr und Gain bei 1 kHz), transformator-
+  unabhängig; die Bank×Colour-Interaktion ist modellseitig vollständig
+  belegt (24 JSFX-Render-Zustände bitgleich) und geräteseitig über
+  Zerlegung + Parität abgedeckt.
+- **CPU (36 Zustände):** Transformator +20–28 %-Punkte über None,
+  Colour +6–8 (pegelunabhängig); **Sym und 00s sind die teuersten
+  Profile** (bis 68 % Median bei 20 Hz-Volldreher) — relevant für die
+  Stop-Zweig-Spezialisierung (TODO, CPU-Reduktion).
+
+**Offen:** Die 60s/80s-Anker (1 % bei −14/−8 dBFS) sind am Gerät noch
+nicht direkt gemessen (die Gerätesserie kennt nur −2 dBFS bei 20 Hz);
+die Bit-Parität Render↔Gerät macht das indirekt belegt. Eine direkte
+Messung würde eine 20-Hz-Pegelreihe bei −14/−8/−2 dBFS am Gerät brauchen
+(Stimuluserweiterung, nächste Runde).

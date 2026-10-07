@@ -22,6 +22,9 @@ Stufe wurden echte C++- und EEL2-Läufe auf x86_64 ausgeführt, **keine neue
 Dwarf- oder REAPER-Messung**. None überspringt die Transformatorrechnung;
 gewählte Modelle rechnen kanalgetrennt, maximal 40 Solveriterationen, drei
 OS-Koeffizientensätze vorab vorbereitet. Keine Allokation im Audiopfad.
+(Klangverhalten dieser Stufe ist inzwischen am Dwarf gerätevalidiert und die
+JSFX-Render sind bitverifiziert — `MESSERGEBNISSE.md`; Gegenstand dieses
+Dokuments bleibt die CPU-Seite.)
 
 Lokaler C++-Stereo-Lauf bei 48 kHz/OS Off: ungefähr **0,020 s/s mit None**,
 **0,032–0,034 s/s** mit Modell, einschließlich bisherigem Kompressor.
@@ -498,16 +501,75 @@ Der Zählerpfad prüft zusätzlich, dass `None` den Solver nie betritt, dass die
 Probenzahl bei 4× OS dem Vierfachen der Eingangssamples entspricht und dass
 `clearTransformerStats()` sowie `reset()` auf null zurücksetzen.
 
+### Serie B — A35-Gerätemessung (2026-10-07, ausgeführt)
+
+Der Bench wurde per Cross-Toolchain (GCC 11, statisch gelinkt) für AArch64
+gebaut und per SSH auf dem Dwarf ausgeführt (`/root/lt/`, Messreihe
+`test-results/serie-b/`). **Provenanz:** nicht der MPB-Compiler — die Zahlen
+sind intern konsistent (Vorher/Nachher mit demselben Compiler), aber nicht
+1:1 mit dem ausgelieferten Plugin vergleichbar. Bedingungen: 48 kHz, OS 2x,
+Stereo, COMP OFF, Colour 100, Input +6 dB, 3 s × 3 Wiederholungen (Median),
+Sinus 997 Hz bzw. 20 Hz.
+
+| Profil | 997 Hz vor | 997 Hz nach | 20 Hz vor | 20 Hz nach |
+|---|---:|---:|---:|---:|
+| None | 0,1785 | 0,1785 | 0,1829 | 0,1829 |
+| 60s | 0,4597 | 0,4609 | 0,4542 | 0,4575 |
+| 80s | 0,4632 | 0,4631 | 0,4569 | 0,4606 |
+| 00s | 0,4713 | 0,4716 | 0,4816 | 0,4860 |
+| Sym | 0,4567 | 0,4581 | 0,4541 | 0,4530 |
+
+Einheit s/s (Prozess-CPU je Audiosekunde; 1,0 = ein Kern). Kernbefunde:
+
+1. **Transformatorblock ≈ +0,28–0,30 s/s** über None — der dominante Term,
+   bestätigt die Plugin-Matrix (MESSTECHNIK 1f: +20–28 %-Punkte).
+2. **Die finale Doppel-Auswertung von `current()` ist eingespart** (C++ und
+   EEL2 gemeinsam umgebaut): Bit-Identität über Checksummen-A/B mit
+   identischem Compiler auf x86 **und** auf dem A35 nachgewiesen (alle vier
+   Profile identisch), die EEL2-Seite zusätzlich gegen die Alt-C++-Semantik
+   bitgleich (256 Fälle + 76 Presets). **Der A35-Gewinn ist ~0 %** — der
+   Compiler hatte die Redundanz bei −O3 vermutlich bereits eliminiert. Die
+   Änderung bleibt (Code jetzt explizit, Nachweis in
+   `test-results/serie-b/`); der TODO-TODO-Erwartungswert „25–30 %“ war zu
+   optimistisch.
+3. **Profilreihung am A35:** 00s am schwersten (0,487 s/s bei 20 Hz), dann
+   80s/60s/Sym (0,45–0,46) — konsistent mit der Plugin-Matrix (Sym/00s
+   teuerst im Verbund mit Colour).
+4. **Bench-Korrekturen:** `--channels`-Semantik war invertiert (1=stereo!)
+   und die Labels folgten der Invertierung; jetzt 1=Mono, 2=Stereo. Die
+   x86-Werte aus 5c wurden mit der alten Semantik gemessen — historisch
+   belassen.
+
+**Verbleibende Hebel (neu sortiert nach Potenzial/Risiko):** Stop-Zweig-
+Spezialisierung (30–50 % des Transformatorblocks, voller Paritätszyklus),
+NEON 2-Lane (bis ~2× des Blocks, aber datenabhängige Solver-Verzweigung
+braucht Maskierung — hohes Implementierungsrisiko), OS-Entkopplung
+(Vertragsfrage). Die Doppel-Auswertung ist damit verfeuert.
+
+### Build-Tuning (2026-10-07, gemessen)
+
+`-mcpu=cortex-a35` am Cross-Bench (997 Hz, sonst wie Serie B, nach der
+Doppel-Auswertung): None 0,1763 (−1,2 %), 60s 0,4544 (−1,4 %), 80s 0,4499
+(−2,9 %), 00s 0,4560 (−3,3 %), Sym 0,4418 (−3,6 %) gegenüber plain `-O3`.
+`-flto` zusätzlich: kein messbarer Mehrnutzen (Sym 0,4419, 00s 0,4536 —
+innerhalb des Rauschens von -mcpu allein). Empfehlung: `-mcpu=cortex-a35`
+in die MPB-Buildrezeptur aufnehmen (CXXFLAGS-Append im `.mk`), LTO kann
+entfallen. Semantik bleibt erhalten (kein Fast-Math, `-ffp-contract=off`);
+Bit-Identität über die Checksummen der Bench-Läufe je Variante prüfen,
+wenn die Rezeptur umgestellt wird.
+
 ### Dwarf-Protokoll
 
 Ausführbar mit `tools/dwarf_loadtest.py` (Pedalboard `GS76x0…GS76x4`, jackd-
 Threadlast, Instanz- und Binärverifikation, xrun-Differenz) und
-`tools/transformer_bench.cpp` (Profilkosten ohne Bedienung). Anleitung,
-Bedingungen und Grenzen: [`MESSTECHNIK.md`](MESSTECHNIK.md).
+`tools/transformer_bench.cpp` (Profilkosten ohne Bedienung; inzwischen auch
+als A35-Lauf, siehe Serie B oben). Anleitung, Bedingungen und Grenzen:
+[`MESSTECHNIK.md`](MESSTECHNIK.md).
 
-**Noch nicht ausgeführt:** kein Lauf auf dem Dwarf, keine A35-Zahl aus diesem
-Abschnitt, keine xruns, kein Hörtest. Die x86-Tabelle oben ist als
-Offline-Vorhersage ausgeführt und lokal reproduzierbar.
+Die Plugin-level-CPU-Matrix (36 Zustände, je voller Neustart) liegt in
+`test-results/cpu-matrix-dwarf` mit Auswertung in `MESSERGEBNISSE.md`
+Abschnitt 6. Der isolierte Bench trennt DSP-Kern von jackd/Host; beide
+Zugänge zusammen ergeben die Kostenbild.
 
 ## 6. Reproduktion
 

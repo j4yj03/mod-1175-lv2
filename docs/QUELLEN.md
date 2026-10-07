@@ -766,6 +766,16 @@ Die früheren xformer.lib-Knie-/Wicklungszuordnungen sind historische Planung,
 keine aktuellen Produktkoeffizienten. Importvertrag und Grenzen:
 [`DSP.md`](DSP.md).
 
+**Validierungsstand (2026-10-07):** Diese Bank ist am Dwarf gegen die digitalen
+Referenzrender validiert (Deckung bis in die 4. Dezimale; die JSFX-Render aller
+34 Betriebszustände sind bitgleich gegen C++). Der 1-%-Anker von 00s
+(`target_one_percent_dbfs = −2`) ist am Gerät exakt getroffen (1,00 % bei
+20 Hz/−2 dBFS); 60s/80s haben ihre 1-%-Anker by design bei −14/−8 dBFS. Die
+frühere Reihung (5,53/2,15/0,11 %) stammt von derselben Bank bei
+eingangsgedämpfter Messung (INPUT-Knopf, H3/H5-Beleg) — die installierte
+Binary (`e6b4e55…`) trägt die aktuellen Bankkonstanten bitweise (87/87
+double-Konstanten). Kennwerte und Provenanz: `MESSERGEBNISSE.md`.
+
 MOD-Widgetprüfung: `mod-audio/mod-ui`, Commit
 `7a35aac69781af28997aee7e560a92da7146f318`, `html/js/modgui.js` SHA256
 `49ef2446f4990955f9f1e4ad9085aef3c1e8cd35a60ceba98242cd146d14b06f`.

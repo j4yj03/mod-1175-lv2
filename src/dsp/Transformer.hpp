@@ -136,14 +136,15 @@ struct TransformerCore {
 #ifdef GS76_TRANSFORMER_STATS
         unsigned usedIterations=0;
 #endif
+        double derivative=0.0, i=0.0;
+        bool converged=false;
         for (unsigned iteration=0; iteration<40; ++iteration) {
 #ifdef GS76_TRANSFORMER_STATS
             ++usedIterations;
 #endif
-            double derivative;
-            const double i=current(x,c,derivative,false);
+            i=current(x,c,derivative,false);
             const double residual=x-flux-c.h*(voltage+(source-c.ra*i)/c.denominator);
-            if (std::abs(residual)<=1e-14*(1.0+std::abs(x))) break;
+            if (std::abs(residual)<=1e-14*(1.0+std::abs(x))) { converged=true; break; }
             if (residual>0) hi=x; else lo=x;
             const double next=x-residual/(1.0+c.h*c.ra*derivative/c.denominator);
             x=next>lo && next<hi ? next : 0.5*(lo+hi);
@@ -152,8 +153,7 @@ struct TransformerCore {
         stats.iterations+=usedIterations; ++stats.samples;
         if (usedIterations>=40) ++stats.capped;
 #endif
-        double derivative;
-        const double i=current(x,c,derivative,true);
+        i=current(x,c,derivative,true);
         flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
         const double raw=voltage*c.outputScale;
         const double y=c.b0*raw+c.b1*x1-c.a1*y1-c.a2*y2;

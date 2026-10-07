@@ -33,6 +33,20 @@ Original-Netlist-/SPICE-Fit und keine automatisch aus NAM gewonnene Kalibrierung
 - `tools/generate.py`: generierte Model-Includes, Ports, Presets und Oberflächen.
 - `tests/jsfx_parity.cpp`: tatsächliches Rendern beider Kerne, nicht Textvergleich.
 
+### Messvalidierung (Stand 2026-10-07)
+
+Sowohl der **C++- als auch der EEL2-Pfad sind geräteverifiziert**: Die
+Dwarf-Serien (Transformator-Matrix `matrix-dwarf-20261007-b2`, Colour-Serie
+`colour-dwarf-20261007`) decken sich mit den digitalen Referenzrendern bis in
+die 4. Dezimale — Bank-only (Colour 0 × 60s/80s/00s/Sym) und Colour-Stufen
+(None × 5–100 %) einzeln exakt. Die **JSFX-Render aller 34 Betriebszustände**
+(einschließlich der 24 Bank×Colour-Interaktionszustände) sind bitgleich gegen
+den C++-Pfad verifiziert (max 0,5 LSB bei 24 bit, PDC-Offset −3). Die
+Interaktionsmatrix ist damit modellseitig vollständig belegt und geräteseitig
+über Zerlegung + Parität abgedeckt (nicht direkt am Gerät gemessen; Begründung
+und Kennwerte: `MESSERGEBNISSE.md`, Abschnitt 2.5). Die 20-Hz-Klirrreihung der
+aktuellen Bank am Gerät: 60s 12,42 % / 80s 12,28 % / 00s 1,00 % / Sym 0,00 %.
+
 ### Modus-Tabellen: EEL2-Lookup statt indizierter Globals
 
 Die Halfband-Koeffizienten bleiben in EEL2 indizierte Globals. Die drei
@@ -63,8 +77,8 @@ Parität zwischen beiden Kernen ist über `tests/jsfx_parity.cpp` belegt.
 Zwei Diagramme: zuerst der **reine Signalpfad** inklusive Feedback-Regelkreis,
 danach eine **kompakte Übersicht** mit den Reglerzuordnungen. Gerenderte
 Fassungen (192 DPI, `tools/md_to_png.py`):
-[`dsp-signalfluss.png`](dsp-signalfluss.png) und
-[`dsp-regler-uebersicht.png`](dsp-regler-uebersicht.png).
+[`dsp-signalfluss.png`](plots/dsp-signalfluss.png) und
+[`dsp-regler-uebersicht.png`](plots/dsp-regler-uebersicht.png).
 
 ### Reiner Signalfluss (ohne Regler)
 
@@ -1004,12 +1018,13 @@ in beiden Engines und eigene Signalprüfungen.
   **144 Fälle bitgleich**, einschließlich Audio/GR/Latenz und Umschaltungen.
 - Tatsächlich geladene LV2-Binary: optionale Portverbindung, hörwirksame
   Modellauswahl, In-place, nichtendliche Eingaben und blockinvariante Wechsel.
-- **Am Gerät (2026-10-07, Dwarf-Quelle, OS 2x):** alle vier Profile plus
-  Symmetric gegen Bypass gemessen — 20-Hz-Klirr-Reihung 60s 5,53 % /
-  80s 2,15 % / 00s 0,11 % / Sym 0,01 %, Wiederholungsspreizung ≤ 0,01 dB;
-  Details/Grenzen in `EXTERN.md` und `MESSTECHNIK.md` 1a/1b. Die 1-%-Anker
-  sind dort noch nicht direkt vergleichbar (Kompression/Colour/Input-Gain
-  in der Messung enthalten).
+- **Am Gerät (2026-10-07, Dwarf-Quelle, OS 2x, gültige Serie b2):** alle
+  vier Profile plus Symmetric gegen Bypass gemessen — 20-Hz-Klirr 60s
+  **12,42 %** / 80s 12,28 % / 00s **1,00 %** / Sym 0,00 %, Referenzdeckung
+  bis in die 4. Dezimale; JSFX-Render 34 Zustände bitgleich; CPU-Matrix
+  36 Zustände (0 xruns). Der 1-%-Anker von 00s (−2 dBFS) ist am Gerät exakt
+  getroffen, 60s/80s haben ihre Anker by design bei −14/−8 dBFS. Details:
+  `MESSERGEBNISSE.md`, `EXTERN.md`, `MESSTECHNIK.md` 1b–1f.
 
 Aktuelle Dwarf-/REAPER-Geräteprüfung und Hörabnahme bleiben auf dem anderen
 Rechner auszuführen. Frühere Geräte-CPU-Werte gelten nicht für die neue Stufe.
