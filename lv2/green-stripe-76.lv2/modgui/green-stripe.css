@@ -36,7 +36,7 @@
 .gs76{{{cns}}} .gs-pair > section { position:relative; display:flex; flex-direction:column; min-width:0; box-sizing:border-box; padding:14px 9px 9px;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.4),inset -1px -1px 2px rgba(0,0,0,.15); }
 .gs76{{{cns}}} .gs-pair > section:first-child { border-right:1px solid #939a9d; }
-.gs76{{{cns}}} .gs-brand { position:absolute; top:19px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
+.gs76{{{cns}}} .gs-brand { position:absolute; top:22px; left:9px; right:9px; margin:5px 0 8px; padding:6px 0; text-align:center; color:#f6faf7; font-size:17px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-bay-engine { border-color:#14432a; background:#1c5a39;
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.18),inset -1px -1px 2px rgba(0,0,0,.25); }
 .gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
@@ -65,13 +65,13 @@
 .gs76{{{cns}}} .gs-knob { width:50px; height:50px; flex:none; cursor:ns-resize; touch-action:none;
   background-image:url(/resources/assets/aluminium.png{{{ns}}}); background-repeat:no-repeat; background-size:3250px 50px;
   filter:drop-shadow(2px 3px 2px rgba(0,0,0,.23)); }
-.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; line-height:10px; letter-spacing:1.2px; }
-.gs76{{{cns}}} .gs-control .gs-value { display:block; box-sizing:border-box; width:76px; min-height:20px; margin:3px auto 0; padding:2px 6px; font-size:10px; line-height:14px; white-space:nowrap; }
+.gs76{{{cns}}} .gs-control label { display:block; margin:4px 0 0; font-size:9px; line-height:10px; font-weight:bold; letter-spacing:1.2px; }
+.gs76{{{cns}}} .gs-control .gs-value { display:block; box-sizing:border-box; width:76px; min-height:20px; margin:3px auto 0; padding:2px 6px; font-size:10px; line-height:14px; font-weight:bold; white-space:nowrap; }
 .gs76{{{cns}}} .gs-field { width:100%; margin:0 0 7px; }
 .gs76{{{cns}}} .gs-field > label { display:block; margin:0 0 3px; font-size:8.5px; font-weight:bold; letter-spacing:1.4px; }
 .gs76{{{cns}}} select,.gs76{{{cns}}} .gs-value { color:#10161a; border:1px solid #6f777b; border-radius:3px; background:#e0e5e7;
   box-shadow:inset 1px 1px 2px rgba(0,0,0,.14),1px 1px 0 rgba(255,255,255,.4); }
-.gs76{{{cns}}} select { width:100%; height:23px; font-size:10px; }
+.gs76{{{cns}}} select { width:100%; height:23px; font-size:10px; font-weight:bold; }
 .gs76{{{cns}}} .gs-bay-engine select { background:#d8e7dd; border-color:#3f7a58; }
 .gs76{{{cns}}} .gs-switch { position:relative; height:23px; border-radius:3px; cursor:pointer; touch-action:none;
   border:1px solid #4a1512; background:linear-gradient(180deg,#a8342f,#7d201d); box-shadow:inset 0 2px 4px rgba(0,0,0,.45); }
@@ -111,6 +111,9 @@
 .gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-right { top:26px; bottom:9px; right:0; width:30px; height:auto; }
 .gs76{{{cns}}} .mod-drag-handle.gs-drag.gs-drag-bottom { top:auto; bottom:0; left:0; right:0; height:9px; }
 .gs76{{{cns}}} .gs-plate.gs-drag-foot { cursor:move; touch-action:none; }
+/* Pedalboard zooms on drag-handle clicks (event.target must carry
+   mod-drag-handle); children pass clicks through to the plate itself. */
+.gs76{{{cns}}} .gs-plate b, .gs76{{{cns}}} .gs-plate span { pointer-events:none; }
 .gs76{{{cns}}} .gs-inputs,.gs76{{{cns}}} .gs-outputs { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; width:88px; z-index:30; }
 .gs76{{{cns}}} .gs-inputs { left:-88px; } .gs76{{{cns}}} .gs-outputs { right:-88px; }
 .gs76{{{cns}}} .gs-jack { position:relative; margin-bottom:13px; }

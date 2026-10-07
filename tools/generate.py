@@ -280,7 +280,7 @@ def gui_html(stereo, parameters, version):
 <div class="gs-bay">{screws(True, (22, 43, 58, 88))}<div class="gs-body gs-body-knobs">{knob('mix', 'MIX')}{knob('colour', 'COLOUR')}{select('transformer', '', transformer_labels)}</div></div>
 </div>
 <footer>
-<div class="gs-plate gs-drag-foot" mod-role="drag-handle"><b>FET COMPRESSOR/LIMITER EMULATION</b><span>{'STEREO' if stereo else 'MONO'}</span><span class="gs-plate-version">{version}</span></div>
+<div class="gs-plate gs-drag-foot mod-drag-handle" mod-role="drag-handle"><b>FET COMPRESSOR/LIMITER EMULATION</b><span>{'STEREO' if stereo else 'MONO'}</span><span class="gs-plate-version">{version}</span></div>
 <div class="gs-power">
 <div class="gs-bypass" mod-role="bypass" mod-widget="bypass" title="Bypass" aria-label="Bypass"></div>
 <div class="gs-lamp" title="Betriebsanzeige"></div>

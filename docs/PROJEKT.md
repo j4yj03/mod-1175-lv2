@@ -54,7 +54,14 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   DOM-Injection löst relative URLs gegen die Seiten-URL auf); Paneel jetzt am
   kompletten Rahmenring ziehbar (vier Leisten + Fußzeilenplatte, Cursor
   `move`); beide Fixes im Build-Stand `7ceaed7`, `.mk` zeigt dorthin,
-  Geräte-Sichtprüfung offen.
+  Geräte-Sichtprüfung offen. **Nacharbeit 2026-10-07:** Logo +3 px tiefer
+  (`.gs-brand` top 19→22); die Fußzeilenplatte trägt jetzt zusätzlich die
+  Klasse `mod-drag-handle` — mod-ui zoomt per Klick nur, wenn
+  `event.target` diese Klasse trägt (`pedalboard.js`, `focusPlugin`-Gate),
+  deshalb zoomte der obere Rand, die Platte aber nicht; Plattenkinder
+  (`b`/`span`) sind `pointer-events:none`, damit auch Textklicks zoomen.
+  Knopf-Drag löst bewusst kein Zoom aus (Negativkontrolle im Probe-Check
+  PASS; Wiki „Creating the GUI" als Rollenreferenz konsultiert).
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
   (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
   CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel
