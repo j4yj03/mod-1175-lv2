@@ -319,6 +319,53 @@ Messwerte. Deshalb:
    purposes“ überschrieben ist, darf nicht als klangliches Ziel verkauft werden.
    Das gehört in die Dokumentation, nicht in den Feature-Text.
 
+### MOD-GUI-Meter über Output-Ports (seit 0.5.0)
+
+Ein GUI-Meter für einen Wert, den es als LV2-Port nicht gibt, ist ein
+Portvertrag — kein CSS-Trick. Der komplette, am Gerät verifizierte Pfad:
+
+1. **Output-Port anlegen** (z. B. `gr_db`, −60…0 dB, `connectionOptional`),
+   im Generator als eigene Kategorie führen: **kein** `lv2_append`, **kein**
+   JSFX-Slider (`jsfx_slider: 0` und im Generator überspringen — sonst
+   kollidiert der Default-Index mit slider13/Selektor), **nie** in
+   presets.ttl (Outputs sind nicht preset-adressierbar).
+2. **modgui.ttl** braucht beides: `modgui:javascript <modgui/xxx.js>` und
+   `modgui:monitoredOutputs [ lv2:symbol "..." ]`. Ohne monitoredOutputs
+   sendet mod-ui kein `monitor_output` an mod-host und es kommt **nie** ein
+   Wert an — die Ontologie dafür liegt in `/usr/lib/lv2/modgui.lv2/modgui.ttl`
+   („A monitored output MUST have exactly one lv2:symbol").
+3. **Datenpfad:** mod-host → `output_set <inst> <sym> <val>` (WebSocket) →
+   `host.js` → pedalboard `setOutputPortValue` → `gui.setOutputPortValue` →
+   `triggerJS({type:'change', symbol, value})`. Es gibt **keine**
+   `output-control-value`-CSS-Rolle — Werte erreichen die GUI ausschließlich
+   über das Plugin-JS.
+4. **Plugin-JS-Datei:** mod-ui lädt sie per `/effect/file/javascript` und
+   evalt `method = <code>` — die Datei muss also **ein einziger
+   Funktionsausdruck** sein (`function (event, funcs) { ... }`). Fehler im
+   JS werden still abgefangen (`jsCallback = null`, nur console.log) — die
+   GUI fällt dann auf den CSS-Default zurück, deshalb ohne JS einen
+   sinnvollen Zustand (Nadel in Ruhe, gedimmtes Face) via CSS vorbereiten.
+5. **`event.icon` ist der `.mod-pedal`-Wrapper**, nicht die eigene
+   Wurzelklasse — Zustandsklassen über `event.icon.find('.eigeneklasse')`
+   setzen und die CSS-Selektoren von der eigenen Wurzel aus bauen. Das
+   `'start'`-Event trägt alle Input-Portwerte + Monitored-Outputs;
+   `'change'` feuert für UI- **und** Host-seitige Änderungen (nicht bei
+   Quelle „from-js").
+6. **Gerätecheck vorher:** die OS-Version des Geräts kann älteres mod-ui
+   haben — `grep setOutputPortValue /usr/share/mod/html/js/modgui.js` per
+   SSH bestätigt JS-Support und Output-Pfad, bevor man 0.x.y daran aufbaut.
+7. **Darstellung:** Layer-Images (Face on/off + Nadel) mit dem
+   `padding-bottom`-Aspekt-Hack stapeln (aspect-ratio ist auf dem
+   Geräte-WebKit unsicher); Nadel-Ebene ohne Lagerabdeckung (die würde
+   mitrotieren), `transform-origin` am Pivot in Prozent des Canvas; CSS-
+   Transition für die Glättung — und im Browsertest **Wartezeit nach dem
+   Klassentoggle**, sonst misst man mitten in der 60-ms-Opacity-Transition.
+
+**Portindizes:** neue Ports **anhängen** (nach den angehängten Inputs),
+bestehende Indizes bleiben stabil; Portzahl-Assertions in validate.py und
+test_lv2.py mitführen (validate zählt Control-Inputs + Latency + Outputs
+getrennt — Outputs doppelt zu zählen ist der naheliegende Fehler).
+
 ## Typische Fallen, die mich Zeit gekostet haben
 
 | Falle | Wirkung | Gegenmaßnahme |
@@ -340,6 +387,8 @@ Messwerte. Deshalb:
 | Beschriftung **unter** den Regler | Zweiter Text macht einen Bay höher als einen Select-Bay; bei vertikal zentrierten Inhalten liegen die Bays nicht mehr auf einer Linie | Legende seitlich setzen |
 | ASCII-Ersatzschreibweise in deutschen Notizen | Sieht nach Übertragungsfehler aus | Korrekte Umlaute, Diff kontrollieren |
 | Native Bench als Dwarf-Aussage formuliert | Falsche Leistungsaussage | Relativen Trend nennen, Messort dazusagen |
+
+| PIL `ImageDraw.Draw(img)` ersetzt Pixel **inklusive Alphakanal** — halbtransparente Fills löschen den Untergrund (Face wurde unsichtbar); auch `Draw(img, 'RGBA')` blendet Ellipsen nicht zuverlässig | halbtransparente Meter-Faces wurden weiß/unsichtbar | radiale Glows auf **separater Ebene** von außen nach innen zeichnen und mit `Image.alpha_composite` einfügen |
 
 ## Reihenfolge einer Änderung
 

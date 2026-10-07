@@ -18,7 +18,7 @@ def main():
     # Preset value per control port. Derived from the parameter list instead of
     # special-casing symbols, so a new port cannot silently skip this check:
     # 'enabled' and 'link' mirror the preset, appended ports (oversampling,
-    # transformer) reset to their documented default.
+    # transformer) reset to their documented default, outputs are host-read.
     def preset_value(preset,spec):
         symbol=spec['symbol']
         if symbol=='enabled':
@@ -27,31 +27,37 @@ def main():
             return preset['link']
         if symbol in preset:
             return preset[symbol]
-        assert spec.get('lv2_append'),(symbol,'not a preset value and not appended')
+        assert spec.get('lv2_append') or spec.get('lv2_output'),\
+            (symbol,'not a preset value and neither appended nor output')
         return spec['default']
     for p in presets:
         for spec in parameters:
+            if spec.get('lv2_output'):
+                continue
             key='link' if spec['symbol']=='stereo_link' else spec['symbol']
             value=preset_value(p,spec)
             assert spec['min']<=value<=spec['max'],(p['name'],key)
     bundle=ROOT/'lv2/green-stripe-76.lv2'
-    # Port count is derived: audio ports plus control ports plus the latency port.
+    # Port count is derived: audio ports plus control input ports plus the
+    # latency port plus the monitored output ports.
+    outputs=len([s for s in parameters if s.get('lv2_output')])
     expected={variant:audio+len([s for s in parameters
-                                  if variant=='stereo' or not s.get('stereo_only')])+1
+                                  if (variant=='stereo' or not s.get('stereo_only'))
+                                  and not s.get('lv2_output')])+1+outputs
               for variant,audio in [('mono',2),('stereo',4)]}
     for variant, count in expected.items():
         ttl=(bundle/(variant+'.ttl')).read_text(encoding='utf-8')
         indices=list(map(int,re.findall(r'lv2:index (\d+)',ttl)))
         assert indices==list(range(count)), (variant,indices)
-        assert len(re.findall('lv2:OutputPort, lv2:ControlPort',ttl))==1
+        assert len(re.findall('lv2:OutputPort, lv2:ControlPort',ttl))==1+outputs
         assert 'lv2:designation lv2:enabled' in ttl
-        assert 'gain_reduction' not in ttl
+        assert 'lv2:symbol "gr_db"' in ttl
+        assert 'lv2:portProperty lv2:connectionOptional' in ttl
         for spec in parameters:
             if variant=='mono' and spec.get('stereo_only'):
                 assert f'lv2:symbol "{spec["symbol"]}"' not in ttl,spec['symbol']
             else:
                 assert f'lv2:symbol "{spec["symbol"]}"' in ttl,spec['symbol']
-        assert 'lv2:connectionOptional' in ttl
     for path in (ROOT/'jsfx').glob('*.jsfx*'):
         content=path.read_text(encoding='utf-8')
         for include in re.findall(r'^import (.+)$',content,re.M):

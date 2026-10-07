@@ -43,6 +43,9 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
 
 ### Stereo Link
 
+Ab 0.5.0 über die Plugin-Einstellungen (MOD-Parameterliste bzw.
+Host-Dialog) statt im Paneel einstellbar; Verhalten unverändert:
+
 - **On:** Ein gemeinsamer Regelverlauf reagiert auf den lauteren Betragspegel.
   L/R behalten denselben dynamischen Gain; gegenphasige Signale lösen weiterhin
   Kompression aus. Kanalabhängige Färbung kann trotzdem das Spektrum verändern.
@@ -58,9 +61,13 @@ Stereo-Version verwenden. Kanäle oberhalb 1/2 werden von JSFX nicht bearbeitet.
 
 **Aufbau der LV2-Oberfläche.** Drei senkrechte Bereiche nebeneinander: eine
 breite **GAIN/TIME-Platte ohne Gruppenüberschriften**, mit Input/Output in der
-linken und Attack/Release in der rechten Spalte, das grüne ENGINE-Feld (Verhältnis, Comp-Kippschalter,
-Oversampling, Link) mit dem **Produktnamen als Titel**, und die rechte Platte
-ohne Gruppentitel (Mix, Colour, Transformator). Die Bereiche schließen spaltfrei aneinander an; der Titel
+linken und Attack/Release in der rechten Spalte, das grüne ENGINE-Feld
+(**VU-Meter** für die Gain-Reduction, darunter Verhältnis-Auswahl und
+Comp-Kippschalter) mit dem **Produktnamen als Titel**, und die rechte Platte
+ohne Gruppentitel (Mix, Colour, Transformator). **Oversampling und Stereo
+Link sind ab 0.5.0 kein Paneel-Regler mehr** — sie bleiben voll
+einstellbar über die Plugin-Einstellungen (MOD-Parameterliste bzw.
+Host-Parameterdialog). Die Bereiche schließen spaltfrei aneinander an; der Titel
 steht ohne Namensschild direkt auf Grün. Alle Potis verwenden die
 Aluminiumgrafik; alle Beschriftungen einschließlich **Colour** sind neutral.
 Die sechs Potiwerte stehen jeweils unter der Beschriftung in einem kleinen
@@ -149,6 +156,22 @@ Die Zahlen sind Ziel-/Nominalbezeichnungen. Tatsächliche Steigungen können
 pegel- und zeitabhängig abweichen; siehe Prüfbericht. All ist nicht einfach eine
 unendliche Ratio.
 
+### VU-Meter — Gain Reduction und Statuslicht (ab 0.5.0)
+
+Das VU-Meter im grünen ENGINE-Feld zeigt die laufende Gain-Reduction:
+
+- **Nadel:** 0 dB GR steht links am Skalenanfang, größere Reduktion wandert
+  nach rechts; die Skala geht bis 20 dB, die rote Zone beginnt bei 10 dB.
+  Die Anzeige folgt dem stärker geregelten Kanal (Maximum der Reduktion).
+- **Statuslicht:** bei **COMP ON** ist das Face beleuchtet (warmes
+  Backlight), bei **COMP OFF** gedimmt — mit ausgeschalteter Regelung steht
+  die Nadel auf 0 dB.
+- **Kein Rückwirkungskreis:** die Anzeige liest einen reinen Output-Port
+  (`gr_db`); sie kann den GR-Verlauf nicht ändern, und der Feedback-Abgriff
+  liegt weiterhin vor dem Output.
+- Im Host-Bypass oder Enabled Off bleibt das Face gedimmt und die Nadel
+  auf 0 dB.
+
 ### Mix — 0 bis 100 %
 
 - 100 %: vollständig bearbeiteter Pfad.
@@ -180,9 +203,11 @@ zurückgesetzt, um CPU zu sparen. Beim Einschalten baut er die GR mit seiner
 Attack wieder auf; die Steuerung wird geglättet. Färbungszustände laufen bei
 Compression Off weiterhin normal. Das ist eine digitale Betriebsentscheidung.
 
-### Oversampling — Off / 2x / 4x
+### Oversampling — Off / 2x / 4x (Einstellung, kein Paneel-Regler)
 
-Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**:
+Separate Qualitäts-/CPU-Auswahl ab Version 0.2.0, Standard **Off**; ab 0.5.0
+über die Plugin-Einstellungen (MOD-Parameterliste bzw. Host-Dialog) statt
+im Paneel:
 
 - **Off:** interne Verarbeitung mit der Hostrate; der CPU-günstigste Referenzpfad.
 - **2x/4x:** Audiopfad **und** Regelkreis laufen mit der zwei- bzw. vierfachen
@@ -247,7 +272,7 @@ Enabled-Regler verwenden.
 
 ## 4. Anzeigen der JSFX-Fassung
 
-Die LV2-Fassung hat absichtlich keine GR-/Level-Anzeige. JSFX zeigt:
+Die JSFX-Fassung zeigt zusätzlich zu ihrem VU-Panel:
 
 - **MAX:** in jeder Gruppenkopfzeile stehender Maximal-Peak (Peak-Hold) in
   dBFS, über den Peak-Indikatoren. Die Zahlen aktualisieren sich bewusst

@@ -42,18 +42,24 @@
 .gs76{{{cns}}} .gs-bay-engine .gs-field > label { color:#f6faf7; }
 .gs76{{{cns}}} .gs-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .gs76{{{cns}}} .gs-body > :last-child { margin-bottom:0; }
-/* Reserve the dropdown row in all knob modules, keeping both pot rows level. */
-.gs76{{{cns}}} .gs-body-knobs,.gs76{{{cns}}} .gs-body-engine { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
+/* Reserve the dropdown row in knob modules, keeping both pot rows level. */
+.gs76{{{cns}}} .gs-body-knobs { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:87px 87px 23px; row-gap:10px; align-content:center; justify-items:center; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-control,.gs76{{{cns}}} .gs-body-knobs > .gs-field { margin:0; }
 .gs76{{{cns}}} .gs-body-knobs > .gs-field { display:flex; }
-/* Ratio ends on the first pot's value row; title is outside this shared grid. */
-.gs76{{{cns}}} .gs-body-engine > .gs-field { display:flex; flex-direction:column; margin:0; }
-.gs76{{{cns}}} .gs-body-engine > .gs-field:first-child { align-self:end; }
-.gs76{{{cns}}} .gs-body-engine select[mod-port-symbol="ratio"] { height:20px; }
-.gs76{{{cns}}} .gs-engine-controls { grid-row:2 / 4; width:100%; display:flex; flex-direction:column; gap:7px; align-self:start; }
+/* Engine bay: VU meter on top, ratio and COMP beneath; light from upper left. */
+.gs76{{{cns}}} .gs-body-engine { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding-top:64px; }
+.gs76{{{cns}}} .gs-vuwrap { position:relative; width:100%; max-width:172px; height:0; padding-bottom:66.1538%; }
+.gs76{{{cns}}} .gs-vu { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.gs76{{{cns}}} .gs-vu-on { opacity:0; transition:opacity 60ms linear; }
+.gs76{{{cns}}} .gs-vu-off { transition:opacity 60ms linear; }
+.gs76{{{cns}}}.gs-comp-on .gs-vu-on { opacity:1; }
+.gs76{{{cns}}}.gs-comp-on .gs-vu-off { opacity:0; }
+/* Needle asset points to 0 dB GR (left scale end); grmeter.js rotates it
+   relative to rest around the pivot (50% / 96.5% of the 260x172 canvas). */
+.gs76{{{cns}}} .gs-vu-needle { position:absolute; inset:0; width:100%; height:100%;
+  transform-origin:50% 96.5%; transition:transform 90ms linear; will-change:transform; }
+.gs76{{{cns}}} .gs-engine-controls { width:100%; max-width:172px; display:flex; flex-direction:column; gap:7px; }
 .gs76{{{cns}}} .gs-engine-controls > .gs-field { display:flex; flex-direction:column; margin:0; }
-/* Put the breathing space above the quality controls, never between OS and Link. */
-.gs76{{{cns}}} .gs-engine-controls > .gs-field:first-child { margin-bottom:33px; }
 
 .gs76{{{cns}}} .gs-control { width:136px; text-align:center; margin:0 auto 10px; }
 .gs76{{{cns}}} .gs-knob-row { display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:8px; }

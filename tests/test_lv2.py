@@ -21,7 +21,7 @@ Descriptor._fields_ = [('uri', C.c_char_p), ('instantiate', Instantiate), ('conn
 
 
 def render(library, descriptor_index, rate, block, invalid=False, inplace=False, os_value=0, switch_at=None,
-           transformer_value=None, transformer_switch=False):
+           transformer_value=None, transformer_switch=False, input_db=None):
     pointer = library.lv2_descriptor(descriptor_index)
     d = pointer.contents
     stereo = descriptor_index == 1
@@ -29,6 +29,8 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False,
     assert handle
     audio = [(C.c_float * block)() for _ in range(4 if stereo else 2)]
     controls = [C.c_float(v) for v in ([0,0,3,5,0,100,100,1,1,1] if stereo else [0,0,3,5,0,100,100,1,1])]
+    if input_db is not None:
+        controls[0].value = input_db
     latency = C.c_float()
     oversampling = C.c_float(0 if switch_at is not None else os_value)
     for i, buffer in enumerate(audio):
@@ -40,6 +42,8 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False,
     latency_port = len(audio)+len(controls)
     d.connect(handle,latency_port,C.byref(latency))
     d.connect(handle,latency_port+1,C.byref(oversampling))
+    gr = C.c_float()
+    d.connect(handle,latency_port+3,C.byref(gr))
     transformer=C.c_float(transformer_value or 0)
     if transformer_value is not None:
         d.connect(handle,latency_port+2,C.byref(transformer))
@@ -66,6 +70,12 @@ def render(library, descriptor_index, rate, block, invalid=False, inplace=False,
         result = audio[0 if inplace else (2 if stereo else 1)]
         output.extend(float(result[i]) for i in range(frames))
     assert all(math.isfinite(x) for x in output)
+    assert math.isfinite(gr.value) and -60.0 <= gr.value <= 0.0, gr.value
+    if input_db is not None:
+        print('  gr_db port value: %.3f dB (input %+g dB)' % (gr.value, input_db))
+        if input_db >= 0:
+            assert gr.value <= -3.0, ('Gain reduction did not engage', gr.value)
+    assert math.isfinite(gr.value) and -60.0 <= gr.value <= 0.0, gr.value
     if switch_at is not None:
         assert latency.value == (3 if os_value==1 else 4), 'Latency did not follow oversampling switch'
     d.cleanup(handle)
@@ -106,6 +116,9 @@ def main():
                     assert render(library,index,rate,block,os_value=os_value,switch_at=2048)==switched, \
                         'Oversampling transition is block-size dependent'
     print('LV2 ABI / zero block / in-place / finite / block invariance / OS latency + model transitions: PASS')
+    driven = render(library, 1, 48000, 128, input_db=24)
+    rest = render(library, 1, 48000, 128, input_db=-36)
+    print('GR output port (driven/rest): PASS')
 
 
 if __name__=='__main__':

@@ -58,19 +58,31 @@ def main():
             for a,b in zip(boxes, boxes[1:]):
                 assert abs(a['x']+a['width']-b['x']) < .01, 'Gap between panels'
             assert page.locator('.gs-brand').evaluate('e => getComputedStyle(e).borderTopWidth') == '0px'
+            # Engine bay: VU meter between the logo and the ratio/COMP stack;
+            # oversampling and stereo link are host-settings-only now.
+            assert page.locator('select[mod-port-symbol=oversampling]').count() == 0
+            assert page.locator('select[mod-port-symbol=stereo_link]').count() == 0
+            assert page.locator('.gs-body-engine label').count() == 0, 'Ratio keeps no caption on the compact bay'
+            vu_on = page.locator('.gs-vu-on').bounding_box()
+            for symbol in ('.gs-vu-off', '.gs-vu-needle'):
+                assert page.locator(symbol).bounding_box() == vu_on, 'VU layers must cover the same area'
+            brand = page.locator('.gs-brand').bounding_box()
             ratio = page.locator('select[mod-port-symbol=ratio]').bounding_box()
-            for symbol in ('input', 'attack', 'mix'):
-                value = page.locator(f'.gs-value[mod-port-symbol={symbol}]').bounding_box()
-                assert abs(ratio['y']-value['y']) < .05, 'Ratio is not aligned with pot values'
             mode = page.locator('[mod-port-symbol=compression][mod-role=input-control-port]')
-            os_box = page.locator('select[mod-port-symbol=oversampling]').bounding_box()
-            mode_box = mode.bounding_box()
-            before_os = os_box['y']-mode_box['y']-mode_box['height']
-            assert before_os >= 30, 'Missing separation between COMP and oversampling'
-            if variant == 'stereo':
-                link_box = page.locator('select[mod-port-symbol=stereo_link]').bounding_box()
-                after_os = link_box['y']-os_box['y']-os_box['height']
-                assert 0 <= after_os < before_os/2, 'Large gap belongs before OS, not after it'
+            assert vu_on['y'] >= brand['y'] + brand['height'] - 1, 'VU must sit below the logo'
+            assert ratio['y'] > vu_on['y'] + vu_on['height'], 'Ratio belongs below the VU'
+            assert mode.bounding_box()['y'] > ratio['y'], 'COMP belongs below the ratio select'
+            assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '0'
+            assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '1'
+            assert page.locator('.gs-vu-needle').evaluate("e => getComputedStyle(e).transform") == 'none'
+            page.evaluate("$('.gs76').addClass('gs-comp-on')")
+            page.wait_for_timeout(150)  # opacity transition is 60 ms
+            assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '1'
+            assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '0'
+            page.evaluate("$('.gs76').removeClass('gs-comp-on').addClass('gs-comp-off')")
+            page.wait_for_timeout(150)
+            assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '0'
+            page.evaluate("$('.gs76').removeClass('gs-comp-off')")
             assert mode.locator('span:visible').inner_text() == 'COMP ON'
             mode.click(); assert 'off' in mode.get_attribute('class')
             assert mode.locator('span:visible').inner_text() == 'COMP OFF'

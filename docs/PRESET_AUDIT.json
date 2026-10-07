@@ -1,5 +1,5 @@
 {
-  "version": "0.4.2",
+  "version": "0.5.0",
   "rate": 48000,
   "frames": 57600,
   "bank_states": 76,
@@ -16,8 +16,8 @@
   "probe_sha256": "86cbc34120ebe17f9f08cee98694f97346d1eed5438b92d4ce83ada891dfa970",
   "source_sha256": {
     "data/presets.json": "fb534d292eb7a96fcbb30a9eeddcd9e13db576707c0b4a405eea8d41379579e3",
-    "data/parameters.json": "6f8ba43aea440a578e436aff9233c477fe65fe475dbf29425f4eec90667437aa",
-    "data/model.json": "4f25b52b180003901535200df7f334bd144589772bad5dfcf2cb505f6e45d27f",
+    "data/parameters.json": "349f57db6d9f5b20f8520fcb060c0c7d81792ce562fd6473887f1bfe3eef68f6",
+    "data/model.json": "b268e3ee10297dc1b4f7f9a474dd062d0cf8f3469b798b2881517731b87776c2",
     "data/transformers.json": "00e8514d00ac02fc9dc48f60f17376bb9cfb7b1fa26596f1d307591e2b84182f",
     "src/dsp/GreenStripe.hpp": "aefabcf0409fb264736905356e07e8f9a1ed3e04b40007f099f49f7fb8a1a5f1",
     "src/dsp/Transformer.hpp": "605a0f29ce73e9ac58eaa6b93f41568f49ee967b786a40faadcead2229b43d94",

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include "lv2_abi.h"
 #include "dsp/GreenStripe.hpp"
+#include <algorithm>
 #include <new>
 #include <cstring>
 #include <cstdlib>
@@ -20,10 +21,10 @@ const char* const stereoURI = "https://github.com/j4yj03/mod-1175-lv2#green-stri
 
 struct Instance {
     greenstripe::Processor processor;
-    // Stereo: 4 audio + 10 control + latency + oversampling + transformer.
-    // Mono:   2 audio +  9 control + latency + oversampling + transformer.
-    static const unsigned kStereoPorts = 17;
-    static const unsigned kMonoPorts = 14;
+    // Stereo: 4 audio + 10 control + latency + oversampling + transformer + gr.
+    // Mono:   2 audio +  9 control + latency + oversampling + transformer + gr.
+    static const unsigned kStereoPorts = 18;
+    static const unsigned kMonoPorts = 15;
     float* ports[kStereoPorts];
     bool stereo;
     explicit Instance(double rate, bool twoChannels) : processor(rate, twoChannels), stereo(twoChannels) {
@@ -67,6 +68,7 @@ void run(LV2_Handle handle, uint32_t frames) {
     Instance* self = static_cast<Instance*>(handle);
     self->update();
     const unsigned latencyPort = self->stereo ? 14 : 11;
+    const unsigned grPort = self->stereo ? 17 : 14;
     for (uint32_t i = 0; i < frames; ++i) {
         // Read all inputs before writing to support in-place stereo processing.
         const double left = self->ports[0] ? self->ports[0][i] : 0.0;
@@ -77,6 +79,16 @@ void run(LV2_Handle handle, uint32_t frames) {
         if (self->stereo && self->ports[3]) self->ports[3][i] = static_cast<float>(b);
     }
     if (self->ports[latencyPort]) *self->ports[latencyPort] = self->processor.latency();
+    if (self->ports[grPort]) {
+        // Reported as gain in dB (negative = reduction); the displayed value
+        // is the larger of the two channel reductions. The GUI needle maps
+        // 0 dB GR to rest and clamps at the 20 dB scale end.
+        const double gr = self->stereo
+            ? std::min(self->processor.gainReduction(0), self->processor.gainReduction(1))
+            : self->processor.gainReduction(0);
+        *self->ports[grPort] = static_cast<float>(
+            greenstripe::bounded(greenstripe::finiteOr(gr, 0.0), -60.0, 0.0));
+    }
 }
 void cleanup(LV2_Handle handle) {
     static_cast<Instance*>(handle)->~Instance();

@@ -1,5 +1,5 @@
 {
-  "version": "0.4.2",
+  "version": "0.5.0",
   "transformer_bank": "data/transformers.json",
   "calibration_status": "Independent 1176-inspired Green Stripe gray-box; not hardware-calibrated",
   "oversampling": 4,

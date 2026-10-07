@@ -16,7 +16,13 @@
 - Eigenständige 1176-inspirierte Adaption; A oder D ist kein verbindliches
   Klangziel (Benutzerkorrektur). Keine zertifizierte Hardwaregleichheit.
 - LV2 Mono und Stereo; Stereo Link optional, sonst unabhängige Regelkreise.
-- LV2 **ohne GR-/Level-Anzeige**. Ein technischer Latency-Port ist kein Meter.
+- LV2-Anzeige ab 0.5.0 (ausdrücklicher Benutzerauftrag): ein Output-Port
+  `gr_db` (−60…0 dB Gain, blockweise, Maximum der Kanalreduktionen) treibt
+  das VU-Meter in der GUI (Nadel per modgui-JavaScript, Face folgt COMP).
+  Das ist eine **reine Anzeige** — der Port schreibt nichts zurück und darf
+  den GR-Verlauf nicht ändern; Input-Meter-Ports gibt es weiterhin nicht.
+  Ein technischer Latency-Port ist kein Meter. Oversampling und Stereo Link
+  sind bewusst kein Paneel-Regler (Einstellungen im Host).
 - JSFX Mono und Stereo mit GR, Peak/RMS und REAPER-7-Host-GR-Anzeige.
 - Gemeinsame Regler im Dual-Mono-Modus; keine Kanalvermischung.
 - Zielgerät: MOD Dwarf OS **1.13.5.3315**, aarch64, Cortex-A35,

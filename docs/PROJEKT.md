@@ -6,7 +6,17 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 ## Zusammenfassung (Stand 2026-10-07)
 
-- **Produkt 0.4.2:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
+- **Produkt 0.5.0 (Benutzerauftrag, 2026-10-07):** LV2-GUI mit **VU-Meter**
+  (GR-Nadel 0…20 dB, rote Zone ab 10 dB; Face beleuchtet bei COMP ON,
+  gedimmt bei COMP OFF — dient zugleich als Statuslicht); neuer rein
+  lesender Output-Port **`gr_db`** (−60…0 dB, blockweise, Maximum der
+  Kanäle, `modgui:monitoredOutputs` + modgui-JavaScript). **Oversampling
+  und Stereo Link sind aus dem Paneel entfernt** und bleiben in den
+  Plugin-Einstellungen (Parameterliste) einstellbar; Ratio (ohne
+  Beschriftung) und COMP rücken an deren alte Stellen. Alle bisherigen
+  Prüfungen PASS: make test (inkl. neuem GR-Port-Check: −17,4 dB bei
+  +24 dB Input, 0 dB Ruhe), Parität 430+76 max 0 FS, GFX, MOD-Widget-Test.
+- **Produkt 0.4.2 (2:1-Kennlinie):** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
   2:1-Varianten), hörbare Eingangstransformatoren 60s/80s/00s plus None und
   die lineare Referenz Symmetric. DSP-Kern doppelpfadig (C++11/EEL2) mit
   belegter Bit-Parität (506 Signalvergleiche, max 0 FS). **Revisionsregel
@@ -118,7 +128,7 @@ Stand: Benutzerentscheidungen bis 2026-10-05, Produkt 0.4.1.
 | Plattform | Anforderung |
 |---|---|
 | MOD Dwarf | OS 1.13.5.3315, aarch64/Cortex-A35, Kernel 6.1.15-rt7-moddwarf |
-| LV2 | Mono und Stereo, optionale Link-Regelung, keine Meter-GUI/GR-Ports |
+| LV2 | Mono und Stereo, optionale Link-Regelung; ab 0.5.0 GR-Output-Port + VU-Meter-GUI (Benutzerauftrag 2026-10-07), kein Input-Meter |
 | REAPER 7 | JSFX Mono und Stereo, optionale Link-Regelung, GR und Level |
 | Testrechner | anderer Rechner; dort Dwarf/REAPER, Docker/MPB und Hörprüfung |
 
@@ -763,11 +773,17 @@ Ursprünglich L/R und gemeinsamer Betrags-Max-Controller warmgehalten.
 Ab 0.1.1 nur aktive Controller, beim Umschalten Zustandsübernahme und temporäre
 Gain-Crossfadeberechnung aller drei. Kein L+R-Detektor und keine elektrische
 1176-SA-Identität. So entfällt unnötige dreifache Regelarbeit im stabilen Link.
+## D07 — Meter nur JSFX (bis 0.4.x; ab 0.5.0 auf Benutzerauftrag erweitert)
 
-## D07 — Meter nur JSFX
-
-LV2 technisch nur Latency-Output; keine GR-/Level-Controloutputs oder GUI-Meter.
-JSFX Peak/RMS/Hold/GR getrennt vom Core, atomare Block-Snapshots, GFX read-only.
+~~LV2 technisch nur Latency-Output; keine GR-/Level-Controloutputs oder
+GUI-Meter.~~ *(Ab 0.5.0 auf ausdrücklichen Benutzerauftrag (2026-10-07)
+geändert: ein rein lesender Output-Port `gr_db` (−60…0 dB, Maximum der
+Kanäle, blockweise, `modgui:monitoredOutputs`) treibt das VU-Meter in der
+GUI — Nadel per modgui-JavaScript, Face-Licht folgt COMP. Der Port schreibt
+nichts zurück und der Feedback-Abgriff liegt weiterhin vor dem Output; der
+GR-Verlauf kann die Anzeige nicht ändern. JSFX behält seine eigenen
+Meter.) JSFX Peak/RMS/Hold/GR getrennt vom Core, atomare Block-Snapshots,
+GFX read-only.
 Mono verarbeitet Input L auf beide Outputs; keine unbemerkte L/R-Summierung.
 
 ## D08 — Presets sind Startwerte

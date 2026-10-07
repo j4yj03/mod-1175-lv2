@@ -742,9 +742,10 @@ Erst danach C++/EEL2 gemeinsam, Parität, Übergänge und Geräte-CPU testen.
 # Parameter, Ports und Persistenz
 
 Normative Quelle: `data/parameters.json`. TTL und JSFX-Wrappers werden mit
-`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.4.1.
-Gegenüber 0.1.1 kamen `oversampling` und `transformer` hinzu; die Indizes der
-bestehenden Ports und die Plugin-URIs sind unverändert.
+`python3 tools/generate.py` erzeugt. Diese Tabelle beschreibt Version 0.5.0.
+Gegenüber 0.1.1 kamen `oversampling`, `transformer` und (0.5.0) der
+GR-Output-Port hinzu; die Indizes der bestehenden Ports und die Plugin-URIs
+sind unverändert.
 
 | Symbol | JSFX-Slider | Bereich | Default | Bedeutung |
 |---|---:|---|---:|---|
@@ -761,6 +762,7 @@ bestehenden Ports und die Plugin-URIs sind unverändert.
 | Instrument preset | 11 | 0…38 | 0 | JSFX-only: Custom oder Instrumentstartwert |
 | oversampling | 12 | 0…2, Enum | 0 | Off / 2x / 4x; Qualitäts-/CPU-Wahl, **nicht** im Preset |
 | transformer | 13 | 0…4, Enum | 0 | None / 60s / 80s / 00s / Symmetric; hörbare Eingangsmodelle, Symmetric linear |
+| gr_db | — (LV2-Output) | −60…0 dB | 0 | gemessene Gain-Reduction am Ende jedes Blocks, Maximum der Kanäle, nur lesend (0.5.0, treibt die GUI-Nadel); kein JSFX-Slider |
 
 Alle Klangparameter außer Mode-Auswahl werden in abgeleiteter Form geglättet:
 Gains linear, Zeiten in Sekunden, Threshold/Knie/Ratio linear. Die Mode-Auswahl
