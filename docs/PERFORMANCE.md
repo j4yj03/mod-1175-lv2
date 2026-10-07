@@ -546,6 +546,28 @@ NEON 2-Lane (bis ~2× des Blocks, aber datenabhängige Solver-Verzweigung
 braucht Maskierung — hohes Implementierungsrisiko), OS-Entkopplung
 (Vertragsfrage). Die Doppel-Auswertung ist damit verfeuert.
 
+### Stop-Zweig-Reachability (2026-10-07, gemessen)
+
+Diagnosezähler je Stop-Zweig (`stops_clamped[14]`, nur Diagnostic-Build),
+Extremreizen bis zum Input-Clamp (+48 dB ≈ ±256 FS), 20 Hz/997 Hz, alle
+Profile, OS 2x, Stereo (`bench_stats`, Rohdaten `/root/lt/extreme-*.json`):
+
+| Bedingung | klemmt | nie |
+|---|---|---|
+| 0 dB, 20 Hz | 0–10 | 11–13 (alle Profile) |
+| 0 dB, 997 Hz | 0–6 | 7–13 |
+| +48 dB (Clamp), 20 Hz | 0–11 | **12–13** (60s/80s/00s); Sym: alle 14 |
+| +48 dB, 997 Hz | 0–9 | 10–13 |
+
+Die Zweige 12/13 (Schwellen 0,2/0,5) klemmen für 60s/80s/00s nie — der Flux
+ist durch die Sättigung selbst begrenzt (Plateau ≈ flux_scale_vs) und der
+Input durch den Plugin-Clamp. Spezialisierungs-Potenzial damit nur
+**2/14 Zweige ≈ 1–2 % Gesamt-CPU** — die Stop-Zweige sind nicht der
+Hebel, den die 30–50-%-Schätzung annahm (kleine Schwellen = große
+Gewichte = ständig klemmend). Der wirksamere Hebel ist der
+**Startwert-Prädikator** (Iterationen 2,0–2,55 gemessen): Ziel 1,3–1,7
+Iterationen je Probe ≈ −5–15 % Gesamt-CPU.
+
 ### Build-Tuning (2026-10-07, gemessen)
 
 `-mcpu=cortex-a35` am Cross-Bench (997 Hz, sonst wie Serie B, nach der

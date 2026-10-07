@@ -123,6 +123,7 @@ struct Measurement {
     double solverSamples = 0.0;
     double iterationsPerSample = 0.0;
     double cappedFraction = 0.0;
+    double stopsClamped[14] = {0.0};
 };
 
 struct Case {
@@ -217,6 +218,7 @@ Measurement runCase(const Options& o, int transformer, int oversampling, int cha
     m.peakGainReductionDb = peakGainReduction;
 #ifdef GS76_TRANSFORMER_STATS
     unsigned long long iterations = 0, samples = 0, capped = 0;
+    unsigned long long stopsClamped[14] = {0};
     for (int n = 0; n < instances; ++n) {
         for (unsigned c = 0; c < (stereo ? 2u : 1u); ++c) {
             const greenstripe::TransformerSolverStats& s =
@@ -224,11 +226,14 @@ Measurement runCase(const Options& o, int transformer, int oversampling, int cha
             iterations += s.iterations;
             samples += s.samples;
             capped += s.capped;
+            for (unsigned j = 0; j < 14; ++j) stopsClamped[j] += s.stops_clamped[j];
         }
     }
     m.solverSamples = static_cast<double>(samples);
     m.iterationsPerSample = samples ? static_cast<double>(iterations) / static_cast<double>(samples) : 0.0;
     m.cappedFraction = samples ? static_cast<double>(capped) / static_cast<double>(samples) : 0.0;
+    for (unsigned j = 0; j < 14; ++j)
+        m.stopsClamped[j] = static_cast<double>(stopsClamped[j]);
 #endif
     return m;
 }
@@ -296,6 +301,21 @@ void writeJson(const Options& o, const std::vector<Case>& cases) {
              << jsonNumber(100.0 * m.cpuSeconds / c.instances)
              << ", \"solver_iterations_per_sample\": " << jsonNumber(m.iterationsPerSample)
              << ", \"solver_capped_fraction\": " << jsonNumber(m.cappedFraction)
+             << ", \"stops_clamped\": [" << jsonNumber(m.stopsClamped[0])
+             << ", " << jsonNumber(m.stopsClamped[1])
+             << ", " << jsonNumber(m.stopsClamped[2])
+             << ", " << jsonNumber(m.stopsClamped[3])
+             << ", " << jsonNumber(m.stopsClamped[4])
+             << ", " << jsonNumber(m.stopsClamped[5])
+             << ", " << jsonNumber(m.stopsClamped[6])
+             << ", " << jsonNumber(m.stopsClamped[7])
+             << ", " << jsonNumber(m.stopsClamped[8])
+             << ", " << jsonNumber(m.stopsClamped[9])
+             << ", " << jsonNumber(m.stopsClamped[10])
+             << ", " << jsonNumber(m.stopsClamped[11])
+             << ", " << jsonNumber(m.stopsClamped[12])
+             << ", " << jsonNumber(m.stopsClamped[13])
+             << "]"
              << ", \"peak_gain_reduction_db\": " << jsonNumber(m.peakGainReductionDb)
              << ", \"output_rms\": " << jsonNumber(m.outputRms)
              << ", \"checksum\": " << jsonNumber(m.checksum) << "}"

@@ -148,10 +148,18 @@ Mit vollem Paritätspreis (C++/EEL2 gemeinsam, `generate.py`, 430+76 Fälle
 gegen neue Bit-Basis, `cpu_regression` Vorher/Nachher, Übergangstests,
 Gerätevergleich):
 
-- [ ] Stop-Zweige je Profil spezialisieren: `generate.py` gibt die aktiven
-  Zweige je Profil aus; Zweige, die im Erreichbarkeitsbereich nie klemmen,
-  exakt in den Residual falten oder zur Bauzeit weglassen. Potenzial grob
-  30–50 % des dominanten Terms; Fließkomma-Neuordnung ändert Rundung.
+- [x] Stop-Zweig-Reachability gemessen (2026-10-07, Diagnosezähler je Zweig,
+  Extremreizen bis zum Input-Clamp ±256 FS, 20 Hz/997 Hz, alle Profile):
+  **60s/80s/00s klemmen max. Zweige 0–11 — 12/13 klemmen nie**; Sym (linear)
+  klemmt bei 20 Hz alle 14. Das Potenzial der Spezialisierung ist damit nur
+  **2 von 14 Zweigen ≈ 1–2 % Gesamt-CPU** — die TODO-Schätzung 30–50 % war
+  zu optimistisch (die kleinen Schwellen haben die großen Gewichte und
+  klemmen ständig). Rohdaten: `test-results/serie-b` (bench_stats).
+  Umsetzung nur noch gemeinsam mit dem Startwert-Prädikator lohnend.
+- [ ] Startwert-Prädikator 2. Ordnung + Konvergenz-Toleranz 1e-14 → 1e-10:
+  Iterationen 2,0–2,55 je Probe (gemessen); Ziel 1,3–1,7. Erwartung
+  −15–35 % des Solver-Loops ≈ −5–15 % Gesamt-CPU; voller Paritätszyklus
+  (Rundung ändert sich), 1-%-Anker und Cap-Quote vérifizieren.
 - [ ] Startwert-/Steigungsverbesserung (Prädiktor zweiter Ordnung) bzw.
   gelockerte Konvergenztoleranz (aktuell 1e-14 relativ) prüfen; Ziel
   Iterationen < 2 je Probe.
@@ -180,12 +188,13 @@ verfeuert (~0 %).
 
 ## Offen — Projektinfrastruktur
 
-- [ ] Dwarf-GUI: Logo-Renderfix (`/resources/…{{{ns}}}`-Form, siehe PROJEKT)
-  auf dem Gerät prüfen; dazu Fix committen/pushen und
-  `GREEN_STRIPE_76_VERSION` in `packaging/mod-plugin-builder/…/green-stripe-76.mk`
-  auf den neuen Commit setzen, dann MPB-Neubau (Gerät/Cloud) und Web-UI-Sichtprüfung.
-- [ ] README-Verzeichnisse auf ersten beiden Stufen erstellen (Haupt-README
-  nur Überblick + Referenzen).
+- [x] Dwarf-GUI: Logo-Renderfix auf dem Gerät verifiziert (2026-10-07):
+  Screenshot aus der installierten Bundle-GUI per SSH gezogen — Logo weiß auf
+  dem grünen ENGINE-Feld, Paneel vollständig; `.mk`-Pin folgt dem HEAD.
+  Letzte live Sichtprüfung im Web-UI kann der Benutzer bestätigen.
+- [x] README-Verzeichnisse auf ersten beiden Stufen erstellt (2026-10-07):
+  data/, docs/, jsfx/, lv2/, packaging/, reaper/, src/, test-results/, tests/,
+  tools/ mit Kurzübersicht; Haupt-README nach der benannten Struktur.
 
 ## Erledigt (zur Erinnerung, nicht mehr offen)
 

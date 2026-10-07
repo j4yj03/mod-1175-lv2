@@ -69,7 +69,9 @@ struct TransformerBank {
 #ifdef GS76_TRANSFORMER_STATS
 struct TransformerSolverStats {
     unsigned iterations, samples, capped;
-    void clear() { iterations = samples = capped = 0; }
+    unsigned stops_clamped[14];
+    void clear() { iterations = samples = capped = 0;
+                   for (unsigned j=0; j<14; ++j) stops_clamped[j]=0; }
 };
 #endif
 
@@ -113,6 +115,9 @@ struct TransformerCore {
     }
     double current(double x, const TransformerCoefficients& c, double& derivative, bool advance) {
         double value=law(x,*c.p,derivative);
+#ifdef GS76_TRANSFORMER_STATS
+        const double disp_now=x-flux;
+#endif
         const double z=((1.0-c.relaxation)*relax+c.relaxation*(x+flux))/(1.0+c.relaxation);
         value+=(x-z)/c.p->relax_l_h;
         derivative+=1.0/((1.0+c.relaxation)*c.p->relax_l_h);
@@ -122,6 +127,9 @@ struct TransformerCore {
             const double stop=bounded(trial,-transformer_model::thresholds[j],transformer_model::thresholds[j]);
             value+=c.weights[j]*stop;
             if (std::abs(trial)<transformer_model::thresholds[j]) derivative+=c.weights[j];
+#ifdef GS76_TRANSFORMER_STATS
+            if (std::abs(trial)>=transformer_model::thresholds[j]) ++stats.stops_clamped[j];
+#endif
             if (advance) stops[j]=zap(stop);
         }
         return value;
