@@ -133,6 +133,17 @@ Paritätsneutral (bit-identisch machbar):
   Kanal) — Lockstep braucht Maskierung von x/hi/lo und den Zustands-Commit;
   deshalb erst nach der Stop-Zweig-Frage entscheiden.
 
+Vertragsfragen OS-Entkopplung (2026-10-07 diskutiert, **zurückgestellt**):
+der Transformator soll laut Benutzer **oversampled bleiben** — die
+Host-Rate-Option würde das Sättigungs-Oversampling abschalten und ist damit
+klanglich fraglich. Falls später als explizit gekennzeichnete „Eco"-Option
+wieder aufgenommen: (a) neuer angehängter Port `transformer_rate`
+{OS folgen, Host-Rate}, Index 17/14, Default „OS folgen" (Recall-neutral),
+Minor-Bump 0.5.0; (b) gemessene Alias-Grenze statt Schwelle raten
+(Zweitton-/10-kHz-Anregung bei −2 dBFS, Host-Rate vs OS 2x); (c) volle Kette
+(generate.py, Übergangstests, Parität, CPU-Nachweis). Priorität liegt auf
+Konvergenz-Toleranz/Startwert (Vorschlag 3) und Stop-Zweig-Spezialisierung.
+
 Mit vollem Paritätspreis (C++/EEL2 gemeinsam, `generate.py`, 430+76 Fälle
 gegen neue Bit-Basis, `cpu_regression` Vorher/Nachher, Übergangstests,
 Gerätevergleich):

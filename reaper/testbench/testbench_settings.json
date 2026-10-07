@@ -1,0 +1,722 @@
+{
+ "schema": 1,
+ "generator": "tools/testbench_rpp.py",
+ "signal": {
+  "file": "Media\\\\gs76-matrix-all-m2-stereo.wav",
+  "length": 64.47
+ },
+ "jsfx": "GreenStripe/GreenStripe76-Stereo.jsfx",
+ "layout": {
+  "signal_length": 64.47,
+  "group1": {
+   "start": 3.53,
+   "gap": 3.53
+  },
+  "group2": {
+   "start": 776.0,
+   "gap": 4.47
+  },
+  "group12": {
+   "start": 1664.0,
+   "colour_gap": 4.47,
+   "type_gap": 11.53
+  }
+ },
+ "groups": [
+  {
+   "name": "JSFX.GROUP 1",
+   "subregions": [
+    {
+     "name": "60s_jsfx",
+     "position": 3.53,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 0.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "80s_jsfx",
+     "position": 71.53,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 0.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "00s_jsfx",
+     "position": 139.53,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 0.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "sym_jsfx",
+     "position": 207.53,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 0.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    }
+   ]
+  },
+  {
+   "name": "JSFX.GROUP 2",
+   "subregions": [
+    {
+     "name": "05_col_jsfx",
+     "position": 304.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 5.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    },
+    {
+     "name": "10_col_jsfx",
+     "position": 372.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 10.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    },
+    {
+     "name": "20_col_jsfx",
+     "position": 440.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 20.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    },
+    {
+     "name": "50_col_jsfx",
+     "position": 508.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 50.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    },
+    {
+     "name": "75_col_jsfx",
+     "position": 576.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 75.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    },
+    {
+     "name": "100_col_jsfx",
+     "position": 644.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 100.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "JSFX.GROUP 1 x 2",
+   "subregions": [
+    {
+     "name": "05_col_60s_jsfx",
+     "position": 720.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 5.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "10_col_60s_jsfx",
+     "position": 788.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 10.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "20_col_60s_jsfx",
+     "position": 856.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 20.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "50_col_60s_jsfx",
+     "position": 924.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 50.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "75_col_60s_jsfx",
+     "position": 992.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 75.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "100_col_60s_jsfx",
+     "position": 1060.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 100.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 1
+     }
+    },
+    {
+     "name": "05_col_80s_jsfx",
+     "position": 1136.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 5.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "10_col_80s_jsfx",
+     "position": 1204.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 10.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "20_col_80s_jsfx",
+     "position": 1272.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 20.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "50_col_80s_jsfx",
+     "position": 1340.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 50.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "75_col_80s_jsfx",
+     "position": 1408.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 75.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "100_col_80s_jsfx",
+     "position": 1476.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 100.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 2
+     }
+    },
+    {
+     "name": "05_col_00s_jsfx",
+     "position": 1552.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 5.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "10_col_00s_jsfx",
+     "position": 1620.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 10.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "20_col_00s_jsfx",
+     "position": 1688.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 20.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "50_col_00s_jsfx",
+     "position": 1756.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 50.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "75_col_00s_jsfx",
+     "position": 1824.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 75.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "100_col_00s_jsfx",
+     "position": 1892.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 100.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 3
+     }
+    },
+    {
+     "name": "05_col_sym_jsfx",
+     "position": 1968.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 5.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    },
+    {
+     "name": "10_col_sym_jsfx",
+     "position": 2036.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 10.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    },
+    {
+     "name": "20_col_sym_jsfx",
+     "position": 2104.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 20.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    },
+    {
+     "name": "50_col_sym_jsfx",
+     "position": 2172.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 50.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    },
+    {
+     "name": "75_col_sym_jsfx",
+     "position": 2240.94,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 75.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    },
+    {
+     "name": "100_col_sym_jsfx",
+     "position": 2308.0,
+     "length": 64.47,
+     "state": {
+      "input": 0.0,
+      "output": 0.0,
+      "attack": 7.0,
+      "release": 7.0,
+      "ratio": 1.0,
+      "mix": 100.0,
+      "colour": 100.0,
+      "compression": 0,
+      "enabled": 1,
+      "link": 1,
+      "preset": 0,
+      "oversampling": 1,
+      "transformer": 4
+     }
+    }
+   ]
+  }
+ ]
+}
