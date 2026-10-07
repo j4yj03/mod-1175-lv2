@@ -1,7 +1,7 @@
 # Green Stripe 76 buildroot package recipe (MOD Plugin Builder / Cloud Builder).
 # The cloud builder accepts only this single .mk file, so the source must be
 # fetched from a URL. Update _VERSION to the commit that should be built.
-GREEN_STRIPE_76_VERSION = fbf3455fdfacb21771470afb1afbc10d9a6332d8
+GREEN_STRIPE_76_VERSION = ce26eac3ca8f373651972ac92c8fc134198d8752
 GREEN_STRIPE_76_SITE_METHOD = git
 GREEN_STRIPE_76_SITE = https://github.com/j4yj03/mod-1175-lv2.git
 GREEN_STRIPE_76_LICENSE = MIT, ISC (LV2 ABI header)
@@ -11,11 +11,11 @@ GREEN_STRIPE_76_BUNDLES = green-stripe-76.lv2
 GREEN_STRIPE_76_TARGET_MAKE = $(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)
 
 define GREEN_STRIPE_76_BUILD_CMDS
-	$(GREEN_STRIPE_76_TARGET_MAKE) BUILD_DIR=build/mpb
+	$(GREEN_STRIPE_76_TARGET_MAKE) BUILD_DIR=build/mpb CXXFLAGS="$(TARGET_CXXFLAGS) -mcpu=cortex-a35"
 endef
 
 define GREEN_STRIPE_76_INSTALL_TARGET_CMDS
-	$(GREEN_STRIPE_76_TARGET_MAKE) BUILD_DIR=build/mpb install DESTDIR=$(TARGET_DIR) PREFIX=/usr
+	$(GREEN_STRIPE_76_TARGET_MAKE) BUILD_DIR=build/mpb CXXFLAGS="$(TARGET_CXXFLAGS) -mcpu=cortex-a35" install DESTDIR=$(TARGET_DIR) PREFIX=/usr
 endef
 
 $(eval $(generic-package))
