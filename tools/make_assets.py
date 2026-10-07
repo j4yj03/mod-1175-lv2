@@ -16,6 +16,10 @@ def main():
         for variant in ('mono', 'stereo'):
             page.set_content(page_html(variant), wait_until='load')
             default_controls(page)
+            # COMP ON crossfades the two VU faces over 60 ms. Capturing
+            # immediately made the first (Mono) image look half-dimmed while
+            # the later Stereo pass had already settled.
+            page.wait_for_timeout(100)
             # Include the down-right rack shadow, which an element screenshot
             # would clip at the panel border. Keep the surrounding area transparent.
             page.add_style_tag(content='body { background:transparent; }')

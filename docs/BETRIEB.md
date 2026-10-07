@@ -161,7 +161,7 @@ unendliche Ratio.
 Das VU-Meter im grünen ENGINE-Feld zeigt die laufende Gain-Reduction:
 
 - **Nadel:** 0 dB GR steht links am Skalenanfang, größere Reduktion wandert
-  nach rechts; die Skala geht bis 20 dB, die rote Zone beginnt bei 10 dB.
+  nach rechts; die Skala geht bis 30 dB, die rote Zone beginnt bei 20 dB.
   Die Anzeige folgt dem stärker geregelten Kanal (Maximum der Reduktion).
 - **Statuslicht:** bei **COMP ON** ist das Face beleuchtet (warmes
   Backlight), bei **COMP OFF** gedimmt — mit ausgeschalteter Regelung steht

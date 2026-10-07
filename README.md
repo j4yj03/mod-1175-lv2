@@ -27,8 +27,8 @@ Dazu: **Mix** 0–100 %, **Stereo Link** On/Off (Off = zwei unabhängige
 Regelkreise), **Bypass** als Schalter, **Instrument preset** mit 38 Einträgen
 (01–36 instrumentweise gruppiert, 37/38 als 2:1-Varianten angehängt).
 Das **VU-Meter** im grünen ENGINE-Feld zeigt die laufende Gain-Reduction
-mit einer Nadel (0 dB Ruhe links, bis 20 dB am Skalenende; rote Zone ab
-10 dB) und dient zugleich als Statuslicht: beleuchtet bei COMP ON,
+  mit einer Nadel (0 dB Ruhe links, bis 30 dB am Skalenende; rote Zone ab
+  20 dB) und dient zugleich als Statuslicht: beleuchtet bei COMP ON,
 gedimmt bei COMP OFF. Es liest einen reinen Output-Port (`gr_db`) — der
 Feed-Regelkreis greift weiterhin vor dem Output ab, die Anzeige kann den
 GR-Verlauf nicht ändern. `None` ist exakt

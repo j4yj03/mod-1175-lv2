@@ -7,7 +7,7 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 ## Zusammenfassung (Stand 2026-10-07)
 
 - **Produkt 0.5.0 (Benutzerauftrag, 2026-10-07):** LV2-GUI mit **VU-Meter**
-  (GR-Nadel 0…20 dB, rote Zone ab 10 dB; Face beleuchtet bei COMP ON,
+  (GR-Nadel 0…30 dB, rote Zone ab 20 dB; Face beleuchtet bei COMP ON,
   gedimmt bei COMP OFF — dient zugleich als Statuslicht); neuer rein
   lesender Output-Port **`gr_db`** (−60…0 dB, blockweise, Maximum der
   Kanäle, `modgui:monitoredOutputs` + modgui-JavaScript). **Oversampling
@@ -89,6 +89,16 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   (0,078 px). `vumeter-on.png` besitzt nun ein helleres warmes Face und einen
   stärkeren radialen Glühlampen-Glow; der echte JS-Start-/Change-Pfad schaltet
   bei COMP ON auf dieses Face und bei COMP OFF auf `vumeter-off.png`.
+  **Skalennachpflege 2026-10-08:** VU-Skala und JavaScript-Nadelmapping reichen
+  nun von 0 bis 30 dB; Hauptmarken liegen in 5-dB-Schritten. Die rote Zone
+  liegt nach der Nachpflege vom 2026-10-08 bei 20–30 dB. Nur das VU-Face ist weitere 4 px nach oben
+  versetzt; Ratio und COMP behalten ihre zuvor gemessene Zeilenausrichtung.
+  Der Bezel ist zusätzlich 3 px nach innen verstärkt; Außenmaß und Skalenradius
+  bleiben gleich, sodass der Rahmen die Skala nicht überlappt.
+  Der Asset-Renderer wartet nach dem Setzen von COMP ON nun 100 ms auf die
+  60-ms-Face-Überblendung. Zuvor wurde das zuerst gerenderte Mono-Bild mitten
+  im Übergang aufgenommen und wirkte deshalb fälschlich wie COMP OFF; der
+  Laufzeitzustand war in Mono und Stereo bereits identisch ON.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
   (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
   CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel

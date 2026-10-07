@@ -2,7 +2,7 @@
 """Erzeugt das VU-Meter-Asset (Gain-Reduction-Anzeige mit Nadel).
 
 Standalone-Generator, Pillow erforderlich. Rendert eine klassische
-VU-Front (Bogenskala 0…20 dB GR, rote Zone) als PNG in das
+VU-Front (Bogenskala 0…30 dB GR, rote Zone ab 20 dB) als PNG in das
 modgui-Assets-Verzeichnis — **ohne Nadel** (die Nadel wird später per
 CSS rotiert und liegt als separate, transparente Ebene vor;
 --needle-output). 0 dB GR = Ruhe am linken Skalenende, Abbildung
@@ -31,7 +31,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / 'lv2/green-stripe-76.lv2/modgui/assets/vumeter.png'
 
-SCALE_MAX_DB = 20.0
+SCALE_MAX_DB = 30.0
 SWEEP_DEG = 45.0          # Halb-Öffnungswinkel der Skala
 SS = 4                    # Supersampling-Faktor
 
@@ -83,13 +83,16 @@ def render(scale_max, lit=True):
     d = ImageDraw.Draw(img, 'RGBA')
     s = SS
 
-    # Gehäuse (Bezel) mit Licht von oben links
+    # Gehäuse (Bezel) mit Licht von oben links. Der Rahmen wächst nur nach
+    # innen: Außenmaß und Skalenposition bleiben unverändert.
     d.rounded_rectangle((0, 0, w * s - 1, h * s - 1), radius=10 * s,
                         fill=BEZEL + (255,))
     d.rounded_rectangle((0, 0, w * s - 1, h * s - 1), radius=10 * s,
                         outline=BEZEL_EDGE + (255,), width=s)
     d.rounded_rectangle((2 * s, 2 * s, w * s - 3, h * s - 3), radius=9 * s,
                         outline=(255, 255, 255, 60), width=s)
+    d.rounded_rectangle((4 * s, 4 * s, w * s - 5, h * s - 5), radius=8 * s,
+                        outline=BEZEL + (255,), width=3 * s)
 
     px, py = w * s / 2.0, (h - 6) * s
     radius = (h - 40) * s
@@ -123,10 +126,10 @@ def render(scale_max, lit=True):
         img = Image.alpha_composite(img, glow)
         d = ImageDraw.Draw(img, 'RGBA')
 
-    # Skalenbogen; roter Bereich ab 10 dB GR
+    # Skalenbogen; roter Bereich ab 20 dB GR
     arc_r = radius
     a_start, a_end = -SWEEP_DEG, SWEEP_DEG
-    red_from = angle_for(10.0, scale_max)
+    red_from = angle_for(20.0, scale_max)
     d.arc((px - arc_r, py - arc_r, px + arc_r, py + arc_r),
           start=90 + a_start, end=90 + red_from, fill=pal['tick'] + (255,),
           width=2 * s)
@@ -134,8 +137,8 @@ def render(scale_max, lit=True):
           start=90 + red_from, end=90 + a_end, fill=pal['red'] + (255,),
           width=2 * s)
 
-    # Ticks: 1-dB-Raster, Major bei 0/3/6/10/15/20 mit Zahl
-    majors = {0, 3, 6, 10, 15, 20}
+    # Ticks: 1-dB-Raster, Major in 5-dB-Schritten mit Zahl.
+    majors = {0, 5, 10, 15, 20, 25, 30}
     db = 0.0
     while db <= scale_max + 1e-9:
         deg = angle_for(db, scale_max)
@@ -145,7 +148,7 @@ def render(scale_max, lit=True):
         x0, y0 = polar(px, py, inner, deg)
         x1, y1 = polar(px, py, outer, deg)
         d.line((x0, y0, x1, y1),
-               fill=(pal['red'] if db >= 10 else pal['tick']) + (255,),
+               fill=(pal['red'] if db >= 20 else pal['tick']) + (255,),
                width=(3 if major else 2) * s)
         if major:
             tx, ty = polar(px, py, arc_r + 12 * s, deg)
@@ -153,7 +156,7 @@ def render(scale_max, lit=True):
             f = font(11 * s, bold=True)
             tw = d.textlength(text, font=f)
             d.text((tx - tw / 2, ty - 7 * s), text, font=f,
-                   fill=(pal['red'] if db >= 10 else pal['ink']) + (255,))
+                    fill=(pal['red'] if db >= 20 else pal['ink']) + (255,))
         db += 1.0
 
     # Beschriftung unterhalb des Bogens (klassische VU-Anordnung)

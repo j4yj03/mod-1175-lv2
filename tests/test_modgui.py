@@ -93,13 +93,13 @@ def main():
             page.evaluate('''source => {
               const callback=eval('('+source+')');
               callback({type:'start',icon:$('body'),ports:[
-                {symbol:'compression',value:1},{symbol:'gr_db',value:-10}
+                {symbol:'compression',value:1},{symbol:'gr_db',value:-15}
               ]}, {});
             }''', grmeter)
             page.wait_for_timeout(150)  # opacity transition is 60 ms
             assert page.locator('.gs-vu-on').evaluate("e => getComputedStyle(e).opacity") == '1'
             assert page.locator('.gs-vu-off').evaluate("e => getComputedStyle(e).opacity") == '0'
-            assert page.locator('.gs-vu-needle').evaluate("e => getComputedStyle(e).transform") != 'none'
+            assert page.locator('.gs-vu-needle').evaluate("e => getComputedStyle(e).transform") == 'matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)'
             page.evaluate('''source => {
               const callback=eval('('+source+')');
               callback({type:'change',icon:$('body'),symbol:'compression',value:0}, {});

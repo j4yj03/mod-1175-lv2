@@ -48,7 +48,7 @@
 .gs76{{{cns}}} .gs-body-knobs > .gs-field { display:flex; }
 /* Engine bay: VU meter on top, ratio and COMP beneath; light from upper left. */
 .gs76{{{cns}}} .gs-body-engine { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding-top:64px; transform:translateY(-6px); }
-.gs76{{{cns}}} .gs-vuwrap { position:relative; width:100%; max-width:172px; height:0; padding-bottom:66.1538%; }
+.gs76{{{cns}}} .gs-vuwrap { position:relative; width:100%; max-width:172px; height:0; padding-bottom:66.1538%; transform:translateY(-4px); }
 .gs76{{{cns}}} .gs-vu { position:absolute; inset:0; width:100%; height:100%; display:block; }
 .gs76{{{cns}}} .gs-vu-on { opacity:0; transition:opacity 60ms linear; }
 .gs76{{{cns}}} .gs-vu-off { transition:opacity 60ms linear; }
