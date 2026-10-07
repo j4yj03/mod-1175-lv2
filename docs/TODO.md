@@ -310,12 +310,13 @@ umbauen). Alles ride-along mit dem nächsten MPB-Build, der ohnehin die
 **1. MPB-Build tatsächlich auf Cortex-A35 optimieren** (gemessen −1,2 bis
 −3,6 % je Profil, PERFORMANCE „Build-Tuning"):
 
-- [ ] `CXXFLAGS += -mcpu=cortex-a35` in der MPB-Rezeptur
-  (`packaging/mod-plugin-builder/green-stripe-76/green-stripe-76.mk`)
-  **anhängen**, vorhandene Flags nicht überschreiben; fährt mit dem nächsten
-  Pin-Bump mit (0.4.2).
-- [ ] Bit-Identität gegen denselben Compiler ohne `-mcpu` über die
-  Bench-Checksummen nachweisen (`-ffp-contract=off`, kein Fast-Math bleibt).
+- [x] `$(TARGET_CXXFLAGS)` in der MPB-Rezeptur bei Build und Install um
+  `-mcpu=cortex-a35` ergänzt; die projektseitigen Flags bleiben angehängt
+  (2026-10-08).
+- [x] Bit-Identität gegen denselben A35-Crosscompiler ohne `-mcpu` über die
+  Bench-Checksummen nachgewiesen (`-ffp-contract=off`, kein Fast-Math; frühere
+  Build-Tuning-Serie). Offizieller MPB-Neubau/Installhash bleibt Teil der
+  Geräte-Stichprobe.
 - [ ] Stichprobe am Gerät statt sofort 36 Zustände: None/60s/80s/00s/Sym ×
   Colour 0/100, OS 2x; Erwartung −1…−4 %.
 
@@ -325,17 +326,20 @@ weiterhin 14 Stop-Trials, 14 Clamps, 14 Ableitungsbedingungen, 14
 Zustands-Commits plus den u²-Loop in `law()`, der numerisch nach 0
 kollabiert.
 
-- [ ] `hysteresis_enabled==0` ⇒ komplette Stop-Bank überspringen
+- [x] `hysteresis_enabled==0` ⇒ komplette Stop-Bank überspringen
   (Auswertung **und** Commit); Stop-Zustände für Sym nicht fortführen
-  (Modellwechsel resettet den Core ohnehin).
-- [ ] Zusätzlich `saturation_strength==0` ⇒ direkt `i=λ/Lm`,
+  (Modellwechsel resettet den Core ohnehin). C++ und EEL2 umgesetzt 2026-10-08.
+- [x] Zusätzlich `saturation_strength==0` ⇒ direkt `i=λ/Lm`,
   `di/dλ=1/Lm` statt Loop-mal-Null.
-- [ ] Bit-Identität nachweisen, nicht annehmen: ±0-Fälle (`0·stop` kann
-  ±0 sein), Extremreizen bis ±256 FS, Cap-Pfad (40 Iterationen),
-  Modellwechsel Sym↔60s, OS off/2x/4x; Checksummen-A/B am A35.
-- [ ] EEL2 `gs_xf_core` spiegelt beide Zweige; Paritätssatz komplett.
-- [ ] Isolierten Bench + Plugin-Stichprobe fahren; Erwartung mehrere
-  Plugin-Punkte bei Sym (aktuell 52–60 % Median).
+- [x] Lokale Bit-Identität nachgewiesen: Diagnoseausgabe vor/nach über 60 Fälle
+  und 90 000 Samples bytegleich; `make test` und Parität 430+76, max 0 FS.
+  Abgedeckt sind Modellwechsel und OS off/2x/4x; `transformer_tests` deckt
+  ±0/Extremreizen bis ±256 FS ab. Der 40-Iterations-Cap wurde nicht erreicht
+  (0 % in den Messläufen). A35-Checksummen folgen mit dem MPB-Lauf.
+- [x] EEL2 `gs_xf_core` spiegelt beide Zweige; Paritätssatz komplett.
+- [ ] A35-Isolationsbench + Plugin-Stichprobe fahren. Lokaler x86-Bench:
+  Symmetric 0,04870 → 0,03956 s/s (−18,8 % gesamt; Mehrkosten gegen None
+  etwa −56 %); Erwartung mehrere Plugin-Punkte bei zuvor 52–60 % Median.
 
 **3. Profil-spezialisierte Kennlinien** (klein bis mittel, 60s/80s):
 

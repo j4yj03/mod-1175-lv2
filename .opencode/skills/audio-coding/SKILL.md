@@ -348,7 +348,11 @@ Portvertrag — kein CSS-Trick. Der komplette, am Gerät verifizierte Pfad:
 5. **`event.icon` ist der `.mod-pedal`-Wrapper**, nicht die eigene
    Wurzelklasse — Zustandsklassen über `event.icon.find('.eigeneklasse')`
    setzen und die CSS-Selektoren von der eigenen Wurzel aus bauen. Das
-   `'start'`-Event trägt alle Input-Portwerte + Monitored-Outputs;
+   generierte `{{{cns}}}` wird an Klassennamen angehängt; JavaScript darf
+   deshalb nicht nach der unsuffixierten Basisklasse suchen. Für JS einen
+   zweiten, statischen Hook verwenden (z. B. `class="gs76{{{cns}}} gs76-root"`)
+   und ausschließlich `.gs76-root` selektieren. Das `'start'`-Event trägt
+   alle Input-Portwerte + Monitored-Outputs;
    `'change'` feuert für UI- **und** Host-seitige Änderungen (nicht bei
    Quelle „from-js").
 6. **Gerätecheck vorher:** die OS-Version des Geräts kann älteres mod-ui
@@ -360,6 +364,25 @@ Portvertrag — kein CSS-Trick. Der komplette, am Gerät verifizierte Pfad:
    mitrotieren), `transform-origin` am Pivot in Prozent des Canvas; CSS-
    Transition für die Glättung — und im Browsertest **Wartezeit nach dem
    Klassentoggle**, sonst misst man mitten in der 60-ms-Opacity-Transition.
+   Dasselbe gilt für erzeugte Screenshots: Varianten nacheinander ohne feste
+   Settling-Zeit aufzunehmen lässt die erste Variante halb gedimmt und die
+   zweite korrekt erscheinen, obwohl beide denselben Zustand haben.
+8. **VU-Ballistik:** Eine `transform 300ms ease-out`-Transition liefert eine
+   ungefähr VU-artige sichtbare Trägheit, verändert aber weder den blockweisen
+   Output-Port noch den DSP. Bei häufigen Portupdates startet CSS die Transition
+   jeweils vom aktuellen Zwischenstand neu; das ist eine Anzeigecharakteristik,
+   keine normgerechte IEC-VU-Integration. Tests müssen `transitionDuration`
+   prüfen und vor der Endpositionsprüfung länger als 300 ms warten.
+9. **MODs globale Drag-Handle-Regel beachten:**
+   `.mod-pedal .mod-drag-handle` setzt `position:absolute`, alle vier Kanten
+   auf `0` und `z-index:20`. Ein Footer mit dieser Klasse wird ohne vollständige
+   Gegenregel zum unsichtbaren Vollflächen-Overlay. Für jeden eigenen Rail
+   **alle** relevanten Kanten setzen, inklusive `left:auto`, `right:auto` oder
+   `bottom:auto`; einen Footer explizit auf `position:relative`, alle Kanten
+   `auto` und normalen Z-Index zurücksetzen. Sonst kann z. B. der „rechte“ Rail
+   wegen geerbtem `left:0` links liegen. Der Browsertest muss die GUI in einen
+   `.mod-pedal`-Wrapper setzen und diese echte Basisregel reproduzieren; eine
+   isolierte Template-Vorschau kaschiert den Fehler.
 
 **Portindizes:** neue Ports **anhängen** (nach den angehängten Inputs),
 bestehende Indizes bleiben stabil; Portzahl-Assertions in validate.py und
@@ -387,6 +410,9 @@ getrennt — Outputs doppelt zu zählen ist der naheliegende Fehler).
 | Beschriftung **unter** den Regler | Zweiter Text macht einen Bay höher als einen Select-Bay; bei vertikal zentrierten Inhalten liegen die Bays nicht mehr auf einer Linie | Legende seitlich setzen |
 | ASCII-Ersatzschreibweise in deutschen Notizen | Sieht nach Übertragungsfehler aus | Korrekte Umlaute, Diff kontrollieren |
 | Native Bench als Dwarf-Aussage formuliert | Falsche Leistungsaussage | Relativen Trend nennen, Messort dazusagen |
+| JS sucht `.gs76`, Template nutzt `.gs76{{{cns}}}` | Zustandsklasse wird am Gerät nie gesetzt; lokaler Preview ohne Namespace bleibt fälschlich grün | Zusätzliche statische JS-Hook-Klasse verwenden und echtes Plugin-JS im Browsertest ausführen |
+| `.mod-drag-handle` auf Footer/mehreren Rails ohne vollständigen CSS-Reset | Unsichtbares `inset:0`-/z-index-Overlay macht das ganze Plugin ziehbar; rechte Leiste kann links landen | MOD-Basisregel im Test laden/reproduzieren und Position, vier Kanten sowie Z-Index je Handle explizit setzen |
+| Screenshot direkt nach COMP-Klassentoggle | Erste Variante sieht trotz COMP ON gedimmt aus | Nach `default_controls()` länger als die Face-Transition warten; Zustand und berechnete Opacity separat prüfen |
 
 | PIL `ImageDraw.Draw(img)` ersetzt Pixel **inklusive Alphakanal** — halbtransparente Fills löschen den Untergrund (Face wurde unsichtbar); auch `Draw(img, 'RGBA')` blendet Ellipsen nicht zuverlässig | halbtransparente Meter-Faces wurden weiß/unsichtbar | radiale Glows auf **separater Ebene** von außen nach innen zeichnen und mit `Image.alpha_composite` einfügen |
 

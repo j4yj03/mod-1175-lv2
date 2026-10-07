@@ -88,6 +88,10 @@ struct TransformerCore {
 #endif
     }
     static double law(double x, const transformer_model::Profile& p, double& slope) {
+        if (p.saturation_strength==0.0) {
+            slope=1.0/p.lm_h;
+            return x/p.lm_h;
+        }
         const double u=std::abs(x)/p.flux_scale_vs;
         if (p.family==1) {
             if (u>0.98) {
@@ -115,22 +119,21 @@ struct TransformerCore {
     }
     double current(double x, const TransformerCoefficients& c, double& derivative, bool advance) {
         double value=law(x,*c.p,derivative);
-#ifdef GS76_TRANSFORMER_STATS
-        const double disp_now=x-flux;
-#endif
         const double z=((1.0-c.relaxation)*relax+c.relaxation*(x+flux))/(1.0+c.relaxation);
         value+=(x-z)/c.p->relax_l_h;
         derivative+=1.0/((1.0+c.relaxation)*c.p->relax_l_h);
         if (advance) relax=zap(z);
-        for (unsigned j=0; j<14; ++j) {
-            const double trial=stops[j]+x-flux;
-            const double stop=bounded(trial,-transformer_model::thresholds[j],transformer_model::thresholds[j]);
-            value+=c.weights[j]*stop;
-            if (std::abs(trial)<transformer_model::thresholds[j]) derivative+=c.weights[j];
+        if (c.p->hysteresis_enabled!=0.0) {
+            for (unsigned j=0; j<14; ++j) {
+                const double trial=stops[j]+x-flux;
+                const double stop=bounded(trial,-transformer_model::thresholds[j],transformer_model::thresholds[j]);
+                value+=c.weights[j]*stop;
+                if (std::abs(trial)<transformer_model::thresholds[j]) derivative+=c.weights[j];
 #ifdef GS76_TRANSFORMER_STATS
-            if (std::abs(trial)>=transformer_model::thresholds[j]) ++stats.stops_clamped[j];
+                if (std::abs(trial)>=transformer_model::thresholds[j]) ++stats.stops_clamped[j];
 #endif
-            if (advance) stops[j]=zap(stop);
+                if (advance) stops[j]=zap(stop);
+            }
         }
         return value;
     }
@@ -169,10 +172,12 @@ struct TransformerCore {
             const double z=((1.0-c.relaxation)*relax+c.relaxation*(x+flux))/
                 (1.0+c.relaxation);
             relax=zap(z);
-            for (unsigned j=0; j<14; ++j) {
-                const double trial=stops[j]+x-flux;
-                stops[j]=zap(bounded(trial,-transformer_model::thresholds[j],
-                                     transformer_model::thresholds[j]));
+            if (c.p->hysteresis_enabled!=0.0) {
+                for (unsigned j=0; j<14; ++j) {
+                    const double trial=stops[j]+x-flux;
+                    stops[j]=zap(bounded(trial,-transformer_model::thresholds[j],
+                                         transformer_model::thresholds[j]));
+                }
             }
         } else {
             i=current(x,c,derivative,true);

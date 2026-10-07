@@ -658,6 +658,29 @@ entfallen. Semantik bleibt erhalten (kein Fast-Math, `-ffp-contract=off`);
 Bit-Identität über die Checksummen der Bench-Läufe je Variante prüfen,
 wenn die Rezeptur umgestellt wird.
 
+### Symmetric-Fastpath und MPB-A35-Flag (2026-10-08, lokal umgesetzt)
+
+Für `Symmetric` sind `hysteresis_enabled=0` und `saturation_strength=0`
+normative Profilkonstanten. C++ und EEL2 überspringen deshalb jetzt die
+14 Stop-Auswertungen samt Zustands-Commit und lösen die Kennlinie direkt als
+`i=lambda/Lm`, `di/dlambda=1/Lm`. Der lastgekoppelte implizite Solver, die
+RL-Relaxation und der HF-Zweipol bleiben aktiv. Ein gepaarter x86_64-Lauf
+(GCC 11, 48 kHz, OS 2x, Stereo, Input +6 dB, 0 dBFS/997 Hz, 3 s × 9,
+Median) ergab **0,04870 → 0,03956 s/s** für Symmetric, also **−18,8 %** im
+gesamten Standalone-Bench; die Transformator-Mehrkosten gegenüber None sanken
+um etwa **56 %**. 60s/80s/00s blieben innerhalb des Messrauschens.
+
+Die C++-Diagnoseausgabe vor/nach der Änderung ist über alle 60 Fälle und
+90 000 Samples byteidentisch. `make test` sowie C++/EEL2-Parität
+(430 Fälle + 76 Presetzustände, max 0 FS) bestehen. Dies ist eine lokale
+x86-Messung; A35-Pluginwerte und xruns sind noch zu messen.
+
+Die MPB-Rezeptur ergänzt `$(TARGET_CXXFLAGS)` für Build und Installation um
+`-mcpu=cortex-a35`; die projektseitigen Flags werden weiterhin angehängt,
+`-ffp-contract=off` und das Fast-Math-Verbot bleiben erhalten. Der frühere A35-Cross-Bench belegt für das
+Flag −1,2 bis −3,6 % und identische Checksummen. Ein neuer offizieller
+MPB-Build samt installierter SHA und Geräte-Stichprobe steht aus.
+
 ### Dwarf-Protokoll
 
 Ausführbar mit `tools/dwarf_loadtest.py` (Pedalboard `GS76x0…GS76x4`, jackd-

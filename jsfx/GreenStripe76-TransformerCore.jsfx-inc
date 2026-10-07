@@ -40,8 +40,10 @@ function gs_xf_init() instance(stops) (
   stops=gs_alloc(14); this.gs_xf_reset(0);
 );
 function gs_xf_law(x c) instance(slope) local(u knee fk sk target width delta e value d nonlinear j) (
-  u=abs(x)/c[1];
-  c[14]===1 ? (
+  c[16]===0 ? (
+    slope=1/c[0]; x/c[0];
+  ) : c[14]===1 ? (
+    u=abs(x)/c[1];
     u>0.98 ? (
       knee=0.98*c[1]; fk=knee*(1+c[16]*0.98/0.02)/c[0];
       sk=(1+c[16]*0.98/0.02+c[16]*0.98/(0.02*0.02))/c[0];
@@ -54,6 +56,7 @@ function gs_xf_law(x c) instance(slope) local(u knee fk sk target width delta e 
       x*(1+c[16]*u/d)/c[0];
     );
   ) : (
+    u=abs(x)/c[1];
     nonlinear=1; loop(c[15]-1,nonlinear*=u;); nonlinear*=c[16];
     slope=(1+c[15]*nonlinear)/c[0]; x*(1+nonlinear)/c[0];
   );
@@ -64,11 +67,13 @@ local(value z j trial stop) (
   z=((1-c[24])*relax+c[24]*(x+flux))/(1+c[24]);
   value+=(x-z)/c[4]; deriv+=1/((1+c[24])*c[4]);
   advance ? relax=gs_zap(z);
-  j=0; loop(14,
-    trial=stops[j]+x-flux; stop=gs_bound(trial,-gs_xf_stops[j],gs_xf_stops[j]);
-    value+=c[32+j]*stop;
-    abs(trial)<gs_xf_stops[j] ? deriv+=c[32+j];
-    advance ? stops[j]=gs_zap(stop); j+=1;
+  c[13]!==0 ? (
+    j=0; loop(14,
+      trial=stops[j]+x-flux; stop=gs_bound(trial,-gs_xf_stops[j],gs_xf_stops[j]);
+      value+=c[32+j]*stop;
+      abs(trial)<gs_xf_stops[j] ? deriv+=c[32+j];
+      advance ? stops[j]=gs_zap(stop); j+=1;
+    );
   );
   value;
 );
@@ -90,10 +95,12 @@ local(source rb bound lo hi x stop i residual next z j trial raw y) (
   );
   stop ? (
     z=((1-c[24])*relax+c[24]*(x+flux))/(1+c[24]); relax=gs_zap(z);
-    j=0; loop(14,
-      trial=stops[j]+x-flux;
-      next=gs_bound(trial,-gs_xf_stops[j],gs_xf_stops[j]);
-      stops[j]=gs_zap(next); j+=1;
+    c[13]!==0 ? (
+      j=0; loop(14,
+        trial=stops[j]+x-flux;
+        next=gs_bound(trial,-gs_xf_stops[j],gs_xf_stops[j]);
+        stops[j]=gs_zap(next); j+=1;
+      );
     );
   ) : (
     i=this.gs_xf_current(x,c,1);

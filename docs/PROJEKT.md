@@ -108,6 +108,13 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   (TODO, Abschnitt CPU-Reduktion Transformator); optional direkte
   20-Hz-Ankermessung von 60s/80s bei −14/−8 dBFS (Stimuluserweiterung).
   Die Ankerinterpretation der Geräteserie ist abgeschlossen (EXTERN).
+- **CPU-Reduktion Transformator (0.5.1, 2026-10-08):** `Symmetric` überspringt
+  nun seine nach Profildefinition wirkungslose Stop-Bank und Null-Sättigung in
+  C++ und EEL2. Gepaarter lokaler x86-Bench: 0,04870 → 0,03956 s/s
+  (**−18,8 %** im Gesamtbench), C++-Vorher/Nachher byteidentisch; `make test`
+  und Parität 430+76 mit max 0 FS bestanden. Die MPB-Rezeptur aktiviert zudem
+  das bereits am A35 gemessene `-mcpu=cortex-a35` additiv. Offizieller
+  MPB-Neubau, Installhash, A35-Bench und Plugin-CPU/xruns stehen aus.
 - **Klangziel entschieden (2026-10-07):** stärkerer, **eigenständiger
   Green-Stripe-Charakter** (kein Hardwareidentitätsziel). Produktvariante
   (Drive-Regler / heiße Bank / beides) offen; vor jeder Laufzeitänderung
