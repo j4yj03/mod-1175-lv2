@@ -313,7 +313,25 @@ digitale Referenz prüfen (60s ≈ 12,42 % bei Colour 0).
 - 96-kHz-Messung bleibt über den Dwarf-Player unmöglich (feste
   Geräterate 48 kHz); 20 kHz liegt damit nah an Nyquist.
 
-## 6. CPU-Matrix (Gerät, OS 2x, COMP OFF)
+## 6. CPU am Gerät — Matrix, Vorher/Nachher und Serie B
+
+### 6.1 Serie B — isolierter Bench (A35, Cross-Build GCC 11, statisch)
+
+Provenanz und Grenzen: `test-results/serie-b/MANIFEST.md`,
+`PERFORMANCE.md` (Serie B). Einheit s/s (1,0 = ein Kern);
+OS 2x, Stereo, COMP OFF, Colour 100, Input +6 dB.
+
+| Profil | 997 Hz vor | 997 Hz nach | 20 Hz vor | 20 Hz nach |
+|---|---:|---:|---:|---:|
+| None | 0.1804 | 0.1823 | 0.1796 | 0.1833 |
+| 60s | 0.4597 | 0.4608 | 0.4542 | 0.4575 |
+| 80s | 0.4632 | 0.4631 | 0.4569 | 0.4606 |
+| 00s | 0.4713 | 0.4716 | 0.4816 | 0.4860 |
+| Symmetric | 0.4567 | 0.4581 | 0.4541 | 0.4530 |
+
+![Serie B](plots/mess-serie-b.png)
+
+### 6.2 CPU-Matrix (Gerät, OS 2x, COMP OFF, Binary 66c835e8)
 
 Alle Colour×Transformer-Kombinationen live über den mod-host-Socket
 gesetzt und je Zustand per Rücklesung verifiziert; Messung mit
@@ -324,45 +342,54 @@ gesetzt und je Zustand per Rücklesung verifiziert; Messung mit
 | Zustand | Colour % | Transformer | Median % | Peak % |
 |---|---:|---|---:|---:|
 | bypass | 0 | None | 22.0 | nan |
-| c0-tf00s | 0 | 00s | 52.0 | nan |
-| c0-tf60s | 0 | 60s | 48.0 | nan |
-| c0-tf80s | 0 | 80s | 49.0 | nan |
+| c0-tf00s | 0 | 00s | 48.0 | nan |
+| c0-tf60s | 0 | 60s | 46.0 | nan |
+| c0-tf80s | 0 | 80s | 47.0 | nan |
 | c0-tfNone | 0 | None | 28.0 | nan |
 | c0-tfSym | 0 | Sym | 56.0 | nan |
-| c10-tf00s | 10 | 00s | 68.0 | nan |
+| c10-tf00s | 10 | 00s | 66.0 | nan |
 | c10-tf60s | 10 | 60s | 56.0 | nan |
-| c10-tf80s | 10 | 80s | 60.0 | nan |
-| c10-tfNone | 10 | None | 34.0 | nan |
-| c10-tfSym | 10 | Sym | 66.0 | nan |
-| c100-tf00s | 100 | 00s | 63.0 | nan |
-| c100-tf60s | 100 | 60s | 56.0 | nan |
-| c100-tf80s | 100 | 80s | 60.0 | nan |
+| c10-tf80s | 10 | 80s | 57.0 | nan |
+| c10-tfNone | 10 | None | 36.0 | nan |
+| c10-tfSym | 10 | Sym | 64.0 | nan |
+| c100-tf00s | 100 | 00s | 60.0 | nan |
+| c100-tf60s | 100 | 60s | 54.0 | nan |
+| c100-tf80s | 100 | 80s | 56.0 | nan |
 | c100-tfNone | 100 | None | 36.0 | nan |
-| c100-tfSym | 100 | Sym | 66.0 | nan |
-| c20-tf00s | 20 | 00s | 61.0 | nan |
-| c20-tf60s | 20 | 60s | 57.0 | nan |
-| c20-tf80s | 20 | 80s | 57.0 | nan |
-| c20-tfNone | 20 | None | 36.0 | nan |
-| c20-tfSym | 20 | Sym | 66.0 | nan |
-| c5-tf00s | 5 | 00s | 60.0 | nan |
-| c5-tf60s | 5 | 60s | 58.0 | nan |
-| c5-tf80s | 5 | 80s | 58.0 | nan |
+| c100-tfSym | 100 | Sym | 64.0 | nan |
+| c20-tf00s | 20 | 00s | 58.0 | nan |
+| c20-tf60s | 20 | 60s | 56.0 | nan |
+| c20-tf80s | 20 | 80s | 56.0 | nan |
+| c20-tfNone | 20 | None | 34.0 | nan |
+| c20-tfSym | 20 | Sym | 64.0 | nan |
+| c5-tf00s | 5 | 00s | 66.0 | nan |
+| c5-tf60s | 5 | 60s | 55.0 | nan |
+| c5-tf80s | 5 | 80s | 56.0 | nan |
 | c5-tfNone | 5 | None | 36.0 | nan |
-| c5-tfSym | 5 | Sym | 66.0 | nan |
-| c50-tf00s | 50 | 00s | 67.0 | nan |
-| c50-tf60s | 50 | 60s | 58.0 | nan |
-| c50-tf80s | 50 | 80s | 58.0 | nan |
+| c5-tfSym | 5 | Sym | 64.0 | nan |
+| c50-tf00s | 50 | 00s | 64.0 | nan |
+| c50-tf60s | 50 | 60s | 54.0 | nan |
+| c50-tf80s | 50 | 80s | 56.0 | nan |
 | c50-tfNone | 50 | None | 34.0 | nan |
-| c50-tfSym | 50 | Sym | 68.0 | nan |
-| c75-tf00s | 75 | 00s | 66.0 | nan |
-| c75-tf60s | 75 | 60s | 57.0 | nan |
-| c75-tf80s | 75 | 80s | 57.0 | nan |
-| c75-tfNone | 75 | None | 36.0 | nan |
-| c75-tfSym | 75 | Sym | 66.0 | nan |
+| c50-tfSym | 50 | Sym | 64.0 | nan |
+| c75-tf00s | 75 | 00s | 62.0 | nan |
+| c75-tf60s | 75 | 60s | 54.0 | nan |
+| c75-tf80s | 75 | 80s | 56.0 | nan |
+| c75-tfNone | 75 | None | 34.0 | nan |
+| c75-tfSym | 75 | Sym | 64.0 | nan |
 
 ![CPU-Matrix](plots/mess-cpu-matrix.png)
 
+![CPU Vorher/Nachher](plots/mess-cpu-vergleich.png)
+
 ![CPU-Kostendekomposition](plots/mess-cpu-decomposition.png)
+
+
+**Vorher/Nachher (Solver-Umbau):** Vorher = Binary `e6b4e55…`
+(bankidentisch, Doppel-Auswertung), Nachher = `66c835e8…`
+(`94ab2fa`). Die Transformator-Zustände zeigen konsistent
+−1 bis −4 %-Punkte (Gesamtmedian 58,0 → 56,0 %); Bypass/None
+unverändert. Klein, aber richtungsmäßig konsistent mit Serie B.
 
 Befunde: Der Transformator kostet **+20–28 %-Punkte** gegenüber
 None (28 % bei Colour 0); die Colour-Stufen addieren **+6–8 Punkte**

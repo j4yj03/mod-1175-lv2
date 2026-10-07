@@ -12,8 +12,11 @@ __pycache__/
 *.wav
 !docs/transformer/offline_fit/audio/*.wav
 *.nam
+*.reapeaks
+*.rpp-bak
 test-results/
 !tests/fixtures/
 docs/sauce/
-reaper/
-docs/sauce/
+
+
+

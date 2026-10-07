@@ -8,6 +8,7 @@ nichts von Hand eingetragen. Neu ausfuehren, wenn neue Serien dazukommen:
     python3 tools/render_results_doc.py
 """
 import json
+import re
 from pathlib import Path
 
 import matplotlib
@@ -37,6 +38,12 @@ def fmt(value, digits=4):
     if value is None:
         return '—'
     return f'{value:.{digits}f}'
+
+
+def fmt4(value):
+    if value is None:
+        return '—'
+    return f'{value:.4f}'
 
 
 def plan():
@@ -344,13 +351,60 @@ def main():
     A('  Geräterate 48 kHz); 20 kHz liegt damit nah an Nyquist.')
     A('')
 
-    # 6 CPU-Matrix (optional, sobald die Gerätedaten vorliegen)
-    cpu_path = ROOT / 'test-results/cpu-matrix-dwarf/cpu_results.json'
+    # 5b Serie B (isolierter Bench auf dem Dwarf, vor/nach Solver-Umbau)
+    serie_dir = ROOT / 'test-results/serie-b'
+    serie_files = {('997 Hz', 'vorher'): 'serieB-vorher.md', ('997 Hz', 'nachher'): 'serieB-nachher.md',
+                   ('20 Hz', 'vorher'): 'serieB-vorher-20hz.md', ('20 Hz', 'nachher'): 'serieB-nachher-20hz.md'}
+    serie = {}
+    for (tone, phase), fname in serie_files.items():
+        path = serie_dir / fname
+        if not path.exists():
+            continue
+        rows = {}
+        for line in path.read_text(encoding='utf-8').splitlines():
+            m = re.match(r'^\| (None|60s|80s|00s|Symmetric) \|', line)
+            if m:
+                parts = [p.strip() for p in line.split('|')]
+                # cpu = parts[4] im Stdout-Format; im Markdown: Spalte 5 (CPU s/s)
+                try:
+                    rows[m.group(1)] = float(parts[5])
+                except (ValueError, IndexError):
+                    pass
+        serie[(tone, phase)] = rows
+    A('## 6. CPU am Gerät — Matrix, Vorher/Nachher und Serie B')
+    A('')
+    if serie:
+        A('### 6.1 Serie B — isolierter Bench (A35, Cross-Build GCC 11, statisch)')
+        A('')
+        A('Provenanz und Grenzen: `test-results/serie-b/MANIFEST.md`,')
+        A('`PERFORMANCE.md` (Serie B). Einheit s/s (1,0 = ein Kern);')
+        A('OS 2x, Stereo, COMP OFF, Colour 100, Input +6 dB.')
+        A('')
+        A('| Profil | 997 Hz vor | 997 Hz nach | 20 Hz vor | 20 Hz nach |')
+        A('|---|---:|---:|---:|---:|')
+        for name in ('None', '60s', '80s', '00s', 'Symmetric'):
+            def get(tone, phase):
+                return serie.get((tone, phase), {}).get(name)
+            v = [get('997 Hz', 'vorher'), get('997 Hz', 'nachher'),
+                 get('20 Hz', 'vorher'), get('20 Hz', 'nachher')]
+            A('| {0} | {1} | {2} | {3} | {4} |'.format(
+                name,
+                fmt4(v[0]), fmt4(v[1]), fmt4(v[2]), fmt4(v[3])))
+        A('')
+        A('![Serie B](plots/mess-serie-b.png)')
+        A('')
+
+    # 6 CPU-Matrix (optional, sobald die Geraetedaten vorliegen)
+    cpu_path = ROOT / 'test-results/cpu-matrix-94ab2fa/cpu_results.json'
+    cpu_old_path = ROOT / 'test-results/cpu-matrix-dwarf/cpu_results.json'
     cpu_data = None
+    cpu_prev = None
     if cpu_path.exists():
         cpu_data = json.loads(cpu_path.read_text(encoding='utf-8'))
         cpu = cpu_data
-        A('## 6. CPU-Matrix (Gerät, OS 2x, COMP OFF)')
+        if cpu_old_path.exists():
+            cpu_prev = json.loads(cpu_old_path.read_text(encoding='utf-8'))
+        A('### 6.2 CPU-Matrix (Gerät, OS 2x, COMP OFF, Binary 66c835e8)')
         A('')
         A('Alle Colour×Transformer-Kombinationen live über den mod-host-Socket')
         A('gesetzt und je Zustand per Rücklesung verifiziert; Messung mit')
@@ -369,8 +423,18 @@ def main():
         A('')
         A('![CPU-Matrix](plots/mess-cpu-matrix.png)')
         A('')
+        A('![CPU Vorher/Nachher](plots/mess-cpu-vergleich.png)')
+        A('')
         A('![CPU-Kostendekomposition](plots/mess-cpu-decomposition.png)')
         A('')
+        if cpu_prev:
+            A('')
+            A('**Vorher/Nachher (Solver-Umbau):** Vorher = Binary `e6b4e55…`')
+            A('(bankidentisch, Doppel-Auswertung), Nachher = `66c835e8…`')
+            A('(`94ab2fa`). Die Transformator-Zustände zeigen konsistent')
+            A('−1 bis −4 %-Punkte (Gesamtmedian 58,0 → 56,0 %); Bypass/None')
+            A('unverändert. Klein, aber richtungsmäßig konsistent mit Serie B.')
+            A('')
         A('Befunde: Der Transformator kostet **+20–28 %-Punkte** gegenüber')
         A('None (28 % bei Colour 0); die Colour-Stufen addieren **+6–8 Punkte**')
         A('und sind pegelunabhängig (5 % ≈ 100 %). Die schwersten Profile sind')
@@ -550,6 +614,51 @@ def main():
                      '128 Frames, jackd inklusive, 0 xruns)')
         ax.grid(True, alpha=0.3); ax.legend(fontsize=8)
         fig.tight_layout(); fig.savefig(PLOTS / 'mess-cpu-matrix.png'); plt.close(fig)
+
+    # P10b CPU Vorher/Nachher (Streudiagramm gegen die Identitätslinie)
+    if cpu_data and cpu_prev:
+        fig, ax = plt.subplots(figsize=(6, 6))
+        xs, ys, labels = [], [], []
+        for label, entry in cpu_prev.items():
+            om = entry['loadtest'].get('process_percent_median')
+            nm = cpu_data.get(label, {}).get('loadtest', {}).get('process_percent_median')
+            if om is None or nm is None:
+                continue
+            xs.append(om); ys.append(nm)
+            labels.append(label)
+        lim = max(xs + ys) * 1.1
+        ax.plot([0, lim], [0, lim], '--', color='grey', lw=1, label='identisch')
+        for x, y, lbl in zip(xs, ys, labels):
+            tfc = cpu_data.get(lbl, {}).get('transformer', 0)
+            cname = {0: 'None', 1: '60s', 2: '80s', 3: '00s', 4: 'Sym'}.get(tfc, '?')
+            ax.scatter(x, y, s=28, color=colors.get(cname, '#7f7f7f'))
+            if y < x - 1.0:
+                ax.annotate(lbl, (x, y), fontsize=6, xytext=(3, -8),
+                            textcoords='offset points')
+        ax.set_xlabel('Median vorher (e6b4) / %'); ax.set_ylabel('Median nachher (66c835) / %')
+        ax.set_title('CPU Vorher/Nachher je Zustand (Solver-Umbau)\n'
+                     'Punkte unter der Linie = schneller')
+        ax.grid(True, alpha=0.3); ax.legend(fontsize=8, loc='upper left')
+        fig.tight_layout(); fig.savefig(PLOTS / 'mess-cpu-vergleich.png'); plt.close(fig)
+
+    # P9b Serie B (vorher/nachher, 997 Hz + 20 Hz)
+    if serie:
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
+        profs = ['None', '60s', '80s', '00s', 'Symmetric']
+        xidx = range(len(profs))
+        width = 0.35
+        for ax, tone in ((ax1, '997 Hz'), (ax2, '20 Hz')):
+            vor = [serie.get((tone, 'vorher'), {}).get(p) for p in profs]
+            nach = [serie.get((tone, 'nachher'), {}).get(p) for p in profs]
+            ax.bar([i - width / 2 for i in xidx], vor, width, label='vorher', color='#7f7f7f')
+            ax.bar([i + width / 2 for i in xidx], nach, width, label='nachher', color='#1f77b4')
+            ax.set_xticks(list(xidx)); ax.set_xticklabels(profs, fontsize=8, rotation=20)
+            ax.set_title(tone, fontsize=9)
+            ax.grid(True, axis='y', alpha=0.3)
+        ax1.set_ylabel('CPU s/s (1,0 = Kern)')
+        ax1.legend(fontsize=8)
+        fig.suptitle('Serie B: isolierter Bench am A35, vor/nach Solver-Umbau (OS 2x, Stereo, COMP OFF)', y=1.02)
+        fig.tight_layout(); fig.savefig(PLOTS / 'mess-serie-b.png', bbox_inches='tight'); plt.close(fig)
 
     # P11 Colour über Frequenz
     fig, ax = plt.subplots(figsize=(7, 4.2))

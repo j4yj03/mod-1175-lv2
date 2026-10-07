@@ -1,0 +1,1632 @@
+<REAPER_PROJECT 0.1 "7.78/win64" 1791385454 0
+  <NOTES 0 2
+  >
+  RIPPLE 0 0
+  GROUPOVERRIDE 0 0 0 0
+  AUTOXFADE 129
+  ENVATTACH 3
+  POOLEDENVATTACH 0
+  TCPUIFLAGS 0
+  MIXERUIFLAGS 11 48 0
+  ENVFADESZ10 40
+  PEAKGAIN 1
+  FEEDBACK 0
+  PANLAW 1
+  PROJOFFS 0 0 0
+  MAXPROJLEN 0 0
+  GRID 3199 8 1 8 1 0 0 0
+  TIMEMODE 1 5 -1 30 0 0 -1 0
+  VIDEO_CONFIG 0 0 65792
+  PANMODE 3
+  PANLAWFLAGS 3
+  CURSOR 1440
+  ZOOM 0.94017163504955 0 0
+  VZOOMEX 6 0
+  USE_REC_CFG 0
+  RECMODE 1
+  SMPTESYNC 0 30 100 40 1000 300 0 0 1 0 0
+  LOOP 0
+  LOOPGRAN 0 4
+  RECORD_PATH "Media" ""
+  <RECORD_CFG
+    ZXZhdxgAAQ==
+  >
+  <APPLYFX_CFG
+  >
+  RENDER_FILE ""
+  RENDER_PATTERN matrix-$regionname-$datetime
+  RENDER_FMT 0 2 0
+  RENDER_1X 0
+  RENDER_RANGE 5 0 0 0 1000
+  RENDER_RESAMPLE 3 0 1
+  RENDER_ADDTOPROJ 0
+  RENDER_STEMS 8
+  RENDER_DITHER 0
+  RENDER_TRIM 0.000001 0.000001 0 0
+  TIMELOCKMODE 1
+  TEMPOENVLOCKMODE 1
+  ITEMMIX 1
+  DEFPITCHMODE 589824 0
+  TAKELANE 1
+  SAMPLERATE 48000 1 0
+  <RENDER_CFG
+    ZXZhdxgAAQ==
+  >
+  LOCK 1
+  <METRONOME 6 2
+    VOL 0.25 0.125
+    BEATLEN 4
+    FREQ 1760 880 1
+    SAMPLES "" "" "" ""
+    SPLIGNORE 0 0
+    SPLDEF 2 660 "" 0 ""
+    SPLDEF 3 440 "" 0 ""
+    PATTERN 0 169
+    PATTERNSTR ABBB
+    MULT 1
+  >
+  GLOBAL_AUTO -1
+  TEMPO 120 4 4 0
+  PLAYRATE 1 0 0.25 4
+  SELECTION 2912 2976.47
+  SELECTION2 2912 2976.47
+  MASTERAUTOMODE 0
+  MASTERTRACKHEIGHT 0 0
+  MASTERPEAKCOL 16576
+  MASTERMUTESOLO 0
+  MASTERTRACKVIEW 0 0.6667 0.5 0.5 0 0 0 0 0 0 0 0 0 0 1
+  MASTERHWOUT 0 0 1 0 0 0 0 -1
+  MASTER_NCH 2 2
+  MASTER_VOLUME 1 0 -1 -1 1
+  MASTER_PANMODE 3
+  MASTER_PANLAWFLAGS 3
+  MASTER_FX 1
+  MASTER_TRACKID {56D420C2-69E6-449B-AC40-AF61DCBE82EA}
+  MASTER_SEL 0
+  <MASTERPLAYSPEEDENV
+    EGUID {89D0C374-7988-4ED7-B259-5EE38125E534}
+    ACT 0 -1
+    VIS 0 1 1
+    LANEHEIGHT 0 0
+    ARM 0
+    DEFSHAPE 0 -1 -1
+  >
+  <TEMPOENVEX
+    EGUID {90D80C6C-0F04-42C6-92DA-029F5B48DF2A}
+    ACT 0 -1
+    VIS 1 0 1
+    LANEHEIGHT 0 0
+    ARM 0
+    DEFSHAPE 1 -1 -1
+  >
+  RULERHEIGHT 100 86
+  RULERLANE 1 0 "" 0 -1 0
+  RULERLANE 2 4 "" 0 -1 0
+  RULERLANE 3 8 "" 0 -1 0
+  MARKER 1 0 JSFX 1 0 1 R {115DD3F4-4251-4313-A2CD-87D7D5AF988E} 0 1
+  MARKER 1 272 "" 1
+  MARKER 1 3.53 jsfx 0 0 1 R {CBA0385F-DF20-4716-BD3C-EC0DBCE35260} 0 3
+  MARKER 9 3.53 60s_jsfx 5 0 1 R {7D13627F-5905-4875-B71C-4447429AF59D} 0 2
+  MARKER 9 68 "" 5
+  MARKER 10 71.53 80s_jsfx 5 0 1 R {D8E5C32F-37F1-4FE0-B0A7-BED30AF946F5} 0 2
+  MARKER 10 136 "" 5
+  MARKER 11 139.53 00s_jsfx 5 0 1 R {A14A5994-F28C-4C3D-94D2-554DBB527DDD} 0 2
+  MARKER 11 204 "" 5
+  MARKER 12 207.53 sym_jsfx 5 0 1 R {0F345391-D4A5-455A-8653-DAC0C2F83346} 0 2
+  MARKER 12 272 "" 5
+  MARKER 2 312 "MOD Dwarf Recording (Transformer)" 1 0 1 R {D76C222C-A993-4F59-9DE9-DF94DA1E4085} 0 1
+  MARKER 2 651.33016666666663 "" 1
+  MARKER 2 776 jsfx 0 0 1 R {59CBEEDD-310F-465F-AE9E-213F17BA16D5} 0 3
+  MARKER 3 776 JSFX 1 0 1 R {B6E7DBC0-D421-400D-97B4-B6F215F8C463} 0 1
+  MARKER 3 1180.47 "" 1
+  MARKER 13 776 05_col_jsfx 1 0 1 R {F25FA917-C1C8-409E-83E9-5C963722220A} 0 2
+  MARKER 13 840.47 "" 1
+  MARKER 14 844.94 10_col_jsfx 1 0 1 R {7412E890-3F50-48A4-BD3E-A7D6B8F5DCD1} 0 2
+  MARKER 14 909.41 "" 1
+  MARKER 3 844.94 jsfx 0 0 1 R {F3697142-2C50-49DD-B425-1E363E565B61} 0 3
+  MARKER 15 912.94 20_col_jsfx 1 0 1 R {8EDADCA2-758F-41EA-99BC-2E8CC0102AFE} 0 2
+  MARKER 15 977.41 "" 1
+  MARKER 16 980.94 50_col_jsfx 1 0 1 R {FC034233-1BE5-4A0B-93FA-DDD0B51E7662} 0 2
+  MARKER 16 1045.41 "" 1
+  MARKER 17 1048.94 75_col_jsfx 1 0 1 R {9A33E913-1D1B-40DD-A13E-B02946FB5DEA} 0 2
+  MARKER 17 1113.41 "" 1
+  MARKER 18 1116 100_col_jsfx 1 0 1 R {8D281B53-F4DF-4740-9121-EF8C3C21C466} 0 2
+  MARKER 18 1180.47 "" 1
+  MARKER 4 1216 "MOD Dwarf Recording (Colour)" 1 0 1 R {28E92641-D82B-4F4D-9118-00C54AD465EF} 0 1
+  MARKER 4 1634.7008333333333 "" 1
+  MARKER 4 1664 jsfx 0 0 1 R {5796769F-D676-4248-B677-8AD1138A1C2C} 0 3
+  MARKER 5 1664 JSFX 1 0 1 R {F2863B5C-9A06-45DF-8442-D24C49D132B5} 0 1
+  MARKER 5 2068.47 "" 1
+  MARKER 19 1664 05_col_60s_jsfx 5 0 1 R {42D2FDE3-B907-41EC-87E5-6B567E5B5719} 0 2
+  MARKER 19 1728.47 "" 5
+  MARKER 20 1732.94 10_col_60s_jsfx 5 0 1 R {89C00856-5BB2-4BC5-AA46-52408F860798} 0 2
+  MARKER 20 1797.41 "" 5
+  MARKER 5 1732.94 jsfx 0 0 1 R {9FE2AA4F-547E-4637-B84A-CBDA27B16D57} 0 3
+  MARKER 21 1800.94 20_col_60s_jsfx 5 0 1 R {8A267E3E-A758-40E5-9E7F-5FC6B314A4CC} 0 2
+  MARKER 21 1865.41 "" 5
+  MARKER 22 1868.94 50_col_60s_jsfx 5 0 1 R {863646D3-19CF-42F6-BD54-D8C6F3369563} 0 2
+  MARKER 22 1933.41 "" 5
+  MARKER 23 1936.94 75_col_60s_jsfx 5 0 1 R {4E1D86D5-D913-4E77-AE63-C036308CE49D} 0 2
+  MARKER 23 2001.41 "" 5
+  MARKER 24 2004 100_col_60s_jsfx 5 0 1 R {6F24ADF5-62EE-40CC-98EA-75C2B085625E} 0 2
+  MARKER 24 2068.47 "" 5
+  MARKER 6 2080 jsfx 0 0 1 R {D15A3C4A-C98D-4553-834C-F9DDC4580243} 0 3
+  MARKER 6 2080 JSFX 1 0 1 R {3AD1C64C-9191-4B96-A2E7-ED63824AF984} 0 1
+  MARKER 6 2484.47 "" 1
+  MARKER 25 2080 05_col_80s_jsfx 5 0 1 R {2B1EFB7A-A7C0-489F-BBAE-982D0DA0EC8D} 0 2
+  MARKER 25 2144.47 "" 5
+  MARKER 26 2148.94 10_col_80s_jsfx 5 0 1 R {3A9674CD-53C7-45CB-B423-065FDD8BBB30} 0 2
+  MARKER 26 2213.41 "" 5
+  MARKER 7 2148.94 jsfx 0 0 1 R {7E3252C1-9C31-48B7-AAE6-94D64EF647C1} 0 3
+  MARKER 27 2216.94 20_col_80s_jsfx 5 0 1 R {3AB55530-7611-4B8F-835A-D54F9EC4FDD6} 0 2
+  MARKER 27 2281.41 "" 5
+  MARKER 28 2284.94 50_col_80s_jsfx 5 0 1 R {FA0B0611-EE56-40E7-99DB-A38CA4C283EE} 0 2
+  MARKER 28 2349.41 "" 5
+  MARKER 29 2352.94 75_col_80s_jsfx 5 0 1 R {2CB121BE-ADCB-41FF-B25B-CFABD0B9D062} 0 2
+  MARKER 29 2417.41 "" 5
+  MARKER 30 2420 100_col_80s_jsfx 5 0 1 R {C2DAF180-CC73-4D7F-9F50-FC0C30B596A3} 0 2
+  MARKER 30 2484.47 "" 5
+  MARKER 8 2496 jsfx 0 0 1 R {43EBF11A-8232-480C-94DD-6866DEE5E468} 0 3
+  MARKER 7 2496 JSFX 1 0 1 R {364720DE-93F2-4839-9645-75E665411BF9} 0 1
+  MARKER 7 2900.47 "" 1
+  MARKER 31 2496 05_col_00s_jsfx 5 0 1 R {C756F70D-A0B8-4F08-8387-8275E4E8CA60} 0 2
+  MARKER 31 2560.47 "" 5
+  MARKER 32 2564.94 10_col_00s_jsfx 5 0 1 R {8F8F6597-E61E-44A9-A50B-41F37BD1AF79} 0 2
+  MARKER 32 2629.41 "" 5
+  MARKER 9 2564.94 jsfx 0 0 1 R {7F02D147-1B84-4CB7-B53E-8C1E5BD3CE91} 0 3
+  MARKER 33 2632.94 20_col_00s_jsfx 5 0 1 R {29FBFFDF-A2A8-436A-AB51-1393DD580654} 0 2
+  MARKER 33 2697.41 "" 5
+  MARKER 34 2700.94 50_col_00s_jsfx 5 0 1 R {A5B97A46-5A2C-48D1-A66C-CD09773471C2} 0 2
+  MARKER 34 2765.41 "" 5
+  MARKER 35 2768.94 75_col_00s_jsfx 5 0 1 R {FFCFFCFE-3DC9-4B91-BC6C-333E2905B9D8} 0 2
+  MARKER 35 2833.41 "" 5
+  MARKER 36 2836 100_col_00s_jsfx 5 0 1 R {A3422DBE-85D8-44EB-B186-2D632449D7C2} 0 2
+  MARKER 36 2900.47 "" 5
+  MARKER 10 2912 jsfx 0 0 1 R {5ED07510-D2E3-4819-8A9E-7F701009823E} 0 3
+  MARKER 8 2912 JSFX 1 0 1 R {7D31C21D-A344-42C2-9A5F-F0B493BB6C42} 0 1
+  MARKER 8 3316.47 "" 1
+  MARKER 37 2912 05_col_sym_jsfx 5 0 1 R {1E48F166-2144-44A8-9BD5-EDAB575FFE46} 0 2
+  MARKER 37 2976.47 "" 5
+  MARKER 38 2980.94 10_col_sym_jsfx 5 0 1 R {841E05B1-7AA8-4AAF-88E2-57BD49819956} 0 2
+  MARKER 38 3045.41 "" 5
+  MARKER 11 2980.94 jsfx 0 0 1 R {51DEF20D-A87E-47EB-A92C-6FF4414C64EE} 0 3
+  MARKER 39 3048.94 20_col_sym_jsfx 5 0 1 R {60067CF5-D314-4520-BBDF-24312C554E85} 0 2
+  MARKER 39 3113.41 "" 5
+  MARKER 40 3116.94 50_col_sym_jsfx 5 0 1 R {3A9AA2AF-FC4F-42CE-B5A7-C02C337E0EA1} 0 2
+  MARKER 40 3181.41 "" 5
+  MARKER 41 3184.94 75_col_sym_jsfx 5 0 1 R {94437A25-9124-435A-88F9-0D44A78747E7} 0 2
+  MARKER 41 3249.41 "" 5
+  MARKER 42 3252 100_col_sym_jsfx 5 0 1 R {AA497181-109C-469B-B0F6-34D61BF733ED} 0 2
+  MARKER 42 3316.47 "" 5
+  <PROJBAY
+  >
+  <TRACK {416F2764-EBCD-488D-8421-E25AD3EDA303}
+    NAME 1
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    PANLAWFLAGS 3
+    VOLPAN 1 -1 -1 -1 1
+    MUTESOLO 0 0 0
+    IPHASE 0
+    PLAYOFFS 0 1
+    ISBUS 0 0
+    BUSCOMP 0 0 0 0 0
+    SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0 0
+    FIXEDLANES 9 0 0 0 0
+    LANEREC -1 -1 -1 0
+    SEL 0
+    REC 1 0 0 0 0 0 0 0
+    VU 64
+    TRACKHEIGHT 138 0 0 0 0 0 0
+    INQ 0 0 0 0.5 100 0 0 100
+    NCHAN 2
+    FX 1
+    TRACKID {416F2764-EBCD-488D-8421-E25AD3EDA303}
+    PERF 0
+    MIDIOUT -1 -1
+    MAINSEND 1 0
+  >
+  <TRACK {88B7DCFC-2F7E-4338-8147-61420672DD2C}
+    NAME 2
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    PANLAWFLAGS 3
+    VOLPAN 1 1 -1 -1 1
+    MUTESOLO 0 0 0
+    IPHASE 0
+    PLAYOFFS 0 1
+    ISBUS 0 0
+    BUSCOMP 0 0 0 0 0
+    SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0 0
+    FIXEDLANES 9 0 0 0 0
+    LANEREC -1 -1 -1 0
+    SEL 1
+    REC 1 1 0 0 0 0 0 0
+    VU 64
+    TRACKHEIGHT 125 0 0 0 0 0 0
+    INQ 0 0 0 0.5 100 0 0 100
+    NCHAN 2
+    FX 1
+    TRACKID {88B7DCFC-2F7E-4338-8147-61420672DD2C}
+    PERF 0
+    MIDIOUT -1 -1
+    MAINSEND 1 0
+  >
+  <TRACK {9442AF9C-0EE3-4C55-922B-823D92DBDDB9}
+    NAME mod_session008
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    PANLAWFLAGS 3
+    VOLPAN 1 0 -1 -1 1
+    MUTESOLO 0 0 0
+    IPHASE 0
+    PLAYOFFS 0 1
+    ISBUS 0 0
+    BUSCOMP 0 0 0 0 0
+    SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0 0
+    FIXEDLANES 9 0 0 0 0
+    LANEREC -1 -1 -1 0
+    SEL 0
+    REC 0 0 1 0 0 0 0 0
+    VU 64
+    TRACKHEIGHT 0 0 0 0 0 0 0
+    INQ 0 0 0 0.5 100 0 0 100
+    NCHAN 2
+    FX 1
+    TRACKID {9442AF9C-0EE3-4C55-922B-823D92DBDDB9}
+    PERF 0
+    MIDIOUT -1 -1
+    MAINSEND 1 0
+  >
+  <TRACK {5C17C18C-EA4E-4123-9BA1-3255F30B9248}
+    NAME ""
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    PANLAWFLAGS 3
+    VOLPAN 1 0 -1 -1 1
+    MUTESOLO 0 0 0
+    IPHASE 0
+    PLAYOFFS 0 1
+    ISBUS 0 0
+    BUSCOMP 0 0 0 0 0
+    SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0 0
+    FIXEDLANES 9 0 0 0 0
+    LANEREC -1 -1 -1 0
+    SEL 0
+    REC 0 0 1 0 0 0 0 0
+    VU 64
+    TRACKHEIGHT 0 0 0 0 0 0 0
+    INQ 0 0 0 0.5 100 0 0 100
+    NCHAN 2
+    FX 1
+    TRACKID {5C17C18C-EA4E-4123-9BA1-3255F30B9248}
+    PERF 0
+    MIDIOUT -1 -1
+    MAINSEND 1 0
+  >
+  <TRACK {D5FC0D96-630B-4C12-98BC-52920CEFC7A8}
+    NAME gs76-matrix-all-m2-stereo
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    PANLAWFLAGS 3
+    VOLPAN 1 0 -1 -1 1
+    MUTESOLO 0 0 0
+    IPHASE 0
+    PLAYOFFS 0 1
+    ISBUS 0 0
+    BUSCOMP 0 0 0 0 0
+    SHOWINMIX 1 0.6667 0.5 1 0.5 0 0 0 0
+    FIXEDLANES 9 0 0 0 0
+    LANEREC -1 -1 -1 0
+    SEL 0
+    REC 0 0 1 0 0 0 0 0
+    VU 64
+    TRACKHEIGHT 0 0 0 0 0 0 0
+    INQ 0 0 0 0.5 100 0 0 100
+    NCHAN 2
+    FX 1
+    TRACKID {D5FC0D96-630B-4C12-98BC-52920CEFC7A8}
+    PERF 0
+    MIDIOUT -1 -1
+    MAINSEND 1 0
+    <ITEM
+      POSITION 3.53
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {26D62C78-EF31-4562-AD96-D2F226EBA501}
+      IID 41
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {155BB8B9-7858-49C1-85E4-DCFC5E5FDEB9}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 0 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 71.53
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {F302D0BD-2676-4DE5-9802-CE165BC081CB}
+      IID 42
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {E9D263B6-DE43-47FD-852A-D13563817949}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 0 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 139.53
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {51C3924C-5318-4CC2-9FBC-B4ACCD34FFEF}
+      IID 43
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {58431E0D-B727-4270-83E6-6BD8D38E215A}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 0 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 207.53
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {107CB2C0-0F72-40B7-A898-0000512A0793}
+      IID 44
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {14AC09DB-543E-420A-B216-95B6D2B8F107}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 0 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 776
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {3256F908-4602-4CE4-8A70-0423FDC06711}
+      IID 49
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {B8601DC8-12D6-44E2-BA47-3BF19F9C88B4}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 5 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 844.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {5CB6C732-A295-4786-9CEC-6FF0BE7C1540}
+      IID 50
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {F03B0F68-7B17-4A8D-898F-3CBE55C52D3D}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 10 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 912.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {D3191787-3CAD-419E-B967-10704744A1DB}
+      IID 51
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {7184BF9B-94D1-407E-B932-60609C58795E}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 20 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 980.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {926A9549-A827-4212-A229-B94606078120}
+      IID 52
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {61C63E3D-DB77-4B4A-919F-A3029D20C53D}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 50 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1048.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {D8DFD032-CA1C-4C35-986F-A8FA0DD1A2BB}
+      IID 53
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {D53846E4-254D-4A93-A1A2-E219DCFF790C}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 75 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1116
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {D756928F-AD61-4B90-A795-89E43DBD36CC}
+      IID 54
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {3041DF91-DD58-436B-B814-4FA71E8BF876}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 100 0 1 1 0 1 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1664
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {D245707A-EA4C-4941-9EFA-A77E8D6B0CE9}
+      IID 55
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {0FD30601-02D6-4010-8B83-530347C83550}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 5 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1732.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {E1A5A012-5686-4A4A-8AB3-E1944612DDCF}
+      IID 56
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {305FE035-B473-4DD7-9B9A-96DA53FE55B5}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 10 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1800.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {031F3837-600B-4C19-B0D1-8694E208C3C9}
+      IID 57
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {9DB32C94-16F9-4BB1-840F-8607D30B18A8}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 20 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1868.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {450D31D5-44B2-43EF-AF58-0BB715422621}
+      IID 58
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {894350C7-2F02-4E21-8D82-7B5FFA704807}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 50 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 1936.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {3BC661DA-5CB7-4BD0-99ED-B031062F89C5}
+      IID 59
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {1BB373E9-17F7-4561-9565-961A7559820A}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 75 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2004
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {32C4B35D-E0C5-4017-AEA6-2224C6CD81C2}
+      IID 60
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {9430F773-3C3B-4FD5-B0CF-7CE1DB875462}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 100 0 1 1 0 1 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2080
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {3DAAC9ED-E98E-44C6-9EF9-23EBF35D759B}
+      IID 61
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {1F41C587-1695-45E4-973D-5A8F64E279D2}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 5 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2148.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {7EC582EF-AFE0-4518-A315-EDC8F7A63BB7}
+      IID 62
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {0C8741FD-1563-4C10-848D-20435782A24A}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 10 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2216.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {B3AF56C7-41B5-4862-86AE-52E7E585126F}
+      IID 63
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {CBC33A0A-F198-419E-AF0D-7290EE1398AA}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 20 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2284.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {D1D0758B-F9E0-4045-9FEA-1C5AC916CC84}
+      IID 64
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {3E6D6A72-3A1F-42C9-98B5-AFC24645BD81}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 50 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2352.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {2BE5CE85-53E0-45AB-9C22-B6B0D8EAF693}
+      IID 65
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {260E1922-33DD-4887-A39E-3F313724C170}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 75 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2420
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {5A385A9C-AC36-4E3E-92A9-612BB4D840ED}
+      IID 66
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {AC6E5E5F-40C8-4DBD-BCEF-02AD7DD5166A}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 100 0 1 1 0 1 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2496
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {137D2B79-B1A8-4ACA-A54D-C02DBFFFF5A0}
+      IID 67
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {C4041585-CE2D-4EB4-A49B-7BD246D2A6FE}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 5 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2564.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {0A0AE385-D967-49BA-8EBF-4DB172F8F635}
+      IID 68
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {B7A2C4A4-913F-4A0D-9184-1FA5CCA66090}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 10 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2632.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {7C8ACE9F-E9DB-4B05-B92A-6BB57BC7ED2B}
+      IID 69
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {4EB60953-6822-429B-B5C5-661362F188A2}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 20 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2700.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {1AEB846C-C0AB-4489-9204-C39C96E3AA47}
+      IID 70
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {A176189F-DA6E-4E00-B35C-ABBB99AC655F}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 50 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2768.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {7C1A74B3-F7C1-43BD-9133-C4C34F3F38A4}
+      IID 71
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {B7BD859E-38CF-4028-B893-35494725AECF}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 75 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2836
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {B0A0E69E-94C0-45FB-8151-FAC09067D4A0}
+      IID 72
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {3A5A5083-FCD8-4215-943D-15B1B14DE5EE}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 100 0 1 1 0 1 3 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2912
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {75334FED-ACBB-433A-BB59-394BC220C5AA}
+      IID 21
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {997107BE-AD7A-4898-A4AC-58EFBA57C028}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 5 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 2980.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {EDAF72D6-3BB9-4F67-BA94-CC9581F41EF1}
+      IID 45
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {69A57C4F-EF44-4B46-8535-B7B8E3B2B402}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 10 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {E439F9D8-545B-4C10-B2F9-C276EB365C45}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 3048.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {05F40339-2A11-41FF-BD9C-FC599EC1573D}
+      IID 22
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {C16CC9F4-204E-44F0-9E56-A3FDDB485502}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 20 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {FA01F76F-F325-40CA-8BAC-80C69D2D680A}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 3116.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {8553DE03-3646-4595-9EB1-30B4A677B4A5}
+      IID 23
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {29E22219-97A8-4ED3-892C-72BBFB6C896D}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 50 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {4A33C82B-7BFB-4F38-ABEC-C21FCA6CF2A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 3184.94
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {AB5142FE-5CA0-4B50-837F-BDB00B4A3B7D}
+      IID 46
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {DFA8EFEF-6FDB-49D2-9454-635EB623CD15}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 75 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+    <ITEM
+      POSITION 3252
+      SNAPOFFS 0
+      LENGTH 64.47
+      LOOP 1
+      ALLTAKES 0
+      FADEIN 1 0 0 1 0 0 0
+      FADEOUT 1 0 0 1 0 0 0
+      MUTE 0 0
+      SEL 0
+      IGUID {F9428E77-6BA5-42D8-B793-C5D554FE5F11}
+      IID 24
+      NAME gs76-matrix-all-m2-stereo.wav
+      VOLPAN 1 0 1 -1
+      SOFFS 0
+      PLAYRATE 1 1 0 -1 0 0.0025
+      CHANMODE 0
+      GUID {D8B4B0CC-B876-46A7-825C-83E674C88134}
+      <SOURCE WAVE
+        FILE "Media\gs76-matrix-all-m2-stereo.wav"
+      >
+      <TAKEFX
+        WNDRECT 24 82 655 408
+        SHOW 0
+        LASTSEL 0
+        DOCKED 0
+        BYPASS 0 0 0
+        <JS GreenStripe/GreenStripe76-Stereo.jsfx ""
+          0 0 7 7 1 100 100 0 1 1 0 1 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        FLOATPOS 0 0 0 0
+        FXID {6B343AE1-B734-4A41-BD81-2D8BEE9313A2}
+        WAK 0 0
+      >
+      <EXT
+        ORIGINAL_FILENAME C:\Users\Sidney\Desktop\GreenStripe\mod-1175-lv2\test-results\dwarf-tones\gs76-matrix-all-m2-stereo.wav
+      >
+    >
+  >
+  <EXTENSIONS
+  >
+>
