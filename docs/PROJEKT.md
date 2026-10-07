@@ -6,13 +6,14 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 ## Zusammenfassung (Stand 2026-10-07)
 
-- **Produkt 0.4.1 rev 1:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
+- **Produkt 0.4.2:** LV2 Mono/Stereo + JSFX Mono/Stereo, 38 Presets (37/38 als
   2:1-Varianten), hörbare Eingangstransformatoren 60s/80s/00s plus None und
   die lineare Referenz Symmetric. DSP-Kern doppelpfadig (C++11/EEL2) mit
   belegter Bit-Parität (506 Signalvergleiche, max 0 FS). **Revisionsregel
   (AGENTS, verbindlich):** jede Sourcecodeänderung — alle Änderungen zwischen
-  zwei Nutzereingaben gelten als eine — erhöht `revision` in
-  `data/model.json` um +1; angezeigt in der LV2-GUI unter Mono/Stereo
+  zwei Nutzereingaben gelten als eine — erhöht die **dritte Stelle der
+  Versionsnummer** (`data/model.json`, z. B. 0.4.2 = Revision 2) um +1;
+  angezeigt als Versionsnummer in der LV2-GUI unter Mono/Stereo
   (Fußzeilenplatte) und in der JSFX-GFX unten rechts.
 - **Am Gerät nachgewiesen (2026-10-07):** erste vollständige
   Transformator-Matrix aus digitaler Dwarf-Quelle — Anker exakt,
@@ -36,6 +37,19 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   (Offset +3, max 0,5 LSB; `test-results/jsfx-render-1e6-20261007`) —
   die letzte Transformator-Änderung (Prädikator + Toleranz 1e-6) ist damit
   auch in REAPER am vollen Programm bestätigt.
+- **CPU-Matrix mit dem 1e-6-Stand am Gerät (2026-10-07,
+  `test-results/cpu-matrix-1e6-20261007`):** Binary `ed05032b…` (Commit
+  `2d0aff6`, 0.4.1, MPB-Pin `e5a1099`), 36 Zustände, 0 xruns. 00s
+  −7 Punkte Median (56–57 % statt 58–66 %), Sym −5,5 Punkte (56–60 % statt
+  64 %), 60s/80s unverändert, Bypass/None/Colour unverändert — relativ zum
+  Zustand ≈ −9…−11 %, konsistent mit dem isolierten Bench. Worstcase-Median
+  66–68 % → 56–60 %.
+- **1e-6-Qualitätsentscheidung bestätigt (2026-10-07):** Benutzer-Hörprobe
+  meldet den Unterschied als sehr subtil — erwartungsgemäß, der
+  numerische Effekt liegt bei ≈ −120 dB (EXTERN). Vollständige Messwerte
+  inkl. Plots: [MESSERGEBNISSE](MESSERGEBNISSE.md) (Abschnitte 6.3 und 7);
+  Optionen zur Verstärkung der Transformatorwirkung als Vorschläge in
+  EXTERN/TODO (Umsetzung nur auf Auftrag).
 - **GUI am Gerät:** Logoquelle auf `/resources/…{{{ns}}}` korrigiert (Grund:
   DOM-Injection löst relative URLs gegen die Seiten-URL auf); Paneel jetzt am
   kompletten Rahmenring ziehbar (vier Leisten + Fußzeilenplatte, Cursor
@@ -47,6 +61,21 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   (TODO, Abschnitt CPU-Reduktion Transformator); optional direkte
   20-Hz-Ankermessung von 60s/80s bei −14/−8 dBFS (Stimuluserweiterung).
   Die Ankerinterpretation der Geräteserie ist abgeschlossen (EXTERN).
+- **Klangziel entschieden (2026-10-07):** stärkerer, **eigenständiger
+  Green-Stripe-Charakter** (kein Hardwareidentitätsziel). Produktvariante
+  (Drive-Regler / heiße Bank / beides) offen; vor jeder Laufzeitänderung
+  läuft ein Offline-Kandidatenvergleich — detaillierter Plan: TODO,
+  Abschnitt „Eigenständiger Green-Stripe-Charakter".
+- **2:1-Kennlinie angepasst (0.4.2, 2026-10-07, ausdrücklicher
+  Benutzerauftrag):** Schwelle **−25 dBFS** und Knie **7,5 dB** für Ratio 2:1
+  (vorher −24/6 — früherer Einsatz, breiteres/weicheres Knie). `data/model.json`
+  → `generate.py` → make test + Parität **430+76 Fälle, max 0 FS** PASS;
+  Preset-Audit erneuert (240 Fälle): 31/37-Vergleich −18 dBFS/1 kHz mittlere
+  Wet-GR jetzt **2,06 statt 1,56 dB** (4:1: 2,62), 35/38 bei −12 dBFS Spitzen-GR
+  **3,45 statt 2,62 dB** (4:1: 4,11); bei −18 dBFS rückt 2:1 nahe an 4:1
+  (0,93 statt 0,96 dB). Doku (DSP-Tabellen, EXTERN-Ratiovergleich, PRESETS)
+  aktualisiert. **Geräte-/Hörprüfung offen** — braucht MPB-Neubau des
+  0.4.2-Stands und neue Pin-/Install-Verifikation.
 - **Verbindlich:** keine Hardwaregleichheits-Claims; Portindizes/URIs stabil;
   Bank-Refits ändern bestehende Projektklänge (Revision dokumentieren).
 

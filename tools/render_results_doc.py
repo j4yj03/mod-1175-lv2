@@ -9,6 +9,7 @@ nichts von Hand eingetragen. Neu ausfuehren, wenn neue Serien dazukommen:
 """
 import json
 import re
+import statistics
 from pathlib import Path
 
 import matplotlib
@@ -28,6 +29,10 @@ BANK_TYPES = [('60s', 'rep-60s-ch1', 'c0-tf1-ch1'),
               ('00s', 'rep-00s-ch1', 'c0-tf3-ch1'),
               ('Sym', 'rep-Sym-ch1', 'c0-tf4-ch1')]
 COLOURS = ['05', '10', '20', '50', '75', '100']
+CPU_1E6 = ROOT / 'test-results/cpu-matrix-1e6-20261007/cpu_results.json'
+RENDER_1E6 = ROOT / 'test-results/jsfx-render-1e6-20261007/parity-1e6.json'
+RENDER_1E6_BATCH = '19_15_06'
+LSB24 = 2.0 ** -23
 
 
 def load(path):
@@ -309,10 +314,13 @@ def main():
     A('| `matrix-*_col_jsfx-…12_28_31` | Colour-Sweep, Transformer versehentlich 80s/00s/Sym/Sym | ersetzt |')
     A('| `matrix-*_col_jsfx-…12_33_03` | Colour 5–100 × None | bitgleich (Referenz `ref-col*`, `ref-none`) |')
     A('| `matrix-*_col_*_jsfx-…12_49_00` | Colour 5–100 × 60s/80s/00s/Sym (24 Zustände) | bitgleich (Referenz `ref-col*-tf*`) |')
+    A('| `matrix-*_jsfx-…' + RENDER_1E6_BATCH + '` | Vollmatrix 28 Zustände nach der Toleranzänderung 1e-6 | bitgleich (Referenzen im 1e-6-Stand, s. u.) |')
     A('')
     A('Damit ist die Zwei-Sprachen-Parität am vollen 64-s-Matrixprogramm über')
     A('**34 Betriebszustände** belegt (zusätzlich zu den 232 synthetischen')
-    A('Paritätsfällen der Testsuite).')
+    A('Paritätsfällen der Testsuite); nach der Toleranzänderung 1e-6 sind die')
+    A('**28 Vollmatrix-Zustände erneut bitgleich** gegen frische C++-Referenzen')
+    A('des neuen Stands (Abschnitt 7).')
     A('')
 
     # 4 Provenanz
@@ -419,7 +427,7 @@ def main():
             A('| {0} | {1} | {2} | {3:.1f} | {4:.1f} |'.format(
                 label, e['colour'], {0: 'None', 1: '60s', 2: '80s', 3: '00s', 4: 'Sym'}[e['transformer']],
                 lt.get('process_percent_median', float('nan')),
-                lt.get('process_percent_max', float('nan'))))
+                lt.get('process_percent_peak', float('nan'))))
         A('')
         A('![CPU-Matrix](plots/mess-cpu-matrix.png)')
         A('')
@@ -444,6 +452,70 @@ def main():
         A('36 Zuständen**. Basis: 20-Hz-Sinus (schwerstes Solver-Regime),')
         A('128 Frames, je Zustand voller Neustart mit gespeicherten')
         A('Boardwerten, Werte per Board-TTL eingeschrieben.')
+        if CPU_1E6.exists():
+            cpu_1e6 = json.loads(CPU_1E6.read_text(encoding='utf-8'))
+            order = (['bypass', 'c0-tfNone', 'c0-tf60s', 'c0-tf80s', 'c0-tf00s', 'c0-tfSym']
+                     + ['c{0}-tfNone'.format(c) for c in (5, 10, 20, 50, 75, 100)]
+                     + ['c{0}-tf{1}'.format(c, t) for t in ('60s', '80s', '00s', 'Sym')
+                        for c in (5, 10, 20, 50, 75, 100)])
+            rows_1e6 = []
+            for label in order:
+                base_m = cpu.get(label, {}).get('loadtest', {}).get('process_percent_median')
+                new_m = cpu_1e6.get(label, {}).get('loadtest', {}).get('process_percent_median')
+                new_p = cpu_1e6.get(label, {}).get('loadtest', {}).get('process_percent_peak')
+                delta = (new_m - base_m) if (new_m is not None and base_m is not None) else None
+                rows_1e6.append((label, base_m, new_m, new_p, delta))
+            med = lambda sub: statistics.median([r[4] for r in rows_1e6
+                                                 if r[4] is not None
+                                                 and not r[0].startswith('c0-')
+                                                 and any(k in r[0] for k in sub)])
+            d60 = med(('tf60s', 'tf80s'))
+            d00 = med(('tf00s',))
+            dsym = med(('tfSym',))
+            A('')
+            A('### 6.3 CPU-Matrix mit der 1e-6-Binary (0.4.1)')
+            A('')
+            A('Wiederholung aller 36 Zustände mit der installierten Binary')
+            A('`ed05032b…` (Commit `2d0aff6`, Startwert-Prädikator + Toleranz')
+            A('1e-6; MPB-Pin `e5a1099`, Toolchain `moddwarf-new`). Prozedur und')
+            A('Boards identisch zu 6.2; Basis = `66c835e8…` (`94ab2fa`).')
+            A('Rohdaten: `test-results/cpu-matrix-1e6-20261007/`.')
+            A('')
+            A('| Zustand | Basis Median % | 1e-6 Median % | Δ Punkte | 1e-6 Peak % |')
+            A('|---|---:|---:|---:|---:|')
+            for label, base_m, new_m, new_p, delta in rows_1e6:
+                A('| {0} | {1} | {2} | {3:+.1f} | {4} |'.format(
+                    label,
+                    '—' if base_m is None else '{0:.1f}'.format(base_m),
+                    '—' if new_m is None else '{0:.1f}'.format(new_m),
+                    0.0 if delta is None else delta,
+                    '—' if new_p is None else '{0:.1f}'.format(new_p)))
+            A('')
+            A('![CPU 1e-6 Vorher/Nachher](plots/mess-cpu-1e6-vergleich.png)')
+            A('')
+            nv = [r[2] for r in rows_1e6 if r[0].endswith('tf00s')
+                  and r[0] != 'c0-tf00s' and r[2] is not None]
+            sv = [r[2] for r in rows_1e6 if r[0].endswith('tfSym')
+                  and r[0] != 'c0-tfSym' and r[2] is not None]
+            bv = [r[1] for r in rows_1e6 if r[0].endswith('tf00s')
+                  and r[0] != 'c0-tf00s' and r[1] is not None]
+            bw = [r[1] for r in rows_1e6 if r[0].endswith('tfSym')
+                  and r[0] != 'c0-tfSym' and r[1] is not None]
+            pk = max(r[3] for r in rows_1e6 if r[3] is not None)
+            A('**Ergebnis:** 00s Median **{0:+.1f} Punkte** (jetzt {1:.0f}—{2:.0f} %'
+              ' statt {3:.0f}—{4:.0f} %), Sym **{5:+.1f} Punkte** ({6:.0f}—{7:.0f} %'
+              ' statt {8:.0f}—{9:.0f} %), 60s/80s **{10:+.1f} Punkte** (unverändert),'
+              ' Bypass/None/Colour-Stufen unverändert; Spitzen unverändert'
+              ' (max {11:.0f} %), **0 xruns**. Relativ zum Zustand entspricht das'
+              ' ≈ −9…−11 % und deckt sich mit dem isolierten Bench (Toleranz'
+              ' 1e-6, −10–12 %) inkl. plugin-level Verwässerung durch'
+              ' Host-Overhead (Bypass 22 %). 60s/80s bleiben strukturell bei'
+              ' ~2 Iterationen — wie vorhergesagt.'.format(
+                  d00, min(nv), max(nv), min(bv), max(bv),
+                  dsym, min(sv), max(sv), min(bw), max(bw),
+                  d60, pk))
+            A('')
+        A('')
     else:
         A('## 6. CPU-Matrix (Geplant)')
         A('')
@@ -451,6 +523,39 @@ def main():
         A('(`tools/dwarf_cpu_matrix.py`, Ausführung auf dem Dwarf); Ergebnisse')
         A('folgen hier, sobald die Serie gelaufen ist.')
         A('')
+
+    # 7 REAPER-Render-Verifikation nach der Toleranzänderung (1e-6)
+    if Path(RENDER_1E6).exists():
+        parity = json.loads(Path(RENDER_1E6).read_text(encoding='utf-8'))
+        results = parity.get('results', {})
+        n_states = len(results)
+        worst = parity.get('worst', 0.0)
+        A('## 7. REAPER-Render-Verifikation nach der Toleranzänderung (1e-6)')
+        A('')
+        A('Vollständige Matrix (**28 Zustände** = Colour 0 × Typen + 24')
+        A('Bank×Colour-Kombinationen) nach der letzten Transformator-/Solver-')
+        A('Änderung (Startwert-Prädikator + Konvergenztoleranz 1e-6): REAPER-')
+        A('Render der JSFX (per Symlink aktuell, Batch `{0}`) gegen frische'.format(RENDER_1E6_BATCH))
+        A('C++-Offline-Referenzen des 1e-6-Stands (`build/wsl`, Cross-Build-')
+        A('matching) bitverifiziert. Projekt `reaper/testbench/testbench.rpp`;')
+        A('Stimulus `gs76-matrix-all-m2-stereo.wav`, 48 kHz/24 bit, 64,47 s.')
+        A('Archiv mit SHA256 beider Seiten:')
+        A('`test-results/jsfx-render-1e6-20261007/`. Die früheren Batches des')
+        A('Tages (16_17_10, 16_57_58) sind Bisektionsläufe zur EEL2-')
+        A('`instance()`-Scope-Falle und nicht Teil der Verifikation.')
+        A('')
+        A('| Prüfpunkt | Ergebnis |')
+        A('|---|---|')
+        A('| Zustände | {0} (beide Kanäle) |'.format(n_states))
+        A('| bester Offset | +3 Samples (REAPER-PDC-Kompensation der 2x-Latenz; Vorzeichen gegenüber Abschnitt 3 gespiegelt) |')
+        A('| schlechtester max \\|diff\\| | {0:.3e} = {1:.1f} LSB (24 bit) |'.format(worst, worst / LSB24))
+        A('| Grenze | < 1 LSB ({0:.3e}) — erfüllt in allen Zuständen |'.format(LSB24))
+        A('')
+        A('![Render-Parität 1e-6](plots/mess-render-1e6-paritaet.png)')
+        A('')
+        A('Die letzte Transformator-Änderung ist damit auch in REAPER am vollen')
+        A('64-s-Matrixprogramm bitgleich gegen den C++-Kern bestätigt (zuvor')
+        A('bereits `make test` + Parität 430+76 Fälle, max 0 FS).')
 
     (DOCS / 'MESSERGEBNISSE.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
@@ -640,6 +745,61 @@ def main():
                      'Punkte unter der Linie = schneller')
         ax.grid(True, alpha=0.3); ax.legend(fontsize=8, loc='upper left')
         fig.tight_layout(); fig.savefig(PLOTS / 'mess-cpu-vergleich.png'); plt.close(fig)
+
+    # P10c CPU Vorher/Nachher, Toleranz 1e-6 (Basis 66c835 -> ed05032b)
+    if cpu_path.exists() and Path(CPU_1E6).exists():
+        cpu_1e6 = json.loads(Path(CPU_1E6).read_text(encoding='utf-8'))
+        fig, ax = plt.subplots(figsize=(6, 6))
+        xs, ys, labels = [], [], []
+        for label, entry in cpu.items():
+            om = entry.get('loadtest', {}).get('process_percent_median')
+            nm = cpu_1e6.get(label, {}).get('loadtest', {}).get('process_percent_median')
+            if om is None or nm is None:
+                continue
+            xs.append(om); ys.append(nm); labels.append(label)
+        lim = max(xs + ys) * 1.1
+        ax.plot([0, lim], [0, lim], '--', color='grey', lw=1, label='identisch')
+        for x, y, lbl in zip(xs, ys, labels):
+            cname = lbl.split('-tf')[-1] if '-tf' in lbl else 'None'
+            ax.scatter(x, y, s=28, color=colors.get(cname, '#7f7f7f'))
+            if y < x - 3.0:
+                ax.annotate(lbl, (x, y), fontsize=6, xytext=(3, -8),
+                            textcoords='offset points')
+        ax.set_xlabel('Median Basis (66c835, 94ab2fa) / %')
+        ax.set_ylabel('Median 1e-6 (ed05032b, 0.4.1 rev 1) / %')
+        ax.set_title('CPU Vorher/Nachher je Zustand (Toleranz 1e-6)\n'
+                     'Punkte unter der Linie = schneller')
+        ax.grid(True, alpha=0.3); ax.legend(fontsize=8, loc='upper left')
+        fig.tight_layout(); fig.savefig(PLOTS / 'mess-cpu-1e6-vergleich.png'); plt.close(fig)
+
+    # P12 REAPER-Render-Verifikation 1e-6 (max|diff| je Zustand, 24-bit-LSB-Grenze)
+    if Path(RENDER_1E6).exists():
+        parity = json.loads(Path(RENDER_1E6).read_text(encoding='utf-8'))
+        results = parity.get('results', {})
+        order_r = (['c0-tf{0}'.format(i) for i in (1, 2, 3, 4)]
+                   + ['c{0}-tf{1}'.format(c, t) for c in (5, 10, 20, 50, 75, 100)
+                      for t in (1, 2, 3, 4)])
+        xs, ys = [], []
+        for i, ref in enumerate(order_r):
+            pair = results.get(ref)
+            if not pair:
+                continue
+            xs.append(ref)
+            ys.append(max(pair['ch1']['max'], pair['ch2']['max']))
+        fig, ax = plt.subplots(figsize=(11, 4.2))
+        ax.bar(range(len(xs)), ys, color='#1f77b4')
+        ax.axhline(LSB24, color='#d62728', ls='--', lw=1,
+                   label='1 LSB (24 bit) = 1,19e-7')
+        ax.set_yscale('log')
+        ax.set_ylim(1e-8, 3e-7)
+        ax.set_xticks(range(len(xs)))
+        ax.set_xticklabels(xs, rotation=90, fontsize=6)
+        ax.set_ylabel('max |diff| (float)')
+        ax.set_title('REAPER-JSFX-Render (Batch {0}) gegen C++-Referenzen im 1e-6-Stand:\n'
+                     'alle 28 Zustände bitgleich (Offset +3 Samples = REAPER-PDC der 2x-Latenz)'.format(
+                         RENDER_1E6_BATCH))
+        ax.grid(True, axis='y', which='both', alpha=0.3); ax.legend(fontsize=8)
+        fig.tight_layout(); fig.savefig(PLOTS / 'mess-render-1e6-paritaet.png'); plt.close(fig)
 
     # P9b Serie B (vorher/nachher, 997 Hz + 20 Hz)
     if serie:

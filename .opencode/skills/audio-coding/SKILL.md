@@ -179,6 +179,26 @@ Doku, sobald ein Preset dazukommt. Auch hartkodierte Mengenangaben im Generator
 (`len(presets)`, Anzahl aktiver Transformer) gehören dynamisch, sonst stimmen sie
 nach dem nächsten Preset nicht mehr.
 
+### Versionierung und Revision (Dreistelligen-Schema)
+
+- Die **Revisionsnummer ist die dritte Stelle der Versionsnummer** in
+  `data/model.json` (`version`, z. B. 0.4.2 = Revision 2); ein separates
+  `revision`-Feld gibt es nicht (früher „0.4.1 rev N" — rev 1 ≙ 0.4.1,
+  rev 2 ≙ 0.4.2).
+- Mit **jeder Sourcecodeänderung** die dritte Stelle um **+1** erhöhen;
+  alle Änderungen zwischen zwei Nutzereingaben gelten als **eine**
+  Sourcecodeänderung. Sourcecodeänderung = Dateien unter `src/` oder
+  `jsfx/`; `tools/`, Doku, GUI-Assets und reine Metadaten zählen nicht.
+  Achtung: `data/*.json`-Änderungen zählen dann, wenn sie generierte
+  Artefakte unter `src/`/`jsfx/` verändern (z. B. Kennlinienkonstanten).
+- Nach dem Bump immer `python3 tools/generate.py`; die Version erscheint
+  **ohne „rev"-Anhang** in der LV2-GUI (Fußzeilenplatte, unter Mono/Stereo)
+  und in der JSFX-`@gfx` unten rechts via `#gs_ver` (EEL2-Stringvariable,
+  wird im generierten `@init` gesetzt — Strings brauchen `#`-Präfix und
+  können nicht als Funktionsparameter übergeben werden).
+- `lv2:microVersion` folgt derselben dritten Stelle (`generate.py` parst
+  `version`).
+
 ### Bauen und Testen im WSL-Sysroot
 
 Ohne Root-Rechte wird gegen ein entpacktes Sysroot gebaut:

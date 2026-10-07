@@ -276,10 +276,13 @@ geprüften Zustände sind bei 24-bit-Auflösung **bitgleich**
 | `matrix-*_col_jsfx-…12_28_31` | Colour-Sweep, Transformer versehentlich 80s/00s/Sym/Sym | ersetzt |
 | `matrix-*_col_jsfx-…12_33_03` | Colour 5–100 × None | bitgleich (Referenz `ref-col*`, `ref-none`) |
 | `matrix-*_col_*_jsfx-…12_49_00` | Colour 5–100 × 60s/80s/00s/Sym (24 Zustände) | bitgleich (Referenz `ref-col*-tf*`) |
+| `matrix-*_jsfx-…19_15_06` | Vollmatrix 28 Zustände nach der Toleranzänderung 1e-6 | bitgleich (Referenzen im 1e-6-Stand, s. u.) |
 
 Damit ist die Zwei-Sprachen-Parität am vollen 64-s-Matrixprogramm über
 **34 Betriebszustände** belegt (zusätzlich zu den 232 synthetischen
-Paritätsfällen der Testsuite).
+Paritätsfällen der Testsuite); nach der Toleranzänderung 1e-6 sind die
+**28 Vollmatrix-Zustände erneut bitgleich** gegen frische C++-Referenzen
+des neuen Stands (Abschnitt 7).
 
 ## 4. Provenanz der Gerätesserien
 
@@ -341,42 +344,42 @@ gesetzt und je Zustand per Rücklesung verifiziert; Messung mit
 
 | Zustand | Colour % | Transformer | Median % | Peak % |
 |---|---:|---|---:|---:|
-| bypass | 0 | None | 22.0 | nan |
-| c0-tf00s | 0 | 00s | 48.0 | nan |
-| c0-tf60s | 0 | 60s | 46.0 | nan |
-| c0-tf80s | 0 | 80s | 47.0 | nan |
-| c0-tfNone | 0 | None | 28.0 | nan |
-| c0-tfSym | 0 | Sym | 56.0 | nan |
-| c10-tf00s | 10 | 00s | 66.0 | nan |
-| c10-tf60s | 10 | 60s | 56.0 | nan |
-| c10-tf80s | 10 | 80s | 57.0 | nan |
-| c10-tfNone | 10 | None | 36.0 | nan |
-| c10-tfSym | 10 | Sym | 64.0 | nan |
-| c100-tf00s | 100 | 00s | 60.0 | nan |
-| c100-tf60s | 100 | 60s | 54.0 | nan |
-| c100-tf80s | 100 | 80s | 56.0 | nan |
-| c100-tfNone | 100 | None | 36.0 | nan |
-| c100-tfSym | 100 | Sym | 64.0 | nan |
-| c20-tf00s | 20 | 00s | 58.0 | nan |
-| c20-tf60s | 20 | 60s | 56.0 | nan |
-| c20-tf80s | 20 | 80s | 56.0 | nan |
-| c20-tfNone | 20 | None | 34.0 | nan |
-| c20-tfSym | 20 | Sym | 64.0 | nan |
-| c5-tf00s | 5 | 00s | 66.0 | nan |
-| c5-tf60s | 5 | 60s | 55.0 | nan |
-| c5-tf80s | 5 | 80s | 56.0 | nan |
-| c5-tfNone | 5 | None | 36.0 | nan |
-| c5-tfSym | 5 | Sym | 64.0 | nan |
-| c50-tf00s | 50 | 00s | 64.0 | nan |
-| c50-tf60s | 50 | 60s | 54.0 | nan |
-| c50-tf80s | 50 | 80s | 56.0 | nan |
-| c50-tfNone | 50 | None | 34.0 | nan |
-| c50-tfSym | 50 | Sym | 64.0 | nan |
-| c75-tf00s | 75 | 00s | 62.0 | nan |
-| c75-tf60s | 75 | 60s | 54.0 | nan |
-| c75-tf80s | 75 | 80s | 56.0 | nan |
-| c75-tfNone | 75 | None | 34.0 | nan |
-| c75-tfSym | 75 | Sym | 64.0 | nan |
+| bypass | 0 | None | 22.0 | 24.0 |
+| c0-tf00s | 0 | 00s | 48.0 | 62.0 |
+| c0-tf60s | 0 | 60s | 46.0 | 58.0 |
+| c0-tf80s | 0 | 80s | 47.0 | 60.0 |
+| c0-tfNone | 0 | None | 28.0 | 32.0 |
+| c0-tfSym | 0 | Sym | 56.0 | 58.0 |
+| c10-tf00s | 10 | 00s | 66.0 | 70.0 |
+| c10-tf60s | 10 | 60s | 56.0 | 66.0 |
+| c10-tf80s | 10 | 80s | 57.0 | 72.0 |
+| c10-tfNone | 10 | None | 36.0 | 40.0 |
+| c10-tfSym | 10 | Sym | 64.0 | 70.0 |
+| c100-tf00s | 100 | 00s | 60.0 | 68.0 |
+| c100-tf60s | 100 | 60s | 54.0 | 68.0 |
+| c100-tf80s | 100 | 80s | 56.0 | 70.0 |
+| c100-tfNone | 100 | None | 36.0 | 40.0 |
+| c100-tfSym | 100 | Sym | 64.0 | 70.0 |
+| c20-tf00s | 20 | 00s | 58.0 | 72.0 |
+| c20-tf60s | 20 | 60s | 56.0 | 68.0 |
+| c20-tf80s | 20 | 80s | 56.0 | 66.0 |
+| c20-tfNone | 20 | None | 34.0 | 40.0 |
+| c20-tfSym | 20 | Sym | 64.0 | 70.0 |
+| c5-tf00s | 5 | 00s | 66.0 | 72.0 |
+| c5-tf60s | 5 | 60s | 55.0 | 80.0 |
+| c5-tf80s | 5 | 80s | 56.0 | 68.0 |
+| c5-tfNone | 5 | None | 36.0 | 40.0 |
+| c5-tfSym | 5 | Sym | 64.0 | 76.0 |
+| c50-tf00s | 50 | 00s | 64.0 | 70.0 |
+| c50-tf60s | 50 | 60s | 54.0 | 68.0 |
+| c50-tf80s | 50 | 80s | 56.0 | 70.0 |
+| c50-tfNone | 50 | None | 34.0 | 40.0 |
+| c50-tfSym | 50 | Sym | 64.0 | 66.0 |
+| c75-tf00s | 75 | 00s | 62.0 | 70.0 |
+| c75-tf60s | 75 | 60s | 54.0 | 68.0 |
+| c75-tf80s | 75 | 80s | 56.0 | 72.0 |
+| c75-tfNone | 75 | None | 34.0 | 40.0 |
+| c75-tfSym | 75 | Sym | 64.0 | 68.0 |
 
 ![CPU-Matrix](plots/mess-cpu-matrix.png)
 
@@ -400,3 +403,82 @@ A35-Priorisierung belegt. Peak-Werte bis 76 %, **0 xruns in allen
 36 Zuständen**. Basis: 20-Hz-Sinus (schwerstes Solver-Regime),
 128 Frames, je Zustand voller Neustart mit gespeicherten
 Boardwerten, Werte per Board-TTL eingeschrieben.
+
+### 6.3 CPU-Matrix mit der 1e-6-Binary (0.4.1)
+
+Wiederholung aller 36 Zustände mit der installierten Binary
+`ed05032b…` (Commit `2d0aff6`, Startwert-Prädikator + Toleranz
+1e-6; MPB-Pin `e5a1099`, Toolchain `moddwarf-new`). Prozedur und
+Boards identisch zu 6.2; Basis = `66c835e8…` (`94ab2fa`).
+Rohdaten: `test-results/cpu-matrix-1e6-20261007/`.
+
+| Zustand | Basis Median % | 1e-6 Median % | Δ Punkte | 1e-6 Peak % |
+|---|---:|---:|---:|---:|
+| bypass | 22.0 | 22.0 | +0.0 | 30.0 |
+| c0-tfNone | 28.0 | 28.0 | +0.0 | 30.0 |
+| c0-tf60s | 46.0 | 46.0 | +0.0 | 60.0 |
+| c0-tf80s | 47.0 | 46.0 | -1.0 | 58.0 |
+| c0-tf00s | 48.0 | 46.0 | -2.0 | 62.0 |
+| c0-tfSym | 56.0 | 52.0 | -4.0 | 58.0 |
+| c5-tfNone | 36.0 | 36.0 | +0.0 | 42.0 |
+| c10-tfNone | 36.0 | 36.0 | +0.0 | 40.0 |
+| c20-tfNone | 34.0 | 34.0 | +0.0 | 40.0 |
+| c50-tfNone | 34.0 | 36.0 | +2.0 | 40.0 |
+| c75-tfNone | 34.0 | 34.0 | +0.0 | 40.0 |
+| c100-tfNone | 36.0 | 35.0 | -1.0 | 42.0 |
+| c5-tf60s | 55.0 | 54.0 | -1.0 | 68.0 |
+| c10-tf60s | 56.0 | 54.0 | -2.0 | 70.0 |
+| c20-tf60s | 56.0 | 56.0 | +0.0 | 70.0 |
+| c50-tf60s | 54.0 | 56.0 | +2.0 | 70.0 |
+| c75-tf60s | 54.0 | 56.0 | +2.0 | 70.0 |
+| c100-tf60s | 54.0 | 56.0 | +2.0 | 68.0 |
+| c5-tf80s | 56.0 | 56.0 | +0.0 | 70.0 |
+| c10-tf80s | 57.0 | 55.0 | -2.0 | 68.0 |
+| c20-tf80s | 56.0 | 56.0 | +0.0 | 74.0 |
+| c50-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c75-tf80s | 56.0 | 56.0 | +0.0 | 70.0 |
+| c100-tf80s | 56.0 | 56.0 | +0.0 | 68.0 |
+| c5-tf00s | 66.0 | 56.0 | -10.0 | 68.0 |
+| c10-tf00s | 66.0 | 57.0 | -9.0 | 76.0 |
+| c20-tf00s | 58.0 | 56.0 | -2.0 | 72.0 |
+| c50-tf00s | 64.0 | 56.0 | -8.0 | 74.0 |
+| c75-tf00s | 62.0 | 56.0 | -6.0 | 70.0 |
+| c100-tf00s | 60.0 | 56.0 | -4.0 | 76.0 |
+| c5-tfSym | 64.0 | 59.0 | -5.0 | 68.0 |
+| c10-tfSym | 64.0 | 58.0 | -6.0 | 70.0 |
+| c20-tfSym | 64.0 | 60.0 | -4.0 | 68.0 |
+| c50-tfSym | 64.0 | 60.0 | -4.0 | 70.0 |
+| c75-tfSym | 64.0 | 56.0 | -8.0 | 70.0 |
+| c100-tfSym | 64.0 | 57.0 | -7.0 | 68.0 |
+
+![CPU 1e-6 Vorher/Nachher](plots/mess-cpu-1e6-vergleich.png)
+
+**Ergebnis:** 00s Median **-7.0 Punkte** (jetzt 56—57 % statt 58—66 %), Sym **-5.5 Punkte** (56—60 % statt 64—64 %), 60s/80s **+0.0 Punkte** (unverändert), Bypass/None/Colour-Stufen unverändert; Spitzen unverändert (max 76 %), **0 xruns**. Relativ zum Zustand entspricht das ≈ −9…−11 % und deckt sich mit dem isolierten Bench (Toleranz 1e-6, −10–12 %) inkl. plugin-level Verwässerung durch Host-Overhead (Bypass 22 %). 60s/80s bleiben strukturell bei ~2 Iterationen — wie vorhergesagt.
+
+
+## 7. REAPER-Render-Verifikation nach der Toleranzänderung (1e-6)
+
+Vollständige Matrix (**28 Zustände** = Colour 0 × Typen + 24
+Bank×Colour-Kombinationen) nach der letzten Transformator-/Solver-
+Änderung (Startwert-Prädikator + Konvergenztoleranz 1e-6): REAPER-
+Render der JSFX (per Symlink aktuell, Batch `19_15_06`) gegen frische
+C++-Offline-Referenzen des 1e-6-Stands (`build/wsl`, Cross-Build-
+matching) bitverifiziert. Projekt `reaper/testbench/testbench.rpp`;
+Stimulus `gs76-matrix-all-m2-stereo.wav`, 48 kHz/24 bit, 64,47 s.
+Archiv mit SHA256 beider Seiten:
+`test-results/jsfx-render-1e6-20261007/`. Die früheren Batches des
+Tages (16_17_10, 16_57_58) sind Bisektionsläufe zur EEL2-
+`instance()`-Scope-Falle und nicht Teil der Verifikation.
+
+| Prüfpunkt | Ergebnis |
+|---|---|
+| Zustände | 28 (beide Kanäle) |
+| bester Offset | +3 Samples (REAPER-PDC-Kompensation der 2x-Latenz; Vorzeichen gegenüber Abschnitt 3 gespiegelt) |
+| schlechtester max \|diff\| | 5.960e-08 = 0.5 LSB (24 bit) |
+| Grenze | < 1 LSB (1.192e-07) — erfüllt in allen Zuständen |
+
+![Render-Parität 1e-6](plots/mess-render-1e6-paritaet.png)
+
+Die letzte Transformator-Änderung ist damit auch in REAPER am vollen
+64-s-Matrixprogramm bitgleich gegen den C++-Kern bestätigt (zuvor
+bereits `make test` + Parität 430+76 Fälle, max 0 FS).

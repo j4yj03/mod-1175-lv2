@@ -621,6 +621,18 @@ die tief saturierenden (60s/80s) bleiben bei ~2 (die starke Nichtlinearität
 braucht den zweiten Newton-Schritt). Selbst am Input-Clamp bleibt alles
 ≤ 1,99 Iterationen, 0 xruns.
 
+**Plugin-level-Bestätigung am Gerät (2026-10-07):** die 36-Zustände-CPU-
+Matrix wurde mit der 1e-6-Binary `ed05032b…` (0.4.1, MPB `e5a1099`)
+wiederholt (`test-results/cpu-matrix-1e6-20261007`, MESSERGEBNISSE 6.3):
+00s −7 Punkte Median (56–57 % statt 58–66 %), Sym −5,5 Punkte (56–60 %
+statt 64 %), 60s/80s Δ 0,0, Bypass/None/Colour unverändert, 0 xruns,
+Spitzen unverändert (max 76 %). Relativ zum Zustand ≈ −9…−11 % — der
+isolated-Bench-Wert, am Plugin wie erwartet durch jackd-/Host-Overhead
+(Bypass 22 %) verwässert. Qualitätsseite: 1-%-Anker unverändert, Parität
+430+76 Fälle max 0 FS, REAPER-Vollmatrix (28 Zustände) bitgleich
+(`test-results/jsfx-render-1e6-20261007`); die Benutzer-Hörprobe meldet
+den Unterschied als sehr subtil/erwartungsgemäß unauffällig (EXTERN).
+
 **Rückpfad (falls die Qualitätsshwellen-Entscheidung zurückgenommen wird):**
 - Toleranz: `src/dsp/Transformer.hpp` (process, residual check)
   `1e-6*(1.0+std::abs(x))` → `1e-10*(1.0+std::abs(x))`;

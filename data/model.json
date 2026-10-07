@@ -1,6 +1,5 @@
 {
-  "version": "0.4.1",
-  "revision": 1,
+  "version": "0.4.2",
   "transformer_bank": "data/transformers.json",
   "calibration_status": "Independent 1176-inspired Green Stripe gray-box; not hardware-calibrated",
   "oversampling": 4,
@@ -25,7 +24,7 @@
     16.0
   ],
   "thresholds_dbfs": [
-    -24.0,
+    -25.0,
     -24.0,
     -21.0,
     -19.5,
@@ -33,7 +32,7 @@
     -22.0
   ],
   "knees_db": [
-    6.0,
+    7.5,
     6.0,
     4.0,
     3.0,

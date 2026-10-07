@@ -37,11 +37,6 @@ def eel_number(value):
     return text
 
 
-def version_display(model):
-    """Product version plus the mandatory per-source-change revision counter."""
-    return f'{model["version"]} rev {model["revision"]}'
-
-
 def eel_lookup(name, values):
     # EEL2 globals share one storage pool; an indexed store past a declared array
     # size does not grow the array but overwrites the following variable. The mode
@@ -193,7 +188,7 @@ def metadata(parameters, presets, model):
                                   f'    [ lv2:symbol "{p["symbol"]}"; pset:value {number(values[p["symbol"]])} ]'
                                   for p in controls) + ' .\n')
         files[bundle + f'modgui/icon-{variant}.html'] = gui_html(stereo, parameters,
-                                                                 version_display(model))
+                                                                 model['version'])
     files[bundle + 'manifest.ttl'] = '\n'.join(manifest) + '\n'
     files[bundle + 'modgui.ttl'] = '\n'.join(gui) + '\n'
     files[bundle + 'presets.ttl'] = '\n'.join(preset_text) + '\n'
@@ -207,8 +202,8 @@ def gui_html(stereo, parameters, version):
     oriented Phillips slots. ENGINE carries the unframed product name; the
     knob modules have no headings and share two aligned rows. All knob labels are neutral, and numeric
     values sit in small inset fields. The bypass has no printed caption.
-    The footer plate shows the variant under the product line and the version
-    plus revision below it. No GR or level meters.
+    The footer plate shows the variant under the product line and the product
+    version (revision as third digit) below it. No GR or level meters.
     """
     def spec(symbol):
         return next(p for p in parameters if p['symbol'] == symbol)
@@ -329,7 +324,7 @@ def jsfx_files(parameters, presets, model):
         rpl += ['>', '']
         files[f'jsfx/GreenStripe76-{variant}.rpl'] = '\n'.join(rpl)
         lines = [f'desc:Green Stripe 76 {variant}', 'author:Green Stripe 76 contributors',
-                 f'version:{version_display(model)}', 'tags:dynamics compressor limiter fet',
+                 f'version:{model["version"]}', 'tags:dynamics compressor limiter fet',
                  '// SPDX-License-Identifier: MIT',
                  'options:maxmem=8192 prealloc=8192 gfx_hz=30',
                  'import GreenStripe76-Core.jsfx-inc',
@@ -355,7 +350,7 @@ def jsfx_files(parameters, presets, model):
         lines += ['in_pin:Input L', 'in_pin:Input R', 'out_pin:Output L', 'out_pin:Output R',
                   '', '@init', 'ext_nodenorm=1; ext_tail_size=-1; ext_gr_meter=0;',
                   'gfx_ext_retina=1;', f'gs_stereo={1 if stereo else 0};',
-                  f'#gs_ver="{version_display(model)}";',
+                  f'#gs_ver="{model["version"]}";',
                   'gs_engine.gs_reset(gs_stereo); gs_rate=srate;',
                   'gs_inL.gs_meter_init(); gs_inR.gs_meter_init();',
                   'gs_outL.gs_meter_init(); gs_outR.gs_meter_init();',

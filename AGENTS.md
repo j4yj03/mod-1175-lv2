@@ -54,14 +54,17 @@
   in `tools/requirements-scarlett.txt`. Offline-/Mocktests sind keine Geräteabnahme.
 - Portindizes/-symbole/URIs nicht ohne begründete Versionierung ändern.
 - Kein `-ffast-math`; anfänglich `-ffp-contract=off` für Parität.
-- **Revisionsnummer (verbindlich):** `data/model.json` trägt `version` (Produktstand,
-  z. B. 0.4.1) und `revision` (Änderungszähler). Mit **jeder Sourcecodeänderung**
-  erhöht sich `revision` um **+1**; alle Änderungen zwischen zwei Nutzereingaben
-  gelten dabei als **eine** Sourcecodeänderung (ein Arbeitsblock = eine Revision).
-  Reine Dokumentations-/Messdatenänderungen ohne Codeberührung zählen nicht.
-  Nach dem Bump `tools/generate.py` laufen lassen; die Revision erscheint in der
-  LV2-GUI unter Mono/Stereo (Fußzeilenplatte) und in der JSFX-GFX unten rechts
-  (`#gs_ver`).
+- **Revisionsnummer (verbindlich):** die Revisionsnummer ist die **dritte
+  Stelle der Versionsnummer** in `data/model.json` (`version`, z. B. 0.4.2 =
+  Revision 2); ein separates `revision`-Feld gibt es nicht. Mit **jeder
+  Sourcecodeänderung** erhöht sich die dritte Stelle um **+1**; alle
+  Änderungen zwischen zwei Nutzereingaben gelten dabei als **eine**
+  Sourcecodeänderung (ein Arbeitsblock = eine Revision). Sourcecodeänderung
+  heißt: Dateien unter `src/` oder `jsfx/`. Änderungen an Werkzeugen
+  (`tools/`), Metadaten, GUI-Assets oder Dokumentation zählen **nicht**.
+  Nach dem Bump `tools/generate.py` laufen lassen; die Versionsnummer
+  erscheint in der LV2-GUI unter Mono/Stereo (Fußzeilenplatte, ohne
+  „rev"-Anhang) und in der JSFX-GFX unten rechts (`#gs_ver`).
 - EEL2 `==` vergleicht mit Toleranz; für gleichartige DSP-Zweige `===` nutzen.
   NaN-Sanierung nicht über `(x-x)===0`: x86-EEL behandelt unordered als gleich.
   Vorhandene geordnete Vergleichsfunktion beibehalten und NaN-Test wiederholen.

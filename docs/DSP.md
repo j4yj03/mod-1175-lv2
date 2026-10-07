@@ -264,7 +264,7 @@ AC-/DC-Widerstands-/Diodenblock. Ratio-abhängige T/K-Werte:
 
 | Modus | nominale Ratio | Threshold dBFS am Tap | Knie dB |
 |---|---:|---:|---:|
-| 2 | 2 | −24 | 6 |
+| 2 | 2 | −25 | 7,5 |
 | 4 | 4 | −24 | 6 |
 | 8 | 8 | −21 | 4 |
 | 12 | 12 | −19,5 | 3 |
@@ -470,9 +470,13 @@ Maßgeblicher neuer Befund und nächster Schritt:
 [SPICE-Bericht](QUELLEN.md) und der Abschluss dieses Abschnitts.
 
 Seit 0.3.0 gibt es einen Control-Port `transformer` und ein Dropdown im Panel.
-**Die Auswahl hat derzeit keine Klangwirkung.** Der Wert wird im Parameterpfad
-geführt, von Presets adressiert und im `mod-active`-Zustand gespeichert, ist aber
-noch nicht mit dem Audiopfad verbunden.
+~~**Die Auswahl hat derzeit keine Klangwirkung.**~~ *(Überholt ab 0.4.0: die
+Stufen sind hörbar, geräteverifiziert und bitparitisch — siehe den
+aktuellen Vertrag am Anfang dieses Abschnitts.)* ~~Der Wert wird im
+Parameterpfad geführt, von Presets adressiert und im `mod-active`-Zustand
+gespeichert, ist aber noch nicht mit dem Audiopfad verbunden.~~ *(Seit
+0.4.0 wandert die Stufe mit dem Preset und ist mit dem Audiopfad
+verbunden.)*
 
 ### Auswahl
 
@@ -775,7 +779,7 @@ mit der früheren Fünferliste brauchen eine Kontrolle der Ratio-Auswahl.
 
 | Index | Beschriftung | Verhältnis | Schwelle | Knie |
 |---:|---|---:|---:|---:|
-| 0 | 2:1 | 2,0 | −24 dBFS | 6 dB |
+| 0 | 2:1 | 2,0 | −25 dBFS | 7,5 dB |
 | 1 | 4:1 | 4,0 | −24 dBFS | 6 dB |
 | 2 | 8:1 | 8,0 | −21 dBFS | 4 dB |
 | 3 | 12:1 | 12,0 | −19,5 dBFS | 3 dB |
@@ -783,10 +787,18 @@ mit der früheren Fünferliste brauchen eine Kontrolle der Ratio-Auswahl.
 | 5 | All Buttons | 16,0 | −22 dBFS | 1,5 dB |
 
 `2:1` ist eine bewusste Erweiterung dieses gray-box-Modells, keine
-Hardwareeigenschaft; die Vorlage kennt keinen 2:1-Schalter. Schwelle und Knie
-sind bewusst mit `4:1` identisch, damit der Vergleich nicht durch zwei
-veränderte Größen erschwert wird. Bei festem **Feedback-Tap-Pegel** ist die
-angeforderte dB-GR proportional zu `R−1`, daher 1/3 für 2:1 gegenüber 4:1.
+Hardwareeigenschaft; die Vorlage kennt keinen 2:1-Schalter. ~~Schwelle und
+Knie sind bewusst mit `4:1` identisch, damit der Vergleich nicht durch zwei
+veränderte Größen erschwert wird.~~ *(Seit 0.4.2 hat 2:1 auf
+ausdrücklichen Benutzerauftrag (2026-10-07) eine eigene Kennlinie:
+Schwelle −25 dBFS (früherer Einsatz) und Knie 7,5 dB (breiteres, weicheres
+Knie). Signalbeleg: bei −18 dBFS/1 kHz liegt die mittlere Wet-GR jetzt bei
+2,06 statt bisher 1,56 dB — näher an 4:1 (2,62 dB); bei −12 dBFS Spitzen-GR
+3,45 statt 4,11 dB (31/35-Vergleich, `PRESET_AUDIT.json`).)*
+~~Bei festem **Feedback-Tap-Pegel** ist die angeforderte dB-GR proportional
+zu `R−1`, daher 1/3 für 2:1 gegenüber 4:1.~~ *(Diese 1/3-Relation galt bei
+identischer T/K-Geometrie; seit 0.4.2 nutzt 2:1 eigene Schwelle/Knie, die
+Relation ist daher nur noch näherungsweise.)*
 Das ist **kein** Vergleich bei gleichem Eingang: Der Tap-Pegel ändert sich
 durch die Rückkopplung. Im idealisierten sauberen stationären Bereich oberhalb
 des Knies gilt `GR=(1−1/R)·(L_in−T)`, also dort **2/3** statt 1/3.
@@ -1278,3 +1290,202 @@ nur ihre Begründung als CPU-Gewinn.
 
 Alle Varianten: Quellen- und Herkunftsangaben pflegen, keine
 Thesis-/Messdaten in Pakete, keine Hardwaregleichheits-Behauptungen.
+
+---
+
+# Klangmodell-Verfeinerung und Kennlinien-LUT — Plan (2026-10-07)
+
+**Status: Plan, nicht umgesetzt.** Es wurden keine `src/`-/`jsfx/`-Dateien
+geändert; die Version bleibt **0.4.1**. Klangziel (Benutzerentscheidung
+2026-10-07): **stärkerer, eigenständiger Green-Stripe-Charakter** — Jensen/
+Hammond/de-Paiva und alle Messreihen sind Leitplanken und Validierungswerkzeuge,
+kein Hardwareidentitätsziel. Arbeitsliste: `TODO.md` (Abschnitt
+„Eigenständiger Green-Stripe-Charakter"); Optionenliste und Hörbefund:
+`EXTERN.md`. Vor jeder Laufzeitänderung läuft ein Offline-Kandidatenvergleich.
+
+## Teil A — Klangmodell verfeinern
+
+### Phase 1: Ziel und Referenz festlegen
+
+Der **eigenständige Green-Stripe-Charakter** hat Priorität; Hardwaredaten
+dienen als Orientierung, nicht als Identitätsversprechen. Drei Ziele werden
+**getrennt** behandelt:
+
+1. **Kompressionskennlinie:** Input → stationärer Output/GR je Ratio.
+2. **Zeitverhalten:** Attack, Release, Vorbelastung, programabhängige
+   Erholung.
+3. **Färbung:** Transformer und Colour getrennt von der Regelung.
+
+Die Trennung verhindert, dass beispielsweise Transformator-Klirr
+versehentlich über Threshold oder Release kompensiert wird.
+
+### Phase 2: Mess- und Fitdatensatz erweitern
+
+**Kompressor — pro Ratio inklusive All Buttons:**
+
+- Input-Sweep mit Compression-Off-Referenz.
+- Mindestens 80 Hz, 1 kHz und 10 kHz; ausreichend eingeschwungen.
+- GR, Grundton, H2/H3/H5 separat ausweisen.
+- Attack-Bursts bei mehreren GR-Tiefen.
+- Release nach kurzer und langer Vorbelastung; leiser Carrier während
+  der Erholung.
+- Training und zurückgehaltene Validierungspunkte trennen.
+
+Wichtigster offener Punkt ist die dokumentierte Schwäche beziehungsweise
+ungewöhnliche Reihung ab 8:1 (PluginDoctor-Daten, `EXTERN.md`).
+
+**Transformator — zuerst die fehlende direkte Geräteprüfung:**
+
+- 20-Hz-Pegelreihe um die eigenen Anker −14/−8/−2 dBFS.
+- Zusätzlich 30/50/80/100 Hz; H2/H3/H5, Gain und Phase.
+- Kurze/lange Bassbursts und Wiederanlauf nach Vorbelastung.
+- Colour 0, Compression Off.
+- Zweite Quellen-/Lastbedingung, sobald reale Hardwaremessung möglich ist.
+
+Die 14 Stop-Zweige werden **ohne Minor-Loop-/Transientendaten nicht weiter
+frei gefittet** — ihre fast gleichen Gewichte sind derzeit schwach
+identifiziert (`QUELLEN.md`, Jensen-Fit).
+
+### Phase 3: Kompressionskern verbessern
+
+**Statische Kennlinie:** die festen Threshold-/Knie-/Ratio-Formeln werden
+durch eine kleine, gemessene **Gain-Law-LUT pro Modus** ersetzt; der
+Feedback-Aufbau bleibt erhalten. Die LUT kopiert **nicht** einfach die
+gemessene Input→Output-Kurve: ihre Werte werden offline so optimiert, dass
+der **vollständige geschlossene Feedback-Regelkreis** die gemessene Kurve
+reproduziert.
+
+**Dynamik, danach:**
+
+- Release als zwei gekoppelte Zeitanteile statt nur Einpol + einfachem
+  Memory.
+- Gewichtung abhängig von GR-Tiefe und Vorbelastungsdauer.
+- Attack erst erweitern, wenn Burst-Daten einen systematischen Fehler zeigen.
+- All Buttons mit eigener Kennlinie und eigenen Zeitparametern, nicht nur
+  `12 + 8·memory`.
+
+Die Anzahl zusätzlicher Zustände bleibt auf **zwei** beschränkt, solange
+kein Messdatensatz mehr Freiheitsgrade identifiziert.
+
+### Phase 4: Transformatorwirkung verstärken
+
+Bevorzugter Weg: die bestehende Bank zunächst **unverändert** lassen und
+einen expliziten Parameter **Transformer Drive** anhängen:
+
+$$y = \frac{T(g\,x)}{g}$$
+
+- `g` beispielsweise 0…+12 dB; **Default 0 dB** — bestehende Projekte
+  bleiben klanglich identisch.
+- Die **inverse Kleinsignalkompensation** (`/g`) hält den Pegel in Richtung
+  Kompressor weitgehend stabil.
+- Mehr Sättigung, ohne gleichzeitig über den allgemeinen Input-Regler mehr
+  GR zu erzeugen.
+- `None` bleibt exakt transparent; `Symmetric` bleibt analytische lineare
+  Prüfreferenz.
+- Neuer Port bedeutet Produktversion **0.5.0**.
+
+Damit wird der Charakter dosierbar, ohne die bereits bestätigten Profile
+still umzudefinieren.
+
+**Erst danach** einen neuen Bank-Refit prüfen:
+
+- stärkere Variante durch **negativere** THD-Anker (frühere Sättigung;
+  eine Verschiebung Richtung +dBFS würde schwächen).
+- LF-Kopplung und HF-Verlauf bewusst getrennt fitten.
+- H2/Asymmetrie nur bei Messbeleg.
+- HF-Surrogat langfristig durch ein lastabhängiges Ersatznetz ersetzen.
+- **Keine** Colour×Transformer-Kopplung; beide Pfade bleiben unabhängig
+  prüfbar.
+
+## Teil B — Kennlinien-LUT anlegen
+
+### 1. Empfohlen: kleine Gain-Law-LUT
+
+Eine Tabelle je diskretem Ratio-Modus:
+
+```text
+Achse:   over_db = detector_db - threshold_db
+Bereich: etwa -12 … +48 dB
+Schritt: 0,25 dB
+Tabellen: 2:1, 4:1, 8:1, 12:1, 20:1, All
+Wert:    gewünschte Feedback-Abschwächung in dB
+```
+
+Das ergibt etwa 241 × 6 double-Werte, rund **12 KiB**.
+
+Laufzeit:
+
+```text
+index     = floor((over_db - min_db) * inv_step)
+fraction  = (over_db - min_db) * inv_step - index
+desired_db = y[index] + fraction * (y[index+1] - y[index])
+slope      = (y[index+1] - y[index]) * inv_step
+```
+
+Die Intervallsteigung ersetzt im impliziten Solver den heutigen Ausdruck
+aus Ratio und `kneeSlope()` — Newton-Schritt und LUT bleiben so
+mathematisch konsistent.
+
+**Eigenschaften:**
+
+- unter dem unteren Tabellenende exakt 0 dB GR;
+- oberhalb linear fortsetzen und bei 60 dB begrenzen;
+- keine Interpolation zwischen Ratio-Tasten;
+- All Buttons erhält eine eigene Tabelle;
+- 2:1 bleibt eigene Green-Stripe-Erweiterung;
+- monotone lineare Interpolation, keine kubischen Überschwinger;
+- Werte aus einer normativen JSON-Datei generieren (`tools/generate.py`);
+- C++ als konstante Arrays;
+- EEL2 über reservierten `gs_alloc`-Speicher, nicht über riskante globale
+  Arrays;
+- dieselbe Index- und Interpolationsreihenfolge in beiden Engines.
+
+### 2. Optional: LUT für `TransformerCore::law()`
+
+Nur sinnvoll, wenn eine gemessene oder neu gefittete Magnetisierungskurve
+die heutigen Potenz-/Fröhlich-Familien ersetzen soll. Tabelliert wird
+
+$$f(u), \qquad u=\frac{|\lambda|}{\lambda_\text{scale}},$$
+
+mit
+
+$$i(\lambda)=\operatorname{sgn}(\lambda)\,
+\frac{\lambda_\text{scale}}{L_m}f(u),
+\qquad
+\frac{di}{d\lambda}=\frac{f'(u)}{L_m}.$$
+
+**Wichtig:**
+
+- nur drei nichtlineare Profile; `Symmetric` analytisch direkt lösen;
+- Odd-Symmetrie exakt per Betrag/Vorzeichen;
+- Werte **und konsistente Steigung** bereitstellen;
+- monotone Hermite-Interpolation oder lineare Interpolation mit exakt
+  daraus abgeleiteter Steigung;
+- dichter Bereich um das Knie;
+- Tabellenbereich erst aus realen Trajektorien und Extremtests bestimmen;
+- außerhalb **niemals klemmen**: analytischer Fallback oder C¹-passende
+  Hochfeldfortsetzung;
+- Stop-/Hysteresezustände bleiben separat — sie sind nicht statisch
+  tabellierbar;
+- Startgröße etwa 257 Punkte × 3 Profile × Wert+Steigung ≈ **12 KiB**;
+- vor Übernahme ein **A35-Microbenchmark**, denn p=3/p=5 sind derzeit sehr
+  billig und ein Cachezugriff kann langsamer sein.
+
+### 3. Nicht erneut verfolgen
+
+**Vollständige `fet()`-LUT — weiterhin verworfen:**
+
+- drei kontinuierliche Achsen (input, charge, curvature) plus zwei
+  Polaritätstabellen;
+- 16,7 MiB verfehlen das Fehlerziel 10⁻⁴;
+- rund 264,8 MiB nötig für <10⁻⁴;
+- für A35-Cache und EEL2 ungeeignet.
+
+Die bessere Lösung ist die kleine Gain-Law-LUT; der vorhandene FET-Divider
+bleibt analytisch.
+
+**`softClip()`-LUT — technisch möglich, aber nicht sinnvoll:**
+
+- 1025 log-Stützpunkte: 16 KiB, Fehler 2,84×10⁻⁵;
+- auf x86 bereits langsamer als die analytische Padé-Funktion;
+- kein Klanggewinn, solange nur dieselbe Kurve approximiert wird.

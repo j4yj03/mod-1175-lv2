@@ -689,9 +689,11 @@ Werte zeigen starken Anstieg ab ~-15 dB bis 0 dB; Peak-GR liegt um 8:1, nicht be
 # PluginDoctor GR vs DSP-Modell
 
 ## Modellparameter (data/model.json)
+*(Stand 0.4.2; 2:1 seit 0.4.2 mit −25 dBFS/7,5 dB auf Benutzerauftrag.)*
+
 | Ratio | Mode | Ratio (linear) | Threshold (dBFS) | Knee (dB) |
 |---|---:|---:|---:|---:|
-| 2:1 | 0 | 2.0 | -24.0 | 6.0 |
+| 2:1 | 0 | 2.0 | -25.0 | 7.5 |
 | 4:1 | 1 | 4.0 | -24.0 | 6.0 |
 | 8:1 | 2 | 8.0 | -21.0 | 4.0 |
 | 12:1 | 3 | 12.0 | -19.5 | 3.0 |
@@ -699,10 +701,10 @@ Werte zeigen starken Anstieg ab ~-15 dB bis 0 dB; Peak-GR liegt um 8:1, nicht be
 | All Buttons | 5 | 16.0 | -22.0 | 1.5 |
 
 ## Messwerte PluginDoctor (GR = Input - Output, Transfer-In→Out)
-Siehe Tabelle oben; Max-GR bei 0 dB In: 8:1 ~18.4 dB, 12:1 ~17.9 dB, 20:1 ~17.1 dB (abnehmend).
+Siehe Tabelle oben; Max-GR bei 0 dB In: 8:1 ~18.4 dB, 12:1 ~17.9 dB, 20:1 ~17.1 dB (abnehmend). *(Werte vor der 2:1-Änderung 0.4.2 gemessen; 2:1 selbst ist dort nicht aufgeführt.)*
 
 ## Interpretation
-- Knee wird kleiner (6→1.5), Threshold steigt (-24→-18) für höhere Ratio-Modi – das reduziert die effektive Kompression über weiten Pegelbereich (harder knee + höherer Threshold → späterer, schärferer aber begrenzter Übergriff).
+- ~~Knee wird kleiner (6→1.5), Threshold steigt (-24→-18) für höhere Ratio-Modi~~ *(seit 0.4.2: Knee fällt 7,5→1,5, Threshold steigt −25→−18)* – das reduziert die effektive Kompression über weiten Pegelbereich (harder knee + höherer Threshold → späterer, schärferer aber begrenzter Übergriff); 2:1 bildet mit breitem Knie und frühester Schwelle den weichen Gegpol.
 - "All Buttons" (Mode 5) hat Ratio 16.0, sehr schmaler Knee 1.5, Threshold -22 – Verhalten zwischen 8:1 und 12:1, Peak-GR ~19.2 dB.
 - Ab 8:1 steigt Threshold und sinkt Knee sukzessive – konsistent mit beobachteter Abnahme der Max-GR ab 8:1 (Messung). Das ist **modellseitig beabsichtigt** (nicht notwendigerweise klassisches FET-Hard-Knee aller Modi).
 
@@ -835,8 +837,8 @@ und Hörabgleich. Alle genannten GR-Ziele beziehen sich auf den Wet-Pfad.
 | 34 Synth Lead Sustain | 4:1/3/5,5 und 85 % Mix passen zu Sustain; Delay/Reverb-Routing beeinflusst Pumpen. |
 | 35 Stereo Bus Subtle | Niedrige Anregung, 40 % Mix/Colour, Link und None bleiben erhalten; zusätzliche 2:1-Variante unter 38. |
 | 36 Mix Bus Light Glue | 4:1 bleibt wegen des ausdrücklichen Quellenbezugs. 1–2 dB Wet-GR wird über Input eingestellt, nicht über Mix; Notiz korrigiert. |
-| 37 Piano Gentle 2:1 | Neu: bis auf Ratio identisch mit 31; Ziel 1–2 dB Wet-GR. Bei derselben Probe ca. 3,96 statt 6,04 dB Spitzen-GR, Input weiterhin abstimmen. |
-| 38 Stereo Bus Subtle 2:1 | Neu: bis auf Ratio identisch mit 35; Ziel 0–2 dB Wet-GR. Bei derselben Probe ca. 2,62 statt 4,11 dB Spitzen-GR. |
+| 37 Piano Gentle 2:1 | Neu: bis auf Ratio identisch mit 31; Ziel 1–2 dB Wet-GR. Bei derselben Probe ca. 3,96 statt 6,04 dB Spitzen-GR, Input weiterhin abstimmen. *(Spitzen-GR-Zahlen vor der 2:1-Kennlinienänderung 0.4.2 gemessen.)* |
+| 38 Stereo Bus Subtle 2:1 | Neu: bis auf Ratio identisch mit 35; Ziel 0–2 dB Wet-GR. Bei derselben Probe ca. 2,62 statt 4,11 dB Spitzen-GR. *(Mit der 0.4.2-Kennlinie (−25 dBFS/7,5 dB) jetzt ca. 3,45 statt 4,11 dB Spitzen-GR bei −12 dBFS/1 kHz; `PRESET_AUDIT.json`.)* |
 
 ## 3. Zwei umgesetzte 2:1-Erweiterungen
 
@@ -867,12 +869,17 @@ dem Preset-Input-Gain. Kein Nachregeln von Input/Output in dieser Messung.
 
 | Preset | Eingang Peak | 4:1 GR | 2:1 GR |
 |---|---:|---:|---:|
-| 31 Piano Gentle | −18 dBFS | 2,6181 dB | 1,5566 dB |
-| 31 Piano Gentle | −12 dBFS | 6,6720 dB | 4,4165 dB |
-| 31 Piano Gentle | −6 dBFS | 11,1249 dB | 7,3967 dB |
-| 35 Stereo Bus Subtle | −18 dBFS | 0,9560 dB | 0,4930 dB |
-| 35 Stereo Bus Subtle | −12 dBFS | 4,5981 dB | 2,9496 dB |
-| 35 Stereo Bus Subtle | −6 dBFS | 8,9146 dB | 5,9342 dB |
+| 31 Piano Gentle | −18 dBFS | 2,6181 dB | 2,0573 dB |
+| 31 Piano Gentle | −12 dBFS | 6,6720 dB | 4,9126 dB |
+| 31 Piano Gentle | −6 dBFS | 11,1249 dB | 7,8949 dB |
+| 35 Stereo Bus Subtle | −18 dBFS | 0,9560 dB | 0,9292 dB |
+| 35 Stereo Bus Subtle | −12 dBFS | 4,5981 dB | 3,4487 dB |
+| 35 Stereo Bus Subtle | −6 dBFS | 8,9146 dB | 6,4327 dB |
+
+*(2:1-Spalte mit der Kennlinie seit 0.4.2 gemessen — Schwelle −25 dBFS,
+Knie 7,5 dB auf ausdrücklichen Benutzerauftrag; die alten Werte 1,5566/4,4165/
+7,3967 und 0,4930/2,9496/5,9342 gelten für die frühere −24/6-Kennlinie.
+4:1 unverändert. Quelle: `PRESET_AUDIT.json`.)*
 
 2:1 regelt in diesen Fällen weniger, aber weder allgemein halb so stark noch
 allgemein ein Drittel so stark. Die frühere Drittel-Aussage verwechselte
@@ -962,3 +969,76 @@ nicht direkt gemessen (die Gerätesserie kennt nur −2 dBFS bei 20 Hz);
 die Bit-Parität Render↔Gerät macht das indirekt belegt. Eine direkte
 Messung würde eine 20-Hz-Pegelreihe bei −14/−8/−2 dBFS am Gerät brauchen
 (Stimuluserweiterung, nächste Runde).
+
+# Hörprobe Solver 1e-6 und Optionen zur Verstärkung der Transformatorwirkung — 2026-10-07
+
+## Was „Lösungsfehler ≈ −120 dB" bedeutet
+
+Der implizite Feedback-Regler löst je Probe eine nichtlineare Gleichung mit
+Newton/Bisektion; die **Konvergenztoleranz** (jetzt 1e-6 **relativ**) sagt,
+wann der Solver abbricht. Der verbleibende **Lösungsfehler** — der Abstand
+zwischen der gelieferten und der exakten Lösung — ist dann höchstens von der
+Größenordnung der Toleranz relativ zum Signal: 1e-6 ⇒ 20·log10(1e-6) =
+**−120 dB** unter dem Signal. Das liegt unter dem 24-bit-LSB bei
+Normalpegel (−144 dBFS Vollskala; bei −24-dBFS-Signalen ist ein LSB ≈
+−120 dB relativ) und weit unter jeder Hör- oder Messschwelle. Konkret: die
+Toleranzänderung 1e-10 → 1e-6 spart Iterationen (CPU), kann aber aus
+mathematischen Gründen keinen hörbaren Unterschied erzeugen — die
+nachfolgenden Messungen (Parität bitgleich, Anker unverändert) und die
+Hörprobe bestätigen genau das.
+
+**Präzisierung (2026-10-07):** −120 dB beschreibt die Größenordnung des
+Solver-**Residuums** relativ zur gelösten Größe. Das ist keine formale
+globale Garantie für jeden nachgelagerten Audiofehler — der Rückkopplungs-
+regelkreis trägt Zustände weiter, und Rundungseffekte bleiben. Deshalb
+sind die eigentlichen Nachweise die Messreihen (Bit-Parität, Anker,
+Geräte-CPU-Matrix), nicht die dB-Angabe allein.
+
+## Hörprobe (Benutzer, 2026-10-07)
+
+Der Benutzer hat den 1e-6-Stand gehört: der Unterschied ist **sehr subtil**
+— erwartungsgemäß, denn der numerische Effekt liegt bei ≈ −120 dB. Damit
+ist die **1e-6-Qualitätsentscheidung bestätigt**; der Offen-Punkt im TODO
+ist damit abgeschlossen. Formalform: benutzerberichtete Hörprobe, kein
+kontrollierter ABX-Lauf; für die Qualitätssentscheidung tragen die
+Messnachweise (Bit-Parität, Anker, CPU-Matrix), für die Höranwendung die
+Benutzerbewertung.
+
+## Optionen zur Verstärkung der Transformatorwirkung (Vorschläge, nicht freigegeben)
+
+Die Transformator-/Colour-Wirkung ist im Hörvergleich subtil. Möglichkeiten,
+den hörbaren Charakter zu verstärken — **jede Variante ist eine
+Modell-/Bankänderung mit vollem Zyklus** (C++/EEL2 gemeinsam, generate.py,
+Parität, Übergangstests, Geräte-/Hörprüfung, dokumentierte Bankrevision);
+Empfehlungen allein sind keine Freigabe zur Bank-Neuabstimmung (AGENTS):
+
+1. **Anker tiefer legen (Bank-Refit):** die 1-%-Klirranker der Profile
+   **negativ verschieben** — von −14/−8/−2 dBFS auf z. B. −20/−14/−8 dBFS
+   (60s/80s/00s). Negativere Anker bedeuten frühere/stärkere Sättigung bei
+   typischen Arbeitspegeln; eine Verschiebung Richtung +dBFS (z. B.
+   −8/−2/+4) würde die Wirkung **schwächen** (ursprüngliche Formulierung
+   hier war richtungsverkehrt, 2026-10-07 korrigiert). Direktwirksam; macht
+   aber die bestehenden Geräteanker-/Referenzvergleiche ungültig
+   (Erneuerung der Matrix).
+2. **Koppelungsverluste betonen:** stärkere bassseitige Absenkung und mehr
+   HF-Roll-off (20 kHz) — der „Transformator-Fingerabdruck" auf Bass und
+   Hochton wird hörbarer, ohne den Klirr zu erhöhen.
+3. **Asymmetrie/Bias-Anteil:** zusätzlicher geradharmonischer Anteil (H2)
+   für Wärme. Modelländerung; die konsistente Übertrager-Netzform ist
+   zuerst zu klären (QUELLEN, SPICE-Befund), sonst ist der Fit
+   unphysikalisch.
+4. **Härtere Sättigung (höheres n):** steilere Kennlinie oberhalb des
+   Knies; keine zusätzliche Klemme (Vertrag, Skill). Hörbar vor allem bei
+   Drums/Bass.
+5. **Eigener Intensitätsregler (Drive/Amount):** neuer angehängter Port
+   (Versionierung ⇒ 0.5.0), der den Drive in die Transformatorstufe skaliert
+   (mit Lautstärke-Kompensation dahinter). Der Benutzer kann die Wirkung
+   dann selbst dosieren, ohne dass die Bank neu abgestimmt wird; Aufwand:
+   Port-Dreieck (LV2/JSFX/RPL) + Parität + Geräte-CPU.
+6. **Colour×Transformer-Kopplung:** bewusst **nicht** empfohlen — beide
+   Pfade sind einzeln am Gerät exakt validiert und bitgleich; eine Kopplung
+   würde den belegten Stand zerlegen.
+
+Reihenfolge-Empfehlung: erst 1 oder 2 (Bank-Refit mit neuen Referenzdaten,
+dokumentierte Revision), Option 5 parallel als Bedienbarkeitsoption
+prüfen; 3 erst nach der SPICE-Netzformklärung.

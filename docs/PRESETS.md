@@ -310,14 +310,14 @@ Anregungen: PENNY, BLACKBIRD.
 
 ## 37 Piano Gentle 2:1
 
-Neue eigene 2:1-Variante von Preset 31, ansonsten identische Startwerte. Weniger Verdichtung für natürliche Anschläge; im 1-kHz-Vergleich bei −18 dBFS Peak ca. 1,56 statt 2,62 dB mittlere Wet-GR. Das ist ein Signalbeleg, kein Piano-Hörtest. Input an die Aufnahme anpassen und Output neu pegelgleichen.
+Neue eigene 2:1-Variante von Preset 31, ansonsten identische Startwerte. Weniger Verdichtung für natürliche Anschläge; im 1-kHz-Vergleich bei −18 dBFS Peak ca. 2,06 statt 2,62 dB mittlere Wet-GR (Messung 0.4.2; die 2:1-Kennlinie hat seit 0.4.2 −25 dBFS Schwelle und 7,5 dB Knie, vorher 1,56 dB). Das ist ein Signalbeleg, kein Piano-Hörtest. Input an die Aufnahme anpassen und Output neu pegelgleichen.
 
 Transformator: None.
 Anregungen: Eigener musikalischer Startpunkt.
 
 ## 38 Stereo Bus Subtle 2:1
 
-Neue eigene 2:1-Variante von Preset 35, ansonsten identische Startwerte. Sanfte Stereo-Verdichtung; bei −18 dBFS Peak im 1-kHz-Test ca. 0,49 statt 0,96 dB mittlere Wet-GR. Link On erhält gemeinsame Regelung. Mix dosiert den Effekt, nicht die interne GR; Musik-/Geräteabnahme offen.
+Neue eigene 2:1-Variante von Preset 35, ansonsten identische Startwerte. Sanfte Stereo-Verdichtung; bei −18 dBFS Peak im 1-kHz-Test ca. 0,93 statt 0,96 dB mittlere Wet-GR, bei −12 dBFS ca. 3,45 statt 4,11 dB Spitzen-GR (Messung 0.4.2; die 2:1-Kennlinie hat seit 0.4.2 −25 dBFS Schwelle und 7,5 dB Knie). Link On erhält gemeinsame Regelung. Mix dosiert den Effekt, nicht die interne GR; Musik-/Geräteabnahme offen.
 
 Transformator: None.
 Anregungen: Eigener musikalischer Startpunkt.

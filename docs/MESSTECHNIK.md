@@ -898,6 +898,26 @@ der gemessene Zustand ist das eingeschriebene Board.
   das schwere Regime — Worstcase-Marge, nicht Programm-Mittel.
 - Details/Rohdaten: `test-results/cpu-matrix-dwarf/MANIFEST.md`.
 
+## 1g. Wiederholungen mit der 1e-6-Binary (2026-10-07, gültig)
+
+Zwei Serien mit der Binary `ed05032b…` (Commit `2d0aff6`, **0.4.1**,
+MPB-Pin `e5a1099`), Prozedur identisch zu 1c/1f:
+
+- **REAPER-JSFX-Renders, Vollmatrix 28 Zustände** (Batch `19_15_06`):
+  alle Zustände gegen frische C++-Referenzen des 1e-6-Stands bitgleich
+  (Offset +3 Samples = REAPER-PDC, schlechtester max|diff| 5,96×10⁻⁸ =
+  0,5 LSB). Die früheren Batches 16_17_10/16_57_58 sind Bisektionsläufe zur
+  EEL2-`instance()`-Scope-Falle und nicht Teil der Verifikation. Details:
+  `test-results/jsfx-render-1e6-20261007/MANIFEST.md`, MESSERGEBNISSE 7.
+- **CPU-Matrix 36 Zustände:** 00s −7 Punkte Median, Sym −5,5 Punkte,
+  60s/80s/Bypass/None unverändert, 0 xruns — relativ ≈ −9…−11 %, konsistent
+  mit dem isolierten Bench (PERFORMANCE, Toleranz 1e-6). Details:
+  `test-results/cpu-matrix-1e6-20261007/MANIFEST.md`, MESSERGEBNISSE 6.3.
+
+Install-Verifikation je Serie (SHA256 + Bundle-Generation per
+`0.4.1` im modgui-HTML) ausgeführt; Audio-Stack nach dem Binary-
+Austausch vollständig neu gestartet.
+
 ## 2. Systemvoraussetzungen (Windows, nativ)
 
 - Python nativ (nicht WSL): `python -m pip install -r tools/requirements-scarlett.txt`.

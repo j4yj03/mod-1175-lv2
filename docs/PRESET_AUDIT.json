@@ -1,5 +1,5 @@
 {
-  "version": "0.4.1",
+  "version": "0.4.2",
   "rate": 48000,
   "frames": 57600,
   "bank_states": 76,
@@ -13,15 +13,15 @@
   ],
   "gr_definition": "FET gain reduction before Mix; excludes transformer/amplifier loss",
   "limitation": "Synthetic engineering review, not music listening or universal target-GR validation; output peaks use this fixture only",
-  "probe_sha256": "9bff0671a500e54c2076f15e66d41ac7a9c5bd71409c240333718ee5e9f4442b",
+  "probe_sha256": "86cbc34120ebe17f9f08cee98694f97346d1eed5438b92d4ce83ada891dfa970",
   "source_sha256": {
-    "data/presets.json": "23f670c7261b2ebb86f3992e346d97d93018b63fc3d00383af4b5e8930bb39b3",
+    "data/presets.json": "fb534d292eb7a96fcbb30a9eeddcd9e13db576707c0b4a405eea8d41379579e3",
     "data/parameters.json": "6f8ba43aea440a578e436aff9233c477fe65fe475dbf29425f4eec90667437aa",
-    "data/model.json": "3bcea49fb3ead1dd0951170c39ea6f200d13025f448c3398375b9de565e098e3",
+    "data/model.json": "4f25b52b180003901535200df7f334bd144589772bad5dfcf2cb505f6e45d27f",
     "data/transformers.json": "00e8514d00ac02fc9dc48f60f17376bb9cfb7b1fa26596f1d307591e2b84182f",
-    "src/dsp/GreenStripe.hpp": "27ea6b27e5f226d18eb91879c88b6d29e375f2a5405e96309fe11303cfbbdda1",
-    "src/dsp/Transformer.hpp": "646cf12d3b149135828b4811c9898ca095c15ab341c931d11384f9ce69ee4555",
-    "src/dsp/ModelConstants.hpp": "adf40fd764f87c2d654e4183022ac7b2429ecd569084fb8b13d811795215b46b",
+    "src/dsp/GreenStripe.hpp": "aefabcf0409fb264736905356e07e8f9a1ed3e04b40007f099f49f7fb8a1a5f1",
+    "src/dsp/Transformer.hpp": "605a0f29ce73e9ac58eaa6b93f41568f49ee967b786a40faadcead2229b43d94",
+    "src/dsp/ModelConstants.hpp": "0054320e57203c2fb4aa7e6ff82706b27d416a889bafefde14e078b32d821cfb",
     "src/dsp/TransformerModels.hpp": "cb1d09050ef6b5dfda42a80eba8de0660b880f48e782ff0c03e7997def2fbfbe",
     "jsfx/GreenStripe76-Core.jsfx-inc": "ce010de3a9e086ddda489a095bdb1707040a8d94a73bd863619e5284795b9424",
     "tests/jsfx_parity.cpp": "2b8de309beb7a1b96bcd797b32a5f3776ad3fdab2b4ab700112054ef84a572cc",
@@ -762,10 +762,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.2480708659527651,
+      "output_peak_fs": 0.24806970738856998,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.2045970062049785
+      "rms_gain_db": -0.20459395201556121
     },
     {
       "preset": "11 Guitar Colour Only",
@@ -774,10 +774,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.24848312502437656,
+      "output_peak_fs": 0.24848297843542688,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.20007459994487262
+      "rms_gain_db": -0.2000781727702397
     },
     {
       "preset": "11 Guitar Colour Only",
@@ -786,10 +786,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.24745883193738077,
+      "output_peak_fs": 0.2467333088558593,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.19896690336720566
+      "rms_gain_db": -0.19720857431564082
     },
     {
       "preset": "11 Guitar Colour Only",
@@ -798,10 +798,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.2480708659527651,
+      "output_peak_fs": 0.24806970738856998,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.2045970062049785
+      "rms_gain_db": -0.20459395201556121
     },
     {
       "preset": "11 Guitar Colour Only",
@@ -810,10 +810,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.24848312502437656,
+      "output_peak_fs": 0.24848297843542688,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.20007459994487262
+      "rms_gain_db": -0.2000781727702397
     },
     {
       "preset": "11 Guitar Colour Only",
@@ -822,10 +822,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.24745883193738077,
+      "output_peak_fs": 0.2467333088558593,
       "peak_gr_db": 0.0,
       "mean_gr_db": 0.0,
-      "rms_gain_db": -0.19896690336720566
+      "rms_gain_db": -0.19720857431564082
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -834,10 +834,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.12623109933895044,
-      "peak_gr_db": 13.594436982991072,
-      "mean_gr_db": 13.411286524917777,
-      "rms_gain_db": -5.944564678906414
+      "output_peak_fs": 0.12623115322746342,
+      "peak_gr_db": 13.594433947150467,
+      "mean_gr_db": 13.41128828124181,
+      "rms_gain_db": -5.9445642311918405
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -846,10 +846,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.12643083102574243,
-      "peak_gr_db": 13.609003910138858,
-      "mean_gr_db": 13.424269232141492,
-      "rms_gain_db": -5.9476872483190855
+      "output_peak_fs": 0.1264309835599276,
+      "peak_gr_db": 13.608962766215267,
+      "mean_gr_db": 13.424269281289408,
+      "rms_gain_db": -5.947687514842607
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -858,10 +858,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.12658410480717477,
-      "peak_gr_db": 13.61664384891758,
-      "mean_gr_db": 13.43037545607875,
-      "rms_gain_db": -5.95050768432322
+      "output_peak_fs": 0.12661819111924755,
+      "peak_gr_db": 13.608952003724797,
+      "mean_gr_db": 13.43205330847359,
+      "rms_gain_db": -5.951231646482086
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -870,10 +870,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.1262310491742298,
-      "peak_gr_db": 13.594437648638834,
-      "mean_gr_db": 13.411286601966781,
-      "rms_gain_db": -5.944564711200875
+      "output_peak_fs": 0.12623110305686544,
+      "peak_gr_db": 13.594434612884479,
+      "mean_gr_db": 13.41128835830089,
+      "rms_gain_db": -5.944564263490505
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -882,10 +882,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.1264305146146671,
-      "peak_gr_db": 13.609004363425214,
-      "mean_gr_db": 13.424269282368806,
-      "rms_gain_db": -5.947687269326664
+      "output_peak_fs": 0.1264306671532614,
+      "peak_gr_db": 13.608963219505915,
+      "mean_gr_db": 13.424269331516285,
+      "rms_gain_db": -5.9476875358500605
     },
     {
       "preset": "12 Vintage Blue Grit",
@@ -894,10 +894,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.12658381790845896,
-      "peak_gr_db": 13.616644153617278,
-      "mean_gr_db": 13.430375498277233,
-      "rms_gain_db": -5.950507702073972
+      "output_peak_fs": 0.12661789820933933,
+      "peak_gr_db": 13.608952326707566,
+      "mean_gr_db": 13.432053351605498,
+      "rms_gain_db": -5.951231664618389
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -906,10 +906,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.12316943431224767,
-      "peak_gr_db": 20.057523842103127,
-      "mean_gr_db": 19.57974359187033,
-      "rms_gain_db": -6.089105373406664
+      "output_peak_fs": 0.12316943786214482,
+      "peak_gr_db": 20.057524563150047,
+      "mean_gr_db": 19.579743910228455,
+      "rms_gain_db": -6.0891053412819485
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -918,10 +918,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.1233359175664184,
-      "peak_gr_db": 20.072169935845015,
-      "mean_gr_db": 19.60013075466053,
-      "rms_gain_db": -6.093726722927297
+      "output_peak_fs": 0.12333591052866572,
+      "peak_gr_db": 20.072193652164597,
+      "mean_gr_db": 19.60013049990662,
+      "rms_gain_db": -6.093726960495958
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -930,10 +930,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.12349997882434877,
-      "peak_gr_db": 20.085267380636065,
-      "mean_gr_db": 19.613690697257105,
-      "rms_gain_db": -6.097336496028741
+      "output_peak_fs": 0.12349346816626823,
+      "peak_gr_db": 20.094618589685055,
+      "mean_gr_db": 19.613923836439668,
+      "rms_gain_db": -6.097356807782854
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -942,10 +942,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.12316943432378263,
-      "peak_gr_db": 20.057523929583034,
-      "mean_gr_db": 19.579743636210104,
-      "rms_gain_db": -6.089105384185963
+      "output_peak_fs": 0.12316943787367998,
+      "peak_gr_db": 20.05752465063179,
+      "mean_gr_db": 19.57974395456939,
+      "rms_gain_db": -6.089105352061484
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -954,10 +954,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.12333591758009885,
-      "peak_gr_db": 20.07216998515577,
-      "mean_gr_db": 19.60013078601775,
-      "rms_gain_db": -6.0937267305802
+      "output_peak_fs": 0.1233359105423463,
+      "peak_gr_db": 20.07219370147585,
+      "mean_gr_db": 19.600130531264107,
+      "rms_gain_db": -6.093726968148948
     },
     {
       "preset": "13 Guitar Cruncher",
@@ -966,10 +966,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.12349981112236794,
-      "peak_gr_db": 20.08526742085014,
-      "mean_gr_db": 19.61369073232641,
-      "rms_gain_db": -6.097336504536774
+      "output_peak_fs": 0.12349330033485,
+      "peak_gr_db": 20.09461862992934,
+      "mean_gr_db": 19.613923871537146,
+      "rms_gain_db": -6.097356816298349
     },
     {
       "preset": "14 Acoustic Strum",
@@ -1338,10 +1338,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.11173779605152906,
-      "peak_gr_db": 15.567353564358418,
-      "mean_gr_db": 15.038730309525869,
-      "rms_gain_db": -6.878667667807492
+      "output_peak_fs": 0.11173770944861358,
+      "peak_gr_db": 15.567359579634271,
+      "mean_gr_db": 15.038730881323554,
+      "rms_gain_db": -6.878667596095376
     },
     {
       "preset": "19 Bass Mojo Bite",
@@ -1350,10 +1350,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.11197885333969604,
-      "peak_gr_db": 15.616441752228582,
-      "mean_gr_db": 15.061612025046195,
-      "rms_gain_db": -6.887009852064491
+      "output_peak_fs": 0.11197885001418287,
+      "peak_gr_db": 15.616424236356428,
+      "mean_gr_db": 15.061611985108263,
+      "rms_gain_db": -6.887010066876488
     },
     {
       "preset": "19 Bass Mojo Bite",
@@ -1362,10 +1362,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.11209111678413161,
-      "peak_gr_db": 15.635928874589176,
-      "mean_gr_db": 15.076471421084744,
-      "rms_gain_db": -6.893065112800697
+      "output_peak_fs": 0.11212504041832605,
+      "peak_gr_db": 15.630135256578562,
+      "mean_gr_db": 15.075316858854691,
+      "rms_gain_db": -6.895306340523021
     },
     {
       "preset": "19 Bass Mojo Bite",
@@ -1374,10 +1374,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.11173671003127902,
-      "peak_gr_db": 15.567353740011862,
-      "mean_gr_db": 15.03873036211341,
-      "rms_gain_db": -6.878667687696975
+      "output_peak_fs": 0.11173662337673029,
+      "peak_gr_db": 15.567359755296101,
+      "mean_gr_db": 15.038730933913785,
+      "rms_gain_db": -6.878667615985858
     },
     {
       "preset": "19 Bass Mojo Bite",
@@ -1386,10 +1386,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.1119780191912695,
-      "peak_gr_db": 15.6164418176695,
-      "mean_gr_db": 15.06161206409215,
-      "rms_gain_db": -6.887009866892564
+      "output_peak_fs": 0.11197801571782656,
+      "peak_gr_db": 15.61642430181088,
+      "mean_gr_db": 15.061612024161947,
+      "rms_gain_db": -6.887010081707492
     },
     {
       "preset": "19 Bass Mojo Bite",
@@ -1398,10 +1398,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.1120903352107881,
-      "peak_gr_db": 15.63592893533404,
-      "mean_gr_db": 15.076471455296465,
-      "rms_gain_db": -6.89306512580039
+      "output_peak_fs": 0.11212425906466203,
+      "peak_gr_db": 15.630135317646342,
+      "mean_gr_db": 15.075316893087953,
+      "rms_gain_db": -6.895306353536476
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1410,10 +1410,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10123879911245315,
-      "peak_gr_db": 14.483242293328784,
-      "mean_gr_db": 14.292629636832523,
-      "rms_gain_db": -7.884451888906384
+      "output_peak_fs": 0.10123859711720265,
+      "peak_gr_db": 14.483239977100675,
+      "mean_gr_db": 14.292629851757082,
+      "rms_gain_db": -7.8844517275129515
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1422,10 +1422,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10141682638304624,
-      "peak_gr_db": 14.49735681543659,
-      "mean_gr_db": 14.302803274020267,
-      "rms_gain_db": -7.8883009190419076
+      "output_peak_fs": 0.10139567132242172,
+      "peak_gr_db": 14.497243810721764,
+      "mean_gr_db": 14.302696545595154,
+      "rms_gain_db": -7.8885422625882935
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1434,10 +1434,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10141897778621614,
-      "peak_gr_db": 14.50435175634461,
-      "mean_gr_db": 14.308533426491941,
-      "rms_gain_db": -7.891085388410653
+      "output_peak_fs": 0.10140214974376888,
+      "peak_gr_db": 14.504888423530577,
+      "mean_gr_db": 14.30856046734912,
+      "rms_gain_db": -7.891322404156882
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1446,10 +1446,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10123162974886604,
-      "peak_gr_db": 14.483242976175585,
-      "mean_gr_db": 14.292629713969719,
-      "rms_gain_db": -7.884451938863375
+      "output_peak_fs": 0.10123142761526982,
+      "peak_gr_db": 14.483240659959721,
+      "mean_gr_db": 14.29262992889567,
+      "rms_gain_db": -7.884451777470872
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1458,10 +1458,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10141874006712469,
-      "peak_gr_db": 14.497357223006574,
-      "mean_gr_db": 14.302803328602526,
-      "rms_gain_db": -7.888300954311502
+      "output_peak_fs": 0.10139758783365097,
+      "peak_gr_db": 14.49724421891106,
+      "mean_gr_db": 14.302696600263932,
+      "rms_gain_db": -7.888542297914234
     },
     {
       "preset": "20 Huge Sub Weight",
@@ -1470,10 +1470,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 2,
-      "output_peak_fs": 0.10142072259091767,
-      "peak_gr_db": 14.504352093423154,
-      "mean_gr_db": 14.308533472775206,
-      "rms_gain_db": -7.891085418468461
+      "output_peak_fs": 0.10140389322134888,
+      "peak_gr_db": 14.504888760343487,
+      "mean_gr_db": 14.30856051361017,
+      "rms_gain_db": -7.891322434201423
     },
     {
       "preset": "21 Kick Weight",
@@ -1698,10 +1698,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.1926425831589114,
-      "peak_gr_db": 12.922221724972577,
-      "mean_gr_db": 12.551585986020909,
-      "rms_gain_db": -2.2943556427335086
+      "output_peak_fs": 0.19264257783337202,
+      "peak_gr_db": 12.922208434875277,
+      "mean_gr_db": 12.551587016211034,
+      "rms_gain_db": -2.2943555992730187
     },
     {
       "preset": "24 Snare Saturated Parallel",
@@ -1710,10 +1710,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.19270298357691334,
-      "peak_gr_db": 12.932531375456737,
-      "mean_gr_db": 12.561587449765895,
-      "rms_gain_db": -2.2945551517897593
+      "output_peak_fs": 0.19270298013930054,
+      "peak_gr_db": 12.93251241969229,
+      "mean_gr_db": 12.561585971997845,
+      "rms_gain_db": -2.294555323575745
     },
     {
       "preset": "24 Snare Saturated Parallel",
@@ -1722,10 +1722,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.19267737083581832,
-      "peak_gr_db": 12.93779206765165,
-      "mean_gr_db": 12.56633700092168,
-      "rms_gain_db": -2.2949639082436035
+      "output_peak_fs": 0.19268318041818688,
+      "peak_gr_db": 12.937203889139358,
+      "mean_gr_db": 12.565788462410229,
+      "rms_gain_db": -2.295566103817421
     },
     {
       "preset": "24 Snare Saturated Parallel",
@@ -1734,10 +1734,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.19264258308744406,
-      "peak_gr_db": 12.922226940515328,
-      "mean_gr_db": 12.55158625239159,
-      "rms_gain_db": -2.294355664764301
+      "output_peak_fs": 0.19264257776189378,
+      "peak_gr_db": 12.922213651201771,
+      "mean_gr_db": 12.551587282621815,
+      "rms_gain_db": -2.294355621307158
     },
     {
       "preset": "24 Snare Saturated Parallel",
@@ -1746,10 +1746,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.1927029843222848,
-      "peak_gr_db": 12.932535664994992,
-      "mean_gr_db": 12.56158766670706,
-      "rms_gain_db": -2.2945551696912703
+      "output_peak_fs": 0.19270298088435123,
+      "peak_gr_db": 12.932516707824643,
+      "mean_gr_db": 12.56158618888458,
+      "rms_gain_db": -2.2945553414727344
     },
     {
       "preset": "24 Snare Saturated Parallel",
@@ -1758,10 +1758,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 1,
-      "output_peak_fs": 0.19267726593898327,
-      "peak_gr_db": 12.937796062225125,
-      "mean_gr_db": 12.566337210049323,
-      "rms_gain_db": -2.2949639255031054
+      "output_peak_fs": 0.1926830755001483,
+      "peak_gr_db": 12.937207885628304,
+      "mean_gr_db": 12.565788671212415,
+      "rms_gain_db": -2.295566121026967
     },
     {
       "preset": "25 Toms Body",
@@ -2634,10 +2634,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.1797151888519139,
-      "peak_gr_db": 3.962319617053542,
-      "mean_gr_db": 3.9259547360983507,
-      "rms_gain_db": -3.1085091987684343
+      "output_peak_fs": 0.17536919619532487,
+      "peak_gr_db": 4.449059722773973,
+      "mean_gr_db": 4.409288510305143,
+      "rms_gain_db": -3.3121821607956328
     },
     {
       "preset": "37 Piano Gentle 2:1",
@@ -2646,10 +2646,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.17909515573241852,
-      "peak_gr_db": 3.964299794715356,
-      "mean_gr_db": 3.9277091348339823,
-      "rms_gain_db": -3.108235642323115
+      "output_peak_fs": 0.1747576434387216,
+      "peak_gr_db": 4.450697290753098,
+      "mean_gr_db": 4.41116001002677,
+      "rms_gain_db": -3.3119491703097554
     },
     {
       "preset": "37 Piano Gentle 2:1",
@@ -2658,10 +2658,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.17843385689454214,
-      "peak_gr_db": 3.965160215926218,
-      "mean_gr_db": 3.92893670560611,
-      "rms_gain_db": -3.108636543102612
+      "output_peak_fs": 0.1741152210253001,
+      "peak_gr_db": 4.451811038018275,
+      "mean_gr_db": 4.412326983294048,
+      "rms_gain_db": -3.3123152912734435
     },
     {
       "preset": "37 Piano Gentle 2:1",
@@ -2670,10 +2670,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.17965620043316222,
-      "peak_gr_db": 3.9623196463646844,
-      "mean_gr_db": 3.925954858687969,
-      "rms_gain_db": -3.1085092506259278
+      "output_peak_fs": 0.17520813415141406,
+      "peak_gr_db": 4.4490597875326605,
+      "mean_gr_db": 4.409288785072738,
+      "rms_gain_db": -3.3121822731874007
     },
     {
       "preset": "37 Piano Gentle 2:1",
@@ -2682,10 +2682,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.1790459286721921,
-      "peak_gr_db": 3.964299857902484,
-      "mean_gr_db": 3.927709228910494,
-      "rms_gain_db": -3.1082356820778525
+      "output_peak_fs": 0.17461220654028503,
+      "peak_gr_db": 4.450697447374796,
+      "mean_gr_db": 4.411160239616717,
+      "rms_gain_db": -3.3119492642110995
     },
     {
       "preset": "37 Piano Gentle 2:1",
@@ -2694,10 +2694,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.17838964493313586,
-      "peak_gr_db": 3.965160273194718,
-      "mean_gr_db": 3.9289367922652727,
-      "rms_gain_db": -3.1086365797517774
+      "output_peak_fs": 0.1739743871936934,
+      "peak_gr_db": 4.451811186541965,
+      "mean_gr_db": 4.412327208737175,
+      "rms_gain_db": -3.312315383540681
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2706,10 +2706,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.19270157371731877,
-      "peak_gr_db": 2.6209442988118825,
-      "mean_gr_db": 2.588866686794053,
-      "rms_gain_db": -2.3261601594573285
+      "output_peak_fs": 0.19039491222293198,
+      "peak_gr_db": 3.106581536185437,
+      "mean_gr_db": 3.0725059021638326,
+      "rms_gain_db": -2.428280842670895
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2718,10 +2718,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.19218195170143854,
-      "peak_gr_db": 2.6200397609209856,
-      "mean_gr_db": 2.5902109522661663,
-      "rms_gain_db": -2.325884038832705
+      "output_peak_fs": 0.18993187361349753,
+      "peak_gr_db": 3.10614808636048,
+      "mean_gr_db": 3.074167862721114,
+      "rms_gain_db": -2.42806735298198
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2730,10 +2730,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.19205224204894678,
-      "peak_gr_db": 2.62165580381636,
-      "mean_gr_db": 2.591424562024001,
-      "rms_gain_db": -2.326196376915069
+      "output_peak_fs": 0.18980614991750464,
+      "peak_gr_db": 3.107646167054244,
+      "mean_gr_db": 3.075149838510855,
+      "rms_gain_db": -2.428324411747739
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2742,10 +2742,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.192701384124323,
-      "peak_gr_db": 2.6209443003799593,
-      "mean_gr_db": 2.5888666900093527,
-      "rms_gain_db": -2.3261601601440125
+      "output_peak_fs": 0.19039378396830867,
+      "peak_gr_db": 3.1065815492119806,
+      "mean_gr_db": 3.072505927495237,
+      "rms_gain_db": -2.4282808478490865
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2754,10 +2754,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.19218195160334953,
-      "peak_gr_db": 2.6200397621752995,
-      "mean_gr_db": 2.5902109548395957,
-      "rms_gain_db": -2.3258840393823257
+      "output_peak_fs": 0.18993187301494435,
+      "peak_gr_db": 3.1061480951599676,
+      "mean_gr_db": 3.074167880054532,
+      "rms_gain_db": -2.4280673565200344
     },
     {
       "preset": "38 Stereo Bus Subtle 2:1",
@@ -2766,10 +2766,10 @@
       "fixture": 0,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.19205224194173942,
-      "peak_gr_db": 2.621655805181651,
-      "mean_gr_db": 2.5914245647966268,
-      "rms_gain_db": -2.3261963775071095
+      "output_peak_fs": 0.1898061493238412,
+      "peak_gr_db": 3.1076461757139113,
+      "mean_gr_db": 3.075149855838231,
+      "rms_gain_db": -2.428324415286069
     },
     {
       "preset": "31 Piano Gentle",
@@ -2790,10 +2790,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -18,
       "ratio_index": 0,
-      "output_peak_fs": 0.10860892098649107,
-      "peak_gr_db": 1.5576270498641298,
-      "mean_gr_db": 1.556648031679271,
-      "rms_gain_db": -1.9593044994405284
+      "output_peak_fs": 0.10789548636965755,
+      "peak_gr_db": 2.0584950374310265,
+      "mean_gr_db": 2.0572528769823633,
+      "rms_gain_db": -2.2052301379344126
     },
     {
       "preset": "31 Piano Gentle",
@@ -2814,10 +2814,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.20577069834521755,
-      "peak_gr_db": 4.41868924604145,
-      "mean_gr_db": 4.416484305685843,
-      "rms_gain_db": -3.270054865094835
+      "output_peak_fs": 0.2035234263924225,
+      "peak_gr_db": 4.914952725979329,
+      "mean_gr_db": 4.912592867923917,
+      "rms_gain_db": -3.473285248614668
     },
     {
       "preset": "31 Piano Gentle",
@@ -2838,10 +2838,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -6,
       "ratio_index": 0,
-      "output_peak_fs": 0.3800791046696731,
-      "peak_gr_db": 7.399623536801833,
-      "mean_gr_db": 7.396676769084179,
-      "rms_gain_db": -4.394048319564837
+      "output_peak_fs": 0.37447159325650253,
+      "peak_gr_db": 7.897946528569856,
+      "mean_gr_db": 7.894913536138712,
+      "rms_gain_db": -4.558131793819095
     },
     {
       "preset": "35 Stereo Bus Subtle",
@@ -2862,10 +2862,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -18,
       "ratio_index": 0,
-      "output_peak_fs": 0.10362271380855549,
-      "peak_gr_db": 0.493332680053013,
-      "mean_gr_db": 0.4930460179607392,
-      "rms_gain_db": -1.8045924748999194
+      "output_peak_fs": 0.10333137342593278,
+      "peak_gr_db": 0.929701723425309,
+      "mean_gr_db": 0.9292270438324721,
+      "rms_gain_db": -1.916497066968304
     },
     {
       "preset": "35 Stereo Bus Subtle",
@@ -2886,10 +2886,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -12,
       "ratio_index": 0,
-      "output_peak_fs": 0.20249116233058248,
-      "peak_gr_db": 2.950836935689256,
-      "mean_gr_db": 2.9495633845930627,
-      "rms_gain_db": -2.383291576533963
+      "output_peak_fs": 0.20134110416950324,
+      "peak_gr_db": 3.450106643710384,
+      "mean_gr_db": 3.448675581390643,
+      "rms_gain_db": -2.4859507826462464
     },
     {
       "preset": "35 Stereo Bus Subtle",
@@ -2910,10 +2910,10 @@
       "fixture": 1,
       "input_peak_bound_dbfs": -6,
       "ratio_index": 0,
-      "output_peak_fs": 0.3885244620291537,
-      "peak_gr_db": 5.936233736204238,
-      "mean_gr_db": 5.934205687771846,
-      "rms_gain_db": -2.9327335113216426
+      "output_peak_fs": 0.3856206266696295,
+      "peak_gr_db": 6.434779100721845,
+      "mean_gr_db": 6.4326620273315696,
+      "rms_gain_db": -3.0099866617315274
     }
   ]
 }
