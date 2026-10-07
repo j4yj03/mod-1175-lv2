@@ -724,6 +724,14 @@ idealerweise mit `desc.txt`; sie sind nicht im Plugin-Paket.
 6. Instrumentpreset am Slider wählen oder im normalen Presetmenü die passende
    `.rpl`-Bibliothek importieren.
 
+Alternative auf dem Entwicklungsrechner: `jsfx/make-reaper-links.cmd`
+ausführen (Rechtsklick → „Als Administrator ausführen"; `mklink` braucht
+Adminrechte bzw. den Windows-Entwicklermodus). Das Skript setzt für alle
+Dateien in `jsfx/` Windows-Symlinks nach `%APPDATA%\REAPER\Effects\GreenStripe`
+und legt den Ordner bei Bedarf an. Inhaltsänderungen laufen über die Symlinks
+automatisch mit; bei neuen, umbenannten oder gelöschten Dateien das Skript
+erneut ausführen. Hinweis dazu auch in der README im Zielordner.
+
 Keine separate SWS-/ReaPack-/NAM-/JUCE-Installation nötig. Includes müssen neben
 den Hauptdateien liegen. Auf der Stereo-Version ist Link sichtbar; Mono zeigt
 ihn nicht und verarbeitet nur linken Input.

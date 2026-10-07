@@ -209,6 +209,11 @@ Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).
 - [x] README-Verzeichnisse auf ersten beiden Stufen erstellt (2026-10-07):
   data/, docs/, jsfx/, lv2/, packaging/, reaper/, src/, test-results/, tests/,
   tools/ mit Kurzübersicht; Haupt-README nach der benannten Struktur.
+- [x] REAPER-JSFX per Symlink installierbar (2026-10-07): `jsfx/make-reaper-links.cmd`
+  (Admin/UAC) setzt Links für alle jsfx-Dateien nach
+  `%APPDATA%\REAPER\Effects\GreenStripe`; README dort weist darauf hin, die
+  Links nach neuen/umbenannten/gelöschten Dateien zu erneuern. Erste Ausführung
+  durch den Benutzer zu prüfen.
 
 ## Erledigt (zur Erinnerung, nicht mehr offen)
 
