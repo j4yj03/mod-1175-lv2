@@ -202,6 +202,27 @@ Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).
 
 ## Offen — Projektinfrastruktur
 
+## Ausstehende Verifikationen — Solver-Stand 1e-6 (2026-10-07)
+
+Der Solver-Stand (Prädikator + Toleranz 1e-6, Commits `fc1f083`/`3c26259`)
+ist getestet (make test + Parität 430+76, max 0 FS, 1-%-Anker unverändert)
+und gepusht; Pin zeigt darauf. Offen in dieser Reihenfolge:
+
+- [ ] MPB-Build des 1e-6-Stands installieren, **SHA ≠ `66c835e8`** auf dem
+  Gerät verifizieren, Audio-Stack neu starten.
+- [ ] REAPER-Renders (JSFX ist per Symlink aktuell): 28 Zustände
+  (Colour 0 × Typen + 24 Kombinationen) — die Bit-Verifikation läuft gegen
+  die fertigen C++-Referenzen (1e-6, Cross-Build-matching,
+  `/tmp/opencode/ref1e6` bzw. neu erzeugen).
+- [ ] CPU-Matrix (36 Zustände) mit der 1e-6-Binary neu fahren und gegen die
+  94ab2fa-Basis vergleichen; Erwartung: 00s/Sym −10–12 %, 60s/80s ~0.
+- [ ] `tools/render_jsfx.cpp` (ysfx-Offline-Renderer, Alternative zu den
+  REAPER-Renders): der WAV-Schreibfehler war das fehlende
+  Ausgabeverzeichnis — mkdir ergänzen und gegen eine REAPER-Render
+  bitverifizieren; ysfx ist der gepinnte Referenz-Host.
+- [ ] 1e-6-Qualitätsentscheidung final bestätigen (Lösungsfehler ≈ −120 dB;
+  Hörprobe optional).
+
 - [x] Dwarf-GUI: Logo-Renderfix auf dem Gerät verifiziert (2026-10-07):
   Screenshot aus der installierten Bundle-GUI per SSH gezogen — Logo weiß auf
   dem grünen ENGINE-Feld, Paneel vollständig; `.mk`-Pin folgt dem HEAD.

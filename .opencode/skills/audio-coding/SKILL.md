@@ -461,6 +461,88 @@ geführt, wo sie wirklich stattgefunden haben.
   dominieren; OS multipliziert. Hebel-Skizze (paritätsneutral →
   Paritätspreis → Vertragsfragen) in TODO, Abschnitt CPU-Reduktion.
 
+### Remote-Betrieb, Solver-Änderungen und EEL2-Scope-Fallen (2026-10-07, spät)
+
+**SSH ohne Passwortinteraktion (öffnet die Gerätetest-Automatisierung):**
+OpenSSH ≥ 8.4 erlaubt `SSH_ASKPASS_REQUIRE=force` mit einem Mini-askpass
+(`echo mod`) — kein sshpass/expect nötig. Damit: Bench pushen/ausführen,
+Screenshots der installierten GUI ziehen (Sichtprüfung remote möglich!),
+`sha256sum` verifizieren. Achtung: der Erfolgs-Check eines Push-Loops muss
+auf die Erfolgszeile matchen — die Fehlerzeile `! [remote rejected] main ->
+main` enthält ebenfalls „main -> main". GitHub kann pushes zeitweise mit
+`Internal Server Error` ablehnen (Retry-Loop, `git fsck` prüfen).
+
+**EEL2-Instanz-Scope (kritische Falle, hat eine volle Render-Serie
+verursacht):** `instance()`-Listen binden Variablennamen pro Objekt; eine
+Funktion, die eine Objektvariable ansieht, muss sie in ihrer eigenen
+`instance()`-Liste deklarieren — sonst resolved EEL2 den Namen auf die
+GLOBALE Variable (stiller Korruption, kein Crash). Konkret: der
+konvergierte Zustands-Commit in `gs_xf_core` schrieb `stops[j]`, ohne
+`stops` zu binden (das Array lebt in `gs_xf_init` per `gs_alloc`);
+`gs_xf_current` bindet es korrekt — der Alt-Code fasste `stops` in
+`gs_xf_core` nie direkt an. Symptom-Muster: C++↔EEL2 auf den
+Paritätssignalen bitgleich, das volle Programm weicht erst ab der ersten
+breitbandigen Transiente. Debug-Reihenfolge: erste Divergenzstelle
+lokalisieren (Sample-Index → Stimulus-Regime), dann C++-alt /
+C++-neu / EEL2-neu getrennt rendern und gegen die Referenzen stellen —
+die Trennung EEL2-gegen-C++ vor der Mikrosuche im Code.
+
+**Commit-Hygiene bei Bisektionen:** die Bisektionsvariante darf nie im
+Commit landen. Der MPB-Build-Log entlarvt den committierten Stand:
+`warning: variable 'converged' set but not used` hieß, der Sparpfad fehlte
+im gebauten Code. Vor jedem Pin-Bump: `git show HEAD:<datei>` gegen die
+beabsichtigte Fassung prüfen. Und: **Install-Verifikation** — die
+Geräte-SHA256 nach jedem Install prüfen (ein Install griff einmal nicht,
+die Datei blieb wochenalt); der `.mk`-Pin muss den Code-Commit enthalten
+(Pin-Commit NACH dem Code-Commit pushen).
+
+**CPU-Matrix per Boardkopien (robuste Methodik):** 36 Boardverzeichnisse
+mit eingeschriebenen Werten (Template mit Transformer-Port aus der
+bestehenden RPP, SWH-Oszillator 20 Hz als Signalquelle — schwerstes
+Solver-Regime), je Zustand `last.json` + voller Neustart (Controlchain
+übernimmt last.json erst beim Vollstart), Warten auf das Plugin-Mapping in
+`/proc/*/maps`, dann `dwarf_loadtest.py --expect-instances 1`. Die Werte
+stehen in der Board-TTL — der gemessene Zustand ist das eingeschriebene
+Board. `load.json` auf dem Gerät akkumuliert Bedingungen über Läufe — die
+Auswertung nimmt je Label den letzten Eintrag; zwei Serien in einer Datei
+= zwei Binaries (an den SHA-Klassen erkennen).
+
+**Solver-Optimierung: messen vor dem Umbauen.** Die TODO-Schätzung
+„Stop-Zweige 30–50 %" war um den Faktor 20 daneben (12/13 Zweige klemmen
+nie — Diagnosezähler je Zweig + Extremreizen bis zum Input-Clamp ±256 FS);
+die „finale Doppel-Auswertung" hatte der Compiler bei −O3 bereits
+eliminiert (~0 % gemessen). Der wirksame Hebel war die Konvergenztoleranz
+(1e-14 → 1e-6 relativ, Lösung ≈ −120 dB): die sauberen Profile (00s/Sym)
+fallen auf ~1,5 Iterationen (−10–12 % CPU), die tief saturierenden
+(60s/80s) bleiben bei ~2 — die Iterationszahl ist strukturell gebunden
+(quadratische Konvergenz, die Quellstufe des neuen Samples ist a-priori
+unbekannt). Bench mit `-DGS76_TRANSFORMER_STATS` meldet Iter/Probe direkt —
+Kandidaten am Gerät gegeneinander messen, nicht theoretisieren.
+`transformer_bench`-Semantik: `--channels` war invertiert (1=stereo —
+gefixt), `--oversampling` nimmt den Wert (1=2x, 2=4x).
+
+**Cross-Toolchain ohne root:** `apt-get download <paket>` + `dpkg-deb -x`
++ `LD_LIBRARY_PATH` auf die privaten binutils-Libs
+(`libopcodes-2.38-arm64.so` aus x86_64-linux-gnu) — aarch64-GCC ohne
+Installation. Statisch linken (`-static`) umgibt den
+glibc-Symbolfloor-Zielsystem-Vorlauf; die Zahlen sind dann
+Compiler-spezifisch (nicht MPB-komparabel) — Vorher/Nachher nur mit
+demselben Compiler.
+
+**ysfx als Offline-Renderer (Alternative zu REAPER-Renders):** der
+gepinnte Fork rendert JSFX offline — `ysfx_slider_set_value(fx, index,
+value, notify)` ist 0-basiert (sliderN → index N−1), Stereo muss in EINEM
+`ysfx_process_float`-Aufruf laufen (Channel-Pointer-Arrays; getrennte
+L/R-Aufrufe brechen Stereo Link). Ausgabeverzeichnis anlegen (fopen
+schweigt sonst mit „WAV-Schreibfehler"). Der Host ist der gepinnte
+Referenzstand des Projekts (QUELLEN); REAPER-Engine-Äquivalenz wurde am
+vollen Programm bitweise bestätigt.
+
+**Markdown-Konsolidierung bei widerlegten Aussagen:** refutierte/veraltete
+Passagen werden ~~durchgestrichen~~ (nicht gelöscht) und direkt durch den
+Messbefund mit Datum ersetzt — die Widerlegung bleibt lesbar, der
+Dokumentenstand bleibt current.
+
 ### Dwarf als Signalquelle (2026-10-07)
 
 - Der Dwarf spielt die Testtöne selbst (File-Player → GS76 → DAC → Scarlett-ADC
