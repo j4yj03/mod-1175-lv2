@@ -6,6 +6,8 @@ struct TransformerCoefficients {
     const transformer_model::Profile* p;
     double h, ra, denominator, relaxation, weights[14], memoryBound;
     double a1, a2, b0, b1, outputScale;
+    double inv_lm_h, inv_relax_l_h, inv_relax_den, inv_den;
+    double hf_knee, hf_fk, hf_sk, hf_target, hf_width;
     static double cosine(double x) {
         // Initialization only; identical fixed operation order in EEL2.
         const double x2 = x*x;
@@ -51,6 +53,19 @@ struct TransformerCoefficients {
         b0 = 0.5*(sum+std::sqrt(std::max(0.0,sum*sum-4.0*product)));
         b1 = sum-b0;
         outputScale = p->load_resistance_ohm/rb*p->fixed_output_normalization/p->source_volts_per_fs;
+        inv_lm_h = 1.0/p->lm_h;
+        inv_relax_l_h = 1.0/p->relax_l_h;
+        inv_relax_den = 1.0/((1.0+relaxation)*p->relax_l_h);
+        inv_den = 1.0/denominator;
+        hf_knee = hf_fk = hf_sk = hf_target = hf_width = 0.0;
+        if (p->family==1) {
+            hf_knee = 0.98*p->flux_scale_vs;
+            hf_fk = hf_knee*(1.0+p->saturation_strength*0.98/0.02)/p->lm_h;
+            hf_sk = (1.0+p->saturation_strength*0.98/0.02+
+                p->saturation_strength*0.98/(0.02*0.02))/p->lm_h;
+            hf_target = 1.0/(p->lm_h*p->high_field_l_ratio);
+            hf_width = std::max(0.000001,p->flux_scale_vs*0.01);
+        }
     }
 };
 
@@ -87,41 +102,37 @@ struct TransformerCore {
         stats.clear();
 #endif
     }
-    static double law(double x, const transformer_model::Profile& p, double& slope) {
+    static double law(double x, const TransformerCoefficients& c, double& slope) {
+        const transformer_model::Profile& p=*c.p;
         if (p.saturation_strength==0.0) {
-            slope=1.0/p.lm_h;
-            return x/p.lm_h;
+            slope=c.inv_lm_h;
+            return x*c.inv_lm_h;
         }
         const double u=std::abs(x)/p.flux_scale_vs;
         if (p.family==1) {
             if (u>0.98) {
-                const double knee=0.98*p.flux_scale_vs;
-                const double fk=knee*(1.0+p.saturation_strength*0.98/0.02)/p.lm_h;
-                const double sk=(1.0+p.saturation_strength*0.98/0.02+
-                    p.saturation_strength*0.98/(0.02*0.02))/p.lm_h;
-                const double target=1.0/(p.lm_h*p.high_field_l_ratio);
-                const double width=std::max(0.000001,p.flux_scale_vs*0.01);
-                const double delta=std::abs(x)-knee;
-                const double e=seriesExp(-std::min(60.0,delta/width));
-                slope=target+(sk-target)*e;
-                const double value=fk+target*delta+(sk-target)*width*(1.0-e);
+                const double delta=std::abs(x)-c.hf_knee;
+                const double e=seriesExp(-std::min(60.0,delta/c.hf_width));
+                slope=c.hf_target+(c.hf_sk-c.hf_target)*e;
+                const double value=c.hf_fk+c.hf_target*delta+
+                    (c.hf_sk-c.hf_target)*c.hf_width*(1.0-e);
                 return x>=0 ? value : -value;
             }
             const double d=1.0-u;
-            slope=(1.0+p.saturation_strength*u/d+p.saturation_strength*u/(d*d))/p.lm_h;
-            return x*(1.0+p.saturation_strength*u/d)/p.lm_h;
+            slope=(1.0+p.saturation_strength*u/d+p.saturation_strength*u/(d*d))*c.inv_lm_h;
+            return x*(1.0+p.saturation_strength*u/d)*c.inv_lm_h;
         }
         double nonlinear=1;
         for (unsigned i=1; i<static_cast<unsigned>(p.exponent); ++i) nonlinear*=u;
         nonlinear*=p.saturation_strength;
-        slope=(1.0+p.exponent*nonlinear)/p.lm_h;
-        return x*(1.0+nonlinear)/p.lm_h;
+        slope=(1.0+p.exponent*nonlinear)*c.inv_lm_h;
+        return x*(1.0+nonlinear)*c.inv_lm_h;
     }
     double current(double x, const TransformerCoefficients& c, double& derivative, bool advance) {
-        double value=law(x,*c.p,derivative);
+        double value=law(x,c,derivative);
         const double z=((1.0-c.relaxation)*relax+c.relaxation*(x+flux))/(1.0+c.relaxation);
-        value+=(x-z)/c.p->relax_l_h;
-        derivative+=1.0/((1.0+c.relaxation)*c.p->relax_l_h);
+        value+=(x-z)*c.inv_relax_l_h;
+        derivative+=c.inv_relax_den;
         if (advance) relax=zap(z);
         if (c.p->hysteresis_enabled!=0.0) {
             for (unsigned j=0; j<14; ++j) {
@@ -139,10 +150,10 @@ struct TransformerCore {
     }
     double process(double input, const TransformerCoefficients& c) {
         const double source=input*c.p->source_volts_per_fs;
-        const double rb=std::abs((1.0-c.relaxation)*relax+c.relaxation*flux)/
-            ((1.0+c.relaxation)*c.p->relax_l_h);
+        const double rb=std::abs((1.0-c.relaxation)*relax+c.relaxation*flux)*
+            c.inv_relax_den;
         const double bound=std::abs(flux+c.h*voltage)+c.h*
-            (std::abs(source)+c.ra*(c.memoryBound+rb))/c.denominator+1e-12;
+            (std::abs(source)+c.ra*(c.memoryBound+rb))*c.inv_den+1e-12;
         double lo=-bound, hi=bound;
         double x=bounded(flux+2.0*c.h*voltage+(flux-px2),lo,hi);
 #ifdef GS76_TRANSFORMER_STATS
@@ -155,10 +166,10 @@ struct TransformerCore {
             ++usedIterations;
 #endif
             i=current(x,c,derivative,false);
-            const double residual=x-flux-c.h*(voltage+(source-c.ra*i)/c.denominator);
+            const double residual=x-flux-c.h*(voltage+(source-c.ra*i)*c.inv_den);
             if (std::abs(residual)<=1e-6*(1.0+std::abs(x))) { converged=true; break; }
             if (residual>0) hi=x; else lo=x;
-            const double next=x-residual/(1.0+c.h*c.ra*derivative/c.denominator);
+            const double next=x-residual/(1.0+c.h*c.ra*derivative*c.inv_den);
             x=next>lo && next<hi ? next : 0.5*(lo+hi);
         }
 #ifdef GS76_TRANSFORMER_STATS
@@ -182,7 +193,7 @@ struct TransformerCore {
         } else {
             i=current(x,c,derivative,true);
         }
-        px2=flux; flux=zap(x); voltage=zap((source-c.ra*i)/c.denominator);
+        px2=flux; flux=zap(x); voltage=zap((source-c.ra*i)*c.inv_den);
         const double raw=voltage*c.outputScale;
         const double y=c.b0*raw+c.b1*x1-c.a1*y1-c.a2*y2;
         x1=raw; y2=y1; y1=zap(y);

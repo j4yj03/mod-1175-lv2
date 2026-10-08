@@ -689,6 +689,38 @@ Die MPB-Rezeptur ergänzt `$(TARGET_CXXFLAGS)` für Build und Installation um
 Flag −1,2 bis −3,6 % und identische Checksummen. Ein neuer offizieller
 MPB-Build samt installierter SHA und Geräte-Stichprobe steht aus.
 
+### Invariante Kehrwerte (2026-10-08, umgesetzt, 0.5.2)
+
+Die pro Iteration wiederkehrenden Divisionen sind in `prepare()` als
+Kehrwerte vorberechnet: `1/lm_h`, `1/relax_l_h`,
+`1/((1+relaxation)·relax_l_h)`, `1/denominator` sowie die
+00s-Hochfeldkonstanten (Knie, fk, sk, Zielsteigung, Breite — reine,
+bitidentische Hoists). Divisionen durch lm_h/relax_l_h/denominator sind
+jetzt Multiplikationen mit den vorbereiteten Kehrwerten; der Newton-Nenner
+bleibt eine echte Division (läuferabhängig). Unter strengem FP hoistet GCC
+`x/c` nicht zu `x*(1/c)` — die Änderung ist also reale Arbeit. C++ und
+EEL2 identisch (EEL2-Zellen 46–54, Bank-Stride 48→56).
+
+Gepaarter x86_64-Lauf (gleiche Maschine/Sitzung, GCC 11, 48 kHz, OS 2x,
+Stereo, 0 dBFS/997 Hz, Input +6 dB, 3 s × 9, Median); Transformatorblock
+gegen None **derselben Messung** korrigiert, um Maschinendrift
+(None −4,3 %) herauszurechnen:
+
+| Profil | vor (s/s) | nach (s/s) | Block vor | Block nach | Δ Block |
+|---|---:|---:|---:|---:|---:|
+| None | 0,03449 | 0,03300 | — | — | — |
+| 60s | 0,05488 | 0,05087 | 0,02039 | 0,01787 | **−12,4 %** |
+| 80s | 0,05460 | 0,05045 | 0,02011 | 0,01745 | **−13,2 %** |
+| 00s | 0,05111 | 0,04767 | 0,01662 | 0,01467 | **−11,7 %** |
+| Sym | 0,04140 | 0,03863 | 0,00691 | 0,00563 | **−18,5 %** |
+
+`make test` PASS; die 20-Hz-Anker und die Checksummen von
+`transformer_tests` sind auf Druckgenauigkeit unverändert. C++/EEL2-Parität
+430+76 Fälle max 0 FS. Die Bit-Basis verschiebt sich auf Rundungsniveau
+(~1 ULP je ersetzter Division) — Render-/Checksummenvergleiche gegen ältere
+Archive können minimal driften; Geräteanker und REAPER-Render mit dem
+nächsten MPB-Build erneuern (Vorbild: Toleranz-1e-6-Ablauf).
+
 ### Dwarf-Protokoll
 
 Ausführbar mit `tools/dwarf_loadtest.py` (Pedalboard `GS76x0…GS76x4`, jackd-

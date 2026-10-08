@@ -4,7 +4,7 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 **Konsolidiert am 2026-10-06** aus den bisherigen Einzeldokumenten; Inhalt inhaltlich unverändert, Pfadangaben auf die neue Struktur angepasst.
 
-## Zusammenfassung (Stand 2026-10-07)
+## Zusammenfassung (Stand 2026-10-08)
 
 - **Produkt 0.5.0 (Benutzerauftrag, 2026-10-07):** LV2-GUI mit **VU-Meter**
   (GR-Nadel 0…30 dB, rote Zone ab 20 dB; Face beleuchtet bei COMP ON,
@@ -115,11 +115,15 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   `test_modgui` PASS. Relevanz: nur GUI-Assets/`tools/`, keine
   Revisionserhöhung.
 - **Offene Hauptlinien:** Gerätesichtprüfung GUI + REAPER-/Dwarf-Abnahme
-  (PROJEKT Übergabe), Serie-B-Isolationsbench (Ursache je Profil für die
-  CPU-Reduktion) und danach Entscheidung über die CPU-Reduktionshebel
-  (TODO, Abschnitt CPU-Reduktion Transformator); optional direkte
-  20-Hz-Ankermessung von 60s/80s bei −14/−8 dBFS (Stimuluserweiterung).
-  Die Ankerinterpretation der Geräteserie ist abgeschlossen (EXTERN).
+  (PROJEKT Übergabe); CPU-Reduktion fortgesetzt — 0.5.1 (Sym-Fastpath +
+  `-mcpu=cortex-a35`) am Gerät bestätigt, 0.5.2 (invariante Kehrwerte)
+  lokal gemessen, Geräteverifikation offen (TODO, Abschnitt „Ausstehende
+  Verifikationen — 0.5.2"); verbleibende CPU-Hebel: p-Spezialisierung,
+  quellenbewusster Prädiktor (60s/80s strukturell bei ~2 Iterationen),
+  NEON über die Stop-Bank, Commit-A/B, reduzierte Stop-Bank nur als
+  Modelländerung im Klangziel-Kontext; optional direkte 20-Hz-Ankermessung
+  von 60s/80s bei −14/−8 dBFS (Stimuluserweiterung). Die
+  Ankerinterpretation der Geräteserie ist abgeschlossen (EXTERN).
 - **CPU-Reduktion Transformator (0.5.1, 2026-10-08):** `Symmetric` überspringt
   nun seine nach Profildefinition wirkungslose Stop-Bank und Null-Sättigung in
   C++ und EEL2. Gepaarter lokaler x86-Bench: 0,04870 → 0,03956 s/s
@@ -133,6 +137,15 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   gefühlt größer" wird damit **nicht bestätigt** — kein Zustand messbar
   teurer. Details: `test-results/cpu-matrix-051-20261008/`,
   MESSERGEBNISSE 6.4.
+- **CPU-Reduktion Fortsetzung (0.5.2, 2026-10-08):** invariante Kehrwerte
+  (`1/lm_h`, `1/relax_l_h`, `1/((1+relaxation)·relax_l_h)`,
+  `1/denominator`) und die 00s-Hochfeldkonstanten sind in `prepare()`
+  vorberechnet; die pro-Iteration-Divisionen sind Kehrwert-Multiplikationen
+  (C++ und EEL2 gemeinsam, EEL2-Zellen 46–54, Bank-Stride 56). Gepaarter
+  x86-Bench: Transformatorblock **−11,7…−13,2 %** (60s/80s/00s),
+  **−18,5 %** (Sym). `make test` + Parität 430+76 (max 0 FS) PASS, Anker
+  unverändert. Die Bit-Basis verschiebt sich auf Rundungsniveau —
+  Geräteanker/Render mit dem nächsten MPB-Build erneuern.
 - **Klangziel entschieden (2026-10-07):** stärkerer, **eigenständiger
   Green-Stripe-Charakter** (kein Hardwareidentitätsziel). Produktvariante
   (Drive-Regler / heiße Bank / beides) offen; vor jeder Laufzeitänderung

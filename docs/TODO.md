@@ -72,8 +72,15 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
   mit der MPB-Toolchain, falls absolute MPB-komparable Zahlen gebraucht werden.
 - [ ] Dwarf-Lasttabelle: Provenienz nachtragen (Messdatum, Tool-Version,
   installierte SHA256 je Serie, Settle/Messfenster).
-- [ ] 0.4.1-Bundle mit MPB `moddwarf-new` neu bauen; ABI/Hash dokumentieren;
-  danach 21/22 sowie 31/37 und 35/38 im Pedalboard hören, CPU/xruns prüfen.
+- [x] 0.5.1-Bundle mit MPB `moddwarf-new` gebaut und installiert
+  (Binary `c936aca6…`, Pin `bb46e86`); CPU-Matrix 36 Zustände am Gerät
+  bestätigt (Abschnitt CPU-Reduktion, `cpu-matrix-051-20261008`).
+- [ ] 0.5.2-Bundle mit MPB `moddwarf-new` neu bauen: dafür zuerst den
+  0.5.2-Stand (Kehrwerte, siehe „Ausstehende Verifikationen — 0.5.2")
+  committen und den Pin darauf setzen (Arbeitsexemplar-Pin `dbaf48f`
+  enthält 0.5.1-DSP + VU-Hub, noch **ohne** 0.5.2); Install-SHA
+  verifizieren; danach 21/22 sowie 31/37 und 35/38 im Pedalboard hören,
+  CPU/xruns prüfen.
 - [ ] Reale REAPER-7-Abnahme (Recall/Automation/Host-GR/Fonts) und
   Dwarf-Bedienprüfung (PROJEKT, Abschnitt Übergabe P0/P1).
 - [ ] Korrigierte Drag-Handles am Gerät prüfen: MODs globale
@@ -361,13 +368,21 @@ kollabiert.
 
 **4. Invariante Größen vorberechnen:**
 
-- [ ] `1/lm_h`, `1/relax_l_h`, `1/((1+relaxation)·relax_l_h)` und die
+- [x] `1/lm_h`, `1/relax_l_h`, `1/((1+relaxation)·relax_l_h)` und die
   00s-Hochfeldkonstanten (Knie, Zielsteigung, Breite) in
   `TransformerCoefficients::prepare()` vorrechnen; EEL2 identisch bei der
-  Koeffizientenwahl.
-- [ ] Zuerst im MPB-Assemblat prüfen, ob GCC die Divisionen nicht schon
-  hoistet (sonst Doppel-Auswertung-Lektion); Vorher/Nachher mit identischer
-  Toolchain und Checksummen.
+  Koeffizientenwahl. **Umgesetzt 2026-10-08 (0.5.2)**: zusätzlich
+  `1/denominator`; die pro-Iteration-Divisionen durch lm_h/relax_l_h/
+  denominator sind Kehrwert-Multiplikationen (Rundung ~1 ULP je Division),
+  die 00s-Hochfeldkonstanten sind reine bitidentische Hoists; EEL2-Zellen
+  46–54, Stride 48→56.
+- [x] Die Frage „hoistet GCC schon?" ist empirisch beantwortet: unter
+  strengem FP (`-ffp-contract=off`, kein Fast-Math) wandelt GCC
+  `x/c` nicht in `x*(1/c)` — der gepaarte x86-Bench misst **−12,4 %
+  (60s) / −13,2 % (80s) / −11,7 % (00s) / −18,5 % (Sym)** am
+  Transformatorblock (gegen None derselben Messung korrigiert,
+  PERFORMANCE).make test + Parität 430+76 (max 0 FS) PASS; Anker auf
+  Druckgenauigkeit unverändert.
 
 **5. Quellenbewusster Startwert-Prädiktor** (aussichtsreichster
 60s/80s-Hebel, mittleres Numerikrisiko; konkretisiert den offenen Punkt
@@ -426,10 +441,13 @@ kollabiert.
 - [ ] Einordnung im Klangmodellplan: nach dem Offline-Kandidatenvergleich,
   nicht davor.
 
-**Neue Reihenfolge (ersetzt die unten stehende für die Umsetzungsplanung):**
-1) `-mcpu=cortex-a35` in die MPB-Rezeptur (mit dem nächsten Pin-Bump/0.4.2),
-2) Sym-/No-Hysteresis-Fastpath, 3) Invarianten + p-Spezialisierung,
-4) quellenbewusster Prädiktor, 5) Stop-Bank-NEON, 6) Commit-A/B, 7)
+**Neue Reihenfolge (Stand 2026-10-08, gemessene Abarbeitung):**
+1) `-mcpu=cortex-a35` in der MPB-Rezeptur — **erledigt, am Gerät bestätigt**
+(CPU-Matrix 051: Typen/None unverändert, Effekt unter Granularität),
+2) Sym-/No-Hysteresis-Fastpath — **erledigt, am Gerät bestätigt** (−10…−16
+Punkte), 3) Invarianten — **erledigt lokal** (0.5.2, −12–13 % Block);
+p-Spezialisierung offen, 4) quellenbewusster Prädiktor — offen (60s/80s
+strukturell bei ~2 Iterationen), 5) Stop-Bank-NEON, 6) Commit-A/B, 7)
 reduzierte Stop-Bank nur als bewusste Modelländerung. Weiterhin
 zurückgestellt: OS-Entkopplung (Benutzer will oversampled), Host-Rate,
 adaptives OS, float statt double, `-ffast-math`, Auto-Deaktivierung bei
@@ -507,23 +525,33 @@ Vertragliche Hebel (nur mit Gerätedaten und begründeter Modelländerung):
   Option: größter Hebel, aber Modelländerung (Aliasing der Sättigung), neuer
   Port = Versionierung, Übergangstests; nur wenn Serie B genau das als
   Engpass zeigt.
-- [ ] Kennlinien-LUT für `law()`: nur nach A35-Microbench — softClip-Lektion:
-  LUT kann langsamer als analytisch sein (9,7 vs 1,87 ns auf x86), A35-Cache
-  schlechter. Die Stop-Zweige sind zustandsabhängig und bleiben
-  tabellenuntauglich.
+- [x] Kennlinien-LUT für `law()` als CPU-Hebel: **2026-10-08 analysiert und
+  abgelehnt** — das heutige `law()` nutzt kein `pow` mehr (p=3/p=5
+  sequentielle Multiplikationen, 00s Fröhlich closed-form); der einzige
+  LUT-fähige Anteil (Divisionen) ist seit 0.5.2 durch die invarianten
+  Kehrwerte abgedeckt; die dominante 14er-Stop-Bank bleibt
+  zustandsabhängig und tabellenuntauglich. softClip-Lektion bleibt
+  gültig (LUT kann langsamer sein als analytisch, 9,7 vs 1,87 ns auf
+  x86; A35-Cache schlechter). Eine law()-LUT bleibt nur noch als
+  Klangformungs-Projekt relevant (Abschnitt „Eigenständiger
+  Green-Stripe-Charakter", Punkt 5), nicht für CPU.
 
 Nicht wirkksam (dokumentiert, nicht verfolgen): Iterationslimit senken
 (0 % am Cap); kanalübergreifende Zustandsnutzung (Vertrag);
 Auto-Deaktivierung bei Compression Off (bewusst nicht vorgesehen).
 
-Vorgeschlagene Reihenfolge (aktualisiert nach Serie B + Build-Tuning):
+~~Vorgeschlagene Reihenfolge (aktualisiert nach Serie B + Build-Tuning):
 Build-Tuning (`-mcpu=cortex-a35` in die MPB-Rezeptur, −1,2 bis −3,6 %,
-jetzt umsetzbar) → ~~Stop-Zweig-Spezialisierung (30–50 % des Blocks)~~
-**gemessen 1–2 %** (12/13 Zweige klemmen nie — nur mit dem
+jetzt umsetzbar) → Stop-Zweig-Spezialisierung (30–50 % des Blocks)
+gemessen 1–2 % (12/13 Zweige klemmen nie — nur mit dem
 Startwert-Prädikator zusammen sinnvoll) → NEON (Maskierungsrisiko, erst
 danach bewerten) → OS-Entkopplung (Vertragsfrage, zurückgestellt —
 Transformator bleibt oversampled). Doppel-Auswertung verfeuert (~0 %),
-Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).
+Toleranz 1e-6 umgesetzt (−10–12 % bei 00s/Sym).~~
+*(Abgelöst 2026-10-08 durch die „Neue Reihenfolge" oben mit
+Abarbeitungsstand: `-mcpu` erledigt, Sym-Fastpath erledigt, Kehrwerte
+erledigt (0.5.2); verbleibend p-Spezialisierung, Prädiktor (60s/80s
+strukturell bei ~2 Iterationen), NEON, Commit-A/B, reduzierte Stop-Bank.)*
 
 ## Offen — Cross-DAW-Variante des LV2-Plugins (2026-10-07 diskutiert)
 
@@ -612,6 +640,35 @@ und gepusht; Pin zeigt darauf. Offen in dieser Reihenfolge:
   `%APPDATA%\REAPER\Effects\GreenStripe`; README dort weist darauf hin, die
   Links nach neuen/umbenannten/gelöschten Dateien zu erneuern. Erste Ausführung
   durch den Benutzer zu prüfen.
+
+## Ausstehende Verifikationen — 0.5.2, invariante Kehrwerte (2026-10-08)
+
+Der 0.5.2-Stand (Kehrwerte + 00s-Hochfeldkonstanten in `prepare()`,
+Revision 0.5.2) ist **lokal getestet und liegt uncommittet im Arbeitsbaum**:
+`make test` PASS (20-Hz-Anker und `transformer_tests`-Checksummen auf
+Druckgenauigkeit unverändert), Parität 430+76 Fälle max 0 FS,
+Diagnose-Makro byteidentisch, gepaarter x86-Bench −11,7…−13,2 %
+Transformatorblock (60s/80s/00s) und −18,5 % (Sym), gegen None derselben
+Messung korrigiert (PERFORMANCE). Die Bit-Basis verschiebt sich auf
+Rundungsniveau (~1 ULP je ersetzter Division) — ältere Render-/Checksummen-
+Archive können minimal driften. Offen in dieser Reihenfolge:
+
+- [ ] 0.5.2 committen; MPB-Pin auf den 0.5.2-Commit setzen (Arbeitsexemplar-
+  Pin `dbaf48f` = 0.5.1-DSP + VU-Hub, noch ohne 0.5.2); MPB `moddwarf-new`
+  bauen, installieren, **SHA ≠ `c936aca6…`** verifizieren, Audio-Stack
+  vollständig neu starten.
+- [ ] Geräteanker erneuern: Transformator-Matrix (20-Hz-Klirr 60s ≈ 12,42 %,
+  relative Gains −0,817/−0,441/−0,016/−0,002 dB) und Colour-Stufen gegen
+  frische 0.5.2-Referenzrenders; Erwartung: Verschiebung nur auf
+  Rundungsniveau.
+- [ ] REAPER-Renders (JSFX per Symlink) der 28 Vollmatrix-Zustände gegen
+  frische 0.5.2-C++-Referenzen bitgleich prüfen (Abgleich mit PDC-Offset
+  ±3 Samples).
+- [ ] CPU-Stichprobe am Gerät: Erwartung Typen −1…−3 Punkte gegenüber
+  `cpu-matrix-051-20261008` (54–56 %), Sym zusätzlich −1…−2 (46 %);
+  1–2-Punkte-Granularität einkalkulieren, Bypass/None unverändert.
+- [ ] 1-%-Anker und `make test` im 0.5.2-MPB-Build erneut bestätigen;
+  danach Preset-Hörprüfung 21/22 sowie 31/37 und 35/38 (Punkt oben).
 
 ## Erledigt (zur Erinnerung, nicht mehr offen)
 

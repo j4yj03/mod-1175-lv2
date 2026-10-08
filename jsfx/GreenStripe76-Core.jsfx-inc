@@ -243,9 +243,9 @@ function gs_reset(twoChannels) instance(stereo initial moving parked bypassed in
   gs_model_init();
   gs_mem=64; gs_qbase=gs_db_gain(gs_qbias_db);
   gs_xf_stops=gs_alloc(14); gs_xf_thresholds(gs_xf_stops);
-  gs_xf_bank=gs_alloc(12*48);
+  gs_xf_bank=gs_alloc(12*56);
   os=0; loop(3,
-    m=1; loop(4,gs_xf_prepare(max(8000,srate)*(2^os),m,gs_xf_bank+(os*4+m-1)*48); m+=1;);
+    m=1; loop(4,gs_xf_prepare(max(8000,srate)*(2^os),m,gs_xf_bank+(os*4+m-1)*56); m+=1;);
     os+=1;
   );
   this.xfL.gs_xf_init(); this.xfR.gs_xf_init();
@@ -304,7 +304,7 @@ instance(stereo moving parked bypassed inL inR wetL wetR outL outR grL grR os_ac
    pi po pa pr p_ratio p_threshold p_knee p_all pm pc pp pe pl px)
 local(i a b independentL independentR linked qL qR gL gR wet blend factor xfL xfR bank) (
   factor=2^os_active;
-  bank=gs_xf_bank+os_active*4*48;
+  bank=gs_xf_bank+os_active*4*56;
   this.rsL.gs_rs_up(gs_bound(left,-256,256),inL,factor);
   stereo ? this.rsR.gs_rs_up(gs_bound(right,-256,256),inR,factor);
   i=0;
