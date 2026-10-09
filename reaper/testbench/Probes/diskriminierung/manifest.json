@@ -1,0 +1,87 @@
+{
+  "created_by": "tools/make_discrimination_program.py",
+  "program": "gs76-diskriminierung-stereo.wav",
+  "rate": 48000,
+  "channels": 2,
+  "frames": 2195520,
+  "seconds": 45.74,
+  "pcm": "24 bit",
+  "pilot": "0,12-s-Chirp 500→6000 Hz bei −18 dBFS (Start + Ende, wie scarlett_test)",
+  "lead_seconds": 1.0,
+  "gap_seconds": 0.5,
+  "tail_seconds": 1.0,
+  "timeline": [
+    {
+      "kind": "marker",
+      "label": "pilot-start",
+      "start_frames": 48000,
+      "frames": 5760
+    },
+    {
+      "kind": "probe",
+      "label": "remanenz-bursts",
+      "source": "remanenz-bursts.wav",
+      "start_frames": 77760,
+      "frames": 480000,
+      "start_seconds": 1.62
+    },
+    {
+      "kind": "probe",
+      "label": "zweiton-im",
+      "source": "zweiton-im.wav",
+      "start_frames": 581760,
+      "frames": 384000,
+      "start_seconds": 12.12
+    },
+    {
+      "kind": "probe",
+      "label": "pegelreihe-20hz",
+      "source": "pegelreihe-20hz.wav",
+      "start_frames": 989760,
+      "frames": 720000,
+      "start_seconds": 20.62
+    },
+    {
+      "kind": "probe",
+      "label": "dc-asymmetrie",
+      "source": "dc-asymmetrie.wav",
+      "start_frames": 1733760,
+      "frames": 384000,
+      "start_seconds": 36.12
+    },
+    {
+      "kind": "marker",
+      "label": "pilot-end",
+      "start_frames": 2141760,
+      "frames": 5760
+    }
+  ],
+  "render_variants": [
+    {
+      "suffix": "no_fx",
+      "description": "ohne FX (Referenz; leere/Bypass-FX-Kette)",
+      "filename": "diskriminierung-no_fx.wav"
+    },
+    {
+      "suffix": "ssl-a50",
+      "description": "SSL Fusion Transformer, AMOUNT 50 (Stellungs-Screenshot!)",
+      "filename": "diskriminierung-ssl-a50.wav"
+    },
+    {
+      "suffix": "ssl-a100",
+      "description": "SSL Fusion Transformer, AMOUNT 100 (Stellungs-Screenshot!)",
+      "filename": "diskriminierung-ssl-a100.wav"
+    },
+    {
+      "suffix": "gs76-60s",
+      "description": "GS76-Stereo.jsfx: COMP OFF, Colour 0, OS 2x, Transformer 60s",
+      "filename": "diskriminierung-gs76-60s.wav"
+    },
+    {
+      "suffix": "gs76-80s",
+      "description": "GS76-Stereo.jsfx: COMP OFF, Colour 0, OS 2x, Transformer 80s",
+      "filename": "diskriminierung-gs76-80s.wav"
+    }
+  ],
+  "sha256": "7e262ef47c4fd1739f68e5a745fa0c6c3aca2a342d111c6b1b65256dd21da9aa"
+}

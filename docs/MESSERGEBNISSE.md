@@ -294,6 +294,7 @@ des neuen Stands (Abschnitt 7).
 | `colour-dwarf-20261007` | 2026-10-07 | wie b2 | **gültig**, Referenzdeckung 4. Dezimale |
 | `cpu-matrix-dwarf` | 2026-10-07 | 36 Zustände, je Neustart, Rücklesung | **gültig**, 0 xruns |
 | `cpu-matrix-051-20261008` | 2026-10-08 | 36 Zustände, je Neustart, Binary 0.5.1 (`c936aca6…`), je Lauf SHA-verifiziert | **gültig**, 0 xruns |
+| `device-052-20261008` | 2026-10-08 | 0.5.2 (`d94d3121…`, Pin `b09364e`); 11 Wiedergaben des Matrixprogramms, Dwarf-Recorder digital + REAPER/Scarlett analog parallel; Schnitt per `tools/dwarf_matrix_session.py` | **gültig** — Anker exakt, digital max \|Δ\| ≤ 0,02 mdB (Abschnitt 8) |
 
 **Zur Binary-Identität:** Die auf dem Gerät installierte Binary (SHA256
 `e6b4e55…`) trägt die aktuelle Bank — alle 87 nichttrivialen double-
@@ -546,3 +547,426 @@ Tages (16_17_10, 16_57_58) sind Bisektionsläufe zur EEL2-
 Die letzte Transformator-Änderung ist damit auch in REAPER am vollen
 64-s-Matrixprogramm bitgleich gegen den C++-Kern bestätigt (zuvor
 bereits `make test` + Parität 430+76 Fälle, max 0 FS).
+## 8. 0.5.2 am Gerät — Session-Schnitt (2026-10-08, `device-052-20261008`)
+
+Erste Geräteverifikation des 0.5.2-Stands (invariante Kehrwerte,
+Commit `b09364e`). Der Benutzer spielte das 64,47-s-Matrixprogramm
+**11×** nacheinander (Referenz/Bypass, 60s, 80s, 00s, Sym, Colour
+5/10/20/50/75/100 %; Compression OFF, OS 2x, In/Out 0 dB, Mix 100 %),
+parallel aufgezeichnet: **Dwarf-Recorder** (digital, 48 kHz/32f,
+`mod_session_261008_12577.wav`) und **REAPER/Scarlett** (analog, zwei
+Mono-Takes, 48 kHz/24 bit). Schnitt per Pilot-Chirp-Erkennung
+(`tools/dwarf_matrix_session.py`, Korrelationsqualität 0,97–1,0,
+Abstand ≈ 68,5 s). Referenzrenders: 34 Zustände C++ 0.5.2 (`build/wsl`)
+nach Fix des `gr_db`-Verbindungsfehlers in `tools/render_lv2.py` —
+seit 0.5.0 liefen alle damit erzeugten Renders mit **OS Off**, weil der
+Output-Port `gr_db` als Eingangs-Control verbunden war (Latency/
+Oversampling/Transformer um eine Position verschoben). GROUP 1 × 2
+wurde am Gerät bewusst nicht aufgenommen (Benutzerentscheid).
+
+### 8.1 Digital (Dwarf-Recorder) gegen 0.5.2-C++-Referenz
+
+| Zustand | 20-Hz-Klirr Gerät % | 20-Hz-Klirr Ref % | rel. Gain 20 Hz Gerät dB | rel. Gain 20 Hz Ref dB | max \|Δ rel. Gain\| mdB |
+|---|---:|---:|---:|---:|---:|
+| 60s | 12.424 | 12.425 | -0.8174 | -0.8174 | 0.016 |
+| 80s | 12.276 | 12.277 | -0.4411 | -0.4412 | 0.017 |
+| 00s | 1.014 | 1.014 | -0.0156 | -0.0156 | 0.002 |
+| Sym | 0.001 | 0.001 | -0.0013 | -0.0013 | 0.001 |
+| col05 | 0.146 | 0.146 | -0.1260 | -0.1260 | 0.004 |
+| col10 | 0.289 | 0.289 | -0.2476 | -0.2476 | 0.002 |
+| col20 | 0.566 | 0.566 | -0.4777 | -0.4777 | 0.002 |
+| col50 | 1.325 | 1.325 | -1.0580 | -1.0580 | 0.005 |
+| col75 | 1.862 | 1.862 | -1.4099 | -1.4099 | 0.007 |
+| col100 | 2.311 | 2.311 | -1.6394 | -1.6394 | 0.009 |
+
+**Anker exakt:** 20-Hz-relativgains -0.8174/-0.4411/-0.0156/-0.0013 — deckungsgleich mit
+`matrix-dwarf-20261007-b2` (−0,817/−0,441/−0,016/−0,002 dB). Klirr-
+Reihung bestätigt: 60s 12,424 % > 80s 12,276 % > 00s 1,014 % > Sym
+0,001 % (Bypass 0,005 %). **max |Δ rel. Gain| = 0.0168 mdB**
+über alle 10 Zustände × 19 Segmente, **beide Kanäle** (Stimulus L=R,
+C++-Referenz mono). Colour 5–100 % linear (1-kHz-Klirr 0,123→2,435 %,
+rel. Gain −0,126→−1,639 dB; Gerät = Referenz).
+
+### 8.2 Samplevergleich Device ↔ C++ (nach Gain-Fit, `sample-check.json`)
+
+Fester Offset **11997 Samples** (Marker-Schätzung 12000,24; Differenz
+≈ nominale 3-Frame-Latenz des 2x-Modus) richtet alle Segmente aus —
+keine Dispersion; reine Ton-Suche ist periodenmehrdeutig, deshalb
+feste Offsetausrichtung über alle Segmente. Recorder-Gain ≈ −0,000065 dB.
+
+| Zustand | Offset Samples | Recorder-Gain mdB | max \|Rest\| | ≈ dBFS |
+|---|---:|---:|---:|---:|
+| 60s | 11997 | -0.0648 | 4.76e-06 | -106 |
+| 80s | 11997 | -0.0648 | 1.10e-04 | -79 |
+| 00s | 11997 | -0.0656 | 7.76e-05 | -82 |
+| Sym | 11997 | -0.0657 | 1.65e-07 | -136 |
+| col05 | 11997 | -0.0653 | 1.61e-07 | -136 |
+| col10 | 11997 | -0.0649 | 1.70e-07 | -135 |
+| col20 | 11997 | -0.0639 | 2.03e-07 | -134 |
+| col50 | 11997 | -0.0615 | 2.74e-07 | -131 |
+| col75 | 11997 | -0.0595 | 3.49e-07 | -129 |
+| col100 | 11997 | -0.0575 | 4.32e-07 | -127 |
+
+Lineare Pfade auf **float32-LSB** (~1,2×10⁻⁷), Solver-Profile mit dem
+erwarteten **ULP-Rest** des aarch64-MPB-Builds gegen den x86-Host-Build
+(max 1.1e-04 ≈ −79 dBFS bei 80s) — die dokumentierte Rundungs-
+verschiebung des 0.5.2-Stands, hörbar irrelevant.
+
+### 8.3 Analogquerreferenz (REAPER/Scarlett)
+
+Der Analogpfad bestätigt die digitale Serie als Eigenabweichung der
+Kette: **max |Δ rel. Gain| = 14.9 mdB** über alle Zustände und
+Segmente (beide Kanäle) gegen dieselbe C++-Referenz — kein
+systematischer Trend, keine Zustandsabhängigkeit über die
+1–2-mdB-Analogstreuung hinaus.
+
+### 8.4 Grenzen und offene Punkte
+
+- **GROUP 1 × 2** (24 Bank×Colour-Kombinationen) am Gerät nicht
+  aufgenommen; ~~Abdeckung über die einzeln validierten Pfade.~~
+  *(Seit 2026-10-08 zusätzlich in REAPER abgedeckt — Abschnitt 9,
+  alle 24 Kombinationen bitgleich; die am-Gerät-Lücke bleibt
+  bewusst geschlossen, da beide Pfade einzeln am Gerät exakt
+  validiert sind.)*
+- ~~**REAPER-JSFX-Render (0.5.2) steht aus:** der Batch `12_33_37`
+  war ein Altstand (REAPER kompilierte den geänderten JSFX nicht
+  neu); Neu-Render nach REAPER-Neustart/FX-Reload, dann Bitvergleich
+  gegen frische 0.5.2-C++-Referenzen (PDC ±3 Samples).~~
+  *(Erledigt 2026-10-08, Batch `14_14_41` — Abschnitt 9; alle 34
+  Zustände + Referenzlauf PASS, max 0,5 LSB.)*
+- **CPU-Stichprobe** mit der 0.5.2-Binary steht aus (Erwartung
+  Typen −1…−3 Punkte, Sym zusätzlich −1…−2 gegenüber
+  `cpu-matrix-051-20261008`).
+- `col100`: Take-Ende um 0,89 s gekappt (Session-Rekorder); alle
+  Messfenster vollständig, Samplevergleich über 3 051 776 Samples.
+
+![0.5.2 Device-Deltas](plots/mess-device052-delta.png)
+
+## 9. REAPER-JSFX-Render 0.5.2 — Bitverifikation (2026-10-08)
+
+Nach dem Altstand-Befund (Batch `12_33_37`, REAPER hatte den
+geänderten JSFX nicht neu kompiliert) hat der Benutzer die JSFX neu
+laden lassen und das Batch erneut erzeugt (Batch `2026-10-08 14_14_41`;
+Plugin-GUI zeigt **0.5.2**). **35 Dateien**: Referenzlauf `no_fx` +
+34 Zustände — jetzt erstmals inklusive aller **24 GROUP 1 × 2-
+Kombinationen**, die in der Geräteserie bewusst übersprungen wurden.
+Vergleich gegen die 0.5.2-C++-Referenzrenders (`/tmp/opencode/ref052`,
+nach dem `gr_db`-Fix), Offsetsuche ±16, Grenze < 1 LSB (24 bit).
+
+| Prüfpunkt | Ergebnis |
+|---|---|
+| Zustände | 34 (beide Kanäle) — **alle PASS** |
+| bester Offset | einheitlich -3 Samples (REAPER-PDC der 2x-Latenz) |
+| schlechtester max \|diff\| | 5.960e-08 = 0.5 LSB (24 bit) |
+| Referenzlauf `no_fx` | sampleidentisch zum Stimulus (Offset 0, max \|diff\| 0,0) |
+
+Die 0.5.2-Änderung ist damit auch in REAPER am vollen 64-s-Matrix-
+programm bitgleich gegen den C++-Kern bestätigt; der Altstand-Batch
+`12_33_37` gilt als überholt. Archiv: `test-results/
+jsfx-render-052-20261008/` (MANIFEST, `parity-052.json`, SHA256).
+## 10. PluginDoctor-Vergleich Transformer-Harmonics (2026-10-08)
+
+Erneute, diesmal gültige Captures in PluginDoctor (Backend ReaJS,
+44,1 kHz, FFT-Raster 2,692 Hz, Sweep-Anregung −0,32 dB) unter
+`docs/PluginDoctor messen/Transformer Harmonics/`: GS76 60s/80s/00s/Sym
+und die Referenz **SSL Fusion Transformer** in MIN/STOCK/MAX.
+Panelsellungen der GS76-Captures (Benutzerangabe): **COMP OFF, 4x
+Oversampling, Colour 0 %, Mix 100 %**; je Capture ein 2D-Sweep-
+Screenshot, die Klirr-über-Frequenz-Kurve (`THD.txt`, Graph #0) und
+eine FFT-Momentaufnahme (`data.txt`). Analyse:
+`tools/analyze_pd_transformer.py` → `test-results/pd-transformer-20261008/`.
+
+| Capture | Grundwelle (Snapshot) | Grundwelle dB | THD Snapshot | Δ Kurve↔Snapshot | 20 Hz | 30 Hz | 100 Hz | 1 kHz |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| GS76 60s | 8.08 Hz | -7.49 | 43.1 % | +0.01 | -15.0 | -23.6 | -53.6 | -83.3 |
+| GS76 80s | 8.08 Hz | -7.55 | 56.8 % | +0.08 | -13.1 | -26.7 | -70.6 | -85.1 |
+| GS76 00s | 13.46 Hz | -3.45 | 49.8 % | -0.03 | -11.7 | -54.5 | -72.8 | -103.7 |
+| GS76 Sym | 69.99 Hz | -0.32 | unter Boden | — | -91.7 | -105.5 | -124.5 | -160.0 |
+| SSL MIN | 177.67 Hz | -0.32 | unter Boden | — | -150.9 | -150.9 | -150.7 | -168.1 |
+| SSL STOCK | 161.52 Hz | -0.33 | 0.1 % | -25.16 | -5.7 | -3.2 | -37.1 | -86.4 |
+| SSL MAX | 333.81 Hz | -0.35 | 2.5 % | -4.27 | -5.2 | -5.2 | -22.7 | -70.6 |
+
+Alle Werte in dB relativ zur jeweiligen Grundwelle; die Spalten
+20 Hz…1 kHz stammen aus der THD(f)-Kurve (stufentreu abgerufen, kein
+Interpolieren über Klippen). **Gültigkeitsnachweis:** bei den drei
+heißeren GS76-Profilen stimmt die aus der FFT-Momentaufnahme
+berechnete Klirrsumme mit dem Kurvenwert an derselben Frequenz auf
+**Δ ≤ 0,08 dB** (60s +0,01 / 80s +0,08 / 00s −0,03 dB) — Kurve und
+Snapshot sind dieselbe Messung; die Exportprobleme der ersten zwei
+Versuche (Anzeigeboden, byte-identische Dateien) sind behoben.
+
+### 10.1 Befunde
+
+- **SSL verzerrt im Tieftönen massiv stärker:** SSL MAX liefert
+  8–30 Hz **−5,2 dB (≈ 55 %)**, STOCK 24–35 Hz **−3,2 dB (≈ 69 %)**;
+  GS76 60s/80s liegen bei 20 Hz bei **−15,0/−13,1 dB (18/22 %)**,
+  00s fällt oberhalb 20 Hz steil ab (30 Hz: −54,5 dB), Sym ist flach.
+  Das stützt die Klangziel-Entscheidung „stärkerer, eigener
+  Charakter" quantitativ.
+- **Bei 1 kHz** liegt GS76 60s mit −83,3 dB (0,007 %) zwischen SSL
+  STOCK (−86,4 dB) und SSL MAX (−70,6 dB) — die Charakteristik
+  konvergiert im Mittelband, die Unterscheidung spielt sich im
+  Tieftönen.
+- **Reihungsabweichung gegen das Gerät:** PD-Reihung bei 20 Hz ist
+  80s ≈ 00s > 60s, die Gerätetreihung (−2 dBFS) ist 60s ≈ 80s ≫
+  00s (12,42/12,28/1,01 %). Deutung: die heißere PD-Anregung
+  (+1,7 dB) trifft beim scharfen Fröhlich-Hochfeld-Knie des 00s
+  das Steilgebiet; eine kalibrierte Klärung (gleicher Pegel,
+  protokollierte Stellung) steht aus.
+- **Harmonikentyp:** alle GS76-Snapshots sind ungeradedominiert
+  (H2 ≤ −47 dB; 80s zeigt bei heißestem Drive Even-Seitenbänder
+  −47…−64 dB). SSL STOCK ist bei 161 Hz **H2-dominant** (H2 −62,8 dB),
+  SSL MAX bei 334 Hz ungeradedominiert (H3 −32,9 dB, H5 −43,3 dB).
+- **Kopplungsverlust sichtbar:** die GS76-Grundwelle liegt im
+  Snapshot −7,5 dB (60s/80s) bzw. −3,5 dB (00s) unter der Anregung
+  (Koppelungs-Bassabsenkung des Modells), SSL und Sym bei Unity.
+
+### 10.2 Grenzen
+
+- Eingangspegel der GS76-Captures nicht numerisch protokolliert (Sweep-Anregung −0,32 dB laut Screenshot-Toolbar).
+- SSL-Knopfstellungen MIN/STOCK/MAX nur als Verzeichnisnamen belegt, keine numerischen Werte.
+- FFT-Snapshot landet je Export an einer anderen Tonfrequenz (Sweep-Position beim Export); Vergleich deshalb über die THD(f)-Kurve und Ordnungsprofile.
+- GS76-Kurve Graph #1 ist flacher Boden (−100 dB), SSL-Kurve Graph #1 enthält die Grundwelle; Graph-#1-Bedeutung ist nicht kalibriert.
+- Die SSL-Kurven sind Treppenzüge mit 7…8 Stufen; der
+  Punktvergleich ist nur stufentreu aussagekräftig; für einen
+  kalibrierten Vergleich statische Einzeltöne mit protokollierter
+  Stellung und gleichem Pegel (Rezept MESSTECHNIK 1i) verwenden.
+
+![PluginDoctor Klirr über Frequenz](plots/mess-pd-thd-frequenz.png)
+
+![PluginDoctor Harmonikumschläge](plots/mess-pd-harmonik-uebersicht.png)
+
+## 11. SSL Fusion Transformer — AMOUNT-Sweep (2026-10-08, kalibriert)
+
+Fünf REAPER-Renders (`reaper/testbench/2026-10-08 15_22_27/SSL GROUP 1`,
+AMOUNT 0/50/100/150/200) über dasselbe 64,47-s-Matrixprogramm wie die
+Geräteserien (19 Segmente, −2 dBFS, Stimulusplan
+`test-results/dwarf-tones/runs/matrix-all-m2`, SHA geprüft).
+Digital, paddgenau (Synchronisation < 1 Sample, Kanaldifferenz
+L↔R **0,0000 dB**); Analyse `tools/analyze_ssl_amount.py` →
+`test-results/ssl-amount-20261008/`. Das ist der erste **kalibrierte**
+Vergleichspunkt für das Klangziel — gleicher Stimulus, gleicher Pegel
+wie die GS76-Bankwerte.
+
+| AMOUNT | 20 Hz Klirr % | 20 Hz Gain dB | 40 Hz Klirr % | 80 Hz Klirr % | 1 kHz Klirr % | 1 kHz Gain dB | 8 kHz Gain dB |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 0.0000 | +0.012 | 0.0000 | 0.0000 | 0.0000 | +0.013 | +0.711 |
+| 50 | 7.7221 | -1.022 | 0.0920 | 0.0542 | 0.0003 | +0.014 | +0.711 |
+| 100 | 51.2886 | -6.306 | 7.4504 | 0.4383 | 0.0011 | +0.014 | +0.711 |
+| 150 | 64.7275 | -14.630 | 18.8542 | 9.4096 | 0.0043 | +0.014 | +0.711 |
+| 200 | 27.4002 | -15.900 | 11.4481 | 6.0686 | 0.0107 | +0.014 | +0.711 |
+
+### 11.1 Befunde
+
+- **AMOUNT = 0 ist kein Bypass:** Klirr 0,0000 % und Gain +0,012 dB
+  im Bass, aber ein fester, AMOUNT-unabhängiger Höhen-Tilt
+  (+0,048 dB @ 2 kHz, +0,188 dB @ 4 kHz, **+0,711 dB @ 8 kHz**,
+  +1,85 dB @ 16 kHz) — vermutlich SHINE/Transformator-Grundcharakter.
+- **Verzerrung ist fast rein tieftonbegrenzt:** bei 1 kHz bleibt
+  SSL über alle Stellungen ≤ **0,011 %**; unsere Transformator-Bank
+  liegt bei 1 kHz bei 0,0008/0,0005/0,0004 % (60s/80s/00s) —
+  vergleichbar. Der GS76-**Colour**-Pfad liefert dagegen 0,123→
+  **2,435 %** bei 1 kHz (Colour 5→100 %, Gerät) und ist im
+  Mittelband damit weit „charakteristischer" als die SSL-Referenz.
+- **20 Hz, kalibriert:** A50 **7,72 % @ −1,02 dB** (zwischen GS76
+  00s 1,01 % und 60s 12,42 %; Bassverlust wie 60s −0,82 dB),
+  A100 **51,3 % @ −6,31 dB** (über 4× heißer als die heißeste
+  Bankstellung), A150 64,7 %, A200 27,4 % **@ −15,90 dB** — die
+  Grundwelle kollabiert; SSL hat **kein Auto-Makeup**.
+- **Harmonikentyp:** A50/A100 ungeradedominiert (A100: H3 −6,3,
+  H5 −15,7, H7 −30,4 dBc, Even bei −48…−57 dB), A150 nahezu
+  Rechteckstruktur (H3 −5,8, H5 −10,3, H7 −13,8). GS76 60s fällt
+  deutlich steiler (H3 −18,2, H5 −36,3, H7 −55,2 dBc) — die
+  heißen SSL-Stellungen liefern einen viel fetteren Obertonzug.
+- **Positionierung fürs Klangziel:** „mehr Basssättigung ohne
+  Bassloch" bleibt ein eigener Charakterzug des Modells (max
+  −0,82 dB gegen SSL bis −15,9 dB); der nächste kalibrierte
+  Referenzpunkt für eine Stärkung im Bass ist SSL **A ≈ 50**.
+
+### 11.2 Interpretation — kein physikalisches Kernmodell (2026-10-08)
+
+Die Messwerte sprechen dafür, dass die SSL-Umsetzung **kein
+physikalisches Transformator-Kernmodell** abbildet:
+
+1. **Verlust ohne begleitende Verzerrung:** −14,6/−15,9 dB
+   Grundwellenverlust bei 20 Hz und −2 dBFS Eingang (A150/A200);
+   ein realer Line-Pegel-Kern verliert dort ~1–2 dB. −16 dB
+   bräuchte eine kollabierende Lm — die käme mit massiver
+   Verzerrung und lastabhängigem Atmen; gemessen werden nur
+   27,4 % THD (H2…H10, mit 1/n-Schwanz ≤ ~45 %).
+
+2. **Energiebilanz:** von der 20-Hz-Grundwellenleistung bleiben
+   bei A200 ≈ 2,5 % übrig, die messbaren Obertöne tragen nur
+   ≈ 0,2–0,5 % der Eingangsleistung — Sättigung wandelt Energie
+   in Obertöne um, sie löscht sie nicht.
+
+3. **Effektmodell-Signatur:** AMOUNT 0 kein Bypass (fester Höhen-
+   Tilt), nichtmonotone THD über AMOUNT (Max bei A150), Klirr
+   fast ausschließlich unter ~160 Hz (∝ V/f) — Bauweise
+   „flussgewichteter Waveshaper + entworfener Bassverlust".
+
+Nicht beweisbar aus Magnitudenspektren: auch ein getreues Modell
+eines absichtlich überfahrenen Mini-Kerns produziert diese Zahlen.
+Diskriminierungstests mit Rezepten, Probe-Signalen und Kombi-
+programm: MESSTECHNIK 1k.2 —
+`reaper/testbench/Probes/diskriminierung/gs76-diskriminierung-stereo.wav`
+(45,74 s, fünf REAPER-Renders mit verbindlichen Namen). Konsequenz:
+A100–A200 niemals Kalibrierziel; A50 bleibt Intensitätsanker.
+
+- SSL-Knopfstellungen (SHINE, MIX, INPUT/OUTPUT TRIM, HF+/LF+) nicht protokolliert; AMOUNT aus dem Dateinamen.
+- MIX steht vermutlich nicht auf 100 % WET (Grundwellengewinn im Befund pruefen).
+- AMOUNT = 0 ist die kleinste gemessene Stellung, nicht notwendigerweise bypass.
+
+![SSL AMOUNT: Klirr und Gain](plots/mess-ssl-amount-20hz.png)
+
+![SSL AMOUNT: Harmonische bei 20 Hz](plots/mess-ssl-amount-harmonik.png)
+
+## 12. Diskriminierungstests — SSL Fusion Transformer gegen GS76-Bank (2026-10-08)
+
+Kombiprogramm (MESSTECHNIK 1k.2) je Variante einmal gerendert (0 dB, keine
+Absenkung; L=R, Chirp-Alignement und Stille verifiziert, keine Clips):
+SSL AMOUNT 0/50/100/150/200 und GS76-JSFX 00s/60s/80s/Sym (COMP OFF, OS 4x,
+Colour 0 %, Mix 100 %). Auswertung `tools/analyze_discrimination.py`,
+Daten/Provenanz `test-results/diskriminierung-20261008/`. Eine Vorserie
+(−3 dB, 23:03) war durch Projektfehler kontaminiert (L-only Programmkopien
+−6,4 dB an falschen Offsets + 630-Hz-Oszillation) und wurde verworfen.
+
+### 12.1 Befunde je 1k.2-Kriterium
+
+**1. Remanenz/Bursts.** SSL: alle vier Bursts in **allen** AMOUNT-Stellungen
+deckungsgleich (Erst-Halbwelle ±0,01 dB, identischer Nachlauf und DC-Shift)
+— keine Operating-Point-Shift, keine Remanenz. Der Nachlauf über dem
+Trägerboden (−44…−49 gegen −53 dBFS) existiert nur bei A0–A100 und
+verschwindet bei A150/A200 (≈ Boden) — gegenläufig zum Antrieb, kein
+Hysterese-Bild. JSFX: 80s zeigt den Kern-Befund — Erstburst −5,57 dB gegen
+Folgebürste −5,37/−5,39 dB (−0,2 dB Shift, konsistent auch im DC-Nachlauf
++0,00309 gegen +0,00304); 00s/60s/Sym burstdeckungsgleich, Nachlauf aber
+überall über Boden (+0,9…+6,6 dB). Beide Plugins überschießen die erste
+Halbwelle (SSL A0 +0,55 dB; JSFX +0,5…+1,1 dB) — fest wiederholbar.
+
+**2. Zweiton-IM (60 Hz + 1 kHz).** SSL: Seitenbänder symmetrisch
+(Asymmetrie ≤ 0,8 dB; Einzelanomalie A200 k=1 −26,5 dB), odd-order-dominiert
+(k=2/k=4 ≫ k=1/k=3 bei A150/A200) und **30–70 dB unter der speicherfreien
+Vorhersage** aus der 20-Hz-Pegelreihe — das Mittelband ist dramatisch
+linearer als der Bass (bass-/flussgewichtetes Effektmodell). JSFX: ebenfalls
+symmetrisch und unter der Vorhersage (60s: k=2 −67 dB gemessen gegen
+−27 dB Vorhersage); 60s/80s mit kleiner Ober-/Unterband-Asymmetrie
+(−11,5/−6,9 dB bei k=3/k=4) als Speicher-Spürsignal. A0: IM an der
+PCM24-Quantisierungsflur, nicht messbar.
+
+**3. Pegelreihe 20 Hz.** SSL A50: Knie ~−8 dBFS, −1,02 dB @ −2, THD 7,7 %;
+A100: −6,31 dB, THD 51 %; A150: Verlust wächst weiter (−9,18 → −14,63 dB),
+THD 61 → 65 %; **A200: Verlust satturiert** (−15,49 dB bei −8 → −15,90 dB
+bei −2) und die THD **fällt** (50,6 → 27,4 %) — oberhalb −8 dBFS verhält
+sich der 20-Hz-Pfad linear mit festem −16-dB-Shelf: entworfene
+Pegelabsenkung, keine Sättigungsasymptote. Deckungsgleich mit der
+PD-Serie (11: −14,6/−15,9 dB) — Renders gültig. JSFX: 60s/80s Knieform mit
+wachsendem Klirr (12,4 % @ −2) bei kleinem Verlust (−0,8 dB), Sym
+praktisch klirrfrei (≤ −99 dB), 00s 1,1 % @ −2.
+
+**4. DC-Asymmetrie.** SSL lässt 4–37 % des 0,3-FS-DC durch (A0 0,109,
+A50 0,110, A100 0,099, A150 0,037, A200 0,013) — ein realer Kern: ≈ 0.
+Nachlauf nach DC-Ende −26,5…−37,9 dBFS, skaliert invers zur AMOUNT;
+H2-unter-DC nichtmonoton über AMOUNT (+24 dB A50, +47 dB A100, −24 dB
+A150, −61 dB A200) — keine konsistente Even-Order-Antwort. JSFX 00s/60s/
+80s blocken DC vollständig (−143…−148 dBFS) und heben H2 unter DC um
++12…+80 dB an (00s: −25,4 gegen −105,7 dB) — Kern-Signaturen. **JSFX Sym
+sonderbar: DC-Pumpen** — Ausgangs-DC +0,105/+0,096 während der Plateaus,
+negative Nachläufe −0,058 (nach 1. DC-Zyklus) und −0,165 (nach 2. Zyklus):
+akkumulierender Zustand unter DC, Verdacht Integrator-Drift im Sym-Modell;
+zugleich kaum Even-Order und kaum 20-Hz-Klirr.
+
+### 12.2 Urteil
+
+- **SSL: Effektmodell bestätigt** (1k.1-Hypothese durch Diskriminierung
+  belegt): fluss-/bassgewichteter statischer Waveshaper mit entworfener
+  Bassabsenkung, DC-durchlässig, ohne Remanenz und ohne IM-Asymmetrie.
+  Kein physikalisches Kernmodell. A50 bleibt Intensitätsanker, A100–A200
+  niemals Kalibrierziel.
+- **GS76-Bank:** zeigt die Kern-Signaturen, die dem SSL fehlen
+  (DC-Block, Remanenz-Shift bei 80s, Even-Order unter DC, Nachlauf über
+  Boden). Die eigene Bank ist physiknäher als die SSL-Referenz.
+- Offen: no_fx-Negativkontrolle optional nachholen; Sym-DC-Pumpen im
+  Modell prüfen (integrator drift); SSL-Knopfprovenanz (11.2).
+
+### 12.3 GS76-Bank im Detail — was die Diskriminierung über die eigenen Modelle sagt (2026-10-08)
+
+Die JSFX-Renders (COMP OFF, OS 4x, Colour 0 %, Mix 100 %, I/O 0 dB)
+bestätigen die Bank-Rollen und zeigen eine Modell-_Trennschärfe_, die das
+SSL nicht hat:
+
+**DC-Verhalten trennt die Modelle sauber.** 00s, 60s und 80s blocken
+Gleichspannung vollständig: bei 0,3 FS DC-Eingang liegt der Ausgangs-DC
+bei −143,5/−148,5/−145,9 dBFS — Transformator-Physik (die Sekundärseite
+sieht dφ/dt, kein Dauergleichanteil). Nach dem ersten DC-Segment zeigt
+sich eine kleine negative Erholung (−0,0058…−0,0069 FS im 1-kHz-Fenster
+danach, Nachlauf −0,005…−0,008 FS) — flussbezogenes Abklingen im
+Promillebereich, nicht akkumulierend. **Sym weicht qualitativ ab:** er
+lässt +0,096 FS des DC durch (−20,3 dBFS), und die Nachlauf-Nachläufe
+*wachsen* mit jedem DC-Zyklus (−0,058 FS nach dem ersten, −0,165 FS nach
+dem zweiten; Erholungstransient −15,4 dBFS RMS nach DC-Ende). Das ist
+akkumulierender Zustand unter DC — Verdacht Integrator-Drift im
+Sym-Modell. Für Musiksignale harmlos (kein DC-Anteil), aber der einzige
+Fund der Serie, der gegen den Modellvertrag „kein versteckter Zustand"
+prüfen müsste; als offener Punkt in TODO (Abschnitt Sym).
+
+**Even-Order unter Offset — Kern-Signatur der Bank.** Mit DC-Offset
+(0,3 FS auf den 1-kHz-Ton) hebt sich H2 deutlich: 00s −105,7 → −25,4 dB
+(+80 dB!), 80s −88,7 → −67,7 dB (+21 dB), 60s −88,1 → −76,1 dB
+(+12 dB). Die Halbwellen-Peaks werden erwartbar asymmetrisch (00s:
++8,4/−9,4 dBFS gegen ±8,0/−7,9 ohne DC) — ohne Clipping an beiden Kanten.
+Das ist das Verhalten eines echten Kerns unter Offset (Arbeitspunkt
+verschoben, gerade Ordnungen leben auf). Sym bleibt davon ausgenommen
+(−128,1 gegen −131,9 dB): symmetrische Sättigung erzeugt nur ungerade
+Ordnungen — konsistent mit seinem Design-Intent, aber nicht mit seinem
+DC-Durchlass (siehe oben).
+
+**Remanenz und Einschwingen.** 80s ist die einzige Variante mit
+messbarem Operating-Point-Shift: Erstburst −5,57 dBFS gegen Folgebürste
+−5,37/−5,39 dB (−0,2 dB), konsistent auch im DC-Nachlauf nach Burst-Ende
+(+0,00309 gegen +0,00304 FS) — der Erstburst verschiebt den
+Magnetisierungszustand, die Folgebürste laufen auf verändertem Punkt. Dazu
+Nachlauf-RMS über dem Trägerboden in **allen** Varianten (60s +6,7 dB,
+80s +6,0, 00s +2,4, Sym +0,9 über −53 dBFS Boden): gedächtnisbehaftetes
+Abklingen nach jedem Burst. Die erste Halbwelle überschießt bei allen
+JSFX-Varianten um +0,5…+1,1 dB über den transparenten Sollwert (0,496 FS
+wegen des 20-ms-Fades) — Inrush-artiges Einschwingen des
+Fluss-Integrators; bei SSL A0 existiert derselbe Effekt (+0,56 dB), aber
+dort burstdeckungsgleich und ohne 80s-Shift, also fest wiederholbarer
+Transient statt Zustandsverschiebung. Randbefund: die Chirps der
+Marker werden von 60s (corr 0,97) und vor allem Sym (End-Chirp 0,65)
+nachweislich verändert — das Alignement bleibt exakt (REAPER-PDC), die
+Modelle prägen aber selbst den Sync-Ton.
+
+**Pegelreihe = Designvertrag bestätigt.** 60s verliert bei −2 dBFS
+exakt −0,82 dB Grundwelle — deckungsgleich mit dem Modellvertrag
+„max −0,82 dB Kopplungsverlust, kein verstecktes Make-up" (1k.1); 80s
+−0,45 dB, 00s −0,02 dB, Sym −0,00 dB. Keine Stufe kommt auch nur nahe an
+die SSL-Verluste (A100 −6,3 dB, A200 −15,9 dB bei gleichem Pegel). Der
+Klirr folgt der Knieform eines echten Sättigers: 60s flach ~1,2 % bis
+−14 dBFS, dann 3,85 % (−8) und 12,5 % (−2); 80s 12,4 % @ −2; 00s mild
+(1,1 % @ −2); Sym praktisch klirrfrei (≤ −99 dB über alle Stufen). Das
+Mittelband-Klirr (IM) liegt unter der statischen Vorhersage aus der
+20-Hz-Kurve (60s: k=2 −67 dB gemessen gegen −27 dB Vorhersage) —
+flussgewichtete, nicht pegelglobale Nichtlinearität, wie beabsichtigt.
+
+**Einordnung fürs Klangziel.** Die Bank bedient ihr Regime wie
+entworfen: kleine Kopplungsverluste, kontrollierte Sättigung ab
+−8…−2 dBFS, DC fester Block bis auf Sym. Die Diskriminierung liefert
+damit erstmals einen **messbaren Gegenbeweis zur SSL-Referenz** im
+Direktvergleich: die GS76-Modelle zeigen Kernphysik-Signaturen
+(DC-Block, Remanenz-Shift bei 80s, Even-Order unter DC), das SSL nicht.
+A50 bleibt Intensitätsanker; für Physikreferenzen gelten die eigenen
+Modelle, nicht das SSL. Vom Sym-Befund hängt ab, ob vor der nächsten
+Klangänderungsrunde eine Modellkorrektur (DC-Ableitung im
+Fluss-Integrator) mit Paritätslauf und Revision nötig wird.
+
+![Pegelreihe: Grundwellen-Gain](plots/mess-diskr-pegelreihe-gain.png)
+
+![Pegelreihe: Klirr über Pegel](plots/mess-diskr-pegelreihe-thd.png)
+
+![Bursts: Shift und Nachlauf](plots/mess-diskr-bursts.png)
+
+![Zweiton-IM: Seitenbänder gegen Vorhersage](plots/mess-diskr-im.png)
+
+![DC: Durchlass und H2 mit/ohne Offset](plots/mess-diskr-dc.png)

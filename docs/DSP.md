@@ -1473,6 +1473,49 @@ $$i(\lambda)=\operatorname{sgn}(\lambda)\,
 - vor Übernahme ein **A35-Microbenchmark**, denn p=3/p=5 sind derzeit sehr
   billig und ein Cachezugriff kann langsamer sein.
 
+### 2a. Quellenbewertung 2026-10-08: CPWL statt law()-LUT
+
+Die neuen Modellquellen (`QUELLEN.md`, Abschnitt „Modellquellen
+2026-10-08") ändern die Mechanismus-Wahl für Punkt 5 des Klangmodellplans
+(eigene Kennlinie für `law()`): eine **kanonisch piecewise-lineare
+(CPWL)** Darstellung nach Giampiccolo et al. 2021
+
+$$b = \lambda_0 + \lambda_1 a + \sum_{j=1}^{J}
+\bigl(\eta_j\,|a-a_j| + \nu_j\,\operatorname{sgn}(a-a_j)\bigr)$$
+
+ist der Tabellenvariante oben vorzuziehen, wenn eigene Kennlinien
+eingefittet werden:
+
+- **explizit und tabellenfrei:** J Segmente kosten je ein Betrag, ein
+  sgn und zwei Multiplikationen; keine Cache-/Stride-Frage, kein
+  Tabellenrand, kein Indexrechenweg, der C++/EEL2 bitgleich nachgebaut
+  werden müsste;
+- **stückweise konstante Steigung** (λ₁ ± Σ ηⱼ·sgn) — für den impliziten
+  Solver ist das die sauberste Jacobianspalte, konsistent zur
+  Intervallsteigung der Gain-Law-LUT (Abschnitt 1);
+- **beliebig verfeinerbar** über J; Fit gegen beliebige gemessene oder
+  entworfene Kennlinien (Klangformungsziel „eigener Charakter"), nicht
+  nur gegen die Potenz-/Fröhlich-Familien;
+- Odd-Symmetrie exakt über Betrag/Vorzeichen; außerhalb des Fitbereichs
+  wächst CPWL **linear** weiter — kein Clamp nötig, Extremtests bis
+  ±256 FS bleiben definitionsfrei;
+- EEL2-Umsetzung trivial (`abs`, `sgn` nativ) — geringeres
+  Paritätsrisiko als Tabellenindizes.
+
+Voraussetzungen vor Übernahme: Offline-Fit-Studie (J ∈ {4, 8, 12, 16};
+Fehlerziel 10⁻⁴ gegen die heutigen Profilkurven, Klangvergleich),
+A35-Microbench — die p=3/p=5-Kerne sind sehr billig, CPWL mit J=12 kann
+verlieren; die Messung entscheidet wie bei der law()-LUT — und der volle
+Paritätszyklus. Stop-/Hysteresezustände bleiben analytisch (nicht
+statisch darstellbar).
+
+**Rateabhängige Hysterese** (Massi et al. 2023, Preisach-RNN mit 32
+Hidden Units / 8 Play-Operatoren; 784 ms je Eingangsperiode auf einem
+x86-Laptop) ist **kein** Laufzeitkandidat für den Dwarf (CPU-Budget,
+C++/EEL2-Bit-Parität) und bleibt höchstens Offline-Referenzgenerator für
+einen späteren, leichten rateabhängigen Term — nur bei ausdrücklichem
+Klangzielnachweis.
+
 ### 3. Nicht erneut verfolgen
 
 **Vollständige `fet()`-LUT — weiterhin verworfen:**

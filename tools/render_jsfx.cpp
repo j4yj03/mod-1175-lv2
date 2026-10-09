@@ -12,6 +12,10 @@
 //   7 compression, 8 enabled, 9 link, 10 preset, 11 oversampling, 12 transformer
 #include "ysfx.h"
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <cerrno>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -21,6 +25,22 @@
 #include <vector>
 
 namespace {
+
+// POSIX-mkdir fuer das Ausgabeverzeichnis; fopen schweigt sonst mit
+// "WAV-Schreibfehler", wenn der Ordner fehlt (Befund 2026-10-07).
+bool makeDirs(const std::string& path) {
+    if (path.empty()) return true;
+    for (std::size_t i = 1; i < path.size(); ++i) {
+        if (path[i] != '/')
+            continue;
+        std::string prefix = path.substr(0, i);
+        if (::mkdir(prefix.c_str(), 0755) != 0 && errno != EEXIST)
+            return false;
+    }
+    if (::mkdir(path.c_str(), 0755) != 0 && errno != EEXIST)
+        return false;
+    return true;
+}
 
 struct Options {
     std::string jsfx;
@@ -184,6 +204,10 @@ int main(int argc, char** argv) {
         ysfx_process_float(fx.get(), in, outp, 2, 2, count);
         for (unsigned i = 0; i < count; ++i) { out[2 * (offset + i)] = outL[i]; out[2 * (offset + i) + 1] = outR[i]; }
     }
+    std::string parent = o.output;
+    std::string::size_type slash = parent.find_last_of('/');
+    parent = (slash == std::string::npos) ? std::string() : parent.substr(0, slash);
+    if (!makeDirs(parent)) { std::fprintf(stderr, "Verzeichnisfehler: %s\n", parent.c_str()); return 1; }
     if (!writeFloatWav(o.output, out, (unsigned)o.rate, 2)) { std::fprintf(stderr, "WAV-Schreibfehler\n"); return 1; }
     std::printf("%s\n", o.output.c_str());
     return 0;

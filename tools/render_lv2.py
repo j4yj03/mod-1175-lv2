@@ -66,16 +66,22 @@ def main():
     if not handle: raise SystemExit('Cannot instantiate native plugin')
     audio=[(C.c_float*args.block)() for _ in range(4 if stereo else 2)]
     relevant=[p for p in parameters if stereo or not p.get('stereo_only')]
-    existing=[p for p in relevant if not p.get('lv2_append')]
+    # Port order (generated TTL): input controls, latency, appended inputs,
+    # then output control ports such as gr_db. Output ports must not be
+    # counted as input controls, otherwise every later index shifts.
+    existing=[p for p in relevant if not p.get('lv2_append') and not p.get('lv2_output')]
     appended=[p for p in relevant if p.get('lv2_append')]
+    outctl=[p for p in relevant if p.get('lv2_output')]
     controls=[C.c_float(values[p['symbol']]) for p in existing]
     extra=[C.c_float(values[p['symbol']]) for p in appended]
+    grbufs=[C.c_float() for _ in outctl]
     latency=C.c_float()
     for i,buffer in enumerate(audio): d.connect(handle,i,C.cast(buffer,C.c_void_p))
     for i,value in enumerate(controls): d.connect(handle,len(audio)+i,C.byref(value))
     latency_index=len(audio)+len(controls)
     d.connect(handle,latency_index,C.byref(latency))
     for i,value in enumerate(extra): d.connect(handle,latency_index+1+i,C.byref(value))
+    for i,buffer in enumerate(grbufs): d.connect(handle,latency_index+1+len(extra)+i,C.byref(buffer))
     d.activate(handle)
     output=[]; total=len(signal)//ch
     for offset in range(0,total,args.block):

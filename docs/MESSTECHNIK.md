@@ -27,6 +27,8 @@ Testumfang, Protokollvorlage, Dwarf-Lastmessung, Scarlett-Workflow und Messarchi
 19. scarlett-archive/SCARLETT_WINDOWS_NOTES.md — *(Quelle: scarlett-archive/SCARLETT_WINDOWS_NOTES.md)*
 20. PluginDoctor-Sweep am Dwarf (ohne FX) 2026-10-06 — *(Neu; Rohdaten `PluginDoctor messen/scarlett/`)*
 21. Automatisierte Transformator-Matrix (`tools/scarlett_matrix.py`) — *(Neu 2026-10-06)*
+22. Geräteserien 2026-10-07/08 (Abschnitte 1a–1h): Dwarf als Signalquelle, Transformator-Matrix, JSFX-Render-Referenz, CPU-Matrizen, 0.5.2-Sessions
+23. PluginDoctor-Vergleich, SSL-AMOUNT-Referenz und ysfx-Renderer 2026-10-08 (Abschnitte 1i–1l)
 
 
 ---
@@ -617,6 +619,19 @@ Der Selbsttest braucht kein Gerät.
 
 <!-- ===== Teil 4: Quelle docs/DWARF_RESULTS.md ===== -->
 
+**Provenanz Serie A (2026-10-08 nachgetragen):** Messdatum
+**2026-10-05/06** (erste Transformationsserie + Lastmessreihe, HANDOFF
+2026-10-06); Werkzeug `tools/dwarf_loadtest.py` (Stand 2026-10-06,
+`--frames 128/256 --seconds 15–20 --expect-instances 1` — Stereo-Instanz,
+Settle vor dem Fenster); Boards `GS76Measure` (Stereomessboard) und
+`GS76x0`–`GS76x4` je 128/256 Frames, 0 xruns in allen Läufen.
+**Binary-SHA256 für Serie A nicht mehr rekonstruierbar** — die
+SHA-Protokollierung je Lauf wurde erst mit der CPU-Matrix 2026-10-07
+eingeführt (`e6b4e55…`, MESSTECHNIK 1f); die Serie A behält deshalb nur
+Trendaussage-Status, keine Binary-Bindung. Die nachfolgenden Serien
+(cpu-matrix-1e6/-051, Abschnitt 1f) tragen Datum, Tool-Version und
+installierte SHA256 im Archiv (`test-results/cpu-matrix-*/MANIFEST.md`).
+
 | Label | Frames | p_median % | p_peak % | xrun | top thread (median % of core) |
 |---|---:|---:|---:|---:|---|
 | GS76M128 | 128 | 48.0 | 48.0 | 0 | jackd:20.9 |
@@ -917,6 +932,354 @@ MPB-Pin `e5a1099`), Prozedur identisch zu 1c/1f:
 Install-Verifikation je Serie (SHA256 + Bundle-Generation per
 `0.4.1` im modgui-HTML) ausgeführt; Audio-Stack nach dem Binary-
 Austausch vollständig neu gestartet.
+
+## 1h. 0.5.2-Geräteserie mit Session-Schnitt (2026-10-08, gültig)
+
+Erste Serie mit der 0.5.2-Binary (`d94d3121…`, Pin `b09364e`): der Benutzer
+spielte das Matrixprogramm **11×** nacheinander (Referenz/Bypass, 60s, 80s,
+00s, Sym, Colour 5/10/20/50/75/100 %; Compression OFF, OS 2x, In/Out 0 dB)
+und nahm parallel auf — **Dwarf-Recorder** (digital, 32f/stereo,
+`mod_session_261008_12577.wav`) und **REAPER/Scarlett** (analog, zwei
+Mono-Takes). Auswertung neu mit `tools/dwarf_matrix_session.py`:
+
+1. `cut` — Pilot-Chirp-Erkennung (FFT-Matchfilter, normierte Korrelation)
+   schneidet die Wiedergaben aus der Langaufnahme; Reihenfolge fest
+   verdrahtet (`ORDER`), Qualität/Schwellwert im Tool.
+2. `analyze` — je Quelle/Zustand ein Run-Verzeichnis in der
+   `scarlett_test`-Struktur; Baseline = Referenz-Wiedergabe derselben
+   Kette; C++-Seite gegen den Stimulus als Baseline (Referenzrenders
+   0.5.2, siehe Renderhinweis unten).
+3. `report` — Aggregation `summary.json` + Plots (Gain/Frequenz,
+   20-Hz-Klirr, Colour-Sweep, Pegelreihe).
+
+**Ergebnis (Manifest `test-results/device-052-20261008/MANIFEST.md`):**
+Bypass-Kette digital flach (−0,0001 dB), max |Δ Gain| Device↔Referenz
+≤ 0,02 mdB, Anker exakt, Samplevergleich nach Gain-Fit: lineare Pfade auf
+float32-LSB, Solver-Profile ULP-Rest (max 1,1×10⁻⁴). Gruppenlaufzeit-
+Prüfung über feste Offsetausrichtung (keine Dispersion); reine Ton-Suche
+ist periodenmehrdeutig — feste Offsetausrichtung über alle Segmente
+verwenden, nicht je Segment optimieren.
+
+**Werkzeug-Falle (behoben):** `tools/render_lv2.py` verband seit 0.5.0 den
+Output-Port `gr_db` fälschlich als Eingangs-Control (Portliste aus
+`parameters.json`), wodurch Latency/Oversampling/Transformer um eine
+Position verschoben waren und alle damit erzeugten Referenzrenders mit
+**OS Off** liefen. Fix: Output-Control-Ports getrennt behandeln (Reihenfolge
+Controls → Latency → angehängte Inputs → Outputs wie im generierten TTL).
+Renders mit verdächtiger HF-Divergenz gegen bekannte gute Renders immer
+zuerst gegen `nominal_latency` prüfen (0/3/4 Frames verrät die OS-Stufe).
+
+## 1i. PluginDoctor-Vergleich Transformer-Harmonics (2026-10-08, gültig)
+
+**Gültige Messserie (14:00–14:52):** PluginDoctor 2.3.2 (Backend ReaJS,
+REAPER 2.3.2/64 bit, **44,1 kHz**, FFT-Raster 2,692 Hz, Sweep-Anregung
+−0,32 dB, Exp-Sweep 20 Hz→22,05 kHz).
+
+Captures unter `docs/PluginDoctor messen/Transformer Harmonics/`:
+GS76 **60s/80s/00s/Sym** und die Referenz **SSL Fusion Transformer** in
+**MIN/STOCK/MAX**. Je Capture ein 2D-Sweep-Screenshot, die
+Klirr-über-Frequenz-Kurve (`THD.txt`, Graph #0) und eine
+FFT-Momentaufnahme (`data.txt`, 2 × 8191 Punkte).
+
+**Panelsellungen GS76 (Benutzerangabe):** COMP OFF, **4x Oversampling**,
+Colour 0 %, Mix 100 %; der jeweilige Transformator über den
+Verzeichnisnamen. Eingangspegel und SSL-Knopfwerte sind nicht numerisch
+protokolliert. Analyse: `tools/analyze_pd_transformer.py` →
+`test-results/pd-transformer-20261008/analysis.json`; Auswertung inkl.
+Plots: [MESSERGEBNISSE](MESSERGEBNISSE.md), Abschnitt 10.
+
+**Gültigkeitsnachweis (neu, funktioniert):** die aus der FFT-Momentaufnahme
+berechnete Klirrsumme (H2…H41, Peak-Bins) stimmt bei 60s/80s/00s mit dem
+Kurvenwert an derselben Frequenz auf **Δ ≤ 0,08 dB** überein (+0,01/+0,08/
+−0,03 dB) — `THD.txt` und `data.txt` sind dieselbe Messung. Die
+Exportprobleme der ersten zwei Versuche (Anzeigeboden ohne Ton; viermal
+byte-identischer Graph) sind mit dem Rezept unten behoben.
+
+**Kernbefunde:**
+
+- **SSL verzerrt im Tieftönen massiv stärker:** MAX 8–30 Hz −5,2 dB
+  (≈ 55 %), STOCK 24–35 Hz −3,2 dB (≈ 69 %) gegen GS76 60s/80s bei 20 Hz
+  (−15,0/−13,1 dB ≈ 18/22 %); 00s fällt oberhalb 20 Hz steil ab
+  (30 Hz: −54,5 dB), Sym flach (−95 dB bei 20 Hz), SSL MIN auf
+  Analyserboden (−150 dB). Stützt das Klangziel „stärkerer, eigener
+  Charakter" quantitativ.
+- **Mittelband:** bei 1 kHz liegt GS76 60s (−83,3 dB ≈ 0,007 %) zwischen
+  SSL STOCK (−86,4 dB) und SSL MAX (−70,6 dB) — die Trennung spielt sich
+  im Tieftönen.
+- **Reihungsabweichung gegen das Gerät:** PD-Reihung bei 20 Hz
+  80s ≈ 00s > 60s; Gerätetreihung (−2 dBFS, 2x OS) 60s ≈ 80s ≫ 00s
+  (12,42/12,28/1,01 %). Deutung: die +1,7 dB heißere Anregung trifft beim
+  scharfen Fröhlich-Hochfeld-Knie des 00s das Steilgebiet; alternativ
+  Stellungs-/Pegelunterschied — kalibrierte Klärung offen.
+- **Harmonikentyp:** GS76-Snapshots ungeradedominiert (H2 ≤ −47 dB; 80s
+  zeigt bei heißestem Drive Even-Seitenbänder −47…−64 dB, Gerätetreihung
+  bei 20 Hz/−2 dBFS: H2 −80 dB). SSL STOCK bei 161 Hz **H2-dominant**
+  (−62,8 dB), SSL MAX bei 334 Hz ungeradedominiert (H3 −32,9 dB).
+- **Kopplungsverlust sichtbar:** GS76-Grundwelle im Snapshot −7,5 dB
+  (60s/80s) bzw. −3,5 dB (00s) unter der Anregung; SSL und Sym bei Unity
+  — konsistent mit der Koppelungs-Bassabsenkung des Modells.
+- **Kurvenform:** SSL-Kurven sind Treppenzüge (7…8 Stufen, Export/Mess-
+  granularität unbekannt), GS76-Kurven dicht (75 Diskordanzwerte von 83
+  Punkten); Punktvergleich nur stufentreu aussagekräftig.
+
+**Rezept (so wurden die gültigen Exporte erzeugt):** vor jedem Export die
+Anzeige sichtbar neu triggern (Ton aus/ein bzw. neue Messung) und die
+Änderung in der Anzeige kontrollieren; je Capture Screenshot + `data.txt`
++ `THD.txt` frisch exportieren und die Datei**größe** divergieren lassen
+(byte-identische Dateien = Fehlalarm). Zustände je Capture im
+Verzeichnisnamen führen; Panelsellungen zusätzlich als Screenshot des
+Panels sichern.
+
+**Offen:** kalibrierter Vergleich GS76 ↔ SSL bei **gleichem Pegel** und
+protokollierten Stellungen (statische Einzeltöne statt Sweep, z. B. 20 Hz
+und 1 kHz bei −2 dBFS) und PD-Wiederholung der 00s-Reihenfrage; erst dann
+Kennlinienvergleich gegen die Bankanker als Messnachweis führen.
+
+~~Erster Vergleichslauf (13:58–14:04) gegen die SSL Fusion Transformer-~~
+~~Referenz: Screenshots gültig, GS76-FFT-Exporte ungültig (Anzeigeboden~~
+~~−200 dB — Export ohne laufenden Ton); Referenzserie numerisch (29,6 Hz,~~
+~~THD ≈ 14,9 %, rein ungerade, H3 −19,5 dB).~~ *(Abgelöst durch die gültige
+Serie oben; die qualitative Aussage „GS76-Obertöne spärlicher/schwächer
+als SSL" bleibt bestätigt.)*
+
+~~Korrekturversuch 14:19–14:21: alle vier Exporte (60s/80s/00s/Sym) waren~~
+~~byte-identisch (MD5 `fede8841…`) — viermal derselbe Graph (8,08 Hz,~~
+~~THD ≈ 61 %, heißer Drive), keinem Profil zuordenbar.~~ *(Abgelöst; die
+Schnittstelle gab jeweils die alte Graphmomentaufnahme zurück — Rezept
+oben behebt das.)*
+
+## 1j. REAPER-JSFX-Render 0.5.2 — Bitverifikation (2026-10-08, gültig)
+
+Der Benutzer hat die JSFX neu laden lassen und das Batch erneut erzeugt
+(`reaper/testbench/2026-10-08 14_14_41/`): **35 Dateien** = Referenzlauf
+(`matrix-no_fx`) + 34 Zustände (Colour 0 × Typen, Colour-Stufen, alle 24
+GROUP 1 × 2-Kombinationen); die Plugin-GUI zeigt **0.5.2** (Screenshot).
+Vergleich gegen die 0.5.2-C++-Referenzrenders (`/tmp/opencode/ref052`,
+34 Float-WAVs, nach dem `gr_db`-Fix) sampleweise, Offsetsuche ±16:
+
+- **Alle 34 Zustände PASS** (beide Kanäle): Offset einheitlich **−3
+  Samples** (PDC der 2x-Latenz), max|diff| **5,96×10⁻⁸ = 0,5 LSB** (24 bit)
+  in jedem Zustand — identisch zur 1e-6-Serie.
+- **Referenzlauf sampleidentisch zum Stimulus** (Offset 0, max|diff| 0,0).
+- Damit ist die 0.5.2-Änderung in REAPER bitgleich bestätigt **und** die
+  GROUP 1 × 2-Interaktion (24 Zustände) in REAPER abgedeckt — genau die
+  Gruppe, die in der Geräteserie (`device-052-20261008`) bewusst
+  übersprungen wurde.
+- Das leere Verzeichnis `2026-10-08 14_14_34` ist ein abgebrochener
+  Renderstart (keine Dateien, nicht Teil der Verifikation).
+
+Archiv mit Parität, SHA256 beider Seiten und Provenanz:
+`test-results/jsfx-render-052-20261008/` (MANIFEST, `parity-052.json`,
+`render-SHA256.txt`, `ref-SHA256.txt`). Der Altstand-Batch `12_33_37`
+gilt damit als überholt.
+
+## 1k. SSL Fusion Transformer — AMOUNT-Sweep als kalibrierte Referenz (2026-10-08, gültig)
+
+Fünf REAPER-Renders in `reaper/testbench/2026-10-08 15_22_27/SSL GROUP 1/`
+(SSL Fusion Transformer, **AMOUNT 0/50/100/150/200**) über dasselbe
+64,47-s-Matrixprogramm wie alle Geräteserien
+(`Media/gs76-matrix-all-m2-stereo.wav`, 19 Segmente, −2 dBFS). Analyse
+gegen den **originalen Stimulusplan**
+(`test-results/dwarf-tones/runs/matrix-all-m2`, SHA geprüft) mit
+`tools/analyze_ssl_amount.py` → `test-results/ssl-amount-20261008/`
+(results.json/results.csv je AMOUNT und Kanal, aggregiertes
+`analysis.json`).
+
+**Gültigkeit:** Renderlänge = Stimuluslänge (3 094 560 Frames),
+Synchronisation < 1 Sample (0,289 Frames Fraktional-Offset), Kanal-
+differenz L↔R **0,0000 dB** — digital, paddgenau, kein Wandleranteil.
+Damit sind die Werte **direkt** mit den GS76-Bankankern vergleichbar
+(gleicher Stimulus, gleicher Pegel) — der erste kalibrierte
+Referenzvergleich.
+
+**Kernwerte (Kanal 1, −2 dBFS):** 20 Hz Klirr/Gain: A0 0,0000 %/+0,012 dB,
+A50 7,722 %/−1,022 dB, A100 51,289 %/−6,306 dB, A150 64,728 %/−14,630 dB,
+A200 27,400 %/−15,900 dB; 1 kHz ≤ 0,0107 % bei allen Stellungen (Gain
++0,014 dB konstant); 40/80 Hz dazwischen (A100: 7,45/0,44 %). Harmonische
+bei 20 Hz: A100 H3 −6,3/H5 −15,7/H7 −30,4 dBc, A150 H3 −5,8/H5 −10,3/
+H7 −13,8 dBc (Rechteckstruktur). Auswertung und Interpretation:
+[MESSERGEBNISSE](MESSERGEBNISSE.md) Abschnitt 11 (Plots
+`mess-ssl-amount-20hz.png`, `mess-ssl-amount-harmonik.png`).
+
+**Provenanzlücken:** SSL-Knopfstellungen (SHINE, MIX, INPUT/OUTPUT TRIM,
+HF+/LF+) nicht protokolliert — nur AMOUNT aus dem Dateinamen; MIX steht
+vermutlich nicht auf 100 % WET (Grundwellengewinn +0,014 dB); AMOUNT 0
+ist kleinste Stellung, **kein Bypass** (fester Höhen-Tilt +0,711 dB bei
+8 kHz, AMOUNT-unabhängig). Für einen reproduzierbaren Vergleich die
+Stellungen beim nächsten Lauf als Screenshot mitarchivieren.
+
+**Einordnung:** SSL konzentriert die Verzerrung auf den Bass und bezahlt
+mit massivem Pegelverlust (bis −15,9 dB bei 20 Hz, kein Auto-Makeup);
+im Mittelband bleibt die SSL-Referenz nahezu sauber, während der
+GS76-Colour-Pfad dort 2,4 % Klirr erreicht. Für das Klangziel
+„stärkerer, eigener Charakter" ist **SSL A ≈ 50** der nächste
+kalibrierte Referenzpunkt im Bass (7,7 % Klirr bei −1,0 dB — zwischen
+GS76 00s und 60s). Die heißen Stellungen (A100+) zeigen die Richtung
+„mehr Sättigung mit Bassloch", die das Modell bewusst **nicht** kopiert
+(kein versteckter Make-up, max −0,82 dB Kopplungsverlust).
+
+### 1k.1 Physikalische Plausibilität — „echter" Transformator? (2026-10-08)
+
+**Befund (Benutzerfrage):** die Messwerte suggerieren, dass die
+SSL-Plugin-Umsetzung **kein physikalisches Kernmodell** abbildet. Drei
+Messbelege:
+
+1. **Verlust ohne begleitende Verzerrung:** −14,6/−15,9 dB Grundwellen-
+   verlust bei 20 Hz und nur −2 dBFS Eingang (A150/A200). Ein realer
+   Line-Pegel-Kern verliert bei diesem Pegel ~1–2 dB; −16 dB bräuchte
+   eine kollabierende Magnetisierungsinduktanz (Lm bricht ein, Hochpass-
+   Ecke wandert hoch) — genau dieser Mechanismus erzeugt massive
+   Verzerrung und lastabhängiges Atmen. Gemessen werden nur 27,4 %
+   THD (H2…H10; mit 1/n-Schwanz realistisch ≤ ~45 %) — das Verhältnis
+   „Verlust ohne Verzerrung" passt nicht zu Kernphysik.
+
+2. **Energiebilanz:** bei A200 bleiben von der 20-Hz-Grundwellenleistung
+   ≈ 2,5 % übrig; die messbaren Obertöne tragen ≈ 0,2–0,5 % der
+   Eingangsleistung. Sättigung **wandelt** Energie in Obertöne um
+   (Rechteck-Limit ≈ 19 % der Restleistung), sie **löscht** sie nicht.
+
+3. **Effektmodell-Signatur:** AMOUNT 0 kein Bypass (fester Höhen-Tilt),
+   nichtmonotone THD über AMOUNT (Max bei A150 — die Grundwelle bricht
+   schneller weg als die Obertöne wachsen), Klirr fast ausschließlich
+   unter ~160 Hz (Fluss-Gewichtung ∝ V/f) — klassische Bauweise
+   „flussgewichteter Waveshaper + entworfener Bassverlust".
+
+**Was das nicht beweist:** auch ein *getreues* Modell eines absichtlich
+überfahrenen Mini-Kerns (die Fusion-Hardware fährt ihren Transformator
+als Effekt heiß) produziert diese Zahlen. „Stilisiertes Plugin" vs.
+„treues Modell eines missbrauchten Mini-Kerns" ist aus
+Magnitudenspektren allein nicht trennbar — Hardwaremessung am Fusion
+oder die folgenden Diskriminierungstests entscheiden:
+
+- **Bassburst/Remanenz:** echte Kerne zeigen Hysterese-Nachlauf und
+  Operating-Point-Shift nach Bursts; synthetische Modelle meist nicht.
+- **Zweiton-IM (60 Hz + 1 kHz):** flussgetriebene Kerne modulieren das
+  Mittelband (AM-Seitenbänder ±60 Hz); statische Waveshaper weniger
+  strukturiert.
+- **20-Hz-Pegelreihe:** Knieform und Verlust-gegen-Pegel trennen
+  Sättigungs- von Absenkungsverhalten.
+- **DC-/Polaritätsasymmetrie:** Even-Harmonics-Verhalten unter Offset
+  (Rezepte mit Signalen und Kriterien: 1k.2).
+
+**Konsequenz:** SSL A100–A200 niemals als Kalibrierziel (verletzt den
+Vertrag „max −0,82 dB Kopplungsverlust, kein verstecktes Make-up").
+SSL A50 bleibt **Intensitätsanker**, nicht Physikreferenz; die eigene
+Bank ist in ihrem Regime (kleine Kopplungsverluste, kontrollierte
+Sättigung) eher hardwarenah als die SSL-Referenz.
+
+### 1k.2 Diskriminierungstests — Rezepte (2026-10-08)
+
+**Signale:** `python3 tools/make_probes.py <dir>` erzeugt die vier
+Diskriminierungsprobes (Stereo L=R, PCM 24, 48 kHz; −2 dBFS ≙ 0,794).
+**Bevorzugter Renderweg:** das kombinierte Programm
+`reaper/testbench/Probes/diskriminierung/gs76-diskriminierung-stereo.wav`
+(45,74 s, Sync-Marker an Start/Ende, Trennstille 0,5 s; Anleitung
+`README.md`, Timeline/Maschinenformat `manifest.json` im selben
+Verzeichnis, erzeugt von `tools/make_discrimination_program.py`
+aus denselben Generatoren). Einzelprobes für gezielte Nachmessungen:
+
+| Datei | Inhalt | Dauer |
+|---|---|---|
+| `remanenz-bursts.wav` | 20-Hz-Bursts −2 dBFS bei 0,5–1,5 / 2,5–3,5 / 4,5–5,5 / 6,5–9,5 s (drei kurze + ein langer), dazwischen Träger 0,003 | 10 s |
+| `zweiton-im.wav` | 60 Hz −6 dBFS + 1 kHz −26 dBFS (SMPTE-artig, Probe leise) | 8 s |
+| `pegelreihe-20hz.wav` | 20-Hz-Töne −26/−20/−14/−8/−2 dBFS, je 3 s mit 20-ms-Fades | 15 s |
+| `dc-asymmetrie.wav` | 0–3 s 1 kHz + DC +0,3 FS; 3–6 s 1 kHz ohne DC; 6–8 s reiner DC +0,3 | 8 s |
+
+**Durchführung (REAPER-Renders, Benutzer):** das **gesamte Programm
+einmal je Variante** rendern (48 kHz, beide Kanäle) — fünf Renders statt
+20 Einzeldateien; Segmentgrenzen kommen aus `manifest.json`. Verbindliche
+Dateinamen (parsbar für die Auswertung):
+
+```
+diskriminierung-no_fx.wav      diskriminierung-ssl-a50.wav
+diskriminierung-ssl-a100.wav   diskriminierung-gs76-60s.wav
+diskriminierung-gs76-80s.wav
+```
+
+- no_fx = leere/Bypass-FX-Kette, muss **sampleidentisch** zum Programm
+  sein (Negative Control);
+- SSL: nur AMOUNT ändern, Stellungs-Screenshot mitarchivieren;
+- GS76: JSFX wie in der Testbench (COMP OFF, Colour 0, OS 2x, Transformer
+  60s/80s, In/Out 0 dB); die OS-Differenz (SSL ohne OS) betrifft Aliasing,
+  nicht die Tieftonmetriken.
+- DC-Offsets vorsichtig rendern (Clip-Reserven prüfen, Ausgangs-Peak
+  kontrollieren; Programmspitze 0,7 FS im DC-Segment).
+- SHA256 je Render plus Stellungs-Screenshot in
+  `test-results/ssl-diskriminierung-<Datum>/`; Offset-/Ratenprüfung der
+  Renders über die Pilot-Chirps (Korrelation, wie `block_correlate`).
+  Die Auswertung (Metriken unten) läuft offline über die Renders; ein
+  kleines Auswerteskript wird bei Durchführung ergänzt.
+
+**Auswertung und Kriterien:**
+
+1. **Remanenz/Bursts:** (a) Peak der ersten Halbwelle je Burst
+   (Fenster 50 ms nach Burstbeginn) — Erstburst gegen Folgebürste;
+   (b) Nachlauf-RMS im Fenster 50–250 ms nach Burst-Ende gegen den
+   Trägerboden; (c) Ausgangs-DC im 200-ms-Fenster nach Burst-Ende.
+   *Kern:* Folgebürste ≠ Erstburst und/oder Nachlauf > Boden, DC-Shift
+   sichtbar. *Statisches Modell:* alle Bursts deckungsgleich, Nachlauf =
+   Boden. no_fx muss exakt deckungsgleich sein (Negative Control).
+2. **Zweiton-IM:** FFT über ein 4-s-Messfenster (Hann), Seitenbänder bei
+   1000±k·60 Hz (k = 1…4) relativ zum 1-kHz-Probepegel; Ober-/Unterband-
+   Asymmetrie ausweisen. *Kern:* starke, mit Fluss (∝ 1/f) wachsende
+   Modulation und Band-Asymmetrie; statische Nichtlinearitäten erzeugen
+   auch Seitenbänder, aber **speicherfrei aus der Kennlinie vorhersagbar**
+   (Vorhersage aus Test 3) — die Abweichung von dieser Vorhersage ist der
+   Kern-Beleg.
+3. **20-Hz-Pegelreihe:** je Stufe gain_db und THD (H2…H10) im
+   tone_metrics-Muster, Settle ≥ 1 s je Stufe, alle Stufen aus **einem**
+   Render (kein Reglerwechsel zwischen Stufen). *Kriterium:* Verlust,
+   der unbegrenzt mit dem Pegel weiterwächst (Absenkung/Shelf), gegen
+   Verlust, der in Sättigung abklingt (Kern/Clipping); Knieposition
+   dokumentieren.
+4. **DC-/Polaritätsasymmetrie:** (a) Ausgangs-DC bei reinem DC-Eingang —
+   AC-Koppelung (Transformator): ≈ 0; DC-durchlässiges Effektmodell:
+   ≈ +0,3 bzw. gemappt; (b) H2/H3 mit gegen ohne DC-Offset (beide
+   Nichtlinearitäten erzeugen Evens — Muster und Ratio dokumentieren,
+   der Kern zusätzlich mit Nachlauf nach DC-Ende); (c) Clip-Grenzen der
+   positiven/negativen Halbwelle mit/ohne DC.
+
+**Grenzen:** alle Tests in-the-box (kein Wandleranteil); sie trennen
+„physikalisches Kernmodell" von „Effektmodell", nicht „getreu" von
+„stylisiert" — dafür bräuchte es eine Hardwaremessung am Fusion.
+
+**Durchführung 2026-10-08 (abgeschlossen, MESSERGEBNISSE 12):** Renders
+bei 0 dB (kein Pad nötig, Peak −1,9 dBFS), SSL AMOUNT 0/50/100/150/200 und
+JSFX 00s/60s/80s/Sym (COMP OFF, OS 4x, Colour 0 %, Mix 100 %) unter
+`reaper/testbench/2026-10-08 23_21_15/` (Namen `matrix-…` statt
+`diskriminierung-…`); Verifikation L=R, Chirps, stille Lead-ins, keine
+Clips; SHA256/Provenanz in `test-results/diskriminierung-20261008/`.
+Auswertung: `tools/analyze_discrimination.py` (Metriken dieses Abschnitts,
+plus speicherfreie IM-Vorhersage aus der 20-Hz-Kurve desselben Renders;
+nur Kanal L). `no_fx` wurde nicht gerendert — SSL A0/JSFX 00s als
+verifizierte Quasi-Referenz (LS ≈ 0 dB). Die erste Serie (23:03, −3 dB)
+war durch Projektfehler kontaminiert (nur-L-Programmkopien −6,4 dB an
+falschen Offsets, 630-Hz-Oszillation −11,3 dBFS in Stille) und wurde
+verworfen; Lehre: erst die no_fx-Negativkontrolle (sampleidentisch)
+rendern und prüfen, dann die Varianten.
+
+## 1l. ysfx-Offline-Renderer `render_jsfx` — mkdir-Fix und Bitverifikation (2026-10-08, gültig)
+
+`tools/render_jsfx.cpp` (ysfx, gepinnter Fork
+`JoepVanlier/ysfx 5c3452f…`) ist jetzt CMake-Target (`tests/CMakeLists.txt`,
+`render_jsfx`); der Befund 2026-10-07 „WAV-Schreibfehler bei fehlendem
+Ausgabeverzeichnis" ist behoben (POSIX-mkdir über die Pfadkomponenten,
+Reproduktion: Ausgabe in neu angelegtes verschachteltes Verzeichnis).
+
+**Bitverifikation (Zustand c0-tf1, volles 64,47-s-Programm):**
+
+- ysfx ↔ **C++-Referenz** (`/tmp/opencode/ref052/c0-tf1.wav`): Offset 0,
+  max |diff| 9,1×10⁻¹³ ≈ **0 LSB** — der Offline-Renderer ist auf
+  Float32-WAV-Niveau bitgleich mit dem C++-Pfad.
+- ysfx ↔ **REAPER-Render** (Batch `2026-10-08 14_14_41`, 60s_jsfx):
+  Offset −3 (REAPER-PDC), max |diff| 5,96×10⁻⁸ = **0,5 LSB** — derselbe
+  Umschlag wie die akzeptierte REAPER↔C++-Parität; die 1-LSB-Streuung
+  (~12 % der Samples) ist die REAPER-24-bit-Renderquantisierung/Dither.
+
+Nachweis: `test-results/ysfx-render-20261008/verify.json` (SHA256 aller
+Beteiligten, ysfx-Pin, Befehlszeile). ysfx ist damit als Offline-Referenz-
+Host neben REAPER belegt; REAPER-Renders bleiben die Host-Seite der
+Paritätskette.
 
 ## 2. Systemvoraussetzungen (Windows, nativ)
 
@@ -1697,11 +2060,16 @@ tools\scarlett_matrix.bat summary --root test-results\matrix-YYYYMMDD-HHMMSS
   bei Bedarf mit `--rates 48000 96000` nachmessen (Geräteraten vorher
   umstellen).
 
-## Erster Live-Einsatz der Matrix (2026-10-06, nicht abgeschlossen)
+## Erster Live-Einsatz der Matrix (2026-10-06; 2026-10-08 als abgeschlossen gemeldet)
 
-Messreihe `test-results/matrix-20261006-161927` (Gainmatch-Proben; Baseline/
-Matrix noch offen). Ursache des Abbruchs: Pegelkette/Routing, keine
-Software-Probleme. Verlauf:
+Messreihe `test-results/matrix-20261006-161927` (Gainmatch-Proben; die
+Serie wurde 2026-10-08 vom Benutzer **als abgeschlossen gemeldet** — die
+offenen Punkte (Loop-Gewinnkette, Raten-Mismatch, Board-/Routing-Klärung)
+wurden durch den Umstieg auf die **Dwarf-Quelle** und die REAPER-
+Aufnahmewege (2026-10-07, Abschnitte 1a/1b) gelöst bzw. obsolet; die
+Serie bleibt als Feldbefund-Archiv der Analog-Loop-Fallen. Ursache des
+ursprünglichen Abbruchs: Pegelkette/Routing, keine Software-Probleme.
+Verlauf:
 
 | Probe | Ch1 Loop-Gewinn | Ch2 Loop-Gewinn | Differenz | Befund |
 |---|---:|---:|---:|---|

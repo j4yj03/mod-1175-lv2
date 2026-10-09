@@ -425,6 +425,72 @@ Kernwerte experimentell gewählt, kein isolierter 1:1-Hardwarefit.
 SHA256:
 `a2f04f897eb7cfbe8efa23a141f859cefaf6cf371670bbe65786537c85027d63`.
 
+### Modellquellen 2026-10-08 (CPWL, Hysterese, WDF-Grundlage)
+
+Drei lokale PDFs vom 2026-10-08 vollständig als Text gelesen
+(pypdf-Extraktion); Bewertung und abgeleitete Aufgaben:
+`TODO.md` (Abschnitt „Eigenständiger Green-Stripe-Charakter") und
+`DSP.md` (Plan, Abschnitt CPWL). Das vierte PDF desselben Tages
+(TR2025-116, Kontext) steht unten.
+
+**GIAMPICCOLO-CPWL-2021:** Riccardo Giampiccolo, Alberto Bernardini,
+Giambattista Gruosso, Paolo Maffezzoni, Augusto Sarti, *Multiphysics
+Modeling of Audio Circuits with Nonlinear Transformers*, J. Audio Eng.
+Soc. 2021 (Vorabdruck-Zählung „Vol. X, No. X"; lokales PDF 15 Seiten).
+WDF-Multiphysik (elektrisch + magnetisch getrennt modulartig);
+nichtlineare Reluktanzen als **kanonisch piecewise-lineare (CPWL)**
+Funktionen `b = λ0 + λ1·a + Σ_j(η_j·|a−a_j| + ν_j·sgn(a−a_j))` —
+explizit, ohne Tabelle, beliebig verfeinerbar über Segmentzahl J;
+Fröhlich (Gl. 13/14) als übliche Sättigungsform referenziert;
+**Hierarchical SIM (HSIM)** als Fixpunktverallgemeinerung des Scattering
+Iterative Method mit je einem 1-D-Newton pro nichtlinearem One-Port;
+Validierung gegen Simscape (isovac/CGO Elektroblech) am Röhren-Endstufen-
+Beispiel, Backward Euler, 44,1 kHz, 50 Hz. Für uns: CPWL ist der
+Kandidat für den **Klangformungs-Fit von `law()`** (Punkt 5 des
+Klangmodellplans) — explizit, stückweise konstante Steigung
+(Newton-freundlich), kein Cache-/Tabellenteppich; CPU-Bench auf dem A35
+bleibt Pflicht. SHA256:
+`385f753f97e78b7e8c77ba5f0171fa1d147aabccf3a190400432337dcffd921b`.
+
+**MASSI-RNN-HYSTERESE-2023:** Oliviero Massi, Alessandro Ilic Mezza,
+Riccardo Giampiccolo, Alberto Bernardini, *Deep learning-based wave
+digital modeling of rate-dependent hysteretic nonlinearities for virtual
+analog applications*, EURASIP J. Audio Speech Music Process. 2023:12,
+Open Access (CC-BY 4.0), 16 PDF-Seiten. Rateabhängige Hysterese als
+WD-One-Port mit **Preisach-RNN** (U = 32 Hidden Units, M = 8 Play-
+Operatoren; Eingangsvektor = u, u̇, P₁…P_M; Play-Operatoren identischer
+Bauform wie unsere Stop-Bank); Anwendung Röhrenendstufe mit
+nichtlinearem Übertrager. **784 ms je Eingangsperiode** auf
+i5-1240P (1,7 GHz) — die Autoren selbst ordnen echte Echtzeit als
+zukünftig ein. Für uns: **kein Laufzeitkandidat** (A35-Budget,
+C++/EEL2-Bit-Parität); sinnvoll höchstens als Offline-Referenzgenerator,
+um eine leichte rateabhängige Korrektur zu fitten — nur wenn das
+Klangziel das verlangt. SHA256:
+`c6d9dcf7c9ecab58779aaf5c30221de0b6e31e1008241bb964d8bfdb35bc72e2`.
+
+**FETTWEIS-WDF-1986:** Alfred Fettweis, *Wave Digital Filters: Theory
+and Practice*, Proceedings of the IEEE 74(2), Februar 1986, S. 270–327.
+Grundlagenpapier der WDF-Theorie (Einschwingvorgang, Reference
+Resistance, Adapter, Stabilität unter finiter Arithmetik). Für uns:
+Zitiergrundlage für die WDF-Anteile des Modells; keine unmittelbare
+Modelländerung. SHA256:
+`c6aed1a81cfd6bbf15ce266389dfb58d7a5962c89441283e91c7c15fe7a2ff59`.
+
+**MERL-TR2025-116 (Kontext, kein Modellquell):** Christian J. Steinmetz,
+Christian Uhle, Flavio Everardo, Christopher Mitcheltree, J. Keith
+McElveen, Jean-Marc Jot, Gordon Wichern, *Audio Signal Processing in the
+Artificial Intelligence Era: Challenges and Directions*, JAES 2025 /
+MERL TR2025-116 (2025-08-02), 25 PDF-Seiten. Überblick über KI im
+Audio-Engineering (Trends, Echtzeit-/Latenz-/Samplerate-Herausforderungen,
+hybride/DDSP-Argumente). Bestätigt die Gray-Box-Ausrichtung des Projekts
+(erklärbar, parameterisierbar, echtzeitfähig); enthält keine direkt
+übernehmbaren Transformator-/FET-Modelle. SHA256:
+`e6942297e3260ef6e44cb21516a5a09f2c8d9269fa0c9d25b9ae97a3cf44ab49`.
+
+**FET-Bezug:** keine der vier Quellen behandelt FET-/Kompressorschaltungen;
+die FET-Seite bleibt bei den bestehenden 1176-/Jensen-/Literaturquellen
+(METHODIK, MOORE) und der eigenen Messreihe verankert.
+
 ### PAIVA-TRANSFORMER-2011
 
 Rafael Cauduro Dias de Paiva, Jyri Pakarinen, Vesa Välimäki und Miikka Tikander:
