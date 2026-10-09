@@ -5,6 +5,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix mod: <http://moddevices.com/ns/mod#> .
 @prefix modgui: <http://moddevices.com/ns/modgui#> .
 @prefix pset: <http://lv2plug.in/ns/ext/presets#> .
@@ -17,34 +18,41 @@
     mod:brand "GreenStripe"; mod:label "GS76 Mono";
     lv2:minorVersion 5; lv2:microVersion 2;
     lv2:optionalFeature lv2:hardRTCapable;
+    pg:mainInput <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_in>;
+    pg:mainOutput <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_out>;
     rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons, amplifier colour and refit-able input transformer profiles. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port
-    [ a lv2:InputPort, lv2:AudioPort; lv2:index 0; lv2:symbol "in"; lv2:name "Input" ],
-    [ a lv2:OutputPort, lv2:AudioPort; lv2:index 1; lv2:symbol "out"; lv2:name "Output" ],
+    [ a lv2:InputPort, lv2:AudioPort; lv2:index 0; lv2:symbol "in"; lv2:name "Input"; pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_in> ],
+    [ a lv2:OutputPort, lv2:AudioPort; lv2:index 1; lv2:symbol "out"; lv2:name "Output"; pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_out> ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 2;
       lv2:symbol "input"; lv2:name "Input";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-level>;
       lv2:shortName "Input"; lv2:default 0;
       lv2:minimum -36; lv2:maximum 24;
       units:unit units:db;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 3;
       lv2:symbol "output"; lv2:name "Output";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-level>;
       lv2:shortName "Output"; lv2:default 0;
       lv2:minimum -36; lv2:maximum 24;
       units:unit units:db;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 4;
       lv2:symbol "attack"; lv2:name "Attack";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-comp>;
       lv2:shortName "Attack"; lv2:default 3;
       lv2:minimum 1; lv2:maximum 7;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 5;
       lv2:symbol "release"; lv2:name "Release";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-comp>;
       lv2:shortName "Release"; lv2:default 5;
       lv2:minimum 1; lv2:maximum 7;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 6;
       lv2:symbol "ratio"; lv2:name "Ratio";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-comp>;
       lv2:shortName "Ratio"; lv2:default 1;
       lv2:minimum 0; lv2:maximum 5;
       lv2:portProperty lv2:integer, lv2:enumeration;
@@ -57,18 +65,21 @@
       pprops:rangeSteps 6 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 7;
       lv2:symbol "mix"; lv2:name "Mix";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-level>;
       lv2:shortName "Mix"; lv2:default 100;
       lv2:minimum 0; lv2:maximum 100;
       units:unit units:pc;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 8;
       lv2:symbol "colour"; lv2:name "Colour";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-tone>;
       lv2:shortName "Colour"; lv2:default 100;
       lv2:minimum 0; lv2:maximum 100;
       units:unit units:pc;
       pprops:rangeSteps 601 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 9;
       lv2:symbol "compression"; lv2:name "Compression";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-comp>;
       lv2:shortName "Comp"; lv2:default 1;
       lv2:minimum 0; lv2:maximum 1;
       lv2:portProperty lv2:integer, lv2:enumeration;
@@ -85,6 +96,7 @@
     [ a lv2:OutputPort, lv2:ControlPort; lv2:index 11; lv2:symbol "latency"; lv2:name "Nominal latency"; lv2:designation lv2:latency; lv2:portProperty lv2:integer, pprops:notOnGUI; units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 0 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 12;
       lv2:symbol "oversampling"; lv2:name "Oversampling";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-system>;
       lv2:shortName "OS"; lv2:default 0;
       lv2:minimum 0; lv2:maximum 2;
       lv2:portProperty lv2:integer, lv2:enumeration, lv2:connectionOptional;
@@ -94,6 +106,7 @@
       pprops:rangeSteps 3 ],
     [ a lv2:InputPort, lv2:ControlPort; lv2:index 13;
       lv2:symbol "transformer"; lv2:name "Transformer";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-tone>;
       lv2:shortName "Xfm"; lv2:default 0;
       lv2:minimum 0; lv2:maximum 4;
       lv2:portProperty lv2:integer, lv2:enumeration, lv2:connectionOptional;
@@ -105,8 +118,16 @@
       pprops:rangeSteps 5 ],
     [ a lv2:OutputPort, lv2:ControlPort; lv2:index 14;
       lv2:symbol "gr_db"; lv2:name "Gain Reduction";
+      pg:group <https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-meter>;
       lv2:shortName "GR"; lv2:default 0;
       lv2:minimum -60; lv2:maximum 0;
       units:unit units:db;
       lv2:portProperty lv2:connectionOptional;
       pprops:rangeSteps 601 ] .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_in> a pg:MonoGroup, pg:InputGroup; lv2:symbol "audio_in"; lv2:name "Input" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-audio_out> a pg:MonoGroup, pg:OutputGroup; lv2:symbol "audio_out"; lv2:name "Output" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-level> a pg:InputGroup; lv2:symbol "level"; lv2:name "Levels" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-comp> a pg:InputGroup; lv2:symbol "comp"; lv2:name "Compressor" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-tone> a pg:InputGroup; lv2:symbol "tone"; lv2:name "Colour" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-system> a pg:InputGroup; lv2:symbol "system"; lv2:name "System" .
+<https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-mono-group-meter> a pg:OutputGroup; lv2:symbol "meter"; lv2:name "Meter" .

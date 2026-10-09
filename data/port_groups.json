@@ -1,0 +1,25 @@
+{
+  "groups": [
+    {
+      "symbol": "comp",
+      "name": "Compressor"
+    },
+    {
+      "symbol": "level",
+      "name": "Levels"
+    },
+    {
+      "symbol": "tone",
+      "name": "Colour"
+    },
+    {
+      "symbol": "system",
+      "name": "System"
+    },
+    {
+      "symbol": "meter",
+      "name": "Meter",
+      "type": "output"
+    }
+  ]
+}

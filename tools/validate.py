@@ -38,6 +38,30 @@ def main():
             value=preset_value(p,spec)
             assert spec['min']<=value<=spec['max'],(p['name'],key)
     bundle=ROOT/'lv2/green-stripe-76.lv2'
+    # Port groups (LV2 pg). Every grouped parameter must reference a defined
+    # group; the generated TTL must wire pg:group on all present grouped ports,
+    # define each used group exactly once, keep group symbols disjoint from
+    # port symbols (pg spec: shared namespace) and declare main in/out.
+    groups=json.loads((ROOT/'data/port_groups.json').read_text(encoding='utf-8'))['groups']
+    group_syms={g['symbol'] for g in groups}
+    for spec in parameters:
+        if 'group' in spec:
+            assert spec['group'] in group_syms,(spec['symbol'],spec['group'])
+    port_syms={s['symbol'] for s in parameters}
+    assert not (port_syms & group_syms),port_syms & group_syms
+    for variant in ('mono','stereo'):
+        ttl=(bundle/(variant+'.ttl')).read_text(encoding='utf-8')
+        prefix='https://github.com/j4yj03/mod-1175-lv2#green-stripe-76-'+variant
+        expected=[s for s in parameters
+                  if s.get('group') and (variant=='stereo' or not s.get('stereo_only'))]
+        for spec in expected:
+            assert f'pg:group <{prefix}-group-{spec["group"]}>' in ttl,spec['symbol']
+        used={spec['group'] for spec in expected}|{'audio_in','audio_out'}
+        for sym in used:
+            assert len(re.findall(f'lv2:symbol "{sym}";',ttl))==1,(variant,sym)
+        assert ttl.count('pg:mainInput')==1 and ttl.count('pg:mainOutput')==1
+        assert ttl.count('pg:MonoGroup')==(2 if variant=='mono' else 0),variant
+        assert ttl.count('pg:StereoGroup')==(2 if variant=='stereo' else 0),variant
     # Port count is derived: audio ports plus control input ports plus the
     # latency port plus the monitored output ports.
     outputs=len([s for s in parameters if s.get('lv2_output')])

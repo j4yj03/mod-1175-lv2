@@ -18,6 +18,7 @@ TTL_PREFIXES = '''@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix mod: <http://moddevices.com/ns/mod#> .
 @prefix modgui: <http://moddevices.com/ns/modgui#> .
 @prefix pset: <http://lv2plug.in/ns/ext/presets#> .
@@ -96,7 +97,12 @@ def appended_value(q, preset):
     return preset.get(q['symbol'], q['default'])
 
 
-def port(index, p):
+def group_uri(variant, symbol):
+    """Gruppen-URI: Plugin-Fragment plus Gruppen-Plugin-Suffix, ein Fragment."""
+    return f'{PREFIX}{variant}-group-{symbol}'
+
+
+def port(index, p, variant):
     properties = []
     if p.get('labels'):
         properties += ['lv2:integer', 'lv2:enumeration']
@@ -105,9 +111,11 @@ def port(index, p):
     if p.get('connection_optional'):
         properties += ['lv2:connectionOptional']
     lines = [f'    [ a lv2:InputPort, lv2:ControlPort; lv2:index {index};',
-             f'      lv2:symbol "{p["symbol"]}"; lv2:name "{p["name"]}";',
-             f'      lv2:shortName "{p["short"]}"; lv2:default {number(p["default"])};',
-             f'      lv2:minimum {number(p["min"])}; lv2:maximum {number(p["max"])};']
+             f'      lv2:symbol "{p["symbol"]}"; lv2:name "{p["name"]}";']
+    if p.get('group'):
+        lines.append(f'      pg:group <{group_uri(variant, p["group"])}>;')
+    lines += [f'      lv2:shortName "{p["short"]}"; lv2:default {number(p["default"])};',
+              f'      lv2:minimum {number(p["min"])}; lv2:maximum {number(p["max"])};']
     if p.get('unit'):
         lines.append(f'      units:unit units:{p["unit"]};')
     if p.get('designation'):
@@ -121,16 +129,18 @@ def port(index, p):
     return '\n'.join(lines)
 
 
-def output_port(index, p):
+def output_port(index, p, variant):
     """Output control port (e.g. the measured gain reduction).
 
     Outputs are never preset-addressable and never appear in presets.ttl;
     the host reads them, the GUI only listens.
     """
     lines = [f'    [ a lv2:OutputPort, lv2:ControlPort; lv2:index {index};',
-             f'      lv2:symbol "{p["symbol"]}"; lv2:name "{p["name"]}";',
-             f'      lv2:shortName "{p["short"]}"; lv2:default {number(p["default"])};',
-             f'      lv2:minimum {number(p["min"])}; lv2:maximum {number(p["max"])};']
+             f'      lv2:symbol "{p["symbol"]}"; lv2:name "{p["name"]}";']
+    if p.get('group'):
+        lines.append(f'      pg:group <{group_uri(variant, p["group"])}>;')
+    lines += [f'      lv2:shortName "{p["short"]}"; lv2:default {number(p["default"])};',
+              f'      lv2:minimum {number(p["min"])}; lv2:maximum {number(p["max"])};']
     if p.get('unit'):
         lines.append(f'      units:unit units:{p["unit"]};')
     lines.append('      lv2:portProperty lv2:connectionOptional;')
@@ -175,6 +185,9 @@ def metadata(parameters, presets, model):
     files = {}
     _, minor, micro = map(int, model['version'].split('.'))
     bundle = 'lv2/green-stripe-76.lv2/'
+    groups = json.loads((ROOT / 'data/port_groups.json').read_text(encoding='utf-8'))['groups']
+    group_types = {g['symbol']: g.get('type', 'input') for g in groups}
+    group_names = {g['symbol']: g['name'] for g in groups}
     manifest = [TTL_PREFIXES]
     gui = [TTL_PREFIXES]
     preset_text = [TTL_PREFIXES]
@@ -187,23 +200,48 @@ def metadata(parameters, presets, model):
         audio = [('in_l', 'Input L', True), ('in_r', 'Input R', True),
                  ('out_l', 'Output L', False), ('out_r', 'Output R', False)] if stereo else [
                  ('in', 'Input', True), ('out', 'Output', False)]
+        audio_group = {'in_l': 'audio_in', 'in_r': 'audio_in', 'in': 'audio_in',
+                       'out_l': 'audio_out', 'out_r': 'audio_out', 'out': 'audio_out'}
         for i, (symbol, label, is_input) in enumerate(audio):
             ports.append(f'    [ a lv2:{"Input" if is_input else "Output"}Port, lv2:AudioPort; '
-                         f'lv2:index {i}; lv2:symbol "{symbol}"; lv2:name "{label}" ]')
+                         f'lv2:index {i}; lv2:symbol "{symbol}"; lv2:name "{label}"; '
+                         f'pg:group <{group_uri(variant, audio_group[symbol])}> ]')
         controls = [p for p in parameters if stereo or not p.get('stereo_only')]
         existing_controls = [p for p in controls
                              if not p.get('lv2_append') and not p.get('lv2_output')]
         appended_controls = [p for p in controls if p.get('lv2_append')]
         outputs = [p for p in controls if p.get('lv2_output')]
-        ports += [port(len(audio) + i, p) for i, p in enumerate(existing_controls)]
+        ports += [port(len(audio) + i, p, variant) for i, p in enumerate(existing_controls)]
         latency_index = len(audio) + len(existing_controls)
         ports.append(f'    [ a lv2:OutputPort, lv2:ControlPort; lv2:index {latency_index}; '
                      'lv2:symbol "latency"; lv2:name "Nominal latency"; '
                      'lv2:designation lv2:latency; lv2:portProperty lv2:integer, pprops:notOnGUI; '
                       'units:unit units:frame; lv2:minimum 0; lv2:maximum 32; lv2:default 0 ]')
-        ports += [port(latency_index + 1 + i, p) for i, p in enumerate(appended_controls)]
-        ports += [output_port(latency_index + 1 + len(appended_controls) + i, p)
+        ports += [port(latency_index + 1 + i, p, variant) for i, p in enumerate(appended_controls)]
+        ports += [output_port(latency_index + 1 + len(appended_controls) + i, p, variant)
                   for i, p in enumerate(outputs)]
+        # Gruppenressourcen: audio_in/audio_out plus jede referenzierte
+        # Steuergruppe; Symbole muessen portfrei bleiben (pg-Spec).
+        port_symbols = {s for s, _, _ in audio} | {p['symbol'] for p in controls}
+        used_groups = []
+        for symbol in ['audio_in', 'audio_out'] + [p['group'] for p in controls if p.get('group')]:
+            if symbol not in used_groups:
+                used_groups.append(symbol)
+        assert not (port_symbols & set(used_groups)), port_symbols & set(used_groups)
+        group_blocks = []
+        for symbol in used_groups:
+            if symbol == 'audio_in':
+                types = ('pg:StereoGroup, ' if stereo else 'pg:MonoGroup, ') + 'pg:InputGroup'
+                name = 'Input'
+            elif symbol == 'audio_out':
+                types = ('pg:StereoGroup, ' if stereo else 'pg:MonoGroup, ') + 'pg:OutputGroup'
+                name = 'Output'
+            else:
+                types = 'pg:OutputGroup' if group_types[symbol] == 'output' else 'pg:InputGroup'
+                name = group_names[symbol]
+            group_blocks.append(
+                f'<{group_uri(variant, symbol)}> a {types}; lv2:symbol "{symbol}"; '
+                f'lv2:name "{name}" .')
         files[bundle + variant + '.ttl'] = TTL_PREFIXES + f'''
 <{uri}> a lv2:Plugin, lv2:CompressorPlugin;
     doap:name "Green Stripe 76 {variant.title()}";
@@ -213,9 +251,11 @@ def metadata(parameters, presets, model):
     mod:brand "GreenStripe"; mod:label "GS76 {variant.title()}";
     lv2:minorVersion {minor}; lv2:microVersion {micro};
     lv2:optionalFeature lv2:hardRTCapable;
+    pg:mainInput <{group_uri(variant, 'audio_in')}>;
+    pg:mainOutput <{group_uri(variant, 'audio_out')}>;
     rdfs:comment "Independent FET feedback adaptation. Selectable Off/2x/4x oversampling, default Off, programme-dependent recovery, All Buttons, amplifier colour and refit-able input transformer profiles. No lookahead or brickwall guarantee. Nominal IIR latency is frequency dependent. Input/Output are digital dB gains. See project documentation.";
     lv2:port
-''' + ',\n'.join(ports) + ' .\n'
+''' + ',\n'.join(ports) + ' .\n' + '\n'.join(group_blocks) + '\n'
         gui_ports = [p for p in controls if p['symbol'] != 'enabled']
         monitored = ',\n'.join(f'    [ lv2:symbol "{p["symbol"]}" ]' for p in outputs)
         gui.append(f'''<{uri}> modgui:gui [
