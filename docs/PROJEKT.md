@@ -6,6 +6,62 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
 
 ## Zusammenfassung (Stand 2026-10-08)
 
+- **Port-Gruppen (LV2 pg) eingeführt (2026-10-08):** Parameter gruppiert
+  (Compressor/Levels/Colour/System/Meter, `gr_db` als `pg:OutputGroup`),
+  Audio-Paare als Stereo-/Mono-Gruppe, `pg:mainInput`/`pg:mainOutput`.
+  Rein additiv: Indizes/Symbole/URIs, Presets, JSFX und DSP unverändert;
+  `make test`/`validate` grün. Auslöser: MOD OS 1.14 zeigt „Grouped plugin
+  controls" in der Settings-View. Gerätesichtprüfung (1.14 RC4) offen.
+- **MOD OS 1.14 RC4 (build 3366) auf dem Dwarf (2026-10-08):** Testbuild —
+  Release-Verifikation bleibt an 1.13.5.3315 gebunden. Relevant neu:
+  „Grouped plugin controls" (Port-Gruppen in der Settings-View, geräte-
+  gestützt), neuer Audio-Stack (jack2/mod-host). Gerätchecks (modgui-JS-
+  Pfad, CPU-Matrix, Install-SHA256) sind auf 1.14 neu zu fahren
+  (TODO, Abschnitt Dwarf/Gerät); Messwerte künftig mit OS-Build labeln.
+- **0.5.2 bitgleich bestätigt (2026-10-08, 14:14):** REAPER-JSFX-Render
+  nach FX-Reload — **34 Zustände + Referenzlauf alle PASS** (Offset −3
+  Samples = PDC, max 0,5 LSB).
+
+  Damit auch die 24 GROUP 1 × 2-Kombinationen in REAPER abgedeckt;
+  Geräteserie `device-052-20261008` zuvor bereits Anker-exakt
+  (MESSTECHNIK 1g/1j, MESSERGEBNISSE 8/9).
+- **PluginDoctor-Vergleich gültig (2026-10-08):** GS76 60s/80s/00s/Sym
+  gegen SSL Fusion Transformer MIN/STOCK/MAX (COMP OFF, 4x OS, Colour 0 %,
+  Mix 100 %; Anregung −0,32 dB, 44,1 kHz).
+
+  Kurve↔Snapshot-Crosscheck Δ ≤ 0,08 dB; **SSL verzerrt im Tieftönen
+  massiv stärker** (≈ 55–69 % gegen 18/22 % bei GS76 60s/80s) — stützt
+  das Klangziel „stärkerer, eigener Charakter"; Reihungsabweichung 00s
+  gegen das Gerät offen (MESSTECHNIK 1i, MESSERGEBNISSE 10).
+- **Kalibrierte SSL-Referenz (2026-10-08):** AMOUNT-Sweep 0/50/100/150/200
+  als REAPER-Render über dasselbe Matrixprogramm (−2 dBFS, digital,
+  paddgenau): 20 Hz A50 7,72 % @ −1,02 dB, A100 51,3 % @ −6,31 dB,
+  A200 27,4 % @ −15,90 dB (kein Auto-Makeup); 1 kHz ≤ 0,011 %, AMOUNT 0
+  kein Bypass.
+
+  **Interpretation: kein physikalisches Kernmodell** (Verlust ohne
+  begleitende Verzerrung, Energiebilanz, Effektmodell-Signatur;
+  MESSTECHNIK 1k.1) — A100–A200 niemals Kalibrierziel, A50 als
+  Intensitätsanker. **SSL A ≈ 50 = nächster kalibrierter Referenzpunkt im
+  Bass; das Mittelband-(Colour-)Klirr ist bei GS76 deutlich stärker als
+  bei SSL** (MESSTECHNIK 1k, MESSERGEBNISSE 11).
+- **Diskriminierung abgeschlossen (2026-10-08):** SSL Fusion Transformer
+  gegen GS76-Bank über das 1k.2-Kombiprogramm (SSL AMOUNT 0–200, JSFX
+  00s/60s/80s/Sym; 0 dB, verifiziert). **SSL = Effektmodell bestätigt**:
+  Bursts ohne Remanenz (±0,01 dB), IM symmetrisch und 30–70 dB unter der
+  statischen Vorhersage, A200-Verlust als linearer −16-dB-Fix-Shelf statt
+  Sättigungsasymptote, DC-Durchlass 4–37 %. GS76-Bank zeigt die
+  Kern-Signaturen (DC-Block −148 dB, 80s-Remanenz-Shift −0,2 dB, H2
+  unter DC +12…+80 dB); Sym zeigt DC-Pumpen (prüfen). A50 bleibt
+  Intensitätsanker (MESSTECHNIK 1k.2, MESSERGEBNISSE 12).
+- **Modellquellen 2026-10-08 bewertet:** CPWL-Kennlinien (Giampiccolo
+  JAES 2021) als bevorzugter Fitmechanismus für eigene `law()`-Kurven
+  (DSP.md Plan 2a).
+
+  Rateabhängige Hysterese (Massi 2023, Preisach-RNN, 784 ms/Periode)
+  ausdrücklich **kein** Laufzeitkandidat; Fettweis 1986 als WDF-Grundlage,
+  MERL TR2025-116 als Kontext. FET: keine neuen Modellquellen.
+  Abgeleitete Aufgaben in TODO.
 - **Produkt 0.5.0 (Benutzerauftrag, 2026-10-07):** LV2-GUI mit **VU-Meter**
   (GR-Nadel 0…30 dB, rote Zone ab 20 dB; Face beleuchtet bei COMP ON,
   gedimmt bei COMP OFF — dient zugleich als Statuslicht); neuer rein
@@ -146,6 +202,50 @@ Einstieg, verbindlicher Umfang, aktueller Prüfstand, Übergabeauftrag und Entwi
   **−18,5 %** (Sym). `make test` + Parität 430+76 (max 0 FS) PASS, Anker
   unverändert. Die Bit-Basis verschiebt sich auf Rundungsniveau —
   Geräteanker/Render mit dem nächsten MPB-Build erneuern.
+- **0.5.2 am Gerät bestätigt (2026-10-08,
+  `test-results/device-052-20261008`):** MPB-Build (Pin `b09364e`, Geräte-SHA
+  `d94d3121…`) über die digitale Dwarf-Recorder-Serie verifiziert —
+  Referenz/Bypass flach (−0,0001 dB), Reihenfolge per Klirr-Fingerabdruck
+  bestätigt (20 Hz: 60s 12,424 % > 80s 12,276 % > 00s 1,014 % > Sym
+  0,001 %), Anker-Gains −0,8174/−0,4412/−0,0156/−0,0013 dB exakt wie
+  dokumentiert, Colour 5–100 % linear (Klirr 0,123→2,435 %), max |Δ Gain|
+  gegen frische 0.5.2-C++-Referenzen **≤ 0,02 mdB** (10 Zustände × 19
+  Segmente, beide Kanäle). Samplevergleich nach Gain-Fit (−0,000065 dB):
+  lineare Pfade auf float32-LSB, Solver-Profile ULP-Rest (max
+  1,1×10⁻⁴ ≈ −79 dBFS, 80s) — die erwartete Rundungsverschiebung des
+  0.5.2-Stands. GROUP 1 × 2 am Gerät bewusst nicht aufgenommen
+  (Benutzerentscheid); Plots: `plots/` im Serienordner. Werkzeuge:
+  `tools/dwarf_matrix_session.py` (Schnitt/Serie/Report). **Nebenbefund:**
+  `tools/render_lv2.py` verband seit 0.5.0 `gr_db` als Eingangs-Control —
+  die damit erzeugten Renders liefen mit OS Off (Behelfsdiagnose
+  „Toolchain-Verdacht" damit widerlegt); Tool gefixt (keine
+  Revisionspflicht), 34 Referenzrenders gegen den verifizierten
+  1e-6-REAPER-Batch bitgleich (max 0,5 LSB). **REAPER-JSFX-0.5.2-Render
+  bestätigt (2026-10-08, 14:14):** nach FX-Reload neues Batch
+  `2026-10-08 14_14_41` — 34 Zustände + Referenzlauf **alle bitgleich**
+  (Offset −3, max 0,5 LSB; GUI zeigt 0.5.2); erstmals auch alle 24
+  GROUP 1 × 2-Kombinationen in REAPER abgedeckt, die die Geräteserie
+  bewusst übersprang. Archiv `test-results/jsfx-render-052-20261008/`
+  (MESSTECHNIK 1j, MESSERGEBNISSE 9).
+  **MESSERGEBNISSE erweitert (2026-10-08):** Abschnitt 8 (0.5.2-Geräteserie
+  mit Digital-/Analog-Deltas, Samplevergleich, Plot `mess-device052-delta.png`)
+  und Abschnitt 9 (0.5.2-Render-Parität) aus den JSONs generiert; die
+  0.5.2-Geräteserie ist damit vollständig dokumentiert.
+- **PluginDoctor-Vergleich Transformer-Harmonics (2026-10-08,
+  MESSTECHNIK 1i):** erster Vergleichslauf gegen die **SSL Fusion
+  Transformer**-Referenz. Screenshots (Sweep-Spektrogramme) gültig: die
+  GS76-Profile zeigen deutlich spärlichere/schwächere Obertöne als SSL —
+  stützt die Klangziel-Entscheidung „stärkerer, eigener Charakter".
+  SSL-Referenzserie numerisch: 29,6 Hz, THD ≈ 14,9 %, rein ungerade
+  (H3 −19,5 dB, ∝ 1/n-Anfangsabfall), gerade ≤ −80 dB; Stellungsprovenanz
+  unprotokolliert. **Die drei GS76-FFT-Exporte (60s/80s/00s) sind
+  ungültig** (Export ohne laufenden Ton, nur Anzeigeboden) — numerischer
+  GS76↔SSL-Vergleich offen (TODO). **Korrekturversuch 14:19–14:21:**
+  Exporte liefern jetzt ein Spektrum, aber **alle vier Dateien sind
+  byte-identisch** — viermal derselbe, keinem Profil zuordenbare Graph
+  (8,08 Hz, THD ≈ 61 %, rein ungerade, heißer Drive); die Screenshots
+  unterscheiden sich je Profil, nur die Export-Schnittstelle gab denselben
+  (alten) Graph zurück. Rezept für den nächsten Versuch in MESSTECHNIK 1i.
 - **Klangziel entschieden (2026-10-07):** stärkerer, **eigenständiger
   Green-Stripe-Charakter** (kein Hardwareidentitätsziel). Produktvariante
   (Drive-Regler / heiße Bank / beides) offen; vor jeder Laufzeitänderung
@@ -292,7 +392,10 @@ Hardware-Revision A/D nicht bindend.
   (2) Im Ch1-Probe kommt das Signal auf beiden Scarlett-Eingängen an und Ch2
   clippt (bis 139k Samples) — Hinweis auf MONO-Board oder abweichende
   Verkabelung; Prüfung offen. (3) Ch2 zuletzt 4,9 dB unter Ch1 — Rebalance
-  nötig. Details/Regeln: MESSTECHNIK Abschnitt 21.
+  nötig. Details/Regeln: MESSTECHNIK Abschnitt 21. **2026-10-08: vom
+  Benutzer als abgeschlossen gemeldet** — die offenen Punkte wurden über
+  den Umstieg auf die Dwarf-Quelle und die REAPER-Aufnahmewege (2026-10-07)
+  gelöst bzw. obsolet; die Serie bleibt als Feldbefund-Archiv.
 - **Umstieg auf Dwarf als Signalquelle (2026-10-07):** Der Dwarf spielt die
   Testtöne selbst (File-Player → GS76 → DAC → nur noch Scarlett-ADC). Der
   Plugin-Eingang ist damit digital exakt pegelbekannt — `--level -2` trifft
@@ -497,8 +600,8 @@ aus zwei x86-/A35-Anteilen, keine Abnahme. Details und Protokoll in
 | Scarlett-Skript | **12 Offline-/simulierte Backendtests PASS** (Gain, H2, DC, FIR, Taktabweichung, Delay, Fehler, Routing/Stop, HF-Grenze, Pegel-Gate, Raten-Mismatch) |
 | Scarlett-CLI | `generate --kind all` + `analyze` auf identischer WAV, 19 Segmente PASS |
 | Scarlett-Live | 2026-10-05 ausgeführt (TF60s/80s/00s/Sym, Stereo, MME −12 dBFS); Auswertung oben — Pegel-/SNR- und HF-Grenzen, Wiederholung offen |
-| Dwarf-Last Serie A | GS76x0–x4, 128/256 Frames, Median 46–48 %, Spitzen ~66 %, **0 xruns**, Binary-SHA256 in `MESSTECHNIK.md` |
-| Lastwerkzeuge | `make transformer-bench` baut; x86-Sweep und Instanzlinearität ausgeführt; `--self-test` PASS; **Serie B (Gerät) offen** |
+| Dwarf-Last Serie A | GS76x0–x4, 128/256 Frames, Median 46–48 %, Spitzen ~66 %, **0 xruns**, Provenanz nachgetragen (MESSTECHNIK Teil 4; Binary-SHA für Serie A nicht mehr rekonstruierbar — Trendreihe) |
+| Lastwerkzeuge | `make transformer-bench` baut; x86-Sweep und Instanzlinearität ausgeführt; `--self-test` PASS; ~~Serie B (Gerät) offen~~ Serie B am Gerät ausgeführt (2026-10-07, `test-results/serie-b`, Gewinn der Doppel-Auswertung ~0 %) |
 | Diagnosemakro | `diag_parity` gegen `diag_parity_stats` byteidentisch, `cmp` PASS |
 | Paketierung | Source-/JSFX-ZIP 0.4.1, Integrität und Scarlett-Skript/Anleitung/Requirements PASS; Diagnoseaudio/NAM/PDF/NPZ ausgeschlossen |
 
@@ -519,7 +622,7 @@ und die Paare 31/37, 35/38 hören und CPU/xruns im echten Pedalboard prüfen.
 # Mission Status
 
 ## Aktueller Stand
-- Dwarf-Messungen Serie A (128/256 Frames, GS76x0–x4): 46–48 % Median, Spitze bis ~66 %, 0 xruns — Tabelle und Binary-SHA256 in `MESSTECHNIK.md`, Provenienz (Datum/Tool-Version) noch zu ergänzen.
+- Dwarf-Messungen Serie A (128/256 Frames, GS76x0–x4): 46–48 % Median, Spitze bis ~66 %, 0 xruns — Tabelle in `MESSTECHNIK.md`; Provenienz 2026-10-08 nachgetragen (Datum/Tool/Fenster; **Binary-SHA256 für Serie A nicht mehr rekonstruierbar** — nur Trendreihe).
 - Scarlett-Tests durchgeführt (TF60s/80s/00s/TFSym, Stereo, MME −12 dBFS, 2026-10-05). Nachbetrachtung: Loop-Gewinn −63 dB → THD/THD+N und HF-Spalten nicht Plugin-tauglich; Latenzbestätigung (4 Frames/OS 4x) gültig. Wiederholung mit angehobenem Pegel offen.
 - Scarlett-Loop-Analyse dokumentiert (`MESSTECHNIK.md` Abschnitt 9, Protokoll `MESSTECHNIK.md`).
 

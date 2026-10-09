@@ -60,6 +60,40 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
 
 ## Offen — Dwarf/Gerät (siehe [PROJEKT](PROJEKT.md), Abschnitt Übergabe)
 
+**OS-Wechsel 2026-10-08: MOD Dwarf läuft auf 1.14 RC4 (build 3366)** —
+Testbuild („Evelyn, a Modified Dog"; Forum-Thread 13493). Neuer
+Audio-Stack (jack2, mod-host), neue Frameworks; **Gerät-Stand 1.14 RC4
+ist kein Release-Verifikationsstand** — die 1.13.5-Ergebnisse bleiben
+die releasegebundenen Referenzen, bis 1.14 stable ist.
+
+- [ ] Install-Verifikation auf 1.14: SHA256 des installierten Binaries
+  nach dem nächsten Install prüfen (Thread-Warnung betrifft den Duo,
+  trotzdem am Rechner verifizieren, nicht nur am Gerät); Plugin-Mapping
+  und Load prüfen (`dwarf_loadtest.py --expect-instances`).
+- [ ] modgui-Pfad neu verifizieren: `grep setOutputPortValue
+  /usr/share/mod/html/js/modgui.js` auf 1.14 ausführen (mod-ui wurde
+  aktualisiert; die 0.5.0-VU-Nadel hängt an diesem Pfad), dann
+  VU-Funktionssichtprüfung am Gerät.
+- [x] **Port-Gruppen am Gerät prüfen:** 1.14 zeigt „Grouped plugin
+  controls" (gruppiert + farbcodiert in der Settings-View). **Umsetzung
+  2026-10-08 abgeschlossen:** normative `data/port_groups.json` + `group`-Feld
+  in `data/parameters.json`; Generator gibt `pg:group`, Gruppenressourcen
+  (`Compressor`, `Levels`, `Colour`, `System`, `Meter` als `pg:OutputGroup`,
+  Audio-Paare als `pg:StereoGroup`/`pg:MonoGroup` + `pg:mainInput`/
+  `mainOutput`) aus; `validate.py` prüft Zuordnung, Symbolfreiheit
+  (pg-Namensraum geteilt mit Ports), Mono/Stereo-Typen. Indizes/Symbole/
+  URIs unverändert, JSFX/RPL/Presets unberührt, keine src/jsfx-Änderung
+  (keine Revision). **Offen: Sichtprüfung der Gruppierung am 1.14-Gerät**
+  (nach dem nächsten Paket-Install).
+- [ ] CPU-Spotcheck auf 1.14: neue Engine kann die Medianwerte
+  verschieben — keine 1.13.5-CPU-Zahlen unkommentiert auf 1.14 übernehmen;
+  Messwerte künftig immer mit OS-Build labeln (AGENTS).
+- [ ] Thread-Regressionen im Blick behalten: Snapshot-Stille-Ausfälle
+  laut Changelog gefixt; `atom:String`-Parameter-Regression (PR 179, in
+  RC2 gefixt — betrifft uns nicht, GS76 hat keine String-Ports);
+  xruns-Verhalten beim ersten 1.14-Lauf beobachten und mit den
+  1.13.5-Messreihen vergleichen.
+
 - [x] Plugin-level CPU-Matrix am Dwarf (36 Zustände, je voller Neustart):
   Bypass 22 %, None+Colour 28–36 %, Typen 48–56 %, Interaktionen 56–68 %
   (20-Hz-Sinus, OS 2x, COMP OFF, 128 Frames, 0 xruns). **Sym und 00s sind
@@ -70,16 +104,23 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
   `test-results/serie-b`, PERFORMANCE Serie B). Vorher/Nachher der
   Doppel-Auswertung bitgleich (Checksummen), Gewinn ~0 %. Offen: Wiederholung
   mit der MPB-Toolchain, falls absolute MPB-komparable Zahlen gebraucht werden.
-- [ ] Dwarf-Lasttabelle: Provenienz nachtragen (Messdatum, Tool-Version,
-  installierte SHA256 je Serie, Settle/Messfenster).
+- [x] Dwarf-Lasttabelle: Provenienz nachträglich dokumentiert (2026-10-08,
+  MESSTECHNIK Teil 4): Messdatum 2026-10-05/06, Tool-Stand 2026-10-06,
+  Messfenster 15–20 s, 128/256 Frames; **Binary-SHA256 für Serie A nicht
+  mehr rekonstruierbar** (SHA-Protokollierung erst ab der CPU-Matrix
+  2026-10-07) — Serie A gilt nur noch als Trendreihe; alle folgenden
+  Serien tragen Datum/Tool/SHA im Archiv.
 - [x] 0.5.1-Bundle mit MPB `moddwarf-new` gebaut und installiert
   (Binary `c936aca6…`, Pin `bb46e86`); CPU-Matrix 36 Zustände am Gerät
   bestätigt (Abschnitt CPU-Reduktion, `cpu-matrix-051-20261008`).
-- [ ] 0.5.2-Bundle mit MPB `moddwarf-new` neu bauen: dafür zuerst den
+- [ ] ~~0.5.2-Bundle mit MPB `moddwarf-new` neu bauen: dafür zuerst den
   0.5.2-Stand (Kehrwerte, siehe „Ausstehende Verifikationen — 0.5.2")
   committen und den Pin darauf setzen (Arbeitsexemplar-Pin `dbaf48f`
   enthält 0.5.1-DSP + VU-Hub, noch **ohne** 0.5.2); Install-SHA
-  verifizieren; danach 21/22 sowie 31/37 und 35/38 im Pedalboard hören,
+  verifizieren;~~ *(überholt: 0.5.2 ist committet `b09364e`, als Pin
+  gesetzt, mit MPB gebaut und installiert — Geräte-SHA `d94d3121…`,
+  2026-10-08; siehe „Ausstehende Verifikationen — 0.5.2".)* **Offen ist
+  noch der Rest:** 21/22 sowie 31/37 und 35/38 im Pedalboard hören,
   CPU/xruns prüfen.
 - [ ] Reale REAPER-7-Abnahme (Recall/Automation/Host-GR/Fonts) und
   Dwarf-Bedienprüfung (PROJEKT, Abschnitt Übergabe P0/P1).
@@ -116,6 +157,17 @@ und Grafiken: [MESSERGEBNISSE](MESSERGEBNISSE.md) (generiert).
   [EXTERN](EXTERN.md) dokumentiert.
 - [ ] Alias-Konvergenz und Hören der ~21,45-kHz-H9-Kandidatenlinie bei hohem
   Colour-only-Drive (EXTERN).
+- [ ] **CPWL-Kennlinien-Studie** (Quelle Giampiccolo 2021, Bewertung in
+  DSP.md Plan 2a): Offline-Fit kanonisch piecewise-lineare Kennlinien
+  (J ∈ {4, 8, 12, 16}) an eigene Kurvenentwürfe und Messreihen, Fehlerziel
+  1e-4 gegen die heutigen Profile, A35-Microbench gegen p=3/p=5, dann
+  voller Zyklus (Parität/Übergänge/Anker). Kandidat für Punkt 5 unten
+  (Mechanismus ersetzt die Tabelle, Klangformungsprojekt, keine
+  CPU-Motivation).
+- [ ] Rateabhängige Hysterese (Quelle Massi 2023, Preisach-RNN): **kein**
+  Laufzeitkandidat (784 ms/Periode auf x86; A35 + Bit-Parität) —
+  zurückgestellt; höchstens Offline-Referenzgenerator für einen leichten
+  rateabhängigen Term bei ausdrücklichem Klangzielnachweis.
 - [ ] Musik-Hörtests: alle 38 Presets auf geeignetem Material; pegelgleiche
   4:1/2:1-Vergleiche (31↔37, 35↔38); Attackkorrektur 21/22 hören
   (EXTERN, Abschnitt Presetbewertung).
@@ -130,8 +182,12 @@ zuerst offen: **Offline-Kandidatenvergleich vor jeder Laufzeitänderung.**
 Detaillierter Plan (Phasen, Messdatensätze, LUT-Formeln und Laufzeitdetails):
 **`DSP.md`, Abschnitt „Klangmodell-Verfeinerung und Kennlinien-LUT — Plan
 (2026-10-07)"**; Optionenliste und Hörbefund: `EXTERN.md`.
-Solange nichts umgesetzt ist, werden `src/`/`jsfx/` nicht berührt — die
-Version bleibt **0.4.1**; aktueller Stand nach der 2:1-Änderung: **0.4.2**.
+~~Solange nichts umgesetzt ist, werden `src/`/`jsfx/` nicht berührt — die
+Version bleibt 0.4.1; aktueller Stand nach der 2:1-Änderung: 0.4.2.~~
+*(Überholt: 0.5.0–0.5.2 sind inzwischen umgesetzt und am Gerät bestätigt
+(VU-Meter, Sym-Fastpath, Kehrwerte); der Klangmodellplan selbst ist
+weiterhin offen — aktueller Stand **0.5.2**, keine geplanten Kandidaten-
+änderungen ohne Offline-Vergleich.)*
 
 ### 0. Sofortblock Dokumentation — erledigt in diesem Arbeitsblock
 
@@ -203,6 +259,12 @@ Version bleibt **0.4.1**; aktueller Stand nach der 2:1-Änderung: **0.4.2**.
   Dwarf-CPU-Matrix, pegelgleicher Musikvergleich.
 
 ### 5. Transformer-law()-LUT (nur falls die gewünschte Kurvenform analytisch nicht erreichbar ist)
+
+**Mechanismus-Update 2026-10-08:** als Fitmechanik ist **CPWL
+(Giampiccolo 2021) der Tabelle vorzuziehen** — explizit, stückweise
+konstante Steigung, tabellenfrei; Bewertung und Verträge: `DSP.md`,
+Plan-Abschnitt 2a. Die folgenden Punkte gelten sinngemäß für beide
+Mechanismen (Wertequelle, Fitvertrag, Microbench).
 
 Nur sinnvoll, wenn eine gemessene oder neu gefittete Magnetisierungskurve
 die heutigen Potenz-/Fröhlich-Familien ersetzen soll. Tabelliert wird
@@ -314,7 +376,8 @@ zuerst **isoliert am A35 gemessen**; der volle Zyklus (Parität/REAPER/
 Gerät) läuft nur für Kandidaten mit **≥ 3 % Transformerblock oder ≥ 2
 Plugin-Prozentpunkten** (Lektion Doppel-Auswertung: erst messen, dann
 umbauen). Alles ride-along mit dem nächsten MPB-Build, der ohnehin die
-0.4.2-Kennlinie (2:1) tragen muss.
+~~0.4.2-Kennlinie (2:1)~~ *(überholt: seit 0.5.2 umgesetzt und am Gerät
+installiert)* aktuelle Kennlinie tragen muss.
 
 **1. MPB-Build tatsächlich auf Cortex-A35 optimieren** (gemessen −1,2 bis
 −3,6 % je Profil, PERFORMANCE „Build-Tuning"):
@@ -418,6 +481,9 @@ kollabiert.
 - [ ] A35-Microbench zuerst; danach voller Paritätssatz.
 - [ ] Die alte L/R-NEON-Idee (unten) bleibt wegen des Maskierungsrisikos
   zurückgestellt; diese Variante ersetzt sie als bevorzugter Weg.
+  *(Vertieft 2026-10-08: siehe Abschnitt „NEON 2×fp64 — Vertiefung" — dort
+  steht die L/R-Maskierung im Detail und die gegenseitige Ausschließlichkeit
+  beider Lanes-Achsen; die Vorzugsentscheidung bleibt beim Bench.)*
 
 **8. Zustands-Commit der Stop-Bank A/B-messen:**
 
@@ -475,6 +541,9 @@ Paritätsneutral (bit-identisch machbar):
   **Risiko (Serie B):** der Solver verzweigt datenabhängig (Konvergenz je
   Kanal) — Lockstep braucht Maskierung von x/hi/lo und den Zustands-Commit;
   deshalb erst nach der Stop-Zweig-Frage entscheiden.
+  *(Vertieft 2026-10-08: siehe Abschnitt „NEON 2×fp64 — Vertiefung" — die
+  seriesExp-Befürchtung entfällt, die Maskierung ist im Detail durchgearbeitet;
+  Kostenmodell max(L,R) gegen L+R entscheidet am Bench.)*
 
 Vertragsfragen OS-Entkopplung (2026-10-07 diskutiert, **zurückgestellt**):
 der Transformator soll laut Benutzer **oversampled bleiben** — die
@@ -553,6 +622,226 @@ Abarbeitungsstand: `-mcpu` erledigt, Sym-Fastpath erledigt, Kehrwerte
 erledigt (0.5.2); verbleibend p-Spezialisierung, Prädiktor (60s/80s
 strukturell bei ~2 Iterationen), NEON, Commit-A/B, reduzierte Stop-Bank.)*
 
+## Offen — CPU-Reduktion Colour-Pfad (2026-10-08, nach Hebel sortiert)
+
+**Datenlage:** der Colour-Block kostet am Gerät ca. **+10 Prozentpunkte**
+(0.5.1-CPU-Matrix: Sym×Colour 46 gegen Sym c0 36 Median; `test-results/
+cpu-matrix-051-20261008`). Der überwiegende Teil davon ist Klangsubstanz
+(3× `softClip`, `fet()`-Wurzel im Detector); die strukturellen Hebel sind
+deshalb klein — hier gilt die Transformator-Lektion besonders: **erst
+isoliert messen, dann umbauen** (Schwelle für den Vollzyklus: ≥ 2
+Plugin-Prozentpunkte; EEL2 immer gepaart).
+
+**Kandidat 1 — Tote Zustandsfilter bei Colour 0 parken** (sauberster Hebel,
+Gewinner sind die c0-Zustände):
+
+- [ ] Befund: bei `colour == 0.0` laufen aktuell **5 One-Pole-Filter pro
+  Kanal ins Leere** — `inDC`/`inFlux` in `Channel::input()` und
+  `preLP`/`outFlux`/`outDC` in `Channel::output()`
+  (src/dsp/GreenStripe.hpp, Channel-Struct ~:255-286; EEL2
+  `gs_ch_input`/`gs_ch_output`, GreenStripe76-Core.jsfx-inc ~:108-121).
+  Alle fünf werden je Sample aktualisiert, aber nur vom Colour-Pfad
+  gelesen (`hp`/`iron` bzw. `preLP`-Mischung, `outDC`-Abzug).
+- [ ] Umsetzung nach dem 0.1.1-Parkmuster (`parked_`-Flag für Controller,
+  „nur aktive Controller rechnen"): Colour-Zustand parken, wenn
+  `running_.colour == 0.0` exakt; parken = Filterzustände `reset()` und
+  Updates überspringen. Aufwachen verhält sich wie der Initial-Pfad —
+  die Crossfades `x + colour·(iron−x)` starten bei ≈ 0 und walken ein,
+  ohne Klick.
+- [ ] Grundlage ist garantiert: `approach()` snappt exakt auf das Ziel
+  (`≤ 1e-12·max(1,|goal|)`, GreenStripe.hpp ~:556) — `colour == 0.0`
+  feuert also real im stationären Zustand, nicht nur als Absicherung.
+- [ ] **Übergangstests Pflicht** (Reglerwechsel): Colour 0→100→0 und
+  0→5→0 mit Smoothing, Klickfreiheit und Zustandsvergleich gegen den
+  heutigen Stand (der heutige Code hält die Filter „warm" — der neue
+  startet beim Aufwachen frisch; das muss als bewusste Verhaltensänderung
+  dokumentiert und dem hörtest unterzogen werden, nicht still).
+- [ ] EEL2-Seite identisch (`gs_ch_input`/`gs_ch_output` um die
+  Colour-Verzweigung herum umstellen); Paritätssatz komplett; Geräte-
+  Messung c0-Zustände (None/Bypass + alle ×Bank-c0) vor/nach.
+- [ ] Erwartung: klein (5 One-Poles ≈ 1–2 % Plugin) — deshalb Bench
+  zuerst, nur bei ≥ 2 Punkten in den Vollzyklus.
+
+**Kandidat 2 — `fet()`-Snap für kleine Krümmung** (Detector-Tap, nur wenn
+Kandidat 1 nichts bringt):
+
+- [ ] Befund: `fet()` zahlt pro Tap sqrt+div sobald
+  `curvature = colour·(0.24+0.08·all) > 0` — auch bei Colour 5 %
+  (curvature 0,012) und für 1–2 Taps je Sample (bei All 100 % entfällt
+  das bereits). Ein Snap „curvature < ε ⇒ linearer Zweig" (Vorbild: der
+  0.5.1-Fastpath `saturation_strength==0 ⇒ i=λ/Lm`) würde das verbilligen.
+- [ ] **Vertragspreis:** das ist eine numerische Einrastschwelle — laut
+  AGENTS nur mit Vorher-/Nachher- und Übergangstests; die Bit-Parität zu
+  früheren Device-Renders bricht im Bereich 0 < curvature < ε (hörsch
+  irrelevant, aber dokumentationspflichtig); EEL2 gepaart, Paritätssatz
+  gegen die neue Bit-Basis.
+- [ ] ε nur aus der Messung ableiten (größter curvature-Wert, dessen
+  Ergebnisabweichung unter der Messflur bleibt), nicht raten.
+- [ ] Erwartung: 1–2 % Plugin; nur verfolgen, wenn Kandidat 1 unter der
+  Schwelle bleibt und der Bench den Tap-Anteil isoliert bestätigt.
+
+**Kandidat 3 — NEON 2-Lane für die kanalentkoppelten Colour-Filter**
+(backlog; ausführliche Begründung im Abschnitt „NEON 2×fp64 — Vertiefung"
+unten):
+
+- [ ] `Channel::input()`/`output()` sind kanalentkoppelt (Link betrifft
+  nur den Detector) und **datenunabhängig verzweigungsfrei** — anders als
+  der Solver braucht es hier keine Konvergenz-Maskierung; 2×double-Lanes
+  (vmul/vadd, **kein** vfma) mit identischer Operationsreihenfolge je Lane
+  sind paritätsneutral machbar. Der Detector (Taps, Link-Summierung)
+  bleibt skalar.
+- [ ] A35-NEON ist 128-bit (2×fp64 je Op) — Gewinn begrenzt; nur
+  verfolgen, wenn der isolierte Bench zeigt, dass die Filter-/softClip-
+  Anteile ≥ 3–4 Punkte tragen, und nach den Transformator-NEON-Kandidaten
+  (gleiche Intrinsics-Grundarbeit, doppelter Nutzen dort).
+
+**Zurückgestellt / tabu (bewusst, nicht vergessen):**
+- `colour == 1.0`-Sonderweg (Crossfade überspringen): spart ~8 FLOPs,
+  bricht aber die Bitidentität (`x + 1.0·(iron−x) ≠ iron` in FP-Rundung)
+  gegen alle bisherigen Renders — Vertrag nicht antasten.
+- `softClip()`/`fet()`-Mathematik selbst und LUT-Varianten: ist Klang
+  bzw. stehen schon aus CPU-Gründen auf der Rückstellliste (siehe
+  Reihenfolge-Liste im Transformator-Abschnitt).
+- Die immerlaufenden Filter sind bei Colour > 0 alle benötigt — dort ist
+  außer 2/3 nichts strukturell einsparbar, ohne den Klang zu ändern.
+
+**Protokoll für alle Kandidaten:** isolierter x86-Bench des Colour-Blocks
+zuerst (analog `transformer_bench`, Überschneidung mit dem geplanten
+Standalone-Transformator-Plugin beim Bench-Aufbau beachten); Kandidaten
+nur bei ≥ 2 Plugin-Prozentpunkten in den Vollzyklus (C++/EEL2 gepaart,
+`generate.py`, `make test` + Parität, Übergangstests, Geräte-Matrix
+c0 gegen ×Colour); jedes Mal Revisionsbump prüfen (src/Änderung).
+
+## NEON 2×fp64 — Vertiefung (2026-10-08)
+
+Aarch64-NEON ist 128-bit breit = **genau 2 fp64-Lanes**. Damit gibt es
+genau zwei mögliche Lanes-Achsen, und sie schließen sich gegenseitig aus
+(eine Funktion kann nicht gleichzeitig über Operatoren und über Kanäle
+parallelisiert werden):
+
+- **Achse „Operatoren"** (Kandidat 7 oben): die 14 Stop-Operatoren *eines
+  Kanals* als 7 Paare. Geradliniger Code, keine Maskierung nötig — aber
+  der Gewinn ist auf den Stop-Bank-Anteil begrenzt (die Bank ist ein
+  Bruchteil der Iterationsarbeit; `law()` und die Newton-Arithmetik
+  bleiben skalar).
+- **Achse „Kanäle"** (L/R-2-Lane): die *gesamte* per-Sample-Arbeit beider
+  Kanäle in einem Registerpaar: Potenzial bis ~2× auf dem jeweiligen Block
+  für Stereo-Instanzen; braucht Maskierung überall dort, wo der Code
+  datenabhängig verzweigt.
+
+**Grundregel Parität (alle Varianten):** nur IEEE-exakte Ops
+(vadd/vsub/vmul/vdiv/vsqrt — fsqrt ist korrekt gerundet), **kein vfma**
+(Kontraktion! auch `-ffp-contract=off` deckt Intrinsics nicht ab, weil die
+Kontraktion im Intrinsics-Aufruf explizit passiert), Verzweigungen werden
+zu Selects (`bsl`/`vbsl` oder compare+select), **keine horizontale
+Reduction** in wertbestimmten Summen (Reihenfolge!), EEL2 bleibt skalar und
+ist der Paritätsrichter (430+76 Fälle, max 0 FS). Selects sind
+bit-sicher: die nicht gewählte Lane produziert zwar Werte, aber nur die
+gewählten Bits überleben — solange die nicht gewählte Berechnung selbst
+keine Ausnahme erzeugt (fp kann das nicht außer Traps, die aus sind).
+
+**Ort 1 — Colour-Pfad (`Channel::input()`/`output()`), der einfache Fall:**
+
+- Struktur: 5 One-Pole-Filter + 3 `softClip` + Crossfades — **verzweigungs-
+ frei bis auf uniforme Schwellen** (`colour == 0.0` ist ein
+  Parameterzustand, keine Datenverzweigung — beide Lanes treffen sie
+  gleich). `softClip`-Kanten (|x| ≥ 5) sind Datenzweige, aber sauber als
+  Select abbildbar: Polynom für beide Lanes rechnen, Ergebnis per
+  Vergleichsmaske wählen (das Polynom bleibt auch für |x| > 5 endlich —
+  nur die Bits werden weggewählt).
+- `zap()`-Schwelle (|x| < 1e-30) ebenfalls Select. Kein Zustands-
+  Commit-Problem: alle Zustände (inDC, inFlux, preLP, outFlux, outDC)
+  sind je Kanal und werden lane-weise geführt.
+- Der Detector bleibt skalar (Taps + Link-Summierung sind gekoppelt).
+- Gewinnmodell: die Filter-/softClip-Anteile des Colour-Blocks (~von
+  +10 Punkten Gesamtkosten) halbieren sich für Stereo → grob 2–4 Punkte
+  Plugin. Bench-Entscheidung wie im Colour-Abschnitt beschrieben.
+
+**Ort 2 — Transformator-Solver über L/R (der große, risky Fall):**
+
+Kostenmodell als Kernargument: heute kostet ein Stereo-Sample
+`iterL + iterR` Solver-Iterationen; als 2-Lane kostet es
+`max(iterL, iterR)` + Maskierungs-Overhead. L/R sind in der Praxis
+pegelkorreliert → die Iterationszahlen liegen meist nahe beieinander
+(benachbart, nicht identisch) → realistischer Gewinn **1,5–1,9× auf den
+Solverblock** für Stereo, nicht die vollen 2×. Der Solverblock ist der
+größte Einzelblock der CPU-Matrix — das wäre der größte verbliebene
+Einzelhebel überhaupt, deshalb ist die Vertiefung es wert, trotz Risiko.
+
+Divergenzstellen im Loop (`TransformerCore::process`, src/dsp/
+Transformer.hpp ~:155-205) und ihre Behandlung:
+
+- [ ] **Iterationszahl:** Schleife läuft `max(iterL, iterR)`-mal; die
+  konvergierte Lane friert `x` ein (Select aus Konvergenzmaske) und
+  überspringt Newton-Update/Bisektion via Maske. Die Konvergenzmaske
+  (boolx2) wandert durch alle nachfolgenden Schritte.
+- [ ] **Bisektionszweig** (`residual > 0 ? hi=x : lo=x`): reines Select.
+- [ ] **`law()`-Verzweigungen:** `saturation_strength==0` (Sym-Fastpath)
+  und `family==1` sind **Profilkonstanten** — beide Lanes haben dasselbe
+  Modell (der Transformer-Port ist plugin-global), also uniforme Zweige,
+  kein Maskierungsproblem. Der Datenzweig `u > 0.98` (Hochfeld-Knie,
+  00s) wird zum Select; **uniforme Abkürzung erlaubt:** wenn *keine*
+  Lane im Kniebereich ist (OR-Reduktion der Maske — lane-uniforme
+  Entscheidung, deshalb legal), wird `seriesExp` komplett übersprungen;
+  ist eine Lane drin, rechnen beide Lanes die exp und wählen aus.
+- [ ] **`seriesExp` (nicht libm!) vektorisierbar:** eigene Horner-Folge
+  mit Bereichsreduktion (k = floor(x/ln2 + 0,5)) — Horner ist reine
+  mul/add-Kette ✓; `k` wird je Lane mit FRINTM gebildet; die
+  Skalierung `result += result` (k-mal) bzw. `·0,5` ist **exakt**
+  (reine Exponentenverschiebung, auch im Denormalbereich rundungsfrei)
+  und lässt sich bit-identisch durch die Exponentenfeld-Manipulation
+  ersetzen (vreinterpretq_u64_f64 + Integer-Add auf dem Exponentenfeld;
+  Bereich k ≤ ±87, Unter-/Überlauf ausgeschlossen — vorher mit dem
+  tatsächlichen Wertebereich verifizieren). Alternativ maskierte
+  While-Schleife bis max(|k|) — einfacher, kostet im Knie-Fall einige
+  Takte mehr.
+- [ ] **Exponent-Schleife family==0** (`nonlinear *= u`, p−1 fest
+  wiederholte Multiplikationen): datenunabhängige Anzahl ✓ direkt
+  vektorisierbar — synergetisch mit dem offenen Kandidaten „p=3/p=5
+  explizit ausrollen" (derselbe Code, dann nur 1–2 Vektor-Ops).
+- [ ] **Stop-Bank im Loop** (advance=false): 14× (trial, clamp, |·|,
+  konditionale Derivativ-Akkumulation) — alles Selects, identisch zur
+  Achse-„Operatoren"-Arbeit, nur als Lanes-Version.
+- [ ] **Zustands-Commit:** für konvergierte Lanes z/Stops maskiert
+  schreiben; nicht konvergierte Lanes (40er-Cap) nehmen den
+  Advance-Zweig maskiert. Der 40er-Cap wurde in den Messläufen nie
+  erreicht (0 %) — der Advance-Zweig ist Hot-Path-irrelevant, muss aber
+  bitidentisch mitwandern.
+- [ ] **Ausgangs-Biquad:** b0/b1/a1/a2 sind für beide Kanäle identisch,
+  x1/y1/y2 je Kanal → 2-Lane direkt vektorisierbar (keine Divergenz).
+- [ ] **Registerdruck:** Zustandssatz je Kern = flux, relax, voltage,
+  stops[14], x1, y1, y2, px2 ≈ 20 Doubles = 10 q-Register *nur
+  Zustand*, plus Arbeitsregister — A35 hat 32 q-Register; eng, aber
+  machbar. MPB-Assemblat auf Spills prüfen (gleiche Prüfung wie
+  Kandidat 8 Commit-A/B); Spills fressen den Gewinn.
+- [ ] **Diagnose:** `GS76_TRANSFORMER_STATS` bleibt Compile-time-guard,
+  Zähler aus dem Skalarpfad übernehmen (Summe je Lane).
+
+**Entscheidungsreihenfolge (bindend, bis ein Bench etwas anderes zeigt):**
+
+1. Isolierter A35-Bench je Ort (Colour-Block, Stop-Bank-Achse,
+   L/R-Solver-Achse) mit identischer Rechenarbeit wie der Skalarpfad —
+   keine theoretischen Op-Zählungen (Lektion Doppel-Auswertung).
+2. Achse „Operatoren" (Kandidat 7) vor Achse „Kanäle" beim Solver:
+   kleinerer, sicherer Gewinn ohne Maskierung; L/R-Solver nur anfassen,
+   wenn (a) der Bench die Maskierungs-Overhead-Schätzung ≤ ~15 %
+   bestätigt und (b) der Stop-Bank-Gewinn allein unter der 2-Punkte-
+   Schwelle bleibt.
+3. Colour-NEON nur nach dem Solver-NEON (gleiche Intrinsics-Grundarbeit,
+   dort größerer Nutzen; Colour-Bench entscheidet über die 3–4-Punkte-
+   Schwelle).
+4. Jede Umsetzung: skalarer Fallback im Build behalten (Compile-Flag),
+   Paritätssatz gegen EEL2 komplett, CPU-Matrix am Gerät c0/×Colour ×
+   None/60s/80s/00s/Sym, Mono muss unverändert bleiben (kein Gewinn, aber
+   keine Verschlechter).
+
+**Gemeinsame Vorarbeit (alle drei Orte):**
+- [ ] NEON-Hilfsheader (Select-Bausteine, seriesExp-Vektor, zap/softClip-
+  Lane-Versionen) einmal bauen und unit-testen — die drei Orte teilen
+  dieselben Primitive; kein dreifacher Code.
+- [ ] x86-Fallback-Pfad automatisch im CI/Testlauf mitkompilieren, damit
+  die Paritätssätze beide Pfade decken.
+
 ## Offen — Cross-DAW-Variante des LV2-Plugins (2026-10-07 diskutiert)
 
 Ausgangslage: der DSP-Kern ist frameworkfrei (C++11, nur libm, kein UI-/OS-Code);
@@ -580,6 +869,80 @@ Wege, aufsteigend nach Aufwand:
   Revisionstreue nur mit belegter Parität behaupten; kein Cross-Build als
   Geräteabnahme ausgeben.
 
+## Offen — Eigenständiges Transformator-Plugin (LV2 + JSFX) (2026-10-08 diskutiert)
+
+Ausgangslage: der Transformator-Solver (Fluss-Integrator, Sättigungsgesetz,
+Bank `data/transformers.json` mit 00s/60s/80s/Sym, Kanal-/Richtungs-Zustände,
+Oversampling) existiert, ist in C++/EEL2 bitgleich und am Gerät validiert —
+er muss **nicht neu gebaut**, sondern nur umgebettet werden. GUI-Asset steht
+bereits: `lv2/green-stripe-76.lv2/modgui/assets/transformer-front.png`
+(500×500, Frontansicht ohne Fremd-Branding, gezeichnet von
+`tools/make_transformer_asset.py`, als Vorlage für die HTML/CSS-Fassung).
+Hintergrund: MESSERGEBNISSE 12/12.3 (Bank zeigt Kern-Signaturen, SSL nicht),
+MESSTECHNIK 1k.2, docs/DSP.md (Transformator-Laufzeit/Refit-Vertrag).
+
+**Voraussetzung vor dem Start:**
+- [ ] **Sym-DC-Pumpen klären** (Punkt oben): akkumulierender Zustand unter
+  DC (−0,058 → −0,165 FS). Wenn das eine Modellkorrektur braucht, zuerst
+  fixen — sonst erbt das neue Plugin den Defekt mit (Bank ist gemeinsam).
+- [ ] **Benutzerentscheidungen einholen (blockierend):**
+  1. Umfang: Mono + Stereo? Regler — Modellwahl (Bank inkl. `None`),
+     Input-/Output-Gain oder Drive-/Load-Semantik, Oversampling (angehängt,
+     startet Off), Bypass. Meter ja/nein? Presets ja/nein?
+  2. **Bank-Politik (Weichenstellung):** `data/transformers.json` geteilt
+     (Refits wirken dann auf GS76 *und* das neue Plugin — jede Bank-Änderung
+     muss künftig beide Revisionspfade bedenken) oder Kopie mit eigener
+     Pflege? Geteilt ist weniger Duplikation, Kopie entkoppelt die
+     Projektklänge.
+  3. Name: neutral (kein Hammond-/Fremd-Bezug im Produktnamen; die
+     optische Inspiration kann in `docs/QUELLEN.md` belegt werden).
+  4. Provenanz-Aussage: weiter „reduziertes Gray-Box-Modell mit
+     provisorischen Kennlinien, keine zertifizierte Hardwaregleichheit".
+
+**Arbeitsschritte (geschätzt 3–5 Arbeitssitzungen bis zur Abnahme):**
+- [ ] **Generator für zweites Plugin-Ziel** (größter Posten): eigene
+  Bundle-URI, eigenes `model.json`/`parameters.json` (oder konfigurierbares
+  Mehrfachziel in `tools/generate.py`), TTL/JSFX-Erzeugung, Presetpfad,
+  `validate.py`-Regeln je Bundle (Portzahl-Assertions erweitern). Portlayout
+  von Anfang an sauber: neue Ports anhängen, Latency/OS-Muster wie GS76.
+- [ ] **DSP-Umbettung:** in→Transformator→out ohne Kompressorpfad (kein
+  GR/Detektion, kein Feedback-Abgriff); Regler-Mapping auf den Solver
+  (Pegel-/Drive-Skalierung vor dem Kern, kompensierender Output-Gain,
+  Bypass exakt transparent inkl. OS-Wechsel); Stereo = zwei unabhängige
+  Kanalzustände (kein Link nötig); Latenz 0/3/4 Frames für Off/2x/4x
+  beibehalten; C++11, kein `-ffast-math`, `-ffp-contract=off`.
+- [ ] **JSFX-Standalone:** EEL2-Solver aus GreenStripe76-Stereo auskoppeln,
+  Slider-/State-Mapping, PDC-Deklaration (`pdc_delay`/`pdc_bot_ch`/
+  `pdc_top_ch` bei OS-Wechsel), GS76-Caveats übernehmen (`===` für
+  gleichartige Zweige, NaN-Geordnete-Vergleichsfunktion beibehalten).
+- [ ] **Parität + Tests:** `jsfx_parity`-Struktur auf das neue Paar
+  richten (Erwartungen aus dem Artefakt ableiten, keine hartkodierten
+  Zahlen); Signaltests: Bypass-Transparenz, DC-Block (00s/60s/80s),
+  20-Hz-Pegelreihe gegen die Bankanker, Burst-/Remanenzverhalten,
+  Blockinvarianz, OS-Wechselübergänge — die Diskriminierungsprobes aus
+  `tools/make_probes.py` sind genau der richtige Testumfang; 1k.2-Werte
+  (MESSERGEBNISSE 12) als Referenzkanziffern einpflegen.
+- [ ] **GUI:** neue modgui aus dem CSS-Template (PNG als Basis); Meter nur
+  wenn entschieden — sonst das 0.5.0-Muster (Output-Port +
+  monitoredOutputs) unverändert nachschlagen, erst nach Gerätecheck des
+  mod-ui-Stands bauen. `validate.py` erzwingt die `/resources/…{{{ns}}}`-Form.
+- [ ] **Doku/Provenanz:** docs/DSP.md (Solver, Refit-Vertrag, CPU-Regime),
+  QUELLEN (Modellherkunft, optische Inspiration), MESSTECHNIK
+  (Testplan/Messplätze), README/PROJEKT (neues Plugin im Umfang).
+- [ ] **Build/Abnahme:** Native Build + `make test`; Cross-Build
+  (aarch64, Symbolfloor) für den Dwarf; CPU-Messung am Gerät (nur
+  Transformator ist billiger als GS76, OS multipliziert weiterhin);
+  REAPER-Verifikation (PDC, OS-Wechsel, Presets) auf dem Testrechner.
+
+**Risiken/offene Punkte:**
+- Generator-Mehrfachziel ist der unbekannteste Umbau — erst dort anfangen,
+  Datenmodell (geteilte vs. kopierte Bank) vorher festlegen.
+- Keine Portänderungen an GS76 als Nebeneffekt; Revisionsnummern der
+  beiden Plugins unabhängig führen (jeweils dritte Stelle der eigenen
+  `version`).
+- CPU: 4x OS am A35 vor dem Feature-Freeze messen, nicht theoretisieren.
+- Veröffentlichung/Commit erst nach ausdrücklichem Auftrag (AGENTS).
+
 ## Offen — Projektinfrastruktur
 
 - [x] Revisionszähler eingeführt (2026-10-07, AGENTS): `data/model.json`
@@ -587,8 +950,9 @@ Wege, aufsteigend nach Aufwand:
   zwei Nutzereingaben) ⇒ `revision` +1 und `tools/generate.py`; Anzeige in der
   LV2-GUI unter Mono/Stereo (Fußzeilenplatte) und in der JSFX-GFX unten rechts
   (`#gs_ver`; die Revisionsnummer ist die dritte Stelle der Versionsnummer).
-  Aktueller Stand: **0.4.2** (0.4.1 rev 1/rev 2 wurden zum Dreistelligen Schema
-  zusammengeführt).
+  ~~Aktueller Stand: 0.4.2 (0.4.1 rev 1/rev 2 wurden zum Dreistelligen
+  Schema zusammengeführt).~~ *(Aktuell: **0.5.2** — 0.5.0 VU-Meter/GR-Port,
+  0.5.1 Sym-Fastpath, 0.5.2 Kehrwerte; alle am Gerät bestätigt.)*
 
 ## Ausstehende Verifikationen — Solver-Stand 1e-6 (2026-10-07)
 
@@ -618,10 +982,14 @@ und gepusht; Pin zeigt darauf. Offen in dieser Reihenfolge:
   unverändert (max 76 %). Relativ zum Zustand ≈ −9…−11 %, konsistent mit
   dem isolierten Bench (−10–12 %) inkl. plugin-level Verwässerung durch
   Host-Overhead.
-- [ ] `tools/render_jsfx.cpp` (ysfx-Offline-Renderer, Alternative zu den
+- [x] `tools/render_jsfx.cpp` (ysfx-Offline-Renderer, Alternative zu den
   REAPER-Renders): der WAV-Schreibfehler war das fehlende
-  Ausgabeverzeichnis — mkdir ergänzen und gegen eine REAPER-Render
-  bitverifizieren; ysfx ist der gepinnte Referenz-Host.
+  Ausgabeverzeichnis — **mkdir ergänzt und verifiziert (2026-10-08)**:
+  CMake-Target `render_jsfx`; ysfx ↔ C++-Referenz bitgleich (0 LSB,
+  Offset 0), ysfx ↔ REAPER-Render 0,5 LSB bei PDC-Offset −3 (dieselbe
+  Größenordnung wie die akzeptierte REAPER↔C++-Parität; REAPER-24-bit-
+  Dither). Nachweis: `test-results/ysfx-render-20261008/verify.json`
+  (MESSTECHNIK 1l). ysfx ist der gepinnte Referenz-Host.
 - [x] 1e-6-Qualitätsentscheidung final bestätigen (Lösungsfehler ≈ −120 dB;
   Hörprobe optional). **Bestätigt (2026-10-07):** Benutzer-Hörprobe meldet
   den Unterschied als sehr subtil (erwartungsgemäß, Lösungsfehler liegt
@@ -644,31 +1012,109 @@ und gepusht; Pin zeigt darauf. Offen in dieser Reihenfolge:
 ## Ausstehende Verifikationen — 0.5.2, invariante Kehrwerte (2026-10-08)
 
 Der 0.5.2-Stand (Kehrwerte + 00s-Hochfeldkonstanten in `prepare()`,
-Revision 0.5.2) ist **lokal getestet und liegt uncommittet im Arbeitsbaum**:
-`make test` PASS (20-Hz-Anker und `transformer_tests`-Checksummen auf
-Druckgenauigkeit unverändert), Parität 430+76 Fälle max 0 FS,
-Diagnose-Makro byteidentisch, gepaarter x86-Bench −11,7…−13,2 %
-Transformatorblock (60s/80s/00s) und −18,5 % (Sym), gegen None derselben
-Messung korrigiert (PERFORMANCE). Die Bit-Basis verschiebt sich auf
-Rundungsniveau (~1 ULP je ersetzter Division) — ältere Render-/Checksummen-
-Archive können minimal driften. Offen in dieser Reihenfolge:
+Revision 0.5.2) ist **lokal getestet, committet (`b09364e`) und als MPB-Pin
+gesetzt**; ~~Gerätetests laufen~~ **Gerätetests bestätigt** (Geräteserie
+`device-052-20261008` + REAPER-Batch `14_14_41`, 2026-10-08). Offen in
+dieser Reihenfolge:
 
-- [ ] 0.5.2 committen; MPB-Pin auf den 0.5.2-Commit setzen (Arbeitsexemplar-
-  Pin `dbaf48f` = 0.5.1-DSP + VU-Hub, noch ohne 0.5.2); MPB `moddwarf-new`
-  bauen, installieren, **SHA ≠ `c936aca6…`** verifizieren, Audio-Stack
-  vollständig neu starten.
-- [ ] Geräteanker erneuern: Transformator-Matrix (20-Hz-Klirr 60s ≈ 12,42 %,
-  relative Gains −0,817/−0,441/−0,016/−0,002 dB) und Colour-Stufen gegen
-  frische 0.5.2-Referenzrenders; Erwartung: Verschiebung nur auf
-  Rundungsniveau.
-- [ ] REAPER-Renders (JSFX per Symlink) der 28 Vollmatrix-Zustände gegen
+- [x] 0.5.2 committen; MPB-Pin auf den 0.5.2-Commit setzen; MPB
+  `moddwarf-new` bauen, installieren, **SHA ≠ `c936aca6…`** verifizieren,
+  Audio-Stack vollständig neu starten. **Erledigt (2026-10-08):** Pin
+  `b09364e`, Geräte-SHA `d94d3121…`, installiert Okt 08.
+- [x] Geräteanker erneuern: Transformator-Matrix und Colour-Stufen gegen
+  frische 0.5.2-Referenzrenders. **Bestätigt (2026-10-08,
+  `test-results/device-052-20261008`, digitale Dwarf-Recorder-Serie
+  Referenz/GROUP 1/GROUP 2):** Anker exakt (20-Hz-Klirr
+  12,424/12,276/1,014/0,001 %, relative Gains −0,8174/−0,4412/−0,0156/
+  −0,0013 dB), max |Δ Gain| ≤ 0,02 mdB über 10 Zustände × 19 Segmente,
+  Samplevergleich nach Gain-Fit: lineare Pfade auf float32-LSB, Solver-
+  Profile ULP-Rest (max 1,1×10⁻⁴ ≈ −79 dBFS) — Verschiebung wie erwartet
+  auf Rundungsniveau. GROUP 1 × 2 am Gerät bewusst nicht aufgenommen
+  (Benutzerentscheid); Plots im Manifest. **Nebenbefund:** `render_lv2.py`
+  verband seit 0.5.0 den Output-Port `gr_db` als Eingangs-Control — alle
+  damit erzeugten Renders liefen mit OS Off; Tool gefixt (tools, keine
+  Revisionspflicht), 34 Referenzrenders neu erzeugt und gegen den
+  verifizierten 1e-6-REAPER-Batch bitgleich bestätigt (34/34 + Reference,
+  max 0,5 LSB, PDC ±3).
+- [x] REAPER-Renders (JSFX per Symlink) der 28 Vollmatrix-Zustände gegen
   frische 0.5.2-C++-Referenzen bitgleich prüfen (Abgleich mit PDC-Offset
-  ±3 Samples).
+  ±3 Samples). **Erledigt (2026-10-08, 14:14):** nach REAPER-Neustart/
+  FX-Reload neues Batch `2026-10-08 14_14_41` — erweitert auf **34 Zustände
+  + Referenzlauf**: alle 34 bitgleich (Offset −3, max 0,5 LSB), `no_fx`
+  sampleidentisch zum Stimulus; damit auch die 24 GROUP 1 × 2-Kombinationen
+  in REAPER abgedeckt. GUI zeigt 0.5.2. Archiv:
+  `test-results/jsfx-render-052-20261008/` (MESSTECHNIK 1j, MESSERGEBNISSE 9).
 - [ ] CPU-Stichprobe am Gerät: Erwartung Typen −1…−3 Punkte gegenüber
   `cpu-matrix-051-20261008` (54–56 %), Sym zusätzlich −1…−2 (46 %);
   1–2-Punkte-Granularität einkalkulieren, Bypass/None unverändert.
-- [ ] 1-%-Anker und `make test` im 0.5.2-MPB-Build erneut bestätigen;
-  danach Preset-Hörprüfung 21/22 sowie 31/37 und 35/38 (Punkt oben).
+  Benutzerwahrnehmung 2026-10-08: „weiterhin gut ausgelastet" — verträglich
+  mit der kleinen erwarteten Differenz, Messung steht noch aus.
+- [x] 1-%-Anker und `make test` im 0.5.2-Stand lokal bestätigt
+  (2026-10-08, nativer x86-Build, Compiler jetzt im WSL-Host verfügbar —
+  Sysroot entfiel): make test PASS (DSP/Transformer/LV2-ABI/GR-Port/
+  Refit/Bundle), Parität 430+76 max 0 FS, 1-%-Anker 1,01…1,10 % je Rate.
+  Danach Preset-Hörprüfung 21/22 sowie 31/37 und 35/38 am Gerät (Punkt
+  oben) offen.
+- [x] `tools/render_results_doc.py` um die 0.5.2-Geräteserie erweitert
+  (`device-052-20261008`, Abschnitt 8 mit Digital-/Analog-Deltas und
+  Samplevergleich) und `docs/MESSERGEBNISSE.md` inkl. Plot
+  `mess-device052-delta.png` neu generiert (2026-10-08).
+- [x] Kleine Unit-Tests für `tools/dwarf_matrix_session.py` (2026-10-08,
+  `tests/test_dwarf_matrix_session.py`, 8 Fälle): Chirp-Erkennung
+  (block_correlate mit Rauschen/Trefferzusammenfassung), Ratenprüfung,
+  Positions-/Reihenfolgezuordnung (find_playbacks), Schnittgrenzen und
+  Warnpfad von do_cut; do_analyze/do_report bleiben über die
+  scarlett_test-Tests abgedeckt.
+
+## PluginDoctor-Vergleich Transformer-Harmonics (2026-10-08) — Auswertung abgeschlossen
+
+**Gültige Serie 14:00–14:52 ausgewertet** (`tools/analyze_pd_transformer.py` →
+`test-results/pd-transformer-20261008/analysis.json`; MESSERGEBNISSE 10,
+MESSTECHNIK 1i). GS76-Captures (60s/80s/00s/Sym) und SSL Fusion Transformer
+MIN/STOCK/MAX; GS76-Panelsellungen benutzerbelegt (**COMP OFF, 4x OS,
+Colour 0 %, Mix 100 %**). Kernbefunde: Klirrsumme aus der FFT-Momentaufnahme
+stimmt mit der THD(f)-Kurve auf Δ ≤ 0,08 dB (Gültigkeitsnachweis); SSL
+verzerrt im Tieftönen massiv stärker (MAX 8–30 Hz ≈ 55 %, STOCK ≈ 69 %
+gegen GS76 60s/80s 18/22 % bei 20 Hz) — stützt das Klangziel quantitativ;
+bei 1 kHz liegt GS76 60s zwischen SSL STOCK und MAX; PD-Reihung 80s ≈ 00s >
+60s weicht von der Gerätetreihung ab (heißere Anregung trifft das 00s-Knie);
+Kopplungsverlust sichtbar (Grundwelle −7,5/−3,5 dB unter Anregung).
+
+- [x] GS76-FFTs/THD-Kurven erneut exportieren mit sichtbarem Re-Trigger —
+  gültig (2026-10-08), Exportprobleme behoben (Crosscheck ≤ 0,08 dB).
+- [x] Numerische GS76↔SSL-Auswertung und Vergleich mit den Bankankern —
+  durchgeführt (Charaktervergleich, unkalibriert; Plots in MESSERGEBNISSE 10).
+- [x] **Kalibrierter Vergleich auf anderem Weg erbracht (2026-10-08):**
+  SSL Fusion Transformer als REAPER-Render über dasselbe Matrixprogramm
+  (AMOUNT 0/50/100/150/200, −2 dBFS, digital, paddgenau,
+  `test-results/ssl-amount-20261008/`, MESSTECHNIK 1k, MESSERGEBNISSE 11):
+  20 Hz A50 7,72 % @ −1,02 dB (zwischen GS76 00s und 60s), A100 51,3 % @
+  −6,31 dB, A200 27,4 % @ −15,90 dB; 1 kHz ≤ 0,011 % bei allen
+  Stellungen; AMOUNT 0 kein Bypass (+0,71 dB @ 8 kHz fest). **SSL A ≈ 50
+  ist der nächste kalibrierte Referenzpunkt fürs Klangziel im Bass.**
+- [ ] SSL-Knopfprovenanz nachtragen (SHINE/MIX/TRIM als Panel-Screenshot
+  beim nächsten Renderlauf mitarchivieren); PD-Wiederholung mit statischen
+  Einzeltönen nur noch optional (kalibrierte Serie existiert).
+- [x] **Diskriminierungstests SSL-Plugin (Hypothese „kein physikalisches
+  Kernmodell", MESSTECHNIK 1k.1/1k.2):** ausgeführt 2026-10-08 — SSL
+  AMOUNT 0/50/100/150/200 und GS76-JSFX 00s/60s/80s/Sym über das
+  Kombiprogramm gerendert und ausgewertet
+  (`tools/analyze_discrimination.py`,
+  `test-results/diskriminierung-20261008/`). **Urteil: SSL = Effektmodell
+  bestätigt** (Bursts ohne Remanenz, IM symmetrisch/unter Vorhersage,
+  A200-Verlust als linearer Fix-Shelf, DC-Durchlass 4–37 %); GS76-Bank
+  zeigt die Kern-Signaturen (DC-Block, 80s-Remanenz-Shift, H2 unter DC).
+  Details: MESSERGEBNISSE 12, MESSTECHNIK 1k.2 (Durchführung). Eine
+  kontaminierte Vorserie (−3 dB) wurde erkannt und verworfen.
+- [ ] Sym-Transformator: DC-Pumpverhalten klären (Nachlauf nach
+  DC-Zyklen akkumuliert −0,058 → −0,165 FS; Verdacht Integrator-Drift im
+  Sym-Modell) und ggf. gegen den Modellvertrag prüfen — DSP-Änderung
+  würde C++/EEL2-Parität + Revision erfordern.
+- [ ] Optional: no_fx-Negativkontrolle des Diskriminierungsprogramms
+  rendern (sampleidentisch) und die Auswertekette damit formell
+  verifizieren; SSL-Knopfprovenanz bei der Gelegenheit mitarchivieren.
+- [ ] PD-Klärung der 00s-Reihungsabweichung (gleicher Ton/Pegel wie die
+  Gerätetreihe, 2x OS statt 4x OS fahren, Stellung protokollieren).
 
 ## Erledigt (zur Erinnerung, nicht mehr offen)
 

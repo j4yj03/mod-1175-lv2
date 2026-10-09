@@ -25,8 +25,12 @@
   sind bewusst kein Paneel-Regler (Einstellungen im Host).
 - JSFX Mono und Stereo mit GR, Peak/RMS und REAPER-7-Host-GR-Anzeige.
 - Gemeinsame Regler im Dual-Mono-Modus; keine Kanalvermischung.
-- Zielgerät: MOD Dwarf OS **1.13.5.3315**, aarch64, Cortex-A35,
-  Kernel **6.1.15-rt7-moddwarf**, PREEMPT_RT; Betrieb bei 48 kHz.
+- Zielgerät: MOD Dwarf OS **1.14 RC4 (build 3366)** seit 2026-10-08 —
+  Teststand; Release-Verifikation bleibt an **1.13.5.3315** gebunden, bis
+  1.14 stable ist. aarch64, Cortex-A35, Kernel **6.1.15-rt7-moddwarf**,
+  PREEMPT_RT; Betrieb bei 48 kHz. Gerätchecks (modgui-JS-Pfad, CPU-Matrix,
+  Install-Verifikation) sind OS-gebunden und bei Wechsel neu zu fahren;
+  Messwerte immer mit OS-Version labeln.
 - REAPER- und Dwarf-Praxistests erfolgen auf einem **anderen Rechner**.
 
 ## DSP und Kompatibilität

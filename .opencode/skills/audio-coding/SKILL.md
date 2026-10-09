@@ -436,6 +436,15 @@ Hörtests laufen auf einem anderen Rechner und werden erst dort als bestanden
 geführt, wo sie wirklich stattgefunden haben.
 ## MOD Dwarf — Feldpraktische Erkenntnisse (2026-10-05)
 
+**OS-Stand (2026-10-08):** Gerät läuft auf **1.14 RC4 (build 3366)** —
+Testbuild; Release-Verifikation bleibt an 1.13.5.3315 gebunden. 1.14
+bringt „Grouped plugin controls" (pg-Gruppen in der Settings-View,
+gruppiert + farbcodiert), neuen Audio-Stack (jack2/mod-host) und
+mod-ui-Änderungen — **Gerätchecks (modgui-JS-Grep, CPU-Matrix,
+Install-SHA256) sind OS-gebunden und nach jedem Wechsel neu zu fahren**;
+Messwerte immer mit OS-Build labeln. Thread-Regressionen: atom:String-
+Parameter (PR 179, RC2 gefixt).
+
 ### Zugriff & Umgebung
 - SSH: `root@192.168.51.1:22`, Passwort `mod` (laut MOD Wiki). Buildroot 2016.02, Kernel `6.1.15-rt7-moddwarf` (PREEMPT_RT), AArch64 Cortex-A35, 4 Kerne, Python 3.4.3.
 - Dateisystem standardmäßig read-only; Remount nur gezielt `mount / -o remount,rw`.
@@ -680,3 +689,94 @@ Dokumentenstand bleibt current.
 3. **Nie** Regler nur in einem Kanal ändern — die Probe zeigt Kanaldrift sofort
    (beobachtet −4,93 dB nach asymmetrischer Umstellung) und Clipping auf der
    Aufnahme erkennt Übersteuerung ohne Hören.
+
+## Fremdplugin-Referenz und PluginDoctor-Exporte (2026-10-08)
+
+### PluginDoctor-Exportformate entziffern (ReaJS-Backend)
+
+- **`THD.txt`** = THD-über-Frequenz-Kurve des Sweeps (Graph #0, dB relativ
+  zur jeweiligen Grundwelle) plus zweite Kurve (Graph #1 — bei GS76 flacher
+  Boden −100 dB, bei SSL Grundwellen-Tracking; Bedeutung nicht kalibriert).
+- **`data.txt`** = FFT-Momentaufnahme (2 × 8191 Punkte, Raster 2,692 Hz =
+  44,1-kHz-Backend); die Momentaufnahme landet je Export an einer
+  **anderen Tonfrequenz** (Sweep-Position beim Export) — Fundamentale
+  8,08/13,46/70/161/334 Hz sind also kein Benutzermuster, sondern Zufall.
+- **Gültigkeitsnachweis ohne Gerät:** die Peak-Bin-Harmonikensumme
+  (H2…H41) der Momentaufnahme muss mit dem Kurvenwert an derselben
+  Frequenz übereinstimmen. Passte auf ±0,08 dB → Kurve und Snapshot sind
+  dieselbe Messung. Frühere Fehlschläge (nur Anzeigeboden; viermal
+  byte-identische Datei) so erkennbar und abgrenzbar.
+- **Fremdplugin-Kurven können Treppenzüge sein** (7–10 Stufen, z. B. SSL):
+  Werte nur **stufentreu** abrufen (Wert innerhalb eines Plateaus, sonst
+  nächster Exportpunkt) — **niemals über Klippen interpolieren**, sonst
+  erfindet man Messwerte (beobachtet: −57 dB „bei 1 kHz", real Steilklippe
+  939→1034 Hz).
+- **Funktionsrezept für gültige Exporte:** vor jedem Export Anzeige sichtbar
+  neu triggern (Ton aus/ein), Dateigrößen müssen divergieren
+  (byte-identisch = Fehlalarm), je Capture Screenshot + data.txt + THD.txt,
+  Zustand in den Verzeichnisnamen.
+
+### Kalibrierte Fremdplugin-Referenz statt PD-Screenshots
+
+Der bessere Weg: **Fremdplugin in die REAPER-Testbench** laden und über
+dasselbe Matrixprogramm rendern (gleicher Stimulusplan, −2 dBFS, digital,
+paddgenau, Kanaldifferenz prüfen). Damit sind die Werte **direkt** mit den
+eigenen Bankankern vergleichbar — kein Stellungs-/Pegelraten. Analyse
+`tools/analyze_ssl_amount.py` als Muster (Stimulusplan mit SHA wiederverwenden).
+
+### Physik-Plausibilität fremder „Transformator"-Modelle prüfen
+
+Drei Hebel, alle aus Magnitudenspektren allein:
+
+1. **Verlust-vs-Verzerrung:** deep bass loss (−6…−16 dB bei −2 dBFS) ohne
+   massiv begleitende THD ist Kernphysik unwahrscheinlich (kollabierendes
+   Lm erzeugt beides gleichzeitig und lastabhängig).
+2. **Energiebilanz:** Sättigung **wandelt** Grundtonenergie in Obertöne
+   (Rechteck-Limit ≈ 19 % der Restleistung); verschwindet die Grundwelle,
+   ohne dass Harmonische sie tragen (≠ „gelöschte" Leistung), liegt eine
+   entworfene Pegelabsenkung vor. Caveat: THD-Werkzeuge zählen oft nur
+   H2…H10 — bei 1/n-Obertonschwänzen die höhere Ordnung grob
+   mitrechnen, bevor man „Energie fehlt" behauptet.
+3. **Effektmodell-Signatur:** „Bypass"-Stellung mit festem EQ-Tilt,
+   nichtmonotone THD über den Regler, Klirr nur unter ~160 Hz (∝ V/f).
+
+**Ehrliche Alternative mitdenken:** ein getreues Modell eines absichtlich
+überfahrenen Mini-Kerns produziert dieselben Zahlen — trennbar nur durch
+Diskriminierungstests: Bassburst/Remanenz (Hysterese-Nachlauf, Operating-
+Point-Shift), Zweiton-IM (AM-Seitenbänder um den Mittelton),
+20-Hz-Pegelreihe (Knie-/Verlustform), DC-/Polaritätsasymmetrie
+(Even-Harmonics unter Offset). Konsequenz für Anker: heiße Stellungen
+solcher Plugins niemals als Kalibrierziel; niedrige Stellungen höchstens
+als Intensitätsanker.
+
+### Werkzeug-Lektionen dieser Session
+
+- **`scarlett_test.analyze()` schreibt `results.json` in den Stimulus-
+  ordner**, wenn kein `report_dir` übergeben wird — bei wiederverwendeten
+  Plandateien (z. B. `test-results/dwarf-tones/runs/*`) immer
+  `report_dir=` setzen, sonst Überschreibrisiko.
+- **POSIX-mkdir rekursiv nur an `/`-Grenzen:** ein zeichenweiser mkdir über
+  Pfadpräfixe scheitert mit EACCES am Root-Präfix (`mkdir("/t")`) und
+  erzeugt sonst Namensmüll. Komponentenweise an Slash-Grenzen +
+  Abschluss-mkdir.
+- **/tmp/opencode wird zwischen Sessions geleert:** Sysroot und geklonte
+  Repos können weg sein; `ref052`-Renders überlebten. Gepinnte Forks
+  (ysfx `5c3452f…`) frisch klonen **inklusive Submodule**
+  (`git submodule update --init --recursive` — dr_wav fehlt sonst).
+  Der WSL-Host hat inzwischen einen nativen gcc 11.4 — der Sysroot-Env-
+  Block ist überflüssig; make/ctest laufen direkt.
+- **Pilot-Chirp-Position ist designstabil:** im scarlett_test-Stimulus
+  liegt der Marker-Chirp fest bei Frame 24000 (0,5 s Vorstille + 0,12 s
+  Chirp), unabhängig von settle/measure — Unit-Tests können deshalb mit
+  kurzen Scratch-Stimuli echte Erkenndefunktionen fahren
+  (`tests/test_dwarf_matrix_session.py`, 8 Fälle).
+- **Mehrere Proben als ein Programm rendern:** für Fremdplugin-
+  Diskriminierungsserien die Einzelsignale zu **einer WAV** mit
+  Sync-Marker (Pilot-Chirp an Start/Ende) und 0,5-s-Trennstille
+  zusammenfassen (`tools/make_discrimination_program.py` — Generatoren
+  **importiert**, nicht kopiert; Timeline + SHA in `manifest.json`,
+  Anleitung als `README.md` neben der Datei). Fünf Renders des
+  Gesamtprogramms schlagen 20 Einzeldateien; Segmentgrenzen kommen aus
+  dem Manifest, Offset-/Ratenprüfung über die Chirps. Verbindliche
+  Ausgabennamen (`<programm>-<variante>.wav`) im README festlegen, damit
+  die Auswertung parsebar bleibt.
